@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Merger — Every deal, every channel, one desk</title>
+<meta name="description" content="Merger unifies WhatsApp, Telegram, Slack, LinkedIn and nine more networks into a single Matrix-native deal desk with AI triage, counterparty matching, and e-sign tracking." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0D0E11;
+    --ink-2:#13151A;
+    --ink-3:#191C22;
+    --brass:#B9915A;
+    --brass-bright:#D8B47A;
+    --bone:#EDE8DC;
+    --slate:#8B909B;
+    --line:rgba(237,232,220,0.09);
+    --line-strong:rgba(237,232,220,0.16);
+    --display:'Space Grotesk',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    /* vertical accents */
+    --v-secondaries:#7FA8D9;
+    --v-realestate:#8FBF8F;
+    --v-dtc:#D98FB0;
+    --v-structured:#C9A0E8;
+    --v-energy:#E8B36A;
+    --v-rollup:#7FD1C7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--display);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brass);color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--brass-bright);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--brass);
+  }
+
+  /* ---------- nav ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,14,17,0.85);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:0.22em;font-size:14px}
+  .brand svg{display:block}
+  .nav-links{display:flex;align-items:center;gap:30px;font-size:14px;color:var(--slate)}
+  .nav-links a:hover{color:var(--bone)}
+  .nav-cta{
+    font-family:var(--mono);font-size:12px;letter-spacing:0.08em;
+    color:var(--ink);background:var(--brass);
+    padding:9px 16px;border-radius:6px;font-weight:500;
+    transition:background .18s ease;
+  }
+  .nav-cta:hover{background:var(--brass-bright)}
+  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:96px 0 40px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:56px}
+  .hero h1{
+    font-size:clamp(40px,6.2vw,72px);
+    font-weight:700;line-height:1.03;letter-spacing:-0.02em;
+    max-width:14ch;
+  }
+  .hero h1 .accent{color:var(--brass)}
+  .hero .sub{
+    margin-top:26px;max-width:56ch;color:var(--slate);font-size:19px;line-height:1.65;
+  }
+  .hero .sub strong{color:var(--bone);font-weight:500}
+  .cta-row{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:15px 24px;border-radius:8px;font-weight:600;font-size:15.5px;
+    transition:transform .15s ease, background .18s ease, border-color .18s ease;
+    border:1px solid transparent;cursor:pointer;font-family:var(--display);
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-primary{background:var(--brass);color:var(--ink)}
+  .btn-primary:hover{background:var(--brass-bright)}
+  .btn-ghost{background:transparent;color:var(--bone);border-color:var(--line-strong)}
+  .btn-ghost:hover{border-color:var(--brass)}
+  .btn svg{flex:none}
+  .cta-note{
+    margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--slate);letter-spacing:0.05em;
+  }
+
+  /* ---------- convergence (signature) ---------- */
+  .converge{padding:30px 0 20px}
+  .converge-frame{
+    border:1px solid var(--line);border-radius:14px;
+    background:linear-gradient(180deg,var(--ink-2),var(--ink));
+    padding:12px 8px 4px;
+  }
+  .converge svg{width:100%;height:auto;display:block}
+  .converge .caption{
+    display:flex;justify-content:space-between;gap:16px;
+    font-family:var(--mono);font-size:11px;color:var(--slate);
+    letter-spacing:0.12em;text-transform:uppercase;
+    padding:14px 18px 12px;border-top:1px solid var(--line);margin-top:8px;
+  }
+  @media(max-width:640px){.converge .caption span:nth-child(2){display:none}}
+
+  /* ---------- platform strip ---------- */
+  .strip{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin-top:64px;overflow:hidden;
+  }
+  .strip-inner{
+    display:flex;gap:44px;padding:18px 0;white-space:nowrap;
+    font-family:var(--mono);font-size:12.5px;letter-spacing:0.14em;color:var(--slate);
+    animation:ticker 46s linear infinite;width:max-content;
+  }
+  .strip-inner span::before{content:"◆";color:var(--brass);margin-right:12px;font-size:8px;vertical-align:2px}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ---------- sections ---------- */
+  section.block{padding:104px 0 0}
+  .sec-head{max-width:640px}
+  .sec-head h2{
+    margin-top:14px;font-size:clamp(28px,3.6vw,42px);
+    font-weight:600;line-height:1.12;letter-spacing:-0.015em;
+  }
+  .sec-head p{margin-top:18px;color:var(--slate);font-size:17.5px}
+
+  /* what it is */
+  .what-grid{
+    display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:start;margin-top:8px;
+  }
+  .what-copy p{color:var(--slate);margin-top:18px;font-size:17.5px}
+  .what-copy p strong{color:var(--bone);font-weight:500}
+  .desk-card{
+    border:1px solid var(--line);border-radius:14px;background:var(--ink-2);
+    overflow:hidden;font-family:var(--mono);font-size:12px;
+  }
+  .desk-card .bar{
+    display:flex;justify-content:space-between;padding:12px 16px;
+    border-bottom:1px solid var(--line);color:var(--slate);letter-spacing:0.1em;font-size:10.5px;
+  }
+  .deal-row{
+    display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);
+  }
+  .deal-row:last-child{border-bottom:none}
+  .deal-row .dot{width:7px;height:7px;border-radius:50%;flex:none}
+  .deal-row .net{color:var(--slate);width:78px;flex:none;font-size:10.5px;letter-spacing:0.06em}
+  .deal-row .name{color:var(--bone);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .deal-row .stat{font-size:10px;letter-spacing:0.1em;padding:3px 8px;border-radius:4px;border:1px solid var(--line-strong);color:var(--brass);flex:none}
+  @media(max-width:880px){.what-grid{grid-template-columns:1fr}}
+
+  /* features */
+  .feat-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;margin-top:52px;
+  }
+  .feat{
+    background:var(--ink-2);padding:34px 30px 38px;
+    transition:background .2s ease;
+  }
+  .feat:hover{background:var(--ink-3)}
+  .feat .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;color:var(--brass);text-transform:uppercase}
+  .feat h3{margin-top:14px;font-size:19px;font-weight:600}
+  .feat p{margin-top:10px;color:var(--slate);font-size:15px;line-height:1.62}
+  @media(max-width:880px){.feat-grid{grid-template-columns:1fr}}
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:54px}
+  .plan{
+    border:1px solid var(--line);border-radius:14px;background:var(--ink-2);
+    padding:34px 30px 36px;display:flex;flex-direction:column;position:relative;
+  }
+  .plan.featured{border-color:var(--brass);background:linear-gradient(180deg,#1A1712,var(--ink-2) 55%)}
+  .plan .flag{
+    position:absolute;top:-11px;left:30px;
+    font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+    background:var(--brass);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:500;
+  }
+  .plan .pname{font-family:var(--mono);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate)}
+  .plan.featured .pname{color:var(--brass)}
+  .plan .amount{margin-top:18px;display:flex;align-items:baseline;gap:8px}
+  .plan .amount .num{font-size:44px;font-weight:700;letter-spacing:-0.02em}
+  .plan .amount .per{font-family:var(--mono);font-size:12px;color:var(--slate)}
+  .plan .pdesc{margin-top:8px;color:var(--slate);font-size:14.5px;min-height:44px}
+  .plan ul{list-style:none;margin:26px 0 30px;display:grid;gap:12px;font-size:14.5px}
+  .plan li{display:flex;gap:11px;color:var(--bone)}
+  .plan li::before{content:"◆";color:var(--brass);font-size:8px;line-height:2.4}
+  .plan li.dim{color:var(--slate)}
+  .plan .btn{margin-top:auto;justify-content:center}
+  .price-foot{
+    margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--slate);
+    letter-spacing:0.05em;text-align:center;
+  }
+  @media(max-width:880px){.price-grid{grid-template-columns:1fr}.plan .pdesc{min-height:0}}
+
+  /* final cta */
+  .final{
+    margin-top:110px;border-top:1px solid var(--line);
+    padding:96px 0;text-align:center;
+    background:radial-gradient(60% 120% at 50% 0%,rgba(185,145,90,0.07),transparent 70%);
+  }
+  .final h2{font-size:clamp(30px,4.4vw,52px);font-weight:700;letter-spacing:-0.02em;line-height:1.08}
+  .final p{margin-top:18px;color:var(--slate);max-width:52ch;margin-left:auto;margin-right:auto}
+  .final .cta-row{justify-content:center}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:34px 0 44px}
+  .foot-inner{
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11.5px;color:var(--slate);letter-spacing:0.08em;
+  }
+  .foot-inner .brand{letter-spacing:0.22em;font-size:12px;color:var(--bone)}
+
+  @media(prefers-reduced-motion:reduce){
+    .strip-inner{animation:none}
+    .flow{animation:none !important}
+    .btn:hover{transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Merger home">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="24" height="24" rx="6" stroke="#B9915A" stroke-width="1.6"/>
+        <path d="M13 5.8L20.2 13L13 20.2L5.8 13Z" stroke="#EDE8DC" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+      MERGER
+    </a>
+    <div class="nav-links">
+      <a href="#product">Product</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a class="nav-cta" href="#pricing">GET MERGER</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">Unified deal desk · Matrix-native · Twelve networks</p>
+    <h1 style="margin-top:22px">Every deal, every channel, <span class="accent">one desk.</span></h1>
+    <p class="sub">
+      Your counterparties live on WhatsApp, Telegram, LinkedIn, Slack, and eight other networks.
+      Your deals shouldn't. <strong>Merger pulls every conversation into a single workspace</strong> —
+      then triages, classifies, and tracks each one from first message to signed paper.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pricing">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+          <rect x="1" y="2.5" width="15" height="10" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M5 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Download for Desktop
+      </a>
+      <a class="btn btn-ghost" href="#pricing">
+        <svg width="15" height="17" viewBox="0 0 15 18" fill="none" aria-hidden="true">
+          <path d="M12.4 9.6c0-2.2 1.8-3.2 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.8-.8-3-.8C1.3 4.6 0 6 0 8.7c0 1.6.3 3.3 1 5 .6 1.4 1.9 3.1 3.2 3.1 1.1 0 1.6-.7 3-.7s1.8.7 3 .7 2.4-1.5 3-2.9c.4-.9.6-1.4.9-2.3-2.4-.9-2.7-4-2.7-4z" fill="currentColor" opacity=".9"/>
+          <path d="M10.1 2.4C10.7 1.7 11.1.7 11 0c-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.4 1 0 1.9-.5 2.5-1.3z" fill="currentColor" opacity=".9"/>
+        </svg>
+        Download for iOS
+      </a>
+    </div>
+    <p class="cta-note">macOS · Windows · iPhone — no third-party apps, no Beeper account, nothing to bridge yourself.</p>
+  </div>
+</header>
+
+<!-- ============ CONVERGENCE (signature) ============ -->
+<div class="converge">
+  <div class="wrap">
+    <div class="converge-frame">
+      <svg viewBox="0 0 1060 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: twelve messaging networks converge through Merger into one triaged deal stream">
+        <defs>
+          <style>
+            .netlab{font:11px 'JetBrains Mono',monospace;fill:#8B909B;letter-spacing:.08em}
+            .outlab{font:11px 'JetBrains Mono',monospace;fill:#EDE8DC;letter-spacing:.06em}
+            .outtag{font:9.5px 'JetBrains Mono',monospace;fill:#B9915A;letter-spacing:.12em}
+            .flow{stroke-dasharray:5 7;animation:flowdash 2.6s linear infinite}
+            @keyframes flowdash{to{stroke-dashoffset:-48}}
+          </style>
+        </defs>
+
+        <!-- left: platform nodes -->
+        <g>
+          <!-- rows: y from 28 to 312, step ~25.8 -->
+          <circle cx="118" cy="30"  r="3" fill="#25D366"/><text class="netlab" x="106" y="34" text-anchor="end">WHATSAPP</text>
+          <circle cx="118" cy="56"  r="3" fill="#2AABEE"/><text class="netlab" x="106" y="60" text-anchor="end">TELEGRAM</text>
+          <circle cx="118" cy="82"  r="3" fill="#5865F2"/><text class="netlab" x="106" y="86" text-anchor="end">DISCORD</text>
+          <circle cx="118" cy="108" r="3" fill="#ECB22E"/><text class="netlab" x="106" y="112" text-anchor="end">SLACK</text>
+          <circle cx="118" cy="134" r="3" fill="#06C755"/><text class="netlab" x="106" y="138" text-anchor="end">LINE</text>
+          <circle cx="118" cy="160" r="3" fill="#0A66C2"/><text class="netlab" x="106" y="164" text-anchor="end">LINKEDIN</text>
+          <circle cx="118" cy="186" r="3" fill="#0084FF"/><text class="netlab" x="106" y="190" text-anchor="end">MESSENGER</text>
+          <circle cx="118" cy="212" r="3" fill="#E1306C"/><text class="netlab" x="106" y="216" text-anchor="end">INSTAGRAM</text>
+          <circle cx="118" cy="238" r="3" fill="#34A853"/><text class="netlab" x="106" y="242" text-anchor="end">GOOGLE CHAT</text>
+          <circle cx="118" cy="264" r="3" fill="#1A73E8"/><text class="netlab" x="106" y="268" text-anchor="end">MESSAGES</text>
+          <circle cx="118" cy="290" r="3" fill="#EDE8DC"/><text class="netlab" x="106" y="294" text-anchor="end">X</text>
+          <circle cx="118" cy="316" r="3" fill="#3A76F0"/><text class="netlab" x="106" y="320" text-anchor="end">SIGNAL</text>
+        </g>
+
+        <!-- converging paths into diamond center (530,173) -->
+        <g stroke="rgba(237,232,220,0.22)" stroke-width="1.2" fill="none">
+          <path class="flow" d="M126 30 C 320 30, 380 150, 470 168"/>
+          <path class="flow" d="M126 56 C 310 56, 380 152, 470 169"/>
+          <path class="flow" d="M126 82 C 300 82, 380 155, 470 170"/>
+          <path class="flow" d="M126 108 C 300 108, 380 158, 470 171"/>
+          <path class="flow" d="M126 134 C 300 134, 390 162, 470 172"/>
+          <path class="flow" d="M126 160 C 300 160, 400 168, 470 173"/>
+          <path class="flow" d="M126 186 C 300 186, 400 178, 470 174"/>
+          <path class="flow" d="M126 212 C 300 212, 390 184, 470 175"/>
+          <path class="flow" d="M126 238 C 300 238, 380 188, 470 176"/>
+          <path class="flow" d="M126 264 C 300 264, 380 191, 470 177"/>
+          <path class="flow" d="M126 290 C 310 290, 380 194, 470 178"/>
+          <path class="flow" d="M126 316 C 320 316, 380 196, 470 179"/>
+        </g>
+
+        <!-- the diamond -->
+        <g>
+          <rect x="480" y="123" width="100" height="100" rx="18" fill="#13151A" stroke="#B9915A" stroke-width="1.8"/>
+          <path d="M530 143 L560 173 L530 203 L500 173 Z" fill="none" stroke="#EDE8DC" stroke-width="1.8" stroke-linejoin="round"/>
+          <text class="outtag" x="530" y="248" text-anchor="middle">MERGER · AI TRIAGE</text>
+        </g>
+
+        <!-- single outgoing stream -->
+        <g stroke="#B9915A" stroke-width="1.6" fill="none">
+          <path class="flow" d="M580 173 L660 173"/>
+        </g>
+
+        <!-- triaged output rows -->
+        <g>
+          <rect x="668" y="88"  width="330" height="38" rx="8" fill="#13151A" stroke="rgba(237,232,220,0.12)"/>
+          <circle cx="688" cy="107" r="4" fill="#7FA8D9"/>
+          <text class="outlab" x="702" y="111">SPACEX SECONDARY · $2.4M BLOCK</text>
+          <text class="outtag" x="986" y="111" text-anchor="end">HOT</text>
+
+          <rect x="668" y="134" width="330" height="38" rx="8" fill="#13151A" stroke="rgba(237,232,220,0.12)"/>
+          <circle cx="688" cy="153" r="4" fill="#8FBF8F"/>
+          <text class="outlab" x="702" y="157">MULTIFAMILY · 48-UNIT · PHX</text>
+          <text class="outtag" x="986" y="157" text-anchor="end">DILIGENCE</text>
+
+          <rect x="668" y="180" width="330" height="38" rx="8" fill="#13151A" stroke="rgba(237,232,220,0.12)"/>
+          <circle cx="688" cy="199" r="4" fill="#E8B36A"/>
+          <text class="outlab" x="702" y="203">SOLAR PPA · 120MW OFFTAKE</text>
+          <text class="outtag" x="986" y="203" text-anchor="end">TERMS OUT</text>
+
+          <rect x="668" y="226" width="330" height="38" rx="8" fill="#13151A" stroke="rgba(237,232,220,0.12)"/>
+          <circle cx="688" cy="245" r="4" fill="#7FD1C7"/>
+          <text class="outlab" x="702" y="249">HVAC ROLL-UP · 3RD ADD-ON</text>
+          <text class="outtag" x="986" y="249" text-anchor="end">SIGNING</text>
+        </g>
+
+        <!-- connecting stubs from stream to rows -->
+        <g stroke="rgba(185,145,90,0.5)" stroke-width="1.2" fill="none">
+          <path d="M660 173 C 664 173, 664 107, 668 107"/>
+          <path d="M660 173 C 664 173, 664 153, 668 153"/>
+          <path d="M660 173 C 664 173, 664 199, 668 199"/>
+          <path d="M660 173 C 664 173, 664 245, 668 245"/>
+        </g>
+      </svg>
+      <div class="caption">
+        <span>12 NETWORKS IN</span>
+        <span>CLASSIFIED BY VERTICAL · SCORED BY INTENT</span>
+        <span>ONE PIPELINE OUT</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PLATFORM STRIP ============ -->
+<div class="strip" aria-hidden="true">
+  <div class="strip-inner">
+    <span>WHATSAPP</span><span>TELEGRAM</span><span>DISCORD</span><span>SLACK</span><span>LINE</span><span>LINKEDIN</span><span>MESSENGER</span><span>INSTAGRAM</span><span>GOOGLE CHAT</span><span>GOOGLE MESSAGES</span><span>X</span><span>SIGNAL</span>
+    <span>WHATSAPP</span><span>TELEGRAM</span><span>DISCORD</span><span>SLACK</span><span>LINE</span><span>LINKEDIN</span><span>MESSENGER</span><span>INSTAGRAM</span><span>GOOGLE CHAT</span><span>GOOGLE MESSAGES</span><span>X</span><span>SIGNAL</span>
+  </div>
+</div>
+
+<!-- ============ WHAT IT IS ============ -->
+<section class="block" id="product">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">What Merger is</p>
+      <h2>A deal desk built where your deals actually happen: in chat.</h2>
+    </div>
+    <div class="what-grid" style="margin-top:44px">
+      <div class="what-copy">
+        <p>
+          Deals don't come in through a CRM. They come in as a WhatsApp forward at 6am, a Telegram
+          group ping, a LinkedIn DM from someone you met once. By the time you've copied it
+          somewhere trackable, three more have landed on three other apps.
+        </p>
+        <p>
+          Merger runs on <strong>your own Matrix-based infrastructure</strong> — a private,
+          self-hosted messaging core that bridges all twelve networks natively. You keep your
+          existing numbers and accounts. Counterparties never know anything changed.
+        </p>
+        <p>
+          On top of that core, Merger layers what a dealmaker actually needs:
+          <strong>AI triage</strong> that reads inbound and classifies it by vertical, size, and
+          urgency; a <strong>Rolodex</strong> that builds itself from your conversations;
+          <strong>e-signature tracking</strong> for DocuSign and Dotloop envelopes; and
+          <strong>Merger Match</strong> — a counterparty discovery network that turns a mutual
+          match into a live deal room in one tap.
+        </p>
+      </div>
+      <div class="desk-card" aria-label="Example of the Merger deal column">
+        <div class="bar"><span>LIVE DEAL COLUMN</span><span>TODAY</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-secondaries)"></span><span class="net">TELEGRAM</span><span class="name">Anduril secondary — 40k shares</span><span class="stat">NEW</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-realestate)"></span><span class="net">WHATSAPP</span><span class="name">Industrial NNN, Salt Lake corridor</span><span class="stat">LOI</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-dtc)"></span><span class="net">INSTAGRAM</span><span class="name">DTC skincare brand — 7-fig exit</span><span class="stat">CIM</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-structured)"></span><span class="net">LINKEDIN</span><span class="name">Litigation finance note, 14% cpn</span><span class="stat">REVIEW</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-energy)"></span><span class="net">SIGNAL</span><span class="name">Battery storage JV — TX grid</span><span class="stat">NDA</span></div>
+        <div class="deal-row"><span class="dot" style="background:var(--v-rollup)"></span><span class="net">SLACK</span><span class="name">MSP roll-up, 2nd platform co</span><span class="stat">SIGNING</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="block" id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">The stack</p>
+      <h2>Six things your group chats were never going to do for you.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <p class="tag">Unified inbox</p>
+        <h3>Twelve networks, one thread view</h3>
+        <p>Every conversation from every bridged platform in a single channel rail — searchable, filterable, and reply-from-anywhere. Your WhatsApp number stays your WhatsApp number.</p>
+      </div>
+      <div class="feat">
+        <p class="tag">AI triage</p>
+        <h3>Inbound reads itself</h3>
+        <p>Every new message is scored and classified — vertical, deal size, counterparty intent, urgency. Real deal flow rises to the top; noise settles to the bottom. You skim a pipeline, not an inbox.</p>
+      </div>
+      <div class="feat">
+        <p class="tag">Merger Match</p>
+        <h3>Counterparty discovery</h3>
+        <p>A swipeable network of verified buyers, sellers, and brokers across six verticals. A mutual match opens a live deal room instantly — contact created, deal card generated, provenance logged.</p>
+      </div>
+      <div class="feat">
+        <p class="tag">Rolodex</p>
+        <h3>Contacts that build themselves</h3>
+        <p>Every counterparty across every network resolves to one profile: platforms, deal history, verticals, notes. No data entry — your Rolodex assembles itself from the conversations you're already having.</p>
+      </div>
+      <div class="feat">
+        <p class="tag">Signing</p>
+        <h3>Paper tracked next to the talk</h3>
+        <p>DocuSign and Dotloop envelopes surface inside the deal room they belong to. See who's signed, who's stalling, and nudge them on the channel they actually answer.</p>
+      </div>
+      <div class="feat">
+        <p class="tag">Your infrastructure</p>
+        <h3>Private by architecture</h3>
+        <p>Merger runs on a self-hosted Matrix core — not a third-party aggregator holding your messages. Your deal flow lives on infrastructure that answers to you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="block" id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Pricing</p>
+      <h2>Less than one blown deal a year. By a lot.</h2>
+      <p>Billed monthly. Cancel anytime. Every plan includes all twelve network bridges and unlimited message history.</p>
+    </div>
+    <div class="price-grid">
+
+      <div class="plan">
+        <p class="pname">Operator</p>
+        <div class="amount"><span class="num">$79</span><span class="per">/ MO</span></div>
+        <p class="pdesc">For the solo dealmaker drowning in group chats.</p>
+        <ul>
+          <li>All 12 network bridges</li>
+          <li>Unified inbox + deal column</li>
+          <li>AI triage — 150 deals / mo</li>
+          <li>Self-building Rolodex</li>
+          <li>Desktop + iOS apps</li>
+          <li class="dim">Merger Match — browse only</li>
+        </ul>
+        <a class="btn btn-ghost" href="#top">Start with Operator</a>
+      </div>
+
+      <div class="plan featured">
+        <span class="flag">Most desks pick this</span>
+        <p class="pname">Desk</p>
+        <div class="amount"><span class="num">$159</span><span class="per">/ MO PER SEAT</span></div>
+        <p class="pdesc">The full desk: match, sign, and close — not just read.</p>
+        <ul>
+          <li>Everything in Operator</li>
+          <li>Unlimited AI triage + drafted openers</li>
+          <li>Merger Match — full swipe, match &amp; deal rooms</li>
+          <li>DocuSign &amp; Dotloop envelope tracking</li>
+          <li>Shared deal rooms across your team</li>
+          <li>Priority bridge support</li>
+        </ul>
+        <a class="btn btn-primary" href="#top">Start with Desk</a>
+      </div>
+
+      <div class="plan">
+        <p class="pname">Firm</p>
+        <div class="amount"><span class="num">Custom</span></div>
+        <p class="pdesc">For funds and brokerages that need the keys.</p>
+        <ul>
+          <li>Everything in Desk</li>
+          <li>Dedicated private homeserver</li>
+          <li>SSO &amp; admin controls</li>
+          <li>Compliance export &amp; retention policies</li>
+          <li>White-glove onboarding &amp; migration</li>
+          <li>Volume seat pricing</li>
+        </ul>
+        <a class="btn btn-ghost" href="mailto:sales@usemerger.com">Talk to us</a>
+      </div>
+
+    </div>
+    <p class="price-foot">14-DAY FREE TRIAL ON OPERATOR AND DESK · NO CARD REQUIRED TO START</p>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final">
+  <div class="wrap">
+    <p class="eyebrow">Get Merger</p>
+    <h2 style="margin-top:16px">Stop scrolling twelve apps<br/>for one pipeline.</h2>
+    <p>Download Merger, connect your networks in minutes, and watch this week's inbound sort itself into a deal desk.</p>
+    <div class="cta-row" style="margin-top:36px">
+      <a class="btn btn-primary" href="#top">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
+          <rect x="1" y="2.5" width="15" height="10" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M5 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Download for Desktop
+      </a>
+      <a class="btn btn-ghost" href="#top">
+        <svg width="15" height="17" viewBox="0 0 15 18" fill="none" aria-hidden="true">
+          <path d="M12.4 9.6c0-2.2 1.8-3.2 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.8-.8-3-.8C1.3 4.6 0 6 0 8.7c0 1.6.3 3.3 1 5 .6 1.4 1.9 3.1 3.2 3.1 1.1 0 1.6-.7 3-.7s1.8.7 3 .7 2.4-1.5 3-2.9c.4-.9.6-1.4.9-2.3-2.4-.9-2.7-4-2.7-4z" fill="currentColor" opacity=".9"/>
+          <path d="M10.1 2.4C10.7 1.7 11.1.7 11 0c-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.4 1 0 1.9-.5 2.5-1.3z" fill="currentColor" opacity=".9"/>
+        </svg>
+        Download for iOS
+      </a>
+    </div>
+    <p class="cta-note" style="margin-top:20px">macOS 13+ · Windows 11 · iOS 17+</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-inner">
+    <span class="brand">MERGER</span>
+    <span>BUILT ON MATRIX · YOUR NETWORKS, YOUR INFRASTRUCTURE</span>
+    <span>© 2026 MERGER</span>
+  </div>
+</footer>
+
+</body>
+</html>
