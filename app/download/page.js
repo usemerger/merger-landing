@@ -16,7 +16,10 @@ import { ApiError, download, errorMessage, meOrNull, statusLabel } from '../lib/
 function normalizeInstallers(payload) {
   if (!payload || typeof payload !== 'object') return { macos: null, windows: null };
 
-  const src = payload.downloads || payload.installers || payload.urls || payload;
+  // The live API answers entitled requests with {builds: {...}, version: ...},
+  // where builds is empty until packaging lands. The other keys are accepted
+  // defensively so a backend rename does not silently blank the page.
+  const src = payload.builds || payload.downloads || payload.installers || payload.urls || payload;
   const pick = (...keys) => {
     for (const k of keys) {
       const v = src[k];
