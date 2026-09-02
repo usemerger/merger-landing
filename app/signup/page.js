@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
 import PasswordField from '../components/PasswordField';
 import {
@@ -12,15 +12,18 @@ import {
   claimHandle,
   errorMessage,
   handleAvailable,
+  meOrNull,
   signup,
 } from '../lib/api';
 
 const HANDLE_RE = /^[a-z0-9_]{3,30}$/;
 
 function SignupForm() {
+  const router = useRouter();
   const params = useSearchParams();
   const planParam = params.get('plan');
 
+  const [sessionChecked, setSessionChecked] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [handle, setHandle] = useState('');
@@ -35,6 +38,33 @@ function SignupForm() {
   // Signup is three backend calls. If a later one fails we must not re-run the
   // earlier ones on retry — the account (and handle) already exist.
   const progress = useRef({ accountCreated: false, handleClaimed: false });
+
+  // This form creates a NEW account, so it is only for logged-out visitors.
+  // Someone who already has an account — typically after bouncing off Checkout —
+  // must resume from the dashboard, where paying needs only a plan. Sending them
+  // here would demand a handle again and reject their own as taken, which is the
+  // dead end this fix removes.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      // Once this form has created the account itself, stay put so a failure at
+      // the handle or checkout step can still be retried in place.
+      if (progress.current.accountCreated) {
+        if (!cancelled) setSessionChecked(true);
+        return;
+      }
+      const user = await meOrNull().catch(() => null);
+      if (cancelled) return;
+      if (user) {
+        router.replace('/dashboard');
+        return;
+      }
+      setSessionChecked(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
 
   /* ---- live handle availability (§3), debounced ---- */
   useEffect(() => {
@@ -129,6 +159,18 @@ function SignupForm() {
   );
 
   const accountExists = progress.current.accountCreated;
+
+  // Hold the form back until we know there is no session, so a logged-in user is
+  // never shown the handle field even for a frame before the redirect lands.
+  if (!sessionChecked) {
+    return (
+      <main className="auth-main">
+        <div className="auth-card">
+          <p className="spinner-note">Loading…</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="auth-main">

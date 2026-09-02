@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../components/Shell';
+import PlanStep, { useStartCheckout } from '../components/PlanStep';
 import { ApiError, download, errorMessage, meOrNull, statusLabel } from '../lib/api';
 
 /**
@@ -68,6 +69,9 @@ function WindowsIcon() {
 export default function DownloadPage() {
   const router = useRouter();
   const [state, setState] = useState({ phase: 'loading' });
+  // Lets an existing un-entitled account pay from this page instead of bouncing
+  // to signup, where its own handle would come back as taken.
+  const checkoutCtl = useStartCheckout();
 
   const load = useCallback(async () => {
     try {
@@ -149,29 +153,42 @@ export default function DownloadPage() {
             locked.
           </p>
 
-          <div className="panel mt-24">
-            <p className="muted">
-              {canceled
-                ? 'Your subscription was canceled. Resubscribe from your dashboard and downloads come straight back.'
-                : pastDue
-                  ? 'Your last payment did not go through. Update your card and downloads unlock again.'
-                  : 'Start your 14-day trial — a card is required, and you can cancel any time before it ends.'}
-            </p>
-            <div className="dl-row">
-              {canceled || pastDue ? (
+          {pastDue ? (
+            <div className="panel mt-24">
+              <p className="muted">
+                Your last payment did not go through. Update your card and downloads unlock again.
+              </p>
+              <div className="dl-row">
                 <Link className="btn btn-primary btn-sm" href="/dashboard">
-                  {canceled ? 'Resubscribe' : 'Update your card'}
+                  Update your card
                 </Link>
-              ) : (
-                <Link className="btn btn-primary btn-sm" href="/signup">
-                  Start your trial
+                <Link className="btn btn-ghost btn-sm" href="/dashboard">
+                  Back to dashboard
                 </Link>
-              )}
-              <Link className="btn btn-ghost btn-sm" href="/dashboard">
-                Back to dashboard
-              </Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            // This account already exists, so paying resumes right here — picking a
+            // plan is all that is left. It must never route back to the signup form.
+            <>
+              <div className="panel mt-24">
+                <PlanStep
+                  ctl={checkoutCtl}
+                  heading={canceled ? 'Resubscribe' : 'Start your 14-day trial'}
+                  note={
+                    canceled
+                      ? 'Choose a plan to start a new subscription and get your downloads back.'
+                      : 'Your account is already set up — just choose a plan and downloads unlock.'
+                  }
+                />
+              </div>
+              <div className="dl-row">
+                <Link className="btn btn-ghost btn-sm" href="/dashboard">
+                  Back to dashboard
+                </Link>
+              </div>
+            </>
+          )}
         </main>
       </Shell>
     );

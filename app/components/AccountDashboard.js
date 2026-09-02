@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from './Shell';
+import PlanStep, { useStartCheckout } from './PlanStep';
 import {
   ENTITLED_STATUSES,
   PLANS,
@@ -40,6 +41,8 @@ export default function AccountDashboard() {
   const [error, setError] = useState('');
   const [portalBusy, setPortalBusy] = useState(false);
   const [settling, setSettling] = useState(false);
+  // Shared plan + checkout control for every "start your trial" affordance here.
+  const checkoutCtl = useStartCheckout();
   const polling = useRef(false);
 
   const load = useCallback(async () => {
@@ -146,6 +149,7 @@ export default function AccountDashboard() {
       <main className="dash-main">
         <p className="eyebrow">Account</p>
         <h1 className="dash-title">{user ? user.email : 'Your account'}</h1>
+        {user && user.handle && <p className="dash-handle">@{user.handle}</p>}
         <p className="dash-sub">
           {grandfathered
             ? 'Founding account'
@@ -198,7 +202,15 @@ export default function AccountDashboard() {
         {!grandfathered && s.entitlementStatus === 'none' && !settling && (
           <div className="alert alert-warn">
             <strong>You have not started a subscription yet.</strong> Merger will not run until you
-            do. <Link href="/signup">Start your trial</Link>
+            do.{' '}
+            <button
+              type="button"
+              className="linklike"
+              onClick={() => checkoutCtl.start()}
+              disabled={checkoutCtl.busy}
+            >
+              {checkoutCtl.busy ? 'Opening checkout…' : 'Start your trial'}
+            </button>
           </div>
         )}
 
@@ -262,11 +274,6 @@ export default function AccountDashboard() {
               >
                 {portalBusy ? 'Opening…' : 'Manage billing'}
               </button>
-              {s.entitlementStatus === 'none' && (
-                <Link className="btn btn-primary btn-sm" href="/signup">
-                  Start your trial
-                </Link>
-              )}
             </div>
           )}
           {!grandfathered && (
@@ -275,6 +282,24 @@ export default function AccountDashboard() {
             </p>
           )}
         </div>
+
+        {/* An account that exists but never paid resumes here: pick a plan and go
+            straight to Checkout. No email, password or handle is asked for again. */}
+        {!grandfathered && !entitled && (
+          <div className="panel">
+            <PlanStep
+              ctl={checkoutCtl}
+              heading={
+                s.entitlementStatus === 'canceled' ? 'Resubscribe' : 'Start your 14-day trial'
+              }
+              note={
+                s.entitlementStatus === 'canceled'
+                  ? 'Pick a plan to start a new subscription on this account.'
+                  : 'Your account and handle are already set up — just choose a plan.'
+              }
+            />
+          </div>
+        )}
 
         <div className="panel">
           <div className="panel-head">
@@ -286,9 +311,21 @@ export default function AccountDashboard() {
               : 'Downloads unlock once your trial starts.'}
           </p>
           <div className="dl-row">
-            <Link className="btn btn-primary btn-sm" href="/download">
-              {entitled ? 'Go to downloads' : 'Start your trial to download'}
-            </Link>
+            {entitled ? (
+              <Link className="btn btn-primary btn-sm" href="/download">
+                Go to downloads
+              </Link>
+            ) : (
+              // Goes to Checkout for this account, never back to the signup form.
+              <button
+                className="btn btn-primary btn-sm"
+                type="button"
+                onClick={() => checkoutCtl.start()}
+                disabled={checkoutCtl.busy}
+              >
+                {checkoutCtl.busy ? 'Opening checkout…' : 'Start your trial to download'}
+              </button>
+            )}
           </div>
         </div>
       </main>
