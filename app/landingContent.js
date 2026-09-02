@@ -1,242 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Merger — Every deal, every channel, one desk</title>
-<meta name="description" content="Merger unifies WhatsApp, Telegram, Slack, LinkedIn and nine more networks into a single Matrix-native deal desk with AI triage, counterparty matching, and e-sign tracking." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<style>
-  :root{
-    --ink:#0D0E11;
-    --ink-2:#13151A;
-    --ink-3:#191C22;
-    --brass:#B9915A;
-    --brass-bright:#D8B47A;
-    --bone:#EDE8DC;
-    --slate:#8B909B;
-    --line:rgba(237,232,220,0.09);
-    --line-strong:rgba(237,232,220,0.16);
-    --display:'Space Grotesk',sans-serif;
-    --mono:'JetBrains Mono',monospace;
-    /* vertical accents */
-    --v-secondaries:#7FA8D9;
-    --v-realestate:#8FBF8F;
-    --v-dtc:#D98FB0;
-    --v-structured:#C9A0E8;
-    --v-energy:#E8B36A;
-    --v-rollup:#7FD1C7;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--ink);
-    color:var(--bone);
-    font-family:var(--display);
-    font-size:17px;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
-  ::selection{background:var(--brass);color:var(--ink)}
-  a{color:inherit;text-decoration:none}
-  a:focus-visible,button:focus-visible{outline:2px solid var(--brass-bright);outline-offset:3px;border-radius:2px}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
-  .eyebrow{
-    font-family:var(--mono);
-    font-size:11.5px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color:var(--brass);
-  }
-
-  /* ---------- nav ---------- */
-  .nav{
-    position:sticky;top:0;z-index:50;
-    background:rgba(13,14,17,0.85);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:0.22em;font-size:14px}
-  .brand svg{display:block}
-  .nav-links{display:flex;align-items:center;gap:30px;font-size:14px;color:var(--slate)}
-  .nav-links a:hover{color:var(--bone)}
-  .nav-cta{
-    font-family:var(--mono);font-size:12px;letter-spacing:0.08em;
-    color:var(--ink);background:var(--brass);
-    padding:9px 16px;border-radius:6px;font-weight:500;
-    transition:background .18s ease;
-  }
-  .nav-cta:hover{background:var(--brass-bright)}
-  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
-
-  /* ---------- hero ---------- */
-  .hero{padding:96px 0 40px;position:relative;overflow:hidden}
-  .hero-grid{display:grid;grid-template-columns:1fr;gap:56px}
-  .hero h1{
-    font-size:clamp(40px,6.2vw,72px);
-    font-weight:700;line-height:1.03;letter-spacing:-0.02em;
-    max-width:14ch;
-  }
-  .hero h1 .accent{color:var(--brass)}
-  .hero .sub{
-    margin-top:26px;max-width:56ch;color:var(--slate);font-size:19px;line-height:1.65;
-  }
-  .hero .sub strong{color:var(--bone);font-weight:500}
-  .cta-row{display:flex;gap:14px;margin-top:38px;flex-wrap:wrap}
-  .btn{
-    display:inline-flex;align-items:center;gap:10px;
-    padding:15px 24px;border-radius:8px;font-weight:600;font-size:15.5px;
-    transition:transform .15s ease, background .18s ease, border-color .18s ease;
-    border:1px solid transparent;cursor:pointer;font-family:var(--display);
-  }
-  .btn:hover{transform:translateY(-1px)}
-  .btn-primary{background:var(--brass);color:var(--ink)}
-  .btn-primary:hover{background:var(--brass-bright)}
-  .btn-ghost{background:transparent;color:var(--bone);border-color:var(--line-strong)}
-  .btn-ghost:hover{border-color:var(--brass)}
-  .btn svg{flex:none}
-  .cta-note{
-    margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--slate);letter-spacing:0.05em;
-  }
-
-  /* ---------- convergence (signature) ---------- */
-  .converge{padding:30px 0 20px}
-  .converge-frame{
-    border:1px solid var(--line);border-radius:14px;
-    background:linear-gradient(180deg,var(--ink-2),var(--ink));
-    padding:12px 8px 4px;
-  }
-  .converge svg{width:100%;height:auto;display:block}
-  .converge .caption{
-    display:flex;justify-content:space-between;gap:16px;
-    font-family:var(--mono);font-size:11px;color:var(--slate);
-    letter-spacing:0.12em;text-transform:uppercase;
-    padding:14px 18px 12px;border-top:1px solid var(--line);margin-top:8px;
-  }
-  @media(max-width:640px){.converge .caption span:nth-child(2){display:none}}
-
-  /* ---------- platform strip ---------- */
-  .strip{
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-    margin-top:64px;overflow:hidden;
-  }
-  .strip-inner{
-    display:flex;gap:44px;padding:18px 0;white-space:nowrap;
-    font-family:var(--mono);font-size:12.5px;letter-spacing:0.14em;color:var(--slate);
-    animation:ticker 46s linear infinite;width:max-content;
-  }
-  .strip-inner span::before{content:"◆";color:var(--brass);margin-right:12px;font-size:8px;vertical-align:2px}
-  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-  /* ---------- sections ---------- */
-  section.block{padding:104px 0 0}
-  .sec-head{max-width:640px}
-  .sec-head h2{
-    margin-top:14px;font-size:clamp(28px,3.6vw,42px);
-    font-weight:600;line-height:1.12;letter-spacing:-0.015em;
-  }
-  .sec-head p{margin-top:18px;color:var(--slate);font-size:17.5px}
-
-  /* what it is */
-  .what-grid{
-    display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:start;margin-top:8px;
-  }
-  .what-copy p{color:var(--slate);margin-top:18px;font-size:17.5px}
-  .what-copy p strong{color:var(--bone);font-weight:500}
-  .desk-card{
-    border:1px solid var(--line);border-radius:14px;background:var(--ink-2);
-    overflow:hidden;font-family:var(--mono);font-size:12px;
-  }
-  .desk-card .bar{
-    display:flex;justify-content:space-between;padding:12px 16px;
-    border-bottom:1px solid var(--line);color:var(--slate);letter-spacing:0.1em;font-size:10.5px;
-  }
-  .deal-row{
-    display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);
-  }
-  .deal-row:last-child{border-bottom:none}
-  .deal-row .dot{width:7px;height:7px;border-radius:50%;flex:none}
-  .deal-row .net{color:var(--slate);width:78px;flex:none;font-size:10.5px;letter-spacing:0.06em}
-  .deal-row .name{color:var(--bone);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .deal-row .stat{font-size:10px;letter-spacing:0.1em;padding:3px 8px;border-radius:4px;border:1px solid var(--line-strong);color:var(--brass);flex:none}
-  @media(max-width:880px){.what-grid{grid-template-columns:1fr}}
-
-  /* features */
-  .feat-grid{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
-    background:var(--line);border:1px solid var(--line);border-radius:14px;
-    overflow:hidden;margin-top:52px;
-  }
-  .feat{
-    background:var(--ink-2);padding:34px 30px 38px;
-    transition:background .2s ease;
-  }
-  .feat:hover{background:var(--ink-3)}
-  .feat .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:0.16em;color:var(--brass);text-transform:uppercase}
-  .feat h3{margin-top:14px;font-size:19px;font-weight:600}
-  .feat p{margin-top:10px;color:var(--slate);font-size:15px;line-height:1.62}
-  @media(max-width:880px){.feat-grid{grid-template-columns:1fr}}
-
-  /* pricing */
-  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:54px}
-  .plan{
-    border:1px solid var(--line);border-radius:14px;background:var(--ink-2);
-    padding:34px 30px 36px;display:flex;flex-direction:column;position:relative;
-  }
-  .plan.featured{border-color:var(--brass);background:linear-gradient(180deg,#1A1712,var(--ink-2) 55%)}
-  .plan .flag{
-    position:absolute;top:-11px;left:30px;
-    font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
-    background:var(--brass);color:var(--ink);padding:4px 10px;border-radius:4px;font-weight:500;
-  }
-  .plan .pname{font-family:var(--mono);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate)}
-  .plan.featured .pname{color:var(--brass)}
-  .plan .amount{margin-top:18px;display:flex;align-items:baseline;gap:8px}
-  .plan .amount .num{font-size:44px;font-weight:700;letter-spacing:-0.02em}
-  .plan .amount .per{font-family:var(--mono);font-size:12px;color:var(--slate)}
-  .plan .pdesc{margin-top:8px;color:var(--slate);font-size:14.5px;min-height:44px}
-  .plan ul{list-style:none;margin:26px 0 30px;display:grid;gap:12px;font-size:14.5px}
-  .plan li{display:flex;gap:11px;color:var(--bone)}
-  .plan li::before{content:"◆";color:var(--brass);font-size:8px;line-height:2.4}
-  .plan li.dim{color:var(--slate)}
-  .plan .btn{margin-top:auto;justify-content:center}
-  .price-foot{
-    margin-top:26px;font-family:var(--mono);font-size:12px;color:var(--slate);
-    letter-spacing:0.05em;text-align:center;
-  }
-  @media(max-width:880px){.price-grid{grid-template-columns:1fr}.plan .pdesc{min-height:0}}
-
-  /* final cta */
-  .final{
-    margin-top:110px;border-top:1px solid var(--line);
-    padding:96px 0;text-align:center;
-    background:radial-gradient(60% 120% at 50% 0%,rgba(185,145,90,0.07),transparent 70%);
-  }
-  .final h2{font-size:clamp(30px,4.4vw,52px);font-weight:700;letter-spacing:-0.02em;line-height:1.08}
-  .final p{margin-top:18px;color:var(--slate);max-width:52ch;margin-left:auto;margin-right:auto}
-  .final .cta-row{justify-content:center}
-
-  /* footer */
-  footer{border-top:1px solid var(--line);padding:34px 0 44px}
-  .foot-inner{
-    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
-    font-family:var(--mono);font-size:11.5px;color:var(--slate);letter-spacing:0.08em;
-  }
-  .foot-inner .brand{letter-spacing:0.22em;font-size:12px;color:var(--bone)}
-
-  @media(prefers-reduced-motion:reduce){
-    .strip-inner{animation:none}
-    .flow{animation:none !important}
-    .btn:hover{transform:none}
-    html{scroll-behavior:auto}
-  }
-</style>
-</head>
-<body>
-
+// Landing markup migrated verbatim from the original static index.html so the
+// ink-and-brass identity survives the move to Next.js. This is static,
+// author-controlled content — no user input is ever interpolated into it.
+const landingHtml = `
 <!-- ============ NAV ============ -->
 <nav class="nav">
   <div class="wrap nav-inner">
@@ -251,7 +16,8 @@
       <a href="#product">Product</a>
       <a href="#features">Features</a>
       <a href="#pricing">Pricing</a>
-      <a class="nav-cta" href="#pricing">GET MERGER</a>
+      <a href="/login">Sign in</a>
+      <a class="nav-cta" href="/signup">GET MERGER</a>
     </div>
   </div>
 </nav>
@@ -267,7 +33,7 @@
       then triages, classifies, and tracks each one from first message to signed paper.
     </p>
     <div class="cta-row">
-      <a class="btn btn-primary" href="#pricing">
+      <a class="btn btn-primary" href="/download">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
           <rect x="1" y="2.5" width="15" height="10" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
           <path d="M5 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -499,7 +265,7 @@
           <li>Desktop + iOS apps</li>
           <li class="dim">Merger Match — browse only</li>
         </ul>
-        <a class="btn btn-ghost" href="#top">Start with Operator</a>
+        <a class="btn btn-ghost" href="/signup?plan=operator">Start with Operator</a>
       </div>
 
       <div class="plan featured">
@@ -515,7 +281,7 @@
           <li>Shared deal rooms across your team</li>
           <li>Priority bridge support</li>
         </ul>
-        <a class="btn btn-primary" href="#top">Start with Desk</a>
+        <a class="btn btn-primary" href="/signup?plan=desk">Start with Desk</a>
       </div>
 
       <div class="plan">
@@ -534,7 +300,7 @@
       </div>
 
     </div>
-    <p class="price-foot">14-DAY FREE TRIAL ON OPERATOR AND DESK · NO CARD REQUIRED TO START</p>
+    <p class="price-foot">14-DAY FREE TRIAL ON OPERATOR AND DESK · CARD REQUIRED TO START</p>
   </div>
 </section>
 
@@ -545,14 +311,14 @@
     <h2 style="margin-top:16px">Stop scrolling twelve apps<br/>for one pipeline.</h2>
     <p>Download Merger, connect your networks in minutes, and watch this week's inbound sort itself into a deal desk.</p>
     <div class="cta-row" style="margin-top:36px">
-      <a class="btn btn-primary" href="#top">
+      <a class="btn btn-primary" href="/download">
         <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden="true">
           <rect x="1" y="2.5" width="15" height="10" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
           <path d="M5 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         Download for Desktop
       </a>
-      <a class="btn btn-ghost" href="#top">
+      <a class="btn btn-ghost" href="#pricing">
         <svg width="15" height="17" viewBox="0 0 15 18" fill="none" aria-hidden="true">
           <path d="M12.4 9.6c0-2.2 1.8-3.2 1.9-3.3-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.8-.8-3-.8C1.3 4.6 0 6 0 8.7c0 1.6.3 3.3 1 5 .6 1.4 1.9 3.1 3.2 3.1 1.1 0 1.6-.7 3-.7s1.8.7 3 .7 2.4-1.5 3-2.9c.4-.9.6-1.4.9-2.3-2.4-.9-2.7-4-2.7-4z" fill="currentColor" opacity=".9"/>
           <path d="M10.1 2.4C10.7 1.7 11.1.7 11 0c-.9 0-1.9.6-2.5 1.3-.6.6-1 1.6-.9 2.4 1 0 1.9-.5 2.5-1.3z" fill="currentColor" opacity=".9"/>
@@ -573,5 +339,6 @@
   </div>
 </footer>
 
-</body>
-</html>
+`;
+
+export default landingHtml;
