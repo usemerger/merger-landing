@@ -70,6 +70,18 @@ export const login = (email, password) =>
 
 export const logout = () => request('/api/auth/logout', { method: 'POST' });
 
+/**
+ * Request a reset email. The backend answers {ok:true} whether or not the address
+ * is registered, so callers must show the same neutral confirmation either way and
+ * never branch on the result — doing so would leak which emails have accounts.
+ */
+export const forgotPassword = (email) =>
+  request('/api/auth/password/forgot', { method: 'POST', body: { email } });
+
+/** Complete a reset with the single-use token from the emailed link. */
+export const resetPassword = (token, password) =>
+  request('/api/auth/password/reset', { method: 'POST', body: { token, password } });
+
 export const me = () => request('/api/auth/me');
 
 /** Resolves to the current user, or null when there is no valid session. */
@@ -158,6 +170,14 @@ export function errorMessage(err) {
       return 'That handle is already taken. Pick another.';
     case 'unknown_plan':
       return 'That plan is not available. Choose Operator or Desk.';
+    case 'invalid_token':
+      // Reset links are single-use and short-lived, so a rejected token is far
+      // more often expired or already spent than genuinely malformed.
+      return 'This link has expired or has already been used.';
+    case 'weak_password':
+      return 'That password is too short. Use at least 8 characters.';
+    case 'rate_limited':
+      return 'Too many attempts. Wait a minute and try again.';
     case 'network_error':
       return 'Could not reach the server. Check your connection and try again.';
     default:

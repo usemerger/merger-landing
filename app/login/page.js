@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import PasswordField from '../components/PasswordField';
 import { errorMessage, login } from '../lib/api';
 
 function LoginForm() {
@@ -54,18 +55,14 @@ function LoginForm() {
             />
           </div>
 
-          <div className="field">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              placeholder="Your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          <PasswordField
+            id="password"
+            label="Password"
+            autoComplete="current-password"
+            placeholder="Your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
           {error && <div className="alert alert-error">{error}</div>}
 

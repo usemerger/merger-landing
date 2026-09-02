@@ -4,6 +4,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import PasswordField from '../components/PasswordField';
 import {
   ApiError,
   PLANS,
@@ -153,21 +154,16 @@ function SignupForm() {
             />
           </div>
 
-          <div className="field">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="new-password"
-              placeholder="At least 8 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <p className="field-hint">
-              {password && password.length < 8 ? 'Use at least 8 characters.' : ''}
-            </p>
-          </div>
+          <PasswordField
+            id="password"
+            label="Password"
+            autoComplete="new-password"
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            hint={password && password.length < 8 ? 'Use at least 8 characters.' : ''}
+            hintTone={password && password.length < 8 ? 'bad' : undefined}
+          />
 
           <div className="field">
             <label htmlFor="handle">Your handle</label>

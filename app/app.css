@@ -382,3 +382,54 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+/* ---------- password field with show/hide toggle ---------- */
+.pw-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--ink-3);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  transition: border-color 0.18s ease;
+}
+.pw-wrap:focus-within {
+  border-color: var(--brass);
+}
+.pw-wrap input {
+  flex: 1;
+  min-width: 0;
+  border: 0 !important;
+  background: transparent !important;
+}
+.pw-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 14px 10px 8px;
+  transition: color 0.18s ease;
+}
+.pw-toggle:hover {
+  color: var(--bone);
+}
+.pw-toggle[aria-pressed='true'] {
+  color: var(--brass);
+}
+.pw-toggle:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@media (max-width: 420px) {
+  .pw-toggle span {
+    display: none;
+  }
+}
