@@ -180,7 +180,19 @@ export function errorMessage(err) {
       return 'Too many attempts. Wait a minute and try again.';
     case 'network_error':
       return 'Could not reach the server. Check your connection and try again.';
-    default:
-      return (err && err.message) || 'Something went wrong. Please try again.';
+    default: {
+      // A backend blip (a 502 from the gateway, say) has no `error` code, and the
+      // synthesised message is a bare "request_failed_502" — never show that to a
+      // person. Anything unrecognised gets plain language instead.
+      const status = err && err.status;
+      if (status >= 500) {
+        return 'Something went wrong on our end. Please try again in a moment.';
+      }
+      const code = err && err.message;
+      if (!code || /^request_failed_\d+$/.test(code)) {
+        return 'Something went wrong. Please try again.';
+      }
+      return code;
+    }
   }
 }
