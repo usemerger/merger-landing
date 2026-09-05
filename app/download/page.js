@@ -83,7 +83,12 @@ export default function DownloadPage() {
 
       try {
         const payload = await download();
-        setState({ phase: 'entitled', installers: normalizeInstallers(payload), payload });
+        setState({
+          phase: 'entitled',
+          installers: normalizeInstallers(payload),
+          version: typeof payload?.version === 'string' ? payload.version : null,
+          payload,
+        });
       } catch (err) {
         // The backend is the real gate. 402/403 (or a subscription_required
         // envelope) means "pay first" — this page just reflects that decision.
@@ -196,6 +201,9 @@ export default function DownloadPage() {
 
   /* ---- entitled ---- */
   const { macos, windows } = state.installers;
+  // Version comes straight from the response, never from anything baked in here,
+  // so a new release shows up on reload with no redeploy of this site.
+  const version = state.version;
   const anyReady = Boolean(macos || windows);
 
   return (
@@ -211,35 +219,45 @@ export default function DownloadPage() {
         <div className="panel mt-24">
           {anyReady ? (
             <>
-              <h2>Installers</h2>
+              <div className="panel-head">
+                <h2>Installers</h2>
+                {version && <span className="pill neutral">Version {version}</span>}
+              </div>
+
               <div className="dl-row">
-                {macos && (
-                  <a className="btn btn-primary btn-sm" href={macos}>
-                    <AppleIcon />
-                    Download for macOS
+                {windows && (
+                  // Plain anchor straight to the releases host: a normal file
+                  // download, not a fetch, so no CORS is involved.
+                  <a className="btn btn-primary btn-sm" href={windows} download>
+                    <WindowsIcon />
+                    {version ? `Download Merger v${version}` : 'Download Merger for Windows'}
                   </a>
                 )}
-                {windows && (
-                  <a className="btn btn-ghost btn-sm" href={windows}>
-                    <WindowsIcon />
-                    Download for Windows
+                {macos && (
+                  <a className="btn btn-ghost btn-sm" href={macos} download>
+                    <AppleIcon />
+                    {version ? `Download for macOS (v${version})` : 'Download for macOS'}
                   </a>
                 )}
               </div>
-              {(!macos || !windows) && (
+
+              {!macos && (
                 <p className="field-hint mt-16">
-                  The {macos ? 'Windows' : 'macOS'} build is coming shortly.
+                  <AppleIcon /> macOS coming soon — the Windows build is available now.
                 </p>
+              )}
+              {!windows && (
+                <p className="field-hint mt-16">The Windows build is coming soon.</p>
               )}
             </>
           ) : (
-            // Entitlement is confirmed, but packaging/signing is not done yet.
+            // Entitled, but the release manifest has no builds in it right now.
+            // Never render a dead button — say so and let them retry.
             <>
-              <h2>Coming shortly</h2>
+              <h2>Download temporarily unavailable</h2>
               <p className="muted mt-16">
-                Your subscription is active and your download is unlocked — the signed installers
-                are in final packaging right now. We will email you the moment they are up, and this
-                page will show them automatically.
+                Your subscription is active and your download is unlocked, but no installer is being
+                published right now. This is usually brief — try again in a few minutes.
               </p>
               <div className="dl-row">
                 <button className="btn btn-ghost btn-sm" type="button" onClick={load}>
