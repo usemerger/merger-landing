@@ -43,7 +43,7 @@ export default function MarketingNav({ signupHref, checkoutLabel }) {
       <nav id="marketing-navigation" aria-label="Main navigation" className={`mk-nav-links${open ? ' is-open' : ''}`} onClick={event => { if (event.target.closest('a')) setOpen(false); }}>
         <a href="#product">Product</a><a href="#workflow">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
         <Link className="mk-nav-signin" href="/login">Sign in</Link>
-        <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel} <span aria-hidden="true">↗</span></Link>
+        <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>
       </nav>
     </div>
   </header>;

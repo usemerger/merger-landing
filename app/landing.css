@@ -706,7 +706,13 @@ button, input, textarea, select { font: inherit; }
   transition: opacity var(--dur-reveal) var(--ease);
 }
 .mk-hero:has(.mk-button:hover) .mk-hero-bloom,
-.mk-hero:has(.mk-button:focus-visible) .mk-hero-bloom { opacity: 1; }
+.mk-hero:has(.mk-button:focus-visible) .mk-hero-bloom,
+/* The nav's Start button lights the hero as well. It lives outside .mk-hero, so
+   the match has to start from a common ancestor — scoped to the nav rather than
+   to every primary button on the page, or hovering the pricing CTA far down the
+   page would silently light a hero nobody can see. */
+.marketing-page:has(.mk-nav .mk-button:hover) .mk-hero-bloom,
+.marketing-page:has(.mk-nav .mk-button:focus-visible) .mk-hero-bloom { opacity: 1; }
 
 /* Browsers without :has() get a static hero rather than a broken one. */
 @supports not selector(:has(*)) { .mk-hero-bloom { display: none; } }
@@ -723,8 +729,10 @@ button, input, textarea, select { font: inherit; }
 }
 
 /* ── §5 aliveness elsewhere ───────────────────────────────────────────────── */
-.mk-text-link span { transition: transform var(--dur-move) var(--ease); display: inline-block; }
-.mk-text-link:hover span { transform: translateX(4px); }
+/* The arrows these links used to carry are gone, so the hover affordance moves
+   onto the text itself rather than onto a glyph that no longer exists. */
+.mk-text-link { transition: color var(--dur-micro) var(--ease); }
+.mk-text-link:hover { color: var(--gold-lit); }
 .mk-feature { transition: border-color var(--dur-move) var(--ease), transform var(--dur-move) var(--ease), background var(--dur-move) var(--ease); }
 .mk-feature:hover { border-color: var(--line-strong); transform: translateY(-2px); background: rgba(15, 22, 38, .45); }
 .mk-nav-links a { transition: color var(--dur-micro) var(--ease); }
@@ -826,14 +834,15 @@ button, input, textarea, select { font: inherit; }
      the band across in the first fraction of the sweep and then held it still
      — a glint, which is exactly what this is not meant to be. A reflection
      travelling at constant speed is what reads as metal catching light. */
-  animation: mk-sheen 6s linear infinite;
+  animation: mk-sheen 2.6s linear infinite;
 }
 @keyframes mk-sheen {
-  /* The band crosses over ~1.8s of a 6s loop; the remainder is the pause
-     between passes, which is what keeps it feeling like an occasional catch of
-     light rather than a repeating effect. */
+  /* The band crosses in ~0.9s of a 2.6s loop. The first timing gave one pass
+     every six seconds, which meant most people looking at the button never saw
+     it happen at all — the effect has to recur often enough to read as the
+     surface being reflective rather than as a one-off animation. */
   0%   { background-position: 130% 0; }
-  30%  { background-position: -30% 0; }
+  35%  { background-position: -30% 0; }
   100% { background-position: -30% 0; }
 }
 

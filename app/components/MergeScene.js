@@ -31,6 +31,9 @@ import * as THREE from 'three';
 const GOLD = '#C9A96A';
 const GOLD_LIT = '#E8CF97';
 const SHARD_COUNT = 12;
+/** How far a drag turns the stone. A drag across half the window is most of
+ *  a half-turn — the threshold where it feels attached to the hand. */
+const DRAG_GAIN = 7;
 
 /** The stone: taller than wide, like the mark — a diamond, not a ball. */
 function gemGeometry() {
@@ -125,22 +128,41 @@ function Gem({ assembly, drag }) {
       // A drag adds angular velocity; releasing leaves that velocity to decay,
       // which is the inertia. Damping is per-second so a 144Hz screen spins it
       // down at the same rate as a 60Hz one.
+      // DRAG MOVES IT 1:1, NOT THROUGH A VELOCITY.
+      //
+      // The first version set a velocity from the pixel delta and then scaled
+      // that by delta again on the way into the rotation. d.dx is already a
+      // per-frame fraction of the viewport (~0.018 for a brisk drag), so the
+      // result was roughly a single degree for a drag right across the hero —
+      // the gem technically responded and visibly did not move.
+      //
+      // Dragging now rotates the stone directly by the distance travelled, so
+      // the object tracks the hand. DRAG_GAIN 7 means a drag across half the
+      // window turns it most of a half-turn, which is what "easily dragged"
+      // feels like.
       if (d.active) {
-        d.vy = d.dx * 4.2;
-        d.vx = d.dy * 4.2;
+        group.current.rotation.y += d.dx * DRAG_GAIN;
+        group.current.rotation.x += d.dy * DRAG_GAIN * 0.6;
+        // Remember the rate so releasing mid-gesture throws it rather than
+        // stopping dead. Guard delta: a stalled frame would divide by ~0.
+        if (delta > 0.001) {
+          d.vy = (d.dx * DRAG_GAIN) / delta;
+          d.vx = (d.dy * DRAG_GAIN * 0.6) / delta;
+        }
         d.dx = 0; d.dy = 0;
       } else {
+        // Inertia, decaying per second so it spins down identically at 60 and
+        // 144Hz.
         const decay = Math.pow(0.12, delta);
         d.vy *= decay;
         d.vx *= decay;
+        group.current.rotation.y += d.vy * delta;
+        group.current.rotation.x += d.vx * delta;
       }
 
-      // The idle drift is always present underneath; when a throw is still
-      // spinning it simply adds to it, so there is no moment where the object
-      // stops dead and then starts again.
-      const idle = d.active ? 0 : 0.085;
-      group.current.rotation.y += (d.vy + idle) * delta;
-      group.current.rotation.x += d.vx * delta;
+      // The idle drift runs underneath whenever the user is not holding it, so
+      // a throw blends into the drift instead of the object stopping dead.
+      if (!d.active) group.current.rotation.y += 0.085 * delta;
       // Keep the tilt from tumbling all the way over — a gem lying on its side
       // stops reading as the mark.
       group.current.rotation.x = Math.max(-0.55, Math.min(0.55, group.current.rotation.x));

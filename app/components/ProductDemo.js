@@ -37,14 +37,14 @@ export default function ProductDemo({ steps }) {
           <div className="mk-chat-date">Today · sample conversation</div>
           <p className="mk-chat-bubble">{intro}<span>9:41 AM</span></p>
           <p className="mk-chat-bubble">{proposal}<span>9:42 AM</span></p>
-          <button type="button" className="mk-demo-action" onClick={() => setActive(1)}>Review the sample suggestion <span aria-hidden="true">→</span></button>
+          <button type="button" className="mk-demo-action" onClick={() => setActive(1)}>Review the sample suggestion</button>
         </div>}
         {active === 1 && <div className="mk-suggestion">
           <div className="mk-scene-heading"><span className="mk-tiny-tag">{review === 'pending' ? 'Suggested deal' : review === 'filed' ? 'Filed in this demo' : 'Dismissed in this demo'}</span><span className="mk-scene-muted">Claude · example</span></div>
           <h4>Oak Street acquisition</h4><p className="mk-deal-amount">$500,000 <span>allocation</span></p>
           <div className="mk-source-quote"><span>Source message · Morgan Ellis</span><p>“{proposal}”</p></div>
           <div className="mk-review-status" aria-live="polite">{review === 'filed' ? 'You chose to put this deal on the desk.' : review === 'dismissed' ? 'You chose to leave this suggestion out.' : 'Review the context before making it a deal.'}</div>
-          {review === 'pending' ? <div className="mk-demo-actions"><button type="button" className="mk-button mk-button-small" onClick={() => setReview('filed')}>File sample deal</button><button type="button" className="mk-button mk-button-small mk-button-quiet" onClick={() => setReview('dismissed')}>Dismiss</button></div> : <button className="mk-demo-action" type="button" onClick={() => setReview('pending')}>Reset the example <span aria-hidden="true">↺</span></button>}
+          {review === 'pending' ? <div className="mk-demo-actions"><button type="button" className="mk-button mk-button-small" onClick={() => setReview('filed')}>File sample deal</button><button type="button" className="mk-button mk-button-small mk-button-quiet" onClick={() => setReview('dismissed')}>Dismiss</button></div> : <button className="mk-demo-action" type="button" onClick={() => setReview('pending')}>Reset the example</button>}
         </div>}
         {active === 2 && <div className="mk-contact-card">
           <div className="mk-person-row"><span className="mk-avatar mk-avatar-large">ME</span><div><strong>Morgan Ellis</strong><span>Details shared in an introduction</span></div></div>
