@@ -1,23 +1,23 @@
 import './landing.css';
 import './app.css';
-import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 
-// Three roles, not three fonts picked for variety — the pattern every reference
-// site shares (docs/design-notes.md). Instrument Serif is the display voice,
-// Inter does the reading, and the mono makes figures read as instruments
-// rather than prose.
-//
-// `display: 'swap'` on all three: a finance audience on hotel wifi should get
-// text immediately, and a swap is cheaper than a blank hero.
-// §2. The display face is the design: a high-contrast editorial serif, set
-// large and at weight 400. Instrument Serif ships a single 400 weight on
-// purpose — it is drawn for exactly this job and nothing else.
-const instrument = Instrument_Serif({
-  subsets: ['latin'], weight: '400', style: ['normal', 'italic'],
-  display: 'swap', variable: '--font-instrument',
-});
-const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
-const mono = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-jetbrains' });
+/**
+ * ONE SANS, EVERYWHERE. §3 drops the editorial-serif direction entirely: the
+ * brief is the minimalist, professional feel of Apple's and Google's own
+ * interfaces, and that look comes from a single neutral grotesque used with
+ * discipline rather than from a display face doing the talking.
+ *
+ * Geist rather than SF Pro or Product Sans — those are not licensed for web
+ * use, and shipping them would be a licensing problem, not a design decision.
+ * Geist is OFL, served from Google Fonts, and is drawn in that same register:
+ * tall x-height, closed apertures, no personality competing with the content.
+ *
+ * Variable weights so the wordmark can sit at 500 and body at 400 without a
+ * second file.
+ */
+const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-geist' });
+const geistMono = Geist_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-geist-mono' });
 
 export const metadata = {
   title: { default: 'Merger — A place for the work in your conversations', template: '%s · Merger' },
@@ -33,14 +33,14 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  // The page is ink-dark everywhere; without this the browser paints white
-  // chrome around it on mobile and the first frame flashes.
+  // Matches --ink. Without it the browser paints white chrome around the page
+  // on mobile and the first frame flashes.
   themeColor: '#08090C',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${instrument.variable} ${inter.variable} ${mono.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body>{children}</body>
     </html>
   );

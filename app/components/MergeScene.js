@@ -67,7 +67,7 @@ function useShards() {
   }, []);
 }
 
-function Gem({ assembly, pointer, scroll }) {
+function Gem({ assembly, drag }) {
   const group = useRef();
   const core = useRef();
   const refs = useRef([]);
@@ -112,14 +112,41 @@ function Gem({ assembly, pointer, scroll }) {
     }
 
     if (group.current) {
-      // Alive: a slow idle turn, the pointer tilting it, scroll nudging it.
-      // Damped toward the target so it feels weighted rather than wired
-      // straight to the mouse.
-      const ty = pointer.current.x * 0.42 + state.clock.elapsedTime * 0.085 + scroll.current * 0.6;
-      const tx = pointer.current.y * 0.26 + scroll.current * 0.15;
-      group.current.rotation.y += (ty - group.current.rotation.y) * k;
-      group.current.rotation.x += (tx - group.current.rotation.x) * k;
-      group.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.06 - scroll.current * 0.4;
+      // §1 AUTONOMOUS, AND DRAGGABLE — NOTHING ELSE.
+      //
+      // The object no longer reads the cursor's position or the scroll offset.
+      // Following the mouse everywhere made it feel wired to the page rather
+      // than sitting in it, and it meant the object was never still: moving the
+      // pointer to click the CTA dragged the gem along with it.
+      //
+      // So it turns on its own, always, and the ONLY input is an actual drag.
+      const d = drag.current;
+
+      // A drag adds angular velocity; releasing leaves that velocity to decay,
+      // which is the inertia. Damping is per-second so a 144Hz screen spins it
+      // down at the same rate as a 60Hz one.
+      if (d.active) {
+        d.vy = d.dx * 4.2;
+        d.vx = d.dy * 4.2;
+        d.dx = 0; d.dy = 0;
+      } else {
+        const decay = Math.pow(0.12, delta);
+        d.vy *= decay;
+        d.vx *= decay;
+      }
+
+      // The idle drift is always present underneath; when a throw is still
+      // spinning it simply adds to it, so there is no moment where the object
+      // stops dead and then starts again.
+      const idle = d.active ? 0 : 0.085;
+      group.current.rotation.y += (d.vy + idle) * delta;
+      group.current.rotation.x += d.vx * delta;
+      // Keep the tilt from tumbling all the way over — a gem lying on its side
+      // stops reading as the mark.
+      group.current.rotation.x = Math.max(-0.55, Math.min(0.55, group.current.rotation.x));
+      // A slow vertical float, independent of everything, so it is alive even
+      // when perfectly still otherwise.
+      group.current.position.y = Math.sin(state.clock.elapsedTime * 0.45) * 0.07;
     }
   });
 
@@ -178,10 +205,13 @@ function Gem({ assembly, pointer, scroll }) {
   );
 }
 
-export default function MergeScene({ assembly, pointer, scroll, live = true }) {
+export default function MergeScene({ assembly, drag, live = true }) {
   return (
     <Canvas
-      dpr={[1, 1.75]}
+      // 1.5 rather than 1.75: the object is all flat facets and straight
+      // edges, so the extra pixels bought very little and cost real frame time
+      // on high-density displays.
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0, 6.4], fov: 38 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       // A touch over 1: the scene is deliberately dark and the highlights need
@@ -218,7 +248,7 @@ export default function MergeScene({ assembly, pointer, scroll, live = true }) {
       {/* A second, gold, from below-left: the rim that separates the stone from
           the page and puts Merger's accent onto the object itself. */}
       <directionalLight position={[-5, -2, -3]} intensity={1.4} color={GOLD_LIT} />
-      <Gem assembly={assembly} pointer={pointer} scroll={scroll} />
+      <Gem assembly={assembly} drag={drag} />
     </Canvas>
   );
 }

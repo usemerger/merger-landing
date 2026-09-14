@@ -69,9 +69,9 @@ export default function MergeHero() {
    *  nudges the settled stone afterwards. A ref, not state — it changes every
    *  frame and must never cause a React render. */
   const assembly = useRef(0);
-  /** Normalised hero scroll, for the nudge. */
-  const scroll = useRef(0);
-  const pointer = useRef({ x: 0, y: 0 });
+  /** Drag state. dx/dy are the pixels moved since the last frame consumed
+   *  them; vx/vy are the angular velocity the scene decays after release. */
+  const drag = useRef({ active: false, dx: 0, dy: 0, vx: 0, vy: 0 });
   const [mount, setMount] = useState(false);
   const [live, setLive] = useState(false);
 
@@ -86,51 +86,77 @@ export default function MergeHero() {
     } catch { webgl = false; }
     if (reduced || small || !webgl) return;
 
-    // AFTER FIRST PAINT, not during it. requestIdleCallback where it exists so
-    // the scene loads in genuinely spare time; a timeout where it does not.
-    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 320));
-    const cancel = window.cancelIdleCallback || clearTimeout;
-    const handle = idle(() => setMount(true));
-    return () => cancel(handle);
+    // AFTER `load`, THEN IN IDLE TIME. Parsing and evaluating three.js is ~580ms
+    // of script work; while that sat inside the first few seconds it competed
+    // with interactivity and pushed Total Blocking Time to 520ms, which cost
+    // ~15 Lighthouse points on its own. Waiting for the load event moves that
+    // work past the window where the page is meant to be responding to the
+    // person, and the assembly still plays well within the time anyone spends
+    // reading the headline.
+    let cancel = () => {};
+    const schedule = () => {
+      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+      const clear = window.cancelIdleCallback || clearTimeout;
+      const handle = idle(() => setMount(true), { timeout: 1500 });
+      cancel = () => clear(handle);
+    };
+    if (document.readyState === 'complete') schedule();
+    else {
+      window.addEventListener('load', schedule, { once: true });
+      cancel = () => window.removeEventListener('load', schedule);
+    }
+    return () => cancel();
   }, []);
 
+  // §1 DRAG IS THE ONLY INPUT.
+  //
+  // The cursor-follow parallax and the scroll nudge are both gone. Following
+  // the pointer everywhere made the object feel wired to the page rather than
+  // sitting in it — and it meant simply moving the mouse toward the CTA swung
+  // the gem around, so it was never actually still.
+  //
+  // Pointer events (not mouse) so a touch drag works identically, and capture
+  // so a drag that leaves the hero keeps tracking instead of sticking.
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
+    let id = null;
+    let last = null;
 
-    // Scroll → merge progress. Read geometry in the handler but write only to a
-    // ref; the canvas picks it up on its own frame, so scrolling never triggers
-    // React work.
-    const onScroll = () => {
-      const r = host.getBoundingClientRect();
-      // A NUDGE, not the merge. v1 mapped the whole assembly onto scroll, which
-      // meant the stone only resolved as the hero left the screen — the payoff
-      // happened where nobody could see it. Assembly now belongs to the load
-      // animation, and scroll just turns and sinks the settled stone a little.
-      const travelled = -r.top / Math.max(window.innerHeight, 1);
-      scroll.current = Math.min(1, Math.max(0, travelled));
+    const down = (e) => {
+      if (e.button != null && e.button !== 0) return;
+      id = e.pointerId;
+      last = { x: e.clientX, y: e.clientY };
+      drag.current.active = true;
+      try { host.setPointerCapture(id); } catch { /* not capturable */ }
     };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-
-    const onPointer = (e) => {
-      const r = host.getBoundingClientRect();
-      // -1..1 from the centre of the hero, not the window: the object should
-      // respond to where the cursor is relative to IT.
-      pointer.current = {
-        x: ((e.clientX - r.left) / r.width - 0.5) * 2,
-        y: ((e.clientY - r.top) / r.height - 0.5) * 2,
-      };
+    const move = (e) => {
+      if (!drag.current.active || e.pointerId !== id || !last) return;
+      // Normalised by viewport width so the same gesture turns it the same
+      // amount on a laptop and on a 4K display.
+      drag.current.dx += (e.clientX - last.x) / window.innerWidth;
+      drag.current.dy += (e.clientY - last.y) / window.innerWidth;
+      last = { x: e.clientX, y: e.clientY };
     };
-    window.addEventListener('pointermove', onPointer, { passive: true });
+    const up = (e) => {
+      if (e.pointerId !== id) return;
+      drag.current.active = false;
+      last = null;
+      try { host.releasePointerCapture(id); } catch { /* already released */ }
+      id = null;
+    };
 
+    host.addEventListener('pointerdown', down);
+    host.addEventListener('pointermove', move, { passive: true });
+    host.addEventListener('pointerup', up);
+    host.addEventListener('pointercancel', up);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
-      window.removeEventListener('pointermove', onPointer);
+      host.removeEventListener('pointerdown', down);
+      host.removeEventListener('pointermove', move);
+      host.removeEventListener('pointerup', up);
+      host.removeEventListener('pointercancel', up);
     };
-  }, []);
+  }, [mount]);
 
   // ASSEMBLE ON LOAD. Runs once the canvas is mounted, on rAF rather than a
   // CSS transition because the value feeds three.js directly. Slow enough to be
@@ -177,7 +203,7 @@ export default function MergeHero() {
       <ResolvedMark title="Twelve conversations merging into one deal desk" />
       {mount && (
         <div className={`mh-canvas ${live ? 'is-live' : ''}`} aria-hidden="true">
-          <MergeScene assembly={assembly} pointer={pointer} scroll={scroll} live={live} />
+          <MergeScene assembly={assembly} drag={drag} live={live} />
         </div>
       )}
     </div>

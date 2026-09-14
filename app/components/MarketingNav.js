@@ -1,16 +1,40 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import MarketingMark from './MarketingMark';
 
 export default function MarketingNav({ signupHref, checkoutLabel }) {
   const [open, setOpen] = useState(false);
   const toggle = useRef(null);
+
+  /**
+   * §2 The header is invisible at the top of the page and grows a hairline
+   * once you have scrolled past it.
+   *
+   * At the top it is just the mark and the links floating over the hero — no
+   * fill, no border, nothing drawing a box around them. The line exists to
+   * separate the nav from content passing underneath it, so it appears when
+   * there IS content passing underneath and not before.
+   *
+   * A threshold rather than a continuous value: this drives one CSS class, and
+   * a class that changes on every scroll frame is a re-render on every scroll
+   * frame. 24px is far enough not to fire on a trackpad twitch.
+   */
+  const [lifted, setLifted] = useState(false);
+  useEffect(() => {
+    const onScroll = () => {
+      const past = window.scrollY > 24;
+      setLifted((was) => (was === past ? was : past));
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   function escape(event) {
     if (event.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); }
   }
-  return <header className="mk-nav" onKeyDown={escape}>
+  return <header className={`mk-nav${lifted ? ' is-lifted' : ''}`} onKeyDown={escape}>
     <div className="mk-wrap mk-nav-inner">
       <Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark hover /><span>merger</span></Link>
       <button ref={toggle} className="mk-menu-toggle" type="button" aria-expanded={open} aria-controls="marketing-navigation" aria-label={open ? 'Close navigation' : 'Open navigation'} onClick={() => setOpen(!open)}>

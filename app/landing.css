@@ -33,10 +33,14 @@
   /* ── §2 TYPE: editorial serif display, grotesque body, mono for data ─────
      The whole "expensive" register of the reference comes from a high-contrast
      serif set large and LIGHT. Archivo could not do that job. */
-  --display: var(--font-instrument, 'Instrument Serif'), 'Times New Roman', serif;
-  --body: var(--font-inter, 'Inter'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --serif: var(--font-instrument, 'Instrument Serif'), Georgia, serif;
-  --mono: var(--font-jetbrains, 'JetBrains Mono'), ui-monospace, monospace;
+  /* §3 One sans for display AND body. The minimalist register comes from
+     restraint — a single neutral grotesque, sized and spaced deliberately —
+     not from a second face doing the talking. Mono is for data and labels
+     only. */
+  --display: var(--font-geist, 'Geist'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --body: var(--display);
+  --serif: var(--display);
+  --mono: var(--font-geist-mono, 'Geist Mono'), ui-monospace, monospace;
 
   /* Motion tokens — see docs/design-notes.md. One curve; small and large bands. */
   --ease: cubic-bezier(.22, 1, .36, 1);
@@ -476,10 +480,18 @@ button, input, textarea, select { font: inherit; }
 .mh-host {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  /* §1 The stone is draggable, so it must receive pointer events — it was
+     pointer-events:none while the cursor-parallax did the work. The cursor
+     says so; without it a draggable object looks like a picture. */
+  cursor: grab;
+  touch-action: none;
 }
+.mh-host:active { cursor: grabbing; }
+/* Only the canvas is grabbable; the poster underneath is decorative and must
+   not eat clicks meant for whatever sits behind the hero visual. */
+.mh-poster { pointer-events: none; }
 .mk-hero > .mk-wrap { position: relative; z-index: 1; }
 .mh-poster,
 .mh-canvas {
@@ -571,17 +583,21 @@ button, input, textarea, select { font: inherit; }
 .mk-setup-heading h2,
 .mk-faq-heading h2 {
   font-family: var(--display);
-  font-weight: 400;
-  letter-spacing: -.015em;
-  line-height: 1.02;
+  /* 500, not 700. The minimalist register is medium weight with tight
+     tracking — bold at this size reads as a banner, not as a product. */
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: 1.04;
 }
 .mk-hero h1 {
   font-size: clamp(52px, 6.6vw, 96px);
   max-width: 13ch;
 }
 /* The second line drops to a quieter tone rather than taking the accent —
-   gold belongs on the CTA, not in the headline. */
-.mk-hero h1 span { color: var(--slate); font-style: italic; }
+   gold belongs on the CTA, not in the headline. No italic: a grotesque's
+   italic is a slant, and a slanted 95px headline reads as emphasis nobody
+   asked for. */
+.mk-hero h1 span { color: var(--slate); font-style: normal; }
 .mk-section-heading h2,
 .mk-setup-heading h2,
 .mk-faq-heading h2,
@@ -589,7 +605,7 @@ button, input, textarea, select { font: inherit; }
 .mk-section-heading h2 span,
 .mk-setup-heading h2 span,
 .mk-faq-heading h2 span,
-.mk-final h2 span { color: var(--slate); font-style: italic; }
+.mk-final h2 span { color: var(--slate); font-style: normal; }
 
 /* Body copy stays grotesque and quiet; the serif is for display only. */
 .mk-hero-description { font-family: var(--body); font-size: 17px; color: var(--slate); max-width: 46ch; }
@@ -725,3 +741,105 @@ button, input, textarea, select { font: inherit; }
    never needs a fourth line and the floor is never exceeded. */
 .mk-hero h1 { min-height: 3.06em; }
 @media (max-width: 980px) { .mk-hero h1 { min-height: 0; } }
+
+/* ── §3 THE WORDMARK ───────────────────────────────────────────────────────
+   The lettering was the thing that read as unconsidered. A wordmark is not
+   body text set at brand size: it wants a medium weight, noticeably tighter
+   tracking than running text, and optical sizing so it holds together as one
+   shape rather than as six letters that happen to be adjacent. */
+.mk-brand span {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 21px;
+  letter-spacing: -.055em;
+  color: var(--bone);
+  line-height: 1;
+  transition: color var(--dur-micro) var(--ease);
+}
+.mk-brand { gap: 9px; align-items: center; }
+.mk-brand:hover span { color: #FFFFFF; }
+/* The footer mark is the same wordmark one step quieter. */
+.mk-footer .mk-brand span { font-size: 19px; }
+
+/* ── §2 HEADER: nothing at the top, a hairline once you move ───────────────
+   At the top the header is genuinely transparent — the mark and the links
+   float over the hero. The border exists to separate the nav from content
+   passing underneath it, so it appears when there IS content passing
+   underneath and not before.
+
+   Both properties are transitioned rather than toggled, so it arrives instead
+   of snapping; reduced motion zeroes the duration through the token. */
+.mk-nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+  transition:
+    background var(--dur-move) var(--ease),
+    border-color var(--dur-move) var(--ease),
+    backdrop-filter var(--dur-move) var(--ease);
+}
+.mk-nav.is-lifted {
+  /* A very slight tint plus blur, so nav text stays readable over whatever is
+     scrolling behind it — the hairline alone is not enough once a bright
+     panel passes under it. */
+  background: rgba(8, 9, 12, .72);
+  backdrop-filter: blur(12px) saturate(120%);
+  border-bottom-color: var(--line);
+}
+
+/* ── §4 REFLECTIVE GOLD WITH A TRAVELLING SHEEN ────────────────────────────
+   Flat gold reads as paint. Real metal has a highlight that moves as the light
+   or the viewer does, so the button carries a brighter band that sweeps across
+   it on a long loop — slow enough to read as a reflection catching the light
+   rather than as a glint effect.
+
+   The sheen is a pseudo-element with its own gradient, so the base gold stays
+   exactly the specified ramp and the animation cannot drift it. */
+.mk-button {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.mk-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 252, 244, .58) 47%,
+    rgba(255, 255, 255, .78) 50%,
+    rgba(255, 252, 244, .58) 53%,
+    transparent 62%
+  );
+  /* Three widths of travel: most of the loop is the highlight being off the
+     button, which is what makes each pass feel like an event rather than a
+     strobe. */
+  background-size: 300% 100%;
+  background-position: 130% 0;
+  /* LINEAR, not the UI easing. --ease is heavily front-loaded, which whipped
+     the band across in the first fraction of the sweep and then held it still
+     — a glint, which is exactly what this is not meant to be. A reflection
+     travelling at constant speed is what reads as metal catching light. */
+  animation: mk-sheen 6s linear infinite;
+}
+@keyframes mk-sheen {
+  /* The band crosses over ~1.8s of a 6s loop; the remainder is the pause
+     between passes, which is what keeps it feeling like an occasional catch of
+     light rather than a repeating effect. */
+  0%   { background-position: 130% 0; }
+  30%  { background-position: -30% 0; }
+  100% { background-position: -30% 0; }
+}
+
+/* §4 Static gold under reduced motion — no sweep at all, rather than a faster
+   one. The global rule already zeroes durations; this removes the animation so
+   nothing sits mid-sweep at a random position. */
+@media (prefers-reduced-motion: reduce) {
+  .mk-button::after { animation: none; background-position: 130% 0; }
+}
