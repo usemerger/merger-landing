@@ -12,7 +12,7 @@ export default function MarketingNav({ signupHref, checkoutLabel }) {
   }
   return <header className="mk-nav" onKeyDown={escape}>
     <div className="mk-wrap mk-nav-inner">
-      <Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link>
+      <Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark hover /><span>merger</span></Link>
       <button ref={toggle} className="mk-menu-toggle" type="button" aria-expanded={open} aria-controls="marketing-navigation" aria-label={open ? 'Close navigation' : 'Open navigation'} onClick={() => setOpen(!open)}>
         <span>{open ? 'Close' : 'Menu'}</span><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d={open ? 'm4 4 10 10M14 4 4 14' : 'M2 5h14M2 9h14M2 13h14'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
       </button>

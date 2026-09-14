@@ -4,6 +4,8 @@ import { ALPHA_OFFER } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
 import ProductDemo from './components/ProductDemo';
+import MergeHero from './components/MergeHero';
+import Reveal from './components/Reveal';
 
 function FeatureIcon({ name }) {
   const paths = {
@@ -21,6 +23,7 @@ export default function LandingPage() {
     <MarketingNav signupHref={ALPHA_OFFER.signupHref} checkoutLabel={ALPHA_OFFER.checkoutLabel} />
     <main id="main-content">
       <section className="mk-hero" aria-labelledby="hero-title">
+        <MergeHero />
         <div className="mk-wrap mk-hero-grid">
           <div className="mk-hero-copy">
             <p className="mk-kicker"><span className="mk-status-dot" /> Now opening · Windows alpha</p>
@@ -31,7 +34,7 @@ export default function LandingPage() {
             <p className="mk-hero-billing">{ALPHA_OFFER.billingNotice}</p>
           </div>
           <div className="mk-hero-visual" aria-label="Illustration of the Merger Deal Desk with sample data">
-            <div className="mk-hero-orbit" aria-hidden="true" />
+            
             <div className="mk-hero-desk">
               <div className="mk-hero-card-top"><span><MarketingMark size={19} /> merger</span><span>Sample desk</span></div>
               <div className="mk-hero-desk-body">
@@ -53,7 +56,7 @@ export default function LandingPage() {
 
       <section id="product" className="mk-section mk-wrap" aria-labelledby="product-title">
         <div className="mk-section-heading"><div><p className="mk-kicker">Built around the conversation</p><h2 id="product-title">Less copying things around.<br /><span>More keeping things together.</span></h2></div><p>Your chats contain the opportunity, the introduction, and the next step. Merger gives each one somewhere useful to live.</p></div>
-        <div className="mk-feature-grid">{features.map(feature => <article className="mk-feature" key={feature.number}><div className="mk-feature-top"><FeatureIcon name={feature.icon} /><span>{feature.number}</span></div><p className="mk-kicker">{feature.label}</p><h3>{feature.title}</h3><p>{feature.description}</p><div className="mk-feature-note">{feature.note}</div></article>)}</div>
+        <div className="mk-feature-grid">{features.map((feature, i) => <Reveal as="article" delay={i * 0.06} className="mk-feature" key={feature.number}><div className="mk-feature-top"><FeatureIcon name={feature.icon} /><span>{feature.number}</span></div><p className="mk-kicker">{feature.label}</p><h3>{feature.title}</h3><p>{feature.description}</p><div className="mk-feature-note">{feature.note}</div></Reveal>)}</div>
         <a className="mk-text-link mk-feature-link" href="#workflow">Follow a sample conversation through Merger <span aria-hidden="true">↘</span></a>
       </section>
 

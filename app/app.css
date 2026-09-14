@@ -532,3 +532,16 @@
   .stat-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
 }
 @media (prefers-reduced-motion: reduce) { .app-shell * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* The alpha gate. Deliberately shaped like the offer panel it replaces, not
+   like the red error alert beside it — being off the invite list is an answer,
+   not a fault. */
+.alpha-gate {
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--brass);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 22px 0;
+  background: var(--panel);
+}
+.alpha-gate h3 { font-size: 19px; margin-top: 6px; }

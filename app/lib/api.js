@@ -221,6 +221,11 @@ export function errorMessage(err) {
       // Reset links are single-use and short-lived, so a rejected token is far
       // more often expired or already spent than genuinely malformed.
       return 'This link has expired or has already been used.';
+    case 'not_on_alpha_list':
+      // The alpha is invite-only, so this is the single most likely refusal a
+      // real person will meet at checkout. It is not an error on their part and
+      // must never be dressed as one — see the dedicated panel in PlanStep.
+      return 'Your account is not on the alpha list yet.';
     case 'weak_password':
       return 'That password is too short. Use at least 8 characters.';
     case 'rate_limited':
