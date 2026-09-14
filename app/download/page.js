@@ -63,7 +63,7 @@ export default function DownloadPage() {
       <h1 className="dash-title">A subscription unlocks Merger.</h1>
       <p className="dash-sub">Your subscription status is <strong>{statusLabel(state.entitlementStatus).toLowerCase()}</strong>. Downloads unlock when the server confirms access.</p>
       <div className="panel mt-24">
-        {canSubscribe ? <PlanStep ctl={checkoutCtl} heading={canceled ? 'Subscribe again' : 'Join the paid alpha'} note={canceled ? 'Review the currently available offer before starting a new subscription.' : 'Your account and handle are ready. Review the offer to continue.'} /> : <>
+        {canSubscribe ? <PlanStep ctl={checkoutCtl} heading={canceled ? 'Subscribe again' : 'Start your alpha trial'} note={canceled ? 'Review the currently available offer before starting a new subscription.' : 'Your account and handle are ready. Review the offer to continue.'} /> : <>
           <h2>{!state.user.handle ? 'Finish your account' : 'Manage your subscription'}</h2>
           <p className="muted mt-16">{!state.user.handle ? 'Reserve your handle from your account before subscribing.' : 'Review your payment and subscription details from your account.'}</p>
           <div className="dl-row"><Link className="btn btn-primary btn-sm" href="/dashboard">Go to your account</Link></div>

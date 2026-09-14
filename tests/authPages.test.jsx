@@ -89,6 +89,23 @@ describe('signup and sign-in recovery', () => {
 });
 
 describe('account and checkout', () => {
+  it('shows the trial end, later charge, and downloads for a confirmed free trial', async () => {
+    api.meOrNull.mockResolvedValue(account);
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', trialEndsAt: '2026-09-28T12:00:00Z', alphaPriceLocked: true, pricing: { amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } });
+    render(<AccountDashboard />);
+    const trial = await screen.findByRole('status', { name: 'Trial status' });
+    expect(trial).toHaveTextContent('Your free trial ends on September 28, 2026');
+    expect(trial).toHaveTextContent('After the trial, $50.00 / month is billed automatically.');
+    expect(screen.getByRole('link', { name: 'Go to downloads' })).toBeInTheDocument();
+    expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
+  });
+  it('explains that canceling a trial prevents the first charge', async () => {
+    api.meOrNull.mockResolvedValue(account);
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', cancelAtPeriodEnd: true, trialEndsAt: '2026-09-28T12:00:00Z' });
+    render(<AccountDashboard />);
+    expect(await screen.findByRole('status', { name: 'Trial status' })).toHaveTextContent('Your trial is set to cancel. You can use Merger until it ends, with no subscription charge.');
+    expect(screen.queryByText(/is billed automatically/)).not.toBeInTheDocument();
+  });
   it('labels a discounted multi-seat subscription as its total price', async () => {
     api.meOrNull.mockResolvedValue(account);
     api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'active', entitled: true, plan: 'desk', seats: 2, pricing: { amount: 15900, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 2, discounted: true } });

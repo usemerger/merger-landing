@@ -195,7 +195,7 @@ export function errorMessage(err) {
     case 'alpha_price_mismatch':
     case 'billing_unavailable':
     case 'billing_not_configured':
-      return 'Paid signup is temporarily unavailable. Your account is saved; please try again later.';
+      return 'Trial signup is temporarily unavailable. Your account is saved; please try again later.';
     case 'subscription_exists':
     case 'already_subscribed':
       return 'This account already has a subscription. Manage it from your account dashboard.';

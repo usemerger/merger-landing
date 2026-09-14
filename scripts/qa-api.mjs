@@ -12,6 +12,7 @@ const scenarios = {
   checkoutpending: 'Checkout confirmation pending', errors: 'Recoverable API errors',
   nohandle: 'Account without handle', unverified: 'Email verification required',
   offerunavailable: 'Paid alpha offer unavailable', canceling: 'Active, cancellation scheduled', downloadready: 'Synthetic download link (do not download)',
+  trialing: '14-day trial active', trialcanceling: 'Trial cancellation scheduled',
 };
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const validEmail = value => /^[^\s@]+@(?:[^\s@]+\.test|example\.(?:com|org))$/i.test(value || '');
@@ -51,14 +52,15 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
     const mode = state.scenario;
     const complimentary = mode === 'complimentary';
     const active = ['active', 'canceling', 'downloadready'].includes(mode);
-    const entitlementStatus = mode === 'pastdue' ? 'past_due' : mode === 'canceled' ? 'canceled' : mode === 'checkoutpending' ? 'incomplete' : active ? 'active' : 'none';
-    const hasHistory = active || ['pastdue', 'canceled', 'checkoutpending'].includes(mode);
-    return { configured: mode !== 'offerunavailable', entitled: active || complimentary, grandfathered: complimentary,
+    const trialing = ['trialing', 'trialcanceling'].includes(mode);
+    const entitlementStatus = mode === 'pastdue' ? 'past_due' : mode === 'canceled' ? 'canceled' : mode === 'checkoutpending' ? 'incomplete' : trialing ? 'trialing' : active ? 'active' : 'none';
+    const hasHistory = active || trialing || ['pastdue', 'canceled', 'checkoutpending'].includes(mode);
+    return { configured: mode !== 'offerunavailable', entitled: active || trialing || complimentary, grandfathered: complimentary,
       entitlementStatus, offer: hasHistory ? 'alpha' : null, plan: hasHistory ? 'alpha' : null, seats: 1,
       pricing: hasHistory ? { amount: ALPHA_OFFER.amount, currency: ALPHA_OFFER.currency, interval: 'month', intervalCount: 1, quantity: 1 } : null,
-      hasPaymentMethod: hasHistory && mode !== 'checkoutpending', alphaPriceLocked: active,
-      cancelAtPeriodEnd: mode === 'canceling', currentPeriodEnd: active ? '2026-10-14T12:00:00Z' : null,
-      trialEndsAt: null, graceEndsAt: null, billingDetailsUnavailable: false };
+      hasPaymentMethod: hasHistory && mode !== 'checkoutpending', alphaPriceLocked: active || trialing,
+      cancelAtPeriodEnd: ['canceling', 'trialcanceling'].includes(mode), currentPeriodEnd: trialing ? '2026-09-28T12:00:00Z' : active ? '2026-10-14T12:00:00Z' : null,
+      trialEndsAt: trialing ? '2026-09-28T12:00:00Z' : null, graceEndsAt: null, billingDetailsUnavailable: false };
   }
   function controlPage(state) {
     const cards = Object.entries(scenarios).map(([key, label]) => `<form method="post" action="/qa/scenario"><input type="hidden" name="scenario" value="${key}"><button${key === state.scenario ? ' class="active"' : ''}>${label}</button></form>`).join('');
@@ -125,7 +127,7 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
       }
       if (request.method === 'GET' && path === '/api/billing/offers') {
         json(response, 200, { offers: [{ id: 'alpha', available: state.scenario !== 'offerunavailable', amount: ALPHA_OFFER.amount, currency: ALPHA_OFFER.currency,
-          interval: 'month', intervalCount: 1, perSeat: false, trialDays: 0, priceLockedWhileSubscribed: true }] }); return;
+          interval: 'month', intervalCount: 1, perSeat: false, trialDays: 14, priceLockedWhileSubscribed: true }] }); return;
       }
       if (!state.user) { json(response, 401, { error: 'not_authenticated' }); return; }
       if (request.method === 'GET' && path === '/api/auth/me') { json(response, 200, state.user); return; }

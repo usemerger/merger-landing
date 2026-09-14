@@ -3,11 +3,11 @@ import { ApiError, billingOffers, checkout, errorMessage, meOrNull } from '../ap
 import { isAvailableAlphaOffer } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
-const alpha = { id: 'alpha', available: true, amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, perSeat: false, trialDays: 0, priceLockedWhileSubscribed: true };
+const alpha = { id: 'alpha', available: true, amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, perSeat: false, trialDays: 14, priceLockedWhileSubscribed: true };
 describe('billing offer safety', () => {
   it('enables only the exact advertised $50 monthly offer', () => {
     expect(isAvailableAlphaOffer({ offers: [alpha] })).toBe(true);
-    for (const change of [{ amount: 4999 }, { amount: 9999 }, { available: false }, { interval: 'year' }, { intervalCount: 12 }, { trialDays: 365 }, { perSeat: true }, { currency: 'cad' }, { priceLockedWhileSubscribed: false }]) {
+    for (const change of [{ amount: 4999 }, { amount: 9999 }, { available: false }, { interval: 'year' }, { intervalCount: 12 }, { trialDays: 0 }, { trialDays: 7 }, { trialDays: 365 }, { perSeat: true }, { currency: 'cad' }, { priceLockedWhileSubscribed: false }]) {
       expect(isAvailableAlphaOffer({ offers: [{ ...alpha, ...change }] })).toBe(false);
     }
     expect(isAvailableAlphaOffer(null)).toBe(false);

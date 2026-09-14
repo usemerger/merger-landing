@@ -34,7 +34,7 @@ test('synthetic signup, handle reservation and logout use real HTTP cookies', as
 
 test('scenario controls expose distinct entitlement states without offering fake downloads or Stripe URLs', async t => {
   const call = await fixture(t);
-  for (const [scenario, expected, entitled] of [['none', 'none', false], ['active', 'active', true], ['pastdue', 'past_due', false], ['canceled', 'canceled', false], ['complimentary', 'none', true], ['checkoutpending', 'incomplete', false]]) {
+  for (const [scenario, expected, entitled] of [['none', 'none', false], ['active', 'active', true], ['trialing', 'trialing', true], ['trialcanceling', 'trialing', true], ['pastdue', 'past_due', false], ['canceled', 'canceled', false], ['complimentary', 'none', true], ['checkoutpending', 'incomplete', false]]) {
     const control = await call('/qa/scenario', { scenario });
     assert.equal(control.response.status, 303);
     assert.ok(control.response.headers.get('location').startsWith('http://127.0.0.1:3012/'));

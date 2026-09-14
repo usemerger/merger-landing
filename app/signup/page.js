@@ -101,13 +101,13 @@ function SignupForm() {
           <p className="eyebrow">Account ready</p>
           <h1>Your desk starts here.</h1>
           <p className="lede">Signed in as {account.email} · @{account.handle}. Review the alpha offer below to subscribe.</p>
-          <div className="panel mt-24"><PlanStep ctl={checkoutCtl} heading="Join the paid alpha" /></div>
+          <div className="panel mt-24"><PlanStep ctl={checkoutCtl} heading="Start your alpha trial" /></div>
           <p className="form-foot"><Link href="/dashboard">Continue to your account</Link></p>
         </> : <>
           <p className="eyebrow">Join Merger</p>
           <h1>{account ? 'Finish your account.' : 'Set up your deal desk.'}</h1>
-          <p className="lede">{account ? `Your account for ${account.email} is ready. Reserve your handle to continue.` : 'Create your account and reserve your handle. You can review the paid alpha before subscribing.'}</p>
-          {!account && <p className="field-hint mt-16">Windows alpha · {ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}. Your account is free until you complete checkout.</p>}
+          <p className="lede">{account ? `Your account for ${account.email} is ready. Reserve your handle to continue.` : 'Create your account and reserve your handle. Review the trial and billing terms before starting your trial.'}</p>
+          {!account && <p className="field-hint mt-16">Windows alpha · {ALPHA_OFFER.trialLabel}, then {ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}. Card required to start the trial.</p>}
           <form className="panel mt-24" onSubmit={onSubmit} aria-busy={busy} noValidate>
             {!account && <>
               <div className="field">

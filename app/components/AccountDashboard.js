@@ -154,6 +154,7 @@ export default function AccountDashboard() {
   const graceDate = formatDate(s.graceEndsAt);
   const planName = s.offer === 'alpha' ? ALPHA_OFFER.name : s.plan === 'operator' ? 'Operator' : s.plan === 'desk' ? 'Desk' : '—';
   const price = priceLabel(s.pricing);
+  const trialing = s.entitlementStatus === 'trialing' && entitled;
 
   return <Shell authed><main className="dash-main">
     <p className="eyebrow">Account</p>
@@ -167,15 +168,20 @@ export default function AccountDashboard() {
     {justCheckedOut && entitled && <div className="alert alert-info" role="status"><strong>Your account is ready.</strong> You can download Merger below.</div>}
     {pendingPayment && <div className="alert alert-info" role="status">
       {pollState === 'running' || pollState === 'idle' ? 'Confirming your subscription with Stripe…' : <>
-        {pollState === 'error' ? 'We could not check your payment status.' : 'Your payment has not been confirmed yet.'} If you completed checkout, allow a moment for confirmation before starting another subscription.{' '}
-        <button type="button" className="linklike" onClick={() => setPollCycle((value) => value + 1)}>Check payment again</button>
+        {pollState === 'error' ? 'We could not check your subscription status.' : 'Your subscription has not been confirmed yet.'} If you completed checkout, allow a moment for confirmation before starting another subscription.{' '}
+        <button type="button" className="linklike" onClick={() => setPollCycle((value) => value + 1)}>Check subscription again</button>
       </>}
     </div>}
     {!grandfathered && s.entitlementStatus === 'past_due' && <div className="alert alert-warn">
       <strong>Your payment did not go through.</strong>{entitled && graceDate ? ` Access continues until ${graceDate}.` : ' Update your payment method to restore access.'}{' '}
       <button type="button" className="linklike" disabled={portalBusy} onClick={openPortal}>Update payment method</button>
     </div>}
-    {!grandfathered && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
+    {trialing && <div className="alert alert-info" role="status" aria-label="Trial status">
+      <strong>Your free trial{trialDate ? ` ends on ${trialDate}` : ' is active'}.</strong>{' '}
+      {s.cancelAtPeriodEnd ? 'Your trial is set to cancel. You can use Merger until it ends, with no subscription charge.' : <>{price ? `After the trial, ${price} is billed automatically. ` : 'Monthly billing begins after the trial. '}Cancel before your trial ends to avoid the first subscription charge.</>}{' '}
+      <button className="linklike" type="button" onClick={openPortal} disabled={portalBusy}>Manage trial</button>
+    </div>}
+    {!grandfathered && !trialing && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
       <button type="button" className="linklike" onClick={openPortal} disabled={portalBusy}>Manage cancellation</button>
     </div>}
 
@@ -205,7 +211,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Subscribe again' : 'Join the paid alpha'} note={s.entitlementStatus === 'canceled' ? 'A new subscription uses the offer currently available below.' : 'Your account and handle are ready. Review the offer before continuing to checkout.'} /></div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Subscribe again' : 'Start your alpha trial'} note={s.entitlementStatus === 'canceled' ? 'A new subscription uses the offer currently available below.' : 'Your account and handle are ready. Review the offer before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Desktop app</h2></div>
       <p className="muted mt-16">{entitled ? 'Check the available installers for your computer.' : 'Downloads unlock when your subscription is confirmed.'}</p>
