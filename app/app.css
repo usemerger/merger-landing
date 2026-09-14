@@ -1,6 +1,9 @@
 /* Account surface (signup / login / dashboard / download).
    Reuses the ink-and-brass tokens defined in landing.css. */
 
+.app-shell :where(h1, h2, h3, p) { margin: 0; }
+.app-shell :where(h1, p) { overflow-wrap: anywhere; }
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -453,3 +456,79 @@
 .plan-step .field:first-of-type {
   margin-top: 18px;
 }
+
+/* Account typography and responsive controls share the marketing palette. */
+.app-shell { font-family: var(--body, sans-serif); }
+.account-content { flex: 1; display: flex; flex-direction: column; outline: none; }
+.app-shell h1, .app-shell h2, .app-shell h3 { font-family: var(--display, sans-serif); }
+.app-shell a { text-underline-offset: 4px; }
+.app-shell a:focus-visible, .app-shell button:focus-visible, .app-shell input:focus-visible, .app-shell summary:focus-visible { outline: 2px solid var(--brass-bright); outline-offset: 4px; }
+.app-shell button:disabled { cursor: not-allowed; opacity: .6; }
+.app-nav-inner { min-height: 76px; height: auto; padding-block: 16px; gap: 24px; }
+.app-nav .brand { color: var(--bone); text-decoration: none; flex-shrink: 0; font: 600 26px var(--display, sans-serif); letter-spacing: -.04em; }
+.app-nav .brand svg { color: var(--brass); }
+.app-nav-links a { text-decoration: none; }
+.app-nav-links [aria-current='page'] { color: var(--bone); }
+.app-shell .btn, .app-shell .nav-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 12px 20px; border: 1px solid var(--line-strong); border-radius: 8px; font: 600 14px/1.4 var(--body, sans-serif); text-decoration: none; cursor: pointer; color: var(--bone); background: var(--ink-3); }
+.app-shell .btn-primary, .app-shell .nav-cta { background: var(--brass); border-color: var(--brass); color: #171410; }
+.app-shell .btn:hover:not(:disabled), .app-shell .nav-cta:hover { border-color: var(--brass-bright); }
+.app-shell .btn-primary:hover:not(:disabled), .app-shell .nav-cta:hover { background: var(--brass-bright); color: #171410; }
+.account-menu { display: none; }
+.skip-link { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 12px 16px; color: var(--ink); background: var(--brass-bright); border-radius: 6px; }
+.skip-link:focus { top: 12px; }
+.nav-error { max-width: 1064px; margin: 0 auto; padding: 0 0 16px; color: #efb7b7; font-size: 14px; }
+.nav-error .linklike { color: inherit; text-decoration: underline; }
+.auth-main { padding-top: 64px; }
+.auth-card { max-width: 540px; }
+.auth-card h1 { font-size: clamp(30px, 5vw, 38px); line-height: 1.18; letter-spacing: -.04em; }
+.auth-card.narrow { max-width: 460px; }
+.auth-card .lede { font-size: 16px; }
+.eyebrow { font: 500 11px/1.5 var(--mono, monospace); letter-spacing: .12em; text-transform: uppercase; color: var(--brass); }
+.field label { font: 550 14px/1.5 var(--body, sans-serif); text-transform: none; letter-spacing: 0; color: var(--bone); }
+.field input[type='text'], .field input[type='email'], .field input[type='password'], .field input[type='number'] { min-height: 48px; font: 400 16px/1.4 var(--body, sans-serif); }
+.field input::placeholder { color: #81838b; }
+.field-hint { font: 400 13px/1.6 var(--body, sans-serif); letter-spacing: 0; }
+.field-hint a { color: var(--brass-bright); text-decoration: underline; }
+.field-hint.bad { color: #efb7b7; }
+.pw-toggle { min-height: 44px; font: 500 12px var(--body, sans-serif); text-transform: none; letter-spacing: 0; }
+.pw-wrap:focus-within, .handle-wrap:focus-within { box-shadow: 0 0 0 2px rgba(205,169,112,.14); }
+.pw-wrap input:focus-visible, .handle-wrap input:focus-visible { outline: none; }
+.app-shell input[aria-invalid='true'], .pw-wrap:has(input[aria-invalid='true']), .handle-wrap:has(input[aria-invalid='true']) { border-color: #df9b9b; }
+.stat .v { overflow-wrap: anywhere; }
+.alert p { margin: 0; }
+.alpha-summary { padding: 22px 0; margin: 16px 0 22px; border-block: 1px solid var(--line); display: flex; gap: 20px; align-items: center; justify-content: space-between; }
+.alpha-summary h3 { font-size: 19px; margin-top: 7px; }
+.alpha-amount { font: 600 36px/1.15 var(--display, sans-serif); white-space: nowrap; }
+.alpha-amount span { display: block; font: 400 13px/1.5 var(--body, sans-serif); color: var(--slate); margin-top: 5px; }
+.account-footer { width: min(1064px, calc(100% - 56px)); margin: 0 auto; padding: 24px 0; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--slate); font-size: 13px; }
+.account-footer nav { display: flex; gap: 24px; }
+.account-footer a { color: var(--slate); }
+.form-check { display: flex; align-items: flex-start; gap: 10px; color: var(--slate); font-size: 14px; line-height: 1.6; margin-top: 22px; }
+.form-check input { width: 18px; height: 18px; margin-top: 3px; flex: none; accent-color: var(--brass); }
+.legal-main { width: min(780px, calc(100% - 48px)); margin: 0 auto; padding: 64px 0 80px; }
+.legal-main h1 { font-size: clamp(32px, 6vw, 48px); letter-spacing: -.04em; margin: 12px 0 20px; line-height: 1.15; }
+.legal-main h2 { margin: 32px 0 12px; font-size: 22px; }
+.legal-main p, .legal-main li { color: var(--slate); font-size: 16px; line-height: 1.8; }
+.legal-main p + p { margin-top: 16px; }
+.legal-main a { color: var(--brass-bright); }
+.legal-main ul { padding-left: 22px; }
+.support-grid { display: grid; gap: 18px; margin-top: 32px; }
+.support-grid h2 { margin-top: 0; }
+.support-grid .btn { margin-top: 16px; }
+@media (max-width: 660px) {
+  .app-nav-inner { flex-wrap: wrap; padding: 16px 20px; gap: 14px; }
+  .account-menu { display: block; border: 1px solid var(--line-strong); padding: 10px 14px; min-height: 44px; border-radius: 7px; color: var(--bone); background: var(--ink-3); font: inherit; }
+  .app-nav-links { display: none; width: 100%; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .app-nav-links.is-open { display: flex; }
+  .app-nav-links > a, .app-nav-links > button { min-height: 44px; display: inline-flex; align-items: center; }
+  .auth-main, .dash-main { padding: 38px 20px 56px; }
+  .panel { padding: 22px 18px; }
+  .account-footer { width: calc(100% - 40px); flex-direction: column; gap: 16px; }
+  .account-footer nav { gap: 24px; flex-wrap: wrap; }
+  .nav-error { padding: 0 20px 16px; }
+  .alpha-summary { gap: 12px; }
+  .alpha-amount { font-size: 32px; }
+  .dl-row > .btn { width: 100%; }
+  .stat-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .app-shell * { scroll-behavior: auto !important; transition: none !important; } }

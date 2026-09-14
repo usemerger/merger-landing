@@ -2,333 +2,214 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Shell from './Shell';
 import PlanStep, { useStartCheckout } from './PlanStep';
-import {
-  ENTITLED_STATUSES,
-  PLANS,
-  billingPortal,
-  billingStatus,
-  errorMessage,
-  formatDate,
-  meOrNull,
-  statusLabel,
-} from '../lib/api';
+import HandleField from './HandleField';
+import { billingPortal, billingStatus, errorMessage, formatDate, meOrNull, statusLabel } from '../lib/api';
+import { pollEntitlement, safeReturnPath, stripeRedirectURL, validHandle } from '../lib/authFlow';
+import { ALPHA_OFFER } from '../lib/billingOffer';
+import useHandleClaim from '../lib/useHandleClaim';
 
 function StatusPill({ status, grandfathered }) {
   if (grandfathered) return <span className="pill good">Complimentary</span>;
-  const tone =
-    status === 'active' || status === 'trialing'
-      ? 'good'
-      : status === 'past_due'
-        ? 'warn'
-        : status === 'canceled'
-          ? 'bad'
-          : 'neutral';
+  const tone = ['active', 'trialing'].includes(status) ? 'good' : status === 'past_due' ? 'warn' : status === 'canceled' ? 'bad' : 'neutral';
   return <span className={`pill ${tone}`}>{statusLabel(status)}</span>;
+}
+
+function priceLabel(pricing) {
+  if (!Number.isFinite(pricing?.amount) || !/^[a-z]{3}$/i.test(pricing?.currency || '')) return null;
+  try {
+    const amount = new Intl.NumberFormat(undefined, { style: 'currency', currency: pricing.currency }).format(pricing.amount / 100);
+    const period = ['day', 'week', 'month', 'year'].includes(pricing.interval) ? pricing.interval : null;
+    if (!period) return amount;
+    const count = Number.isInteger(pricing.intervalCount) && pricing.intervalCount > 0 ? pricing.intervalCount : 1;
+    return `${amount} / ${count > 1 ? `${count} ${period}s` : period}${pricing.quantity > 1 ? ' total' : ''}`;
+  } catch { return null; }
 }
 
 export default function AccountDashboard() {
   const router = useRouter();
   const params = useSearchParams();
-  // Stripe Checkout returns to /billing?checkout=success.
+  const pathname = usePathname();
+  const returnPath = safeReturnPath(`${pathname}${params.toString() ? `?${params}` : ''}`);
+  const loginPath = `/login?next=${encodeURIComponent(returnPath)}`;
   const justCheckedOut = params.get('checkout') === 'success';
-
+  const canceledCheckout = ['cancelled', 'canceled'].includes(params.get('checkout'));
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionError, setActionError] = useState('');
   const [portalBusy, setPortalBusy] = useState(false);
-  const [settling, setSettling] = useState(false);
-  // Shared plan + checkout control for every "start your trial" affordance here.
+  const [handleBusy, setHandleBusy] = useState(false);
+  const [pollState, setPollState] = useState('idle');
+  const [pollCycle, setPollCycle] = useState(0);
   const checkoutCtl = useStartCheckout();
-  const polling = useRef(false);
+  const handleCtl = useHandleClaim();
+  const request = useRef(0);
+  const loadingRef = useRef(false);
+  const portalPending = useRef(false);
+  const handlePending = useRef(false);
 
   const load = useCallback(async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    const current = ++request.current;
+    setLoading(true);
     setError('');
     try {
-      // Auth gate: no session → send to login, remembering where we were headed.
-      const u = await meOrNull();
-      if (!u) {
-        router.replace('/login?next=/dashboard');
-        return;
-      }
-      setUser(u);
-      setStatus(await billingStatus());
+      const account = await meOrNull();
+      if (current !== request.current) return;
+      if (!account) { router.replace(loginPath); return; }
+      const billing = await billingStatus();
+      if (current !== request.current) return;
+      setUser(account);
+      setStatus(billing);
     } catch (err) {
+      if (current !== request.current) return;
+      if (err?.status === 401) { router.replace(loginPath); return; }
       setError(errorMessage(err));
+      setStatus(null);
     } finally {
-      setLoading(false);
+      if (current === request.current) { loadingRef.current = false; setLoading(false); }
     }
-  }, [router]);
+  }, [router, loginPath]);
 
   useEffect(() => {
     load();
+    const onFocus = () => { if (!portalPending.current && !handlePending.current) load(); };
+    window.addEventListener('focus', onFocus);
+    return () => { request.current += 1; loadingRef.current = false; window.removeEventListener('focus', onFocus); };
   }, [load]);
 
-  // Returning from Stripe Checkout or the Portal, the webhook may land a moment
-  // after the browser does. Re-check once on window focus so the page self-heals.
   useEffect(() => {
-    const onFocus = () => {
-      billingStatus().then(setStatus).catch(() => {});
-    };
-    window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
-  }, []);
-
-  // Straight off Checkout the subscription may not be recorded yet, because
-  // Stripe's webhook races the browser redirect. Poll briefly rather than
-  // telling someone who just paid that they have no subscription.
-  useEffect(() => {
-    if (!justCheckedOut || loading || polling.current) return;
-    if (status && status.entitled) return;
-
-    polling.current = true;
-    setSettling(true);
-    let tries = 0;
-    const iv = setInterval(async () => {
-      tries += 1;
-      try {
-        const s = await billingStatus();
-        setStatus(s);
-        if (s && s.entitled) {
-          clearInterval(iv);
-          setSettling(false);
-        }
-      } catch {
-        // keep trying; a transient failure here is not worth surfacing
-      }
-      if (tries >= 8) {
-        clearInterval(iv);
-        setSettling(false);
-      }
-    }, 1500);
-
-    return () => clearInterval(iv);
-  }, [justCheckedOut, loading, status]);
+    if (!justCheckedOut || loading || !user || !status || status.entitled === true) return;
+    const controller = new AbortController();
+    setPollState('running');
+    pollEntitlement({
+      read: billingStatus,
+      signal: controller.signal,
+      onStatus: setStatus,
+    }).then((result) => {
+      if (!controller.signal.aborted) setPollState(result.entitled ? 'complete' : result.error ? 'error' : 'waiting');
+    }).catch((err) => {
+      if (controller.signal.aborted) return;
+      if (err?.status === 401) router.replace(loginPath);
+      else setPollState('error');
+    });
+    return () => controller.abort();
+    // Status updates from this same poll must not tear it down after one attempt.
+    // A fresh account load or explicit retry starts a new bounded cycle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [justCheckedOut, loading, user?.userId, pollCycle, router, loginPath]);
 
   async function openPortal() {
-    if (portalBusy) return;
+    if (portalPending.current) return;
+    portalPending.current = true;
     setPortalBusy(true);
-    setError('');
+    setActionError('');
     try {
-      // All billing management — card, plan, cancel, invoices — is Stripe-hosted.
-      const res = await billingPortal();
-      if (!res || !res.url) throw new Error('Could not open the billing portal.');
-      window.location.href = res.url;
+      const result = await billingPortal();
+      window.location.assign(stripeRedirectURL(result?.url));
     } catch (err) {
-      setError(errorMessage(err));
+      if (err?.status === 401) { router.replace(loginPath); return; }
+      setActionError(errorMessage(err));
+      portalPending.current = false;
       setPortalBusy(false);
     }
   }
 
-  if (loading) {
-    return (
-      <Shell authed>
-        <main className="dash-main">
-          <p className="spinner-note">Loading your account…</p>
-        </main>
-      </Shell>
-    );
+  async function finishHandle(event) {
+    event.preventDefault();
+    if (handlePending.current) return;
+    if (!validHandle(handleCtl.handle)) { setActionError('Choose a handle with 3–30 letters, numbers or underscores.'); return; }
+    handlePending.current = true;
+    setHandleBusy(true);
+    setActionError('');
+    try {
+      const handle = await handleCtl.claim();
+      setUser((account) => ({ ...account, handle }));
+    } catch (err) {
+      if (err?.status === 401) { router.replace(loginPath); return; }
+      setActionError(errorMessage(err));
+    } finally { handlePending.current = false; setHandleBusy(false); }
   }
 
-  const s = status || {};
-  const grandfathered = s.grandfathered === true;
-  const entitled = s.entitled === true || ENTITLED_STATUSES.includes(s.entitlementStatus);
-  const planMeta = s.plan ? PLANS[s.plan] : null;
-  const planName = planMeta ? planMeta.name : s.plan || null;
+  if (loading) return <Shell authed><main className="dash-main"><p className="spinner-note" role="status">Loading your account…</p></main></Shell>;
+  if (error || !status || !user) return <Shell authed><main className="dash-main">
+    <h1 className="dash-title">Your account</h1>
+    <div className="alert alert-error" role="alert">{error || 'Your account could not be loaded.'}</div>
+    <button type="button" className="btn btn-ghost" onClick={load}>Try again</button>
+  </main></Shell>;
 
-  // Which date matters depends on where the subscription is in its life.
+  const s = status;
+  const grandfathered = s.grandfathered === true;
+  const entitled = s.entitled === true;
+  const pendingPayment = justCheckedOut && !entitled;
+  const hasSubscription = !['none', 'canceled', 'incomplete_expired'].includes(s.entitlementStatus);
+  const canSubscribe = !grandfathered && !entitled && !pendingPayment && !hasSubscription && Boolean(user.handle);
   const renewalDate = formatDate(s.currentPeriodEnd);
   const trialDate = formatDate(s.trialEndsAt);
   const graceDate = formatDate(s.graceEndsAt);
+  const planName = s.offer === 'alpha' ? ALPHA_OFFER.name : s.plan === 'operator' ? 'Operator' : s.plan === 'desk' ? 'Desk' : '—';
+  const price = priceLabel(s.pricing);
 
-  return (
-    <Shell authed>
-      <main className="dash-main">
-        <p className="eyebrow">Account</p>
-        <h1 className="dash-title">{user ? user.email : 'Your account'}</h1>
-        {user && user.handle && <p className="dash-handle">@{user.handle}</p>}
-        <p className="dash-sub">
-          {grandfathered
-            ? 'Founding account'
-            : entitled
-              ? 'Your subscription is in good standing.'
-              : 'You do not have an active subscription.'}
-        </p>
+  return <Shell authed><main className="dash-main">
+    <p className="eyebrow">Account</p>
+    <h1 className="dash-title">{user.email}</h1>
+    {user.handle && <p className="dash-handle">@{user.handle}</p>}
+    <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : 'Your subscription does not currently include app access.'}</p>
+    {actionError && <div className="alert alert-error" role="alert">{actionError}</div>}
+    {s.configured === false && <div className="alert alert-warn">Billing is temporarily unavailable. Your account is saved; please check again later.</div>}
+    {s.billingDetailsUnavailable && <div className="alert alert-warn">Current billing details could not be retrieved. <button type="button" className="linklike" onClick={load}>Try again</button></div>}
+    {canceledCheckout && !entitled && <div className="alert alert-info" role="status">Checkout was not completed. Your account is saved, and you can continue below.</div>}
+    {justCheckedOut && entitled && <div className="alert alert-info" role="status"><strong>Your account is ready.</strong> You can download Merger below.</div>}
+    {pendingPayment && <div className="alert alert-info" role="status">
+      {pollState === 'running' || pollState === 'idle' ? 'Confirming your subscription with Stripe…' : <>
+        {pollState === 'error' ? 'We could not check your payment status.' : 'Your payment has not been confirmed yet.'} If you completed checkout, allow a moment for confirmation before starting another subscription.{' '}
+        <button type="button" className="linklike" onClick={() => setPollCycle((value) => value + 1)}>Check payment again</button>
+      </>}
+    </div>}
+    {!grandfathered && s.entitlementStatus === 'past_due' && <div className="alert alert-warn">
+      <strong>Your payment did not go through.</strong>{entitled && graceDate ? ` Access continues until ${graceDate}.` : ' Update your payment method to restore access.'}{' '}
+      <button type="button" className="linklike" disabled={portalBusy} onClick={openPortal}>Update payment method</button>
+    </div>}
+    {!grandfathered && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
+      <button type="button" className="linklike" onClick={openPortal} disabled={portalBusy}>Manage cancellation</button>
+    </div>}
 
-        {error && <div className="alert alert-error">{error}</div>}
+    {!user.handle && <form className="panel mt-24" onSubmit={finishHandle} noValidate aria-busy={handleBusy}>
+      <h2>Reserve your handle</h2>
+      <p className="muted mt-16">Finish this account using your existing sign-in. You do not need to create another account.</p>
+      <HandleField ctl={handleCtl} disabled={handleBusy} />
+      <button type="submit" className="btn btn-primary" disabled={handleBusy}>{handleBusy ? 'Reserving…' : 'Reserve handle'}</button>
+    </form>}
 
-        {/* Billing is configured server-side? If not, say so rather than showing a broken plan. */}
-        {s.configured === false && (
-          <div className="alert alert-warn">
-            Billing is not fully configured on this environment yet, so subscription details may be
-            incomplete.
-          </div>
-        )}
-
-        {/* §5 banners */}
-        {!grandfathered && s.entitlementStatus === 'past_due' && (
-          <div className="alert alert-warn">
-            <strong>Your payment did not go through.</strong> Update your card to keep your desk
-            running{graceDate ? ` — access continues until ${graceDate}.` : '.'}{' '}
-            <button type="button" className="linklike" onClick={openPortal}>
-              Update your card
-            </button>
-          </div>
-        )}
-        {!grandfathered && s.entitlementStatus === 'canceled' && (
-          <div className="alert alert-warn">
-            <strong>Your subscription is canceled.</strong> Resubscribe to get your desk and
-            downloads back.{' '}
-            <button type="button" className="linklike" onClick={openPortal}>
-              Resubscribe
-            </button>
-          </div>
-        )}
-        {justCheckedOut && entitled && (
-          <div className="alert alert-info">
-            <strong>You are all set.</strong> Your trial has started and your card is on file — you
-            will not be charged until it ends.
-          </div>
-        )}
-        {settling && !entitled && (
-          <div className="alert alert-info">
-            Confirming your payment with Stripe — this usually takes a few seconds.
-          </div>
-        )}
-        {/* Suppress the "no subscription" nag while a just-completed checkout settles. */}
-        {!grandfathered && s.entitlementStatus === 'none' && !settling && (
-          <div className="alert alert-warn">
-            <strong>You have not started a subscription yet.</strong> Merger will not run until you
-            do.{' '}
-            <button
-              type="button"
-              className="linklike"
-              onClick={() => checkoutCtl.start()}
-              disabled={checkoutCtl.busy}
-            >
-              {checkoutCtl.busy ? 'Opening checkout…' : 'Start your trial'}
-            </button>
-          </div>
-        )}
-
-        <div className="panel mt-24">
-          <div className="panel-head">
-            <h2>Subscription</h2>
-            <StatusPill status={s.entitlementStatus} grandfathered={grandfathered} />
-          </div>
-
-          {grandfathered ? (
-            // Explicit grandfathered treatment (§5) — otherwise this reads as
-            // "active, no plan, no renewal", which looks broken.
-            <p className="muted mt-16">
-              Founding account — complimentary. You have full access to Merger with no subscription
-              and nothing to pay. There is no billing to manage.
-            </p>
-          ) : (
-            <div className="stat-grid">
-              <div className="stat">
-                <div className="k">Plan</div>
-                <div className="v">{planName || '—'}</div>
-              </div>
-
-              {(planName === 'Desk' || (s.seats && s.seats > 1)) && (
-                <div className="stat">
-                  <div className="k">Seats</div>
-                  <div className="v">{s.seats || 1}</div>
-                </div>
-              )}
-
-              {s.entitlementStatus === 'trialing' && trialDate && (
-                <div className="stat">
-                  <div className="k">Trial ends</div>
-                  <div className="v">{trialDate}</div>
-                </div>
-              )}
-
-              {s.entitlementStatus !== 'trialing' && renewalDate && (
-                <div className="stat">
-                  <div className="k">
-                    {s.entitlementStatus === 'canceled' ? 'Access until' : 'Renews'}
-                  </div>
-                  <div className="v">{renewalDate}</div>
-                </div>
-              )}
-
-              <div className="stat">
-                <div className="k">Payment method</div>
-                <div className="v">{s.hasPaymentMethod ? 'On file' : 'None'}</div>
-              </div>
-            </div>
-          )}
-
-          {!grandfathered && (
-            <div className="dl-row">
-              <button
-                className="btn btn-ghost btn-sm"
-                type="button"
-                onClick={openPortal}
-                disabled={portalBusy}
-              >
-                {portalBusy ? 'Opening…' : 'Manage billing'}
-              </button>
-            </div>
-          )}
-          {!grandfathered && (
-            <p className="field-hint mt-16">
-              Cards, plan changes, cancellation and invoices are handled on Stripe.
-            </p>
-          )}
+    <div className="panel mt-24">
+      <div className="panel-head"><h2>Subscription</h2><StatusPill status={s.entitlementStatus} grandfathered={grandfathered} /></div>
+      {grandfathered ? <p className="muted mt-16">Founding account — complimentary. You have access to Merger with no subscription and nothing to pay.</p> : <>
+        <div className="stat-grid">
+          <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
+          {price && <div className="stat"><div className="k">Subscription price</div><div className="v">{price}</div></div>}
+          {s.seats > 1 && <div className="stat"><div className="k">Seats</div><div className="v">{s.seats}</div></div>}
+          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
+          {s.entitlementStatus !== 'trialing' && renewalDate && <div className="stat"><div className="k">{s.cancelAtPeriodEnd || s.entitlementStatus === 'canceled' ? 'Access until' : 'Current period ends'}</div><div className="v">{renewalDate}</div></div>}
+          <div className="stat"><div className="k">Payment method</div><div className="v">{s.hasPaymentMethod ? 'On file' : 'None on file'}</div></div>
         </div>
-
-        {/* An account that exists but never paid resumes here: pick a plan and go
-            straight to Checkout. No email, password or handle is asked for again. */}
-        {!grandfathered && !entitled && (
-          <div className="panel">
-            <PlanStep
-              ctl={checkoutCtl}
-              heading={
-                s.entitlementStatus === 'canceled' ? 'Resubscribe' : 'Start your 14-day trial'
-              }
-              note={
-                s.entitlementStatus === 'canceled'
-                  ? 'Pick a plan to start a new subscription on this account.'
-                  : 'Your account and handle are already set up — just choose a plan.'
-              }
-            />
-          </div>
-        )}
-
-        <div className="panel">
-          <div className="panel-head">
-            <h2>Desktop app</h2>
-          </div>
-          <p className="muted mt-16">
-            {entitled
-              ? 'Your subscription is active — installers are ready.'
-              : 'Downloads unlock once your trial starts.'}
-          </p>
-          <div className="dl-row">
-            {entitled ? (
-              <Link className="btn btn-primary btn-sm" href="/download">
-                Go to downloads
-              </Link>
-            ) : (
-              // Goes to Checkout for this account, never back to the signup form.
-              <button
-                className="btn btn-primary btn-sm"
-                type="button"
-                onClick={() => checkoutCtl.start()}
-                disabled={checkoutCtl.busy}
-              >
-                {checkoutCtl.busy ? 'Opening checkout…' : 'Start your trial to download'}
-              </button>
-            )}
-          </div>
-        </div>
-      </main>
-    </Shell>
-  );
+        {price && <p className="field-hint mt-16">Recurring subtotal before tax, credits, or invoice adjustments. View invoices in Manage billing for final amounts.</p>}
+        {s.alphaPriceLocked && <p className="field-hint mt-16">{ALPHA_OFFER.rateNotice}</p>}
+        {(hasSubscription || s.hasPaymentMethod || s.entitlementStatus === 'canceled') && <>
+          <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={openPortal} disabled={portalBusy}>{portalBusy ? 'Opening…' : 'Manage billing'}</button></div>
+          <p className="field-hint mt-16">Manage your payment method, cancellation and invoices on Stripe.</p>
+        </>}
+      </>}
+    </div>
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Subscribe again' : 'Join the paid alpha'} note={s.entitlementStatus === 'canceled' ? 'A new subscription uses the offer currently available below.' : 'Your account and handle are ready. Review the offer before continuing to checkout.'} /></div>}
+    <div className="panel">
+      <div className="panel-head"><h2>Desktop app</h2></div>
+      <p className="muted mt-16">{entitled ? 'Check the available installers for your computer.' : 'Downloads unlock when your subscription is confirmed.'}</p>
+      {entitled && <div className="dl-row"><Link className="btn btn-primary btn-sm" href="/download">Go to downloads</Link></div>}
+    </div>
+  </main></Shell>;
 }

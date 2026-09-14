@@ -49,6 +49,12 @@ export default function PasswordField({
   hint,
   hintTone,
   required = true,
+  disabled = false,
+  minLength,
+  maxLength,
+  name,
+  invalid,
+  autoFocus,
 }) {
   const [visible, setVisible] = useState(false);
   const generated = useId();
@@ -60,12 +66,19 @@ export default function PasswordField({
       <div className="pw-wrap">
         <input
           id={inputId}
+          name={name || inputId}
           type={visible ? 'text' : 'password'}
           autoComplete={autoComplete}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
           required={required}
+          disabled={disabled}
+          minLength={minLength}
+          maxLength={maxLength}
+          autoFocus={autoFocus}
+          aria-invalid={invalid ?? hintTone === 'bad'}
+          aria-describedby={hint ? `${inputId}-hint` : undefined}
           // Keep the plaintext out of spellcheck/autocorrect pipelines.
           spellCheck={false}
           autoCapitalize="none"
@@ -74,6 +87,8 @@ export default function PasswordField({
         <button
           type="button"
           className="pw-toggle"
+          disabled={disabled}
+          aria-controls={inputId}
           onClick={() => setVisible((v) => !v)}
           aria-pressed={visible}
           aria-label={visible ? 'Hide password' : 'Show password'}
@@ -84,7 +99,7 @@ export default function PasswordField({
         </button>
       </div>
       {hint !== undefined && (
-        <p className={'field-hint' + (hintTone ? ` ${hintTone}` : '')}>{hint}</p>
+        <p id={`${inputId}-hint`} className={'field-hint' + (hintTone ? ` ${hintTone}` : '')}>{hint}</p>
       )}
     </div>
   );

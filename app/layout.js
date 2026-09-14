@@ -1,10 +1,16 @@
 import './landing.css';
 import './app.css';
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+const space = Space_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-space' });
+const mono = JetBrains_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-jetbrains' });
 
 export const metadata = {
-  title: 'Merger — Every deal, every channel, one desk',
+  title: { default: 'Merger — A place for the work in your conversations', template: '%s · Merger' },
   description:
-    'Merger unifies WhatsApp, Telegram, Slack, LinkedIn and nine more networks into a single Matrix-native deal desk with AI triage, counterparty matching, and e-sign tracking.',
+    'Bring connected messages, reviewed deal suggestions, contact details, and your own DocuSign account into one Windows desktop workspace. Explore the Merger alpha.',
+  applicationName: 'Merger',
 };
 
 export const viewport = {
@@ -14,15 +20,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${space.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   );

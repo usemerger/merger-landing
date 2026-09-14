@@ -1,23 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Shell from '../components/Shell';
 import { errorMessage, forgotPassword } from '../lib/api';
+import { normalizeEmail, validEmail } from '../lib/authFlow';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const pending = useRef(false);
+  const successHeading = useRef(null);
+  useEffect(() => { if (sent) successHeading.current?.focus(); }, [sent]);
 
   async function onSubmit(e) {
     e.preventDefault();
-    if (busy) return;
+    if (pending.current) return;
+    if (!validEmail(email)) { setError('Enter a valid email address.'); return; }
+    pending.current = true;
     setError('');
     setBusy(true);
     try {
-      await forgotPassword(email.trim());
+      const address = normalizeEmail(email);
+      await forgotPassword(address);
+      setEmail(address);
       // Deliberately not branching on the response: the backend returns the same
       // {ok:true} for registered and unregistered addresses, and the UI must not
       // give away which is which.
@@ -26,6 +34,7 @@ export default function ForgotPasswordPage() {
       setError(errorMessage(err));
     } finally {
       setBusy(false);
+      pending.current = false;
     }
   }
 
@@ -35,7 +44,7 @@ export default function ForgotPasswordPage() {
         <main className="auth-main">
           <div className="auth-card narrow">
             <p className="eyebrow">Check your inbox</p>
-            <h1>Reset link sent.</h1>
+            <h1 ref={successHeading} tabIndex={-1}>Check your email.</h1>
 
             <div className="panel mt-24">
               <p className="muted">
@@ -77,26 +86,30 @@ export default function ForgotPasswordPage() {
             Enter the email on your account and we will send you a link to set a new password.
           </p>
 
-          <form className="panel mt-24" onSubmit={onSubmit} noValidate>
+          <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
             <div className="field">
               <label htmlFor="email">Email</label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 autoComplete="email"
                 placeholder="you@firm.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={busy}
+                autoCapitalize="none"
+                spellCheck={false}
               />
             </div>
 
-            {error && <div className="alert alert-error">{error}</div>}
+            {error && <div className="alert alert-error" role="alert">{error}</div>}
 
             <button
               className="btn btn-primary btn-block"
               type="submit"
-              disabled={busy || !email.trim()}
+              disabled={busy}
             >
               {busy ? 'Sending…' : 'Send reset link'}
             </button>

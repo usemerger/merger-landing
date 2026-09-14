@@ -1,0 +1,6 @@
+scripts/
+tests/
+docs/
+*.md
+vitest.config.mjs
+.env*.local

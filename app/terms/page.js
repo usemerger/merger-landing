@@ -1,0 +1,16 @@
+import Link from 'next/link';
+import Shell from '../components/Shell';
+import { ALPHA_OFFER } from '../lib/billingOffer';
+
+export const metadata = { title: 'Alpha terms', description: 'Pricing, renewal, cancellation, and use of the Merger alpha.' };
+
+export default function TermsPage() {
+  return <Shell><main className="legal-main"><p className="eyebrow">Merger alpha</p><h1>Clear terms, before you join.</h1><p>Updated September 14, 2026. These terms describe the Merger Windows alpha and its monthly subscription. For questions about your account or a charge, contact <a href="mailto:support@usemerger.com">support@usemerger.com</a>.</p>
+    <h2>Your subscription</h2><p>{ALPHA_OFFER.billingNotice} Creating a Merger account is free; a subscription begins only when you complete payment in Stripe Checkout. There is no free trial for this offer.</p><p>{ALPHA_OFFER.rateNotice} This rate applies to one person’s Merger subscription. Your checkout page shows the amount due before you pay.</p>
+    <h2>Renewal and cancellation</h2><p>Your subscription renews automatically each month until canceled. Sign in, open <Link href="/billing">Billing</Link>, and choose Manage billing to cancel through Stripe. A scheduled cancellation takes effect at the end of the paid billing period; access continues until then. Uninstalling the app or signing out does not cancel billing.</p><p>If you cannot access billing management, email support from the email address on your account. For a disputed charge or refund request, contact support with the date and amount of the charge. Do not send card details. Any rights you have under applicable law continue to apply.</p>
+    <h2>What alpha means</h2><p>Merger is in active development. Features, connected services, and availability may change, and bugs or interruptions can occur. Keep independent copies of important messages, contacts, and documents. Windows is the currently offered desktop platform.</p>
+    <h2>Connected services and AI</h2><p>You need your own accounts for the services you connect. Claude features require an Anthropic API key; Anthropic usage charges are separate from Merger. DocuSign requires your own DocuSign account and any subscription required by DocuSign. Third-party services apply their own terms and policies.</p><p>AI suggestions can be incomplete or incorrect. Review suggested deals, contacts, recipient details, and document fields before relying on them. You are responsible for the messages, documents, and agreements you choose to send or sign.</p>
+    <h2>Your account and responsible use</h2><p>Use an email address you control, keep your password private, and connect only accounts you are authorized to use. Do not use Merger for unlawful activity, spam, abuse, unauthorized access, or interference with the service. Access may be restricted to address misuse or security issues.</p>
+    <h2>Privacy and changes</h2><p>Read the <Link href="/privacy">privacy notice</Link> to understand how account data, connected messages, and optional AI features are handled. Updated terms will be published here. The alpha rate commitment above continues for qualifying subscriptions while they remain active.</p>
+  </main></Shell>;
+}

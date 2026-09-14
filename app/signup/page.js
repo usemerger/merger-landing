@@ -2,321 +2,139 @@
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Shell from '../components/Shell';
 import PasswordField from '../components/PasswordField';
-import {
-  ApiError,
-  PLANS,
-  checkout,
-  claimHandle,
-  errorMessage,
-  handleAvailable,
-  meOrNull,
-  signup,
-} from '../lib/api';
-
-const HANDLE_RE = /^[a-z0-9_]{3,30}$/;
+import HandleField from '../components/HandleField';
+import PlanStep, { useStartCheckout } from '../components/PlanStep';
+import { errorMessage, meOrNull, signup } from '../lib/api';
+import { MIN_PASSWORD_LENGTH, normalizeEmail, validEmail, validHandle } from '../lib/authFlow';
+import useHandleClaim from '../lib/useHandleClaim';
+import { ALPHA_OFFER } from '../lib/billingOffer';
 
 function SignupForm() {
   const router = useRouter();
-  const params = useSearchParams();
-  const planParam = params.get('plan');
-
-  const [sessionChecked, setSessionChecked] = useState(false);
+  const [session, setSession] = useState('loading');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [handle, setHandle] = useState('');
-  const [plan, setPlan] = useState(PLANS[planParam] ? planParam : 'operator');
-  const [seats, setSeats] = useState(1);
-
-  const [handleState, setHandleState] = useState({ status: 'idle', message: '' });
+  const [account, setAccount] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [busyLabel, setBusyLabel] = useState('');
+  const pending = useRef(false);
+  const sessionRequest = useRef(0);
+  const handleCtl = useHandleClaim();
+  const checkoutCtl = useStartCheckout();
 
-  // Signup is three backend calls. If a later one fails we must not re-run the
-  // earlier ones on retry — the account (and handle) already exist.
-  const progress = useRef({ accountCreated: false, handleClaimed: false });
-
-  // This form creates a NEW account, so it is only for logged-out visitors.
-  // Someone who already has an account — typically after bouncing off Checkout —
-  // must resume from the dashboard, where paying needs only a plan. Sending them
-  // here would demand a handle again and reject their own as taken, which is the
-  // dead end this fix removes.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      // Once this form has created the account itself, stay put so a failure at
-      // the handle or checkout step can still be retried in place.
-      if (progress.current.accountCreated) {
-        if (!cancelled) setSessionChecked(true);
-        return;
-      }
-      const user = await meOrNull().catch(() => null);
-      if (cancelled) return;
-      if (user) {
-        router.replace('/dashboard');
-        return;
-      }
-      setSessionChecked(true);
-    })();
-    return () => {
-      cancelled = true;
-    };
+  const checkSession = useCallback(async () => {
+    const request = ++sessionRequest.current;
+    setSession('loading');
+    setError('');
+    try {
+      const user = await meOrNull();
+      if (request !== sessionRequest.current) return;
+      if (user) { router.replace('/dashboard'); return; }
+      setSession('ready');
+    } catch (err) {
+      if (request !== sessionRequest.current) return;
+      setError(errorMessage(err));
+      setSession('error');
+    }
   }, [router]);
 
-  /* ---- live handle availability (§3), debounced ---- */
-  useEffect(() => {
-    const h = handle.trim().toLowerCase();
-    if (!h) {
-      setHandleState({ status: 'idle', message: '' });
-      return;
-    }
-    if (!HANDLE_RE.test(h)) {
-      setHandleState({
-        status: 'bad',
-        message: '3–30 characters: lowercase letters, numbers, underscore.',
-      });
-      return;
-    }
-    // Already claimed by this signup attempt — don't report it as taken.
-    if (progress.current.handleClaimed) {
-      setHandleState({ status: 'ok', message: 'Reserved for you.' });
-      return;
-    }
+  useEffect(() => { checkSession(); return () => { sessionRequest.current += 1; }; }, [checkSession]);
 
-    let cancelled = false;
-    setHandleState({ status: 'checking', message: 'Checking…' });
-    const t = setTimeout(async () => {
-      try {
-        const res = await handleAvailable(h);
-        if (cancelled) return;
-        setHandleState(
-          res && res.available
-            ? { status: 'ok', message: `@${h} is available.` }
-            : { status: 'bad', message: `@${h} is already taken.` }
-        );
-      } catch {
-        if (!cancelled) setHandleState({ status: 'idle', message: '' });
+  async function onSubmit(event) {
+    event.preventDefault();
+    if (pending.current) return;
+    if (!account && !validEmail(email)) { setError('Enter a valid email address.'); return; }
+    if (!account && password.length < MIN_PASSWORD_LENGTH) { setError('Use at least 8 characters for your password.'); return; }
+    if (!validHandle(handleCtl.handle)) { setError('Choose a handle with 3–30 letters, numbers or underscores.'); return; }
+    pending.current = true;
+    setBusy(true);
+    setError('');
+    let currentAccount = account;
+    try {
+      if (!currentAccount) {
+        setBusyLabel('Creating your account…');
+        const address = normalizeEmail(email);
+        try {
+          await signup(address, password, null);
+          currentAccount = { email: address };
+        } catch (err) {
+          // Resume only the exact account submitted here after a lost response.
+          if (!err?.status || err.status >= 500) {
+            try {
+              const recovered = await meOrNull();
+              if (recovered?.email?.toLowerCase() === address.toLowerCase()) currentAccount = recovered;
+            } catch { /* Preserve the original signup error. */ }
+          }
+          if (!currentAccount) throw err;
+        }
+        setAccount(currentAccount);
+        setPassword('');
       }
-    }, 400);
-
-    return () => {
-      cancelled = true;
-      clearTimeout(t);
-    };
-  }, [handle]);
-
-  const normalizedHandle = handle.trim().toLowerCase();
-  const canSubmit =
-    !busy &&
-    email.trim() &&
-    password.length >= 8 &&
-    HANDLE_RE.test(normalizedHandle) &&
-    handleState.status !== 'bad';
-
-  const onSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      if (busy) return;
-      setError('');
-      setBusy(true);
-
-      try {
-        // 1. Create the account. It comes back un-entitled by design (§3).
-        if (!progress.current.accountCreated) {
-          setBusyLabel('Creating your account…');
-          await signup(email.trim(), password, null);
-          progress.current.accountCreated = true;
-        }
-
-        // 2. Claim the @handle.
-        if (!progress.current.handleClaimed) {
-          setBusyLabel('Reserving your handle…');
-          await claimHandle(normalizedHandle);
-          progress.current.handleClaimed = true;
-        }
-
-        // 3. Hand off to Stripe-hosted Checkout. Card is required; the 14-day
-        //    trial only starts once Checkout completes. No card data touches us.
-        setBusyLabel('Opening secure checkout…');
-        const seatCount = plan === 'desk' ? Math.max(1, Number(seats) || 1) : 1;
-        const res = await checkout(plan, seatCount);
-        if (!res || !res.url) throw new Error('Checkout could not be started.');
-        window.location.href = res.url;
-        return; // keep the button disabled through the redirect
-      } catch (err) {
-        if (err instanceof ApiError && err.code === 'handle_taken') {
-          setHandleState({ status: 'bad', message: `@${normalizedHandle} is already taken.` });
-        }
-        setError(errorMessage(err));
-        setBusy(false);
-        setBusyLabel('');
+      if (!currentAccount.handle) {
+        setBusyLabel('Reserving your handle…');
+        const handle = await handleCtl.claim();
+        setAccount({ ...currentAccount, handle });
       }
-    },
-    [busy, email, password, normalizedHandle, plan, seats]
-  );
-
-  const accountExists = progress.current.accountCreated;
-
-  // Hold the form back until we know there is no session, so a logged-in user is
-  // never shown the handle field even for a frame before the redirect lands.
-  if (!sessionChecked) {
-    return (
-      <main className="auth-main">
-        <div className="auth-card">
-          <p className="spinner-note">Loading…</p>
-        </div>
-      </main>
-    );
+    } catch (err) {
+      if (err?.status === 401) { router.replace('/login?next=/dashboard'); return; }
+      setError(errorMessage(err));
+    } finally {
+      pending.current = false;
+      setBusy(false);
+      setBusyLabel('');
+    }
   }
 
-  return (
+  return <Shell authed={Boolean(account)}>
     <main className="auth-main">
       <div className="auth-card">
-        <p className="eyebrow">Start your trial</p>
-        <h1>Set up your deal desk.</h1>
-        <p className="lede">
-          14-day free trial on Operator and Desk. A card is required to start — you will not be
-          charged until the trial ends, and you can cancel any time from your dashboard.
-        </p>
-
-        <form className="panel mt-24" onSubmit={onSubmit} noValidate>
-          <div className="field">
-            <label htmlFor="email">Work email</label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@firm.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <PasswordField
-            id="password"
-            label="Password"
-            autoComplete="new-password"
-            placeholder="At least 8 characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            hint={password && password.length < 8 ? 'Use at least 8 characters.' : ''}
-            hintTone={password && password.length < 8 ? 'bad' : undefined}
-          />
-
-          <div className="field">
-            <label htmlFor="handle">Your handle</label>
-            <div className="handle-wrap">
-              <span className="at">@</span>
-              <input
-                id="handle"
-                type="text"
-                autoComplete="off"
-                autoCapitalize="none"
-                spellCheck={false}
-                placeholder="yourdesk"
-                value={handle}
-                onChange={(e) => setHandle(e.target.value)}
-                required
-              />
-            </div>
-            <p
-              className={
-                'field-hint' +
-                (handleState.status === 'ok' ? ' ok' : '') +
-                (handleState.status === 'bad' ? ' bad' : '')
-              }
-            >
-              {handleState.message}
-            </p>
-          </div>
-
-          <div className="field">
-            <label>Plan</label>
-            <div className="plan-grid">
-              {Object.values(PLANS).map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  className="plan-opt"
-                  aria-pressed={plan === p.id}
-                  onClick={() => setPlan(p.id)}
-                >
-                  <div className="pname">{p.name}</div>
-                  <div className="pprice">
-                    ${p.price} / MO{p.perSeat ? ' PER SEAT' : ''}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {plan === 'desk' && (
-            <div className="field">
-              <label htmlFor="seats">Seats</label>
-              <input
-                id="seats"
-                type="number"
-                min={1}
-                max={500}
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-              />
-              <p className="field-hint">
-                ${PLANS.desk.price} per seat / month · {Math.max(1, Number(seats) || 1)} seat
-                {Math.max(1, Number(seats) || 1) === 1 ? '' : 's'} = $
-                {PLANS.desk.price * Math.max(1, Number(seats) || 1)} / month after trial
-              </p>
-            </div>
-          )}
-
-          {error && (
-            <div className="alert alert-error">
-              {error}
-              {accountExists && (
-                <>
-                  {' '}
-                  Your account was created — press continue to finish checkout, or{' '}
-                  <Link href="/dashboard">go to your dashboard</Link>.
-                </>
-              )}
-            </div>
-          )}
-
-          <button className="btn btn-primary btn-block" type="submit" disabled={!canSubmit}>
-            {busy ? busyLabel || 'Working…' : accountExists ? 'Continue to checkout' : 'Continue to checkout'}
-          </button>
-
-          <p className="field-hint center mt-16">
-            Secure payment is handled by Stripe. Card required · cancel any time.
-          </p>
-        </form>
-
-        <p className="form-foot">
-          Already have an account? <Link href="/login">Sign in</Link>
-        </p>
+        {session === 'loading' ? <p className="spinner-note" role="status">Checking your account…</p> : session === 'error' ? <>
+          <h1>Could not check your account.</h1>
+          <div className="alert alert-error" role="alert">{error}</div>
+          <button type="button" className="btn btn-ghost" onClick={checkSession}>Try again</button>
+          <p className="form-foot"><Link href="/login">Sign in</Link></p>
+        </> : account?.handle ? <>
+          <p className="eyebrow">Account ready</p>
+          <h1>Your desk starts here.</h1>
+          <p className="lede">Signed in as {account.email} · @{account.handle}. Review the alpha offer below to subscribe.</p>
+          <div className="panel mt-24"><PlanStep ctl={checkoutCtl} heading="Join the paid alpha" /></div>
+          <p className="form-foot"><Link href="/dashboard">Continue to your account</Link></p>
+        </> : <>
+          <p className="eyebrow">Join Merger</p>
+          <h1>{account ? 'Finish your account.' : 'Set up your deal desk.'}</h1>
+          <p className="lede">{account ? `Your account for ${account.email} is ready. Reserve your handle to continue.` : 'Create your account and reserve your handle. You can review the paid alpha before subscribing.'}</p>
+          {!account && <p className="field-hint mt-16">Windows alpha · {ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}. Your account is free until you complete checkout.</p>}
+          <form className="panel mt-24" onSubmit={onSubmit} aria-busy={busy} noValidate>
+            {!account && <>
+              <div className="field">
+                <label htmlFor="email">Email</label>
+                <input id="email" name="email" type="email" autoComplete="email" autoCapitalize="none" spellCheck={false}
+                  placeholder="you@firm.com" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} />
+              </div>
+              <PasswordField id="password" label="Password" autoComplete="new-password" placeholder="At least 8 characters"
+                value={password} onChange={(event) => setPassword(event.target.value)} minLength={MIN_PASSWORD_LENGTH} disabled={busy}
+                hint={password && password.length < MIN_PASSWORD_LENGTH ? 'Use at least 8 characters.' : ''}
+                hintTone={password && password.length < MIN_PASSWORD_LENGTH ? 'bad' : undefined} />
+            </>}
+            <HandleField ctl={handleCtl} disabled={busy} />
+            {error && <div className="alert alert-error" role="alert">{error}{account && <> Your account is saved. Retry here or <Link href="/dashboard">finish from your account</Link>.</>}</div>}
+            <button className="btn btn-primary btn-block" type="submit" disabled={busy}>
+              {busy ? busyLabel || 'Working…' : account ? 'Reserve handle' : 'Create account'}
+            </button>
+            <p className="field-hint center mt-16">Creating an account does not start a subscription or charge your card.</p>
+            <p className="field-hint center">By creating an account, you agree to the <Link href="/terms">Terms</Link> and acknowledge the <Link href="/privacy">Privacy Policy</Link>.</p>
+          </form>
+          <p className="form-foot">Already have an account? <Link href="/login">Sign in</Link></p>
+        </>}
       </div>
     </main>
-  );
+  </Shell>;
 }
 
 export default function SignupPage() {
-  return (
-    <Shell>
-      <Suspense
-        fallback={
-          <main className="auth-main">
-            <div className="auth-card">
-              <p className="spinner-note">Loading…</p>
-            </div>
-          </main>
-        }
-      >
-        <SignupForm />
-      </Suspense>
-    </Shell>
-  );
+  return <Suspense fallback={<Shell><main className="auth-main"><p className="spinner-note" role="status">Loading…</p></main></Shell>}><SignupForm /></Suspense>;
 }

@@ -23,38 +23,37 @@ export class ApiError extends Error {
 }
 
 async function request(path, { method = 'GET', body } = {}) {
-  let res;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
   try {
-    res = await fetch(path, {
+    const res = await fetch(path, {
       method,
       // credentials:'include' keeps the session cookie flowing on same-origin calls.
       credentials: 'include',
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
       cache: 'no-store',
+      signal: controller.signal,
     });
-  } catch {
-    throw new ApiError(0, 'network_error', null);
-  }
-
-  let data = null;
-  const text = await res.text();
-  if (text) {
+    let data = null;
+    const text = await res.text();
     try {
-      data = JSON.parse(text);
+      data = text ? JSON.parse(text) : null;
     } catch {
-      data = null;
+      throw new ApiError(res.status, res.ok ? 'invalid_response' : null, null);
     }
+    const code = data?.error || (typeof data?.detail === 'string' ? data.detail : data?.detail?.error);
+    if (!res.ok || code) throw new ApiError(res.status, code, data);
+    if (res.status !== 204 && (!data || typeof data !== 'object')) {
+      throw new ApiError(res.status, 'invalid_response', null);
+    }
+    return data;
+  } catch (err) {
+    if (err instanceof ApiError) throw err;
+    throw new ApiError(0, controller.signal.aborted ? 'request_timeout' : 'network_error', null);
+  } finally {
+    clearTimeout(timer);
   }
-
-  if (!res.ok) {
-    throw new ApiError(res.status, data && data.error, data);
-  }
-  // Some endpoints answer 200 with an {error: ...} envelope rather than a 4xx.
-  if (data && data.error) {
-    throw new ApiError(res.status, data.error, data);
-  }
-  return data;
 }
 
 /* ---------------- auth ---------------- */
@@ -69,6 +68,8 @@ export const login = (email, password) =>
   request('/api/auth/login', { method: 'POST', body: { email, password } });
 
 export const logout = () => request('/api/auth/logout', { method: 'POST' });
+
+export const resendVerification = () => request('/api/auth/verify-email/send', { method: 'POST' });
 
 /**
  * Request a reset email. The backend answers {ok:true} whether or not the address
@@ -105,12 +106,13 @@ export const claimHandle = (handle) =>
 /* ---------------- billing ---------------- */
 
 export const billingStatus = () => request('/api/billing/status');
+export const billingOffers = () => request('/api/billing/offers');
 
 /** Returns the hosted Stripe Checkout URL. No card data ever touches this app. */
-export const checkout = (plan, seats) =>
+export const checkout = () =>
   request('/api/billing/checkout', {
     method: 'POST',
-    body: { plan, ...(seats ? { seats } : {}) },
+    body: { offer: 'alpha' },
   });
 
 /** Returns the hosted Stripe Customer Portal URL. */
@@ -123,8 +125,9 @@ export const download = () => request('/api/download');
 /* ---------------- presentation helpers ---------------- */
 
 export const PLANS = {
-  operator: { id: 'operator', name: 'Operator', price: 79, perSeat: false },
-  desk: { id: 'desk', name: 'Desk', price: 159, perSeat: true },
+  alpha: { id: 'alpha', name: 'Merger Alpha', price: 50, perSeat: false },
+  operator: { id: 'operator', name: 'Operator', perSeat: false },
+  desk: { id: 'desk', name: 'Desk', perSeat: true },
 };
 
 /** Entitlement states that unlock the product. */
@@ -133,7 +136,7 @@ export const ENTITLED_STATUSES = ['trialing', 'active'];
 export function statusLabel(status) {
   switch (status) {
     case 'trialing':
-      return 'Trialing';
+      return 'Trial';
     case 'active':
       return 'Active';
     case 'past_due':
@@ -142,8 +145,16 @@ export function statusLabel(status) {
       return 'Canceled';
     case 'none':
       return 'No subscription';
+    case 'unpaid':
+      return 'Payment needed';
+    case 'incomplete':
+      return 'Payment incomplete';
+    case 'incomplete_expired':
+      return 'Checkout expired';
+    case 'paused':
+      return 'Paused';
     default:
-      return status || 'Unknown';
+      return 'Status unavailable';
   }
 }
 
@@ -167,9 +178,45 @@ export function errorMessage(err) {
     case 'invalid_credentials':
       return 'That email and password combination is not right.';
     case 'handle_taken':
+    case 'handle_reserved':
       return 'That handle is already taken. Pick another.';
     case 'unknown_plan':
-      return 'That plan is not available. Choose Operator or Desk.';
+    case 'unknown_offer':
+      return 'That offer is not available. Refresh this page to see the current offer.';
+    case 'offer_changed':
+      return 'The offer has changed. Open your Merger account online to review the current pricing before subscribing.';
+    case 'checkout_processing':
+    case 'checkout_in_progress':
+      return 'A checkout is already being processed for this account. Check your billing page before trying again.';
+    case 'complimentary_access':
+      return 'This account already has complimentary access. You do not need a paid subscription.';
+    case 'alpha_offer_unavailable':
+    case 'alpha_not_configured':
+    case 'alpha_price_mismatch':
+    case 'billing_unavailable':
+    case 'billing_not_configured':
+      return 'Paid signup is temporarily unavailable. Your account is saved; please try again later.';
+    case 'subscription_exists':
+    case 'already_subscribed':
+      return 'This account already has a subscription. Manage it from your account dashboard.';
+    case 'billing_portal_unavailable':
+    case 'billing_management_unavailable':
+    case 'portal_not_configured':
+      return 'Billing management is temporarily unavailable. Contact support@usemerger.com for help.';
+    case 'billing_provider_error':
+      return 'Stripe could not complete the request. Please try again in a moment.';
+    case 'no_subscription':
+      return 'There is no billing account to manage yet. Review the current offer from your account.';
+    case 'provisioning_failed':
+      return 'Your messaging account could not be prepared. Please try again or contact support@usemerger.com.';
+    case 'account_deleted':
+      return 'This account has been deleted. Contact support@usemerger.com if you need help.';
+    case 'email_not_verified':
+      return 'Verify your email before continuing. Use the link in your inbox or request a new one.';
+    case 'invalid_handle':
+      return 'Use 3–30 lowercase letters, numbers, or underscores for your handle.';
+    case 'handle_already_set':
+      return 'Your account already has a handle. Refresh to continue.';
     case 'invalid_token':
       // Reset links are single-use and short-lived, so a rejected token is far
       // more often expired or already spent than genuinely malformed.
@@ -180,6 +227,10 @@ export function errorMessage(err) {
       return 'Too many attempts. Wait a minute and try again.';
     case 'network_error':
       return 'Could not reach the server. Check your connection and try again.';
+    case 'request_timeout':
+      return 'This is taking longer than expected. Please try again.';
+    case 'invalid_response':
+      return 'The server returned an unexpected response. Please try again.';
     default: {
       // A backend blip (a 502 from the gateway, say) has no `error` code, and the
       // synthesised message is a bare "request_failed_502" — never show that to a
@@ -188,11 +239,10 @@ export function errorMessage(err) {
       if (status >= 500) {
         return 'Something went wrong on our end. Please try again in a moment.';
       }
-      const code = err && err.message;
-      if (!code || /^request_failed_\d+$/.test(code)) {
-        return 'Something went wrong. Please try again.';
-      }
-      return code;
+      if (status === 401) return 'Your session has expired. Please sign in again.';
+      if (status === 429) return 'Too many attempts. Wait a minute and try again.';
+      if (status === 422) return 'Check the information you entered and try again.';
+      return 'Something went wrong. Please try again.';
     }
   }
 }
