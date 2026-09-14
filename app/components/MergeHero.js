@@ -64,9 +64,13 @@ const MOBILE_MAX = 820;
 
 export default function MergeHero() {
   const hostRef = useRef(null);
-  /** 0 apart → 1 fused. A ref, not state: it updates per scroll frame and must
-   *  never cause a React render. */
-  const progress = useRef(0);
+  /** 0 scattered → 1 assembled. Driven by a timer on mount, NOT by scroll:
+   *  §4 asks for the pieces to come together on load and settle. Scroll only
+   *  nudges the settled stone afterwards. A ref, not state — it changes every
+   *  frame and must never cause a React render. */
+  const assembly = useRef(0);
+  /** Normalised hero scroll, for the nudge. */
+  const scroll = useRef(0);
   const pointer = useRef({ x: 0, y: 0 });
   const [mount, setMount] = useState(false);
   const [live, setLive] = useState(false);
@@ -99,13 +103,12 @@ export default function MergeHero() {
     // React work.
     const onScroll = () => {
       const r = host.getBoundingClientRect();
-      // RESOLVED WHILE STILL IN VIEW. Mapping the merge across a full viewport
-      // meant the shards only fused as the hero left the screen — the whole
-      // payoff happened where nobody could see it. Completing inside the first
-      // ~45% of a screen of scroll puts the resolved gem in front of the reader
-      // while the hero copy is still beside it.
-      const travelled = -r.top / Math.max(window.innerHeight * 0.45, 1);
-      progress.current = Math.min(1, Math.max(0, travelled + 0.10));
+      // A NUDGE, not the merge. v1 mapped the whole assembly onto scroll, which
+      // meant the stone only resolved as the hero left the screen — the payoff
+      // happened where nobody could see it. Assembly now belongs to the load
+      // animation, and scroll just turns and sinks the settled stone a little.
+      const travelled = -r.top / Math.max(window.innerHeight, 1);
+      scroll.current = Math.min(1, Math.max(0, travelled));
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -128,6 +131,25 @@ export default function MergeHero() {
       window.removeEventListener('pointermove', onPointer);
     };
   }, []);
+
+  // ASSEMBLE ON LOAD. Runs once the canvas is mounted, on rAF rather than a
+  // CSS transition because the value feeds three.js directly. Slow enough to be
+  // watched — the whole point is that someone sees twelve pieces become one.
+  useEffect(() => {
+    if (!mount) return;
+    let raf = 0;
+    let start = 0;
+    const DURATION = 2200;
+    const tick = (now) => {
+      if (!start) start = now;
+      const t = Math.min(1, (now - start) / DURATION);
+      // Long decelerating tail: arriving with weight, never springing.
+      assembly.current = 1 - Math.pow(1 - t, 3);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [mount]);
 
   // Stop rendering when nobody is looking. A hero that keeps a GPU busy in a
   // background tab is the difference between a site that feels expensive and
@@ -155,7 +177,7 @@ export default function MergeHero() {
       <ResolvedMark title="Twelve conversations merging into one deal desk" />
       {mount && (
         <div className={`mh-canvas ${live ? 'is-live' : ''}`} aria-hidden="true">
-          <MergeScene progress={progress} pointer={pointer} live={live} />
+          <MergeScene assembly={assembly} pointer={pointer} scroll={scroll} live={live} />
         </div>
       )}
     </div>

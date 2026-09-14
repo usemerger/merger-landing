@@ -23,31 +23,30 @@ export default function LandingPage() {
     <MarketingNav signupHref={ALPHA_OFFER.signupHref} checkoutLabel={ALPHA_OFFER.checkoutLabel} />
     <main id="main-content">
       <section className="mk-hero" aria-labelledby="hero-title">
-        <MergeHero />
+        {/* §5 THE HERO REACTS TO THE PRIMARY ACTION.
+            Two light layers sit behind everything: an always-on floor sweep
+            (the reference's page is not flat black — it has a floor), and a
+            gold bloom that only rises when the CTA is hovered.
+
+            Driven by :has() rather than React state on purpose. The hover has
+            no business re-rendering the hero, and a CSS-only path keeps working
+            with JS still loading — which is exactly when a first visitor is
+            most likely to be moving the mouse toward the button. */}
+        <div className="mk-hero-floor" aria-hidden="true" />
+        <div className="mk-hero-bloom" aria-hidden="true" />
         <div className="mk-wrap mk-hero-grid">
           <div className="mk-hero-copy">
-            <p className="mk-kicker"><span className="mk-status-dot" /> Now opening · Windows alpha</p>
+            <p className="mk-pill"><span className="mk-status-dot" /> Now opening · Windows alpha</p>
             <h1 id="hero-title">Good deals start in a <span>conversation.</span></h1>
-            <p className="mk-hero-description">Give them a place to go. Bring your connected messages, deal context, and contacts into one desktop workspace.</p>
-            <div className="mk-hero-actions"><Link className="mk-button" href={ALPHA_OFFER.signupHref}>{ALPHA_OFFER.checkoutLabel} <span aria-hidden="true">↗</span></Link><a className="mk-text-link" href="#workflow">Explore the workflow <span aria-hidden="true">↓</span></a></div>
-            <p className="mk-hero-price"><strong>{ALPHA_OFFER.trialLabel}</strong> <span>·</span> Then {ALPHA_OFFER.priceLabel} {ALPHA_OFFER.intervalLabel}.</p>
-            <p className="mk-hero-billing">{ALPHA_OFFER.billingNotice}</p>
-          </div>
-          <div className="mk-hero-visual" aria-label="Illustration of the Merger Deal Desk with sample data">
-            
-            <div className="mk-hero-desk">
-              <div className="mk-hero-card-top"><span><MarketingMark size={19} /> merger</span><span>Sample desk</span></div>
-              <div className="mk-hero-desk-body">
-                <div className="mk-mini-rail" aria-hidden="true"><FeatureIcon name="messages" /><span className="is-selected"><FeatureIcon name="review" /></span><FeatureIcon name="contact" /></div>
-                <div className="mk-mini-desk"><div className="mk-mini-heading"><h2>Deal Desk</h2><span>03 conversations</span></div>
-                  <div className="mk-mini-deal is-highlighted"><div><span className="mk-tiny-tag">Ready for your review</span><span className="mk-mini-dot" /></div><h3>Oak Street acquisition</h3><p>$500,000 allocation</p><footer><span><span className="mk-small-avatar">ME</span> Morgan Ellis</span><span aria-hidden="true">↗</span></footer></div>
-                  <div className="mk-mini-deal"><div><h3>Northline expansion</h3><span className="mk-mini-dot" /></div><p>Keep the next step in view</p></div>
-                  <div className="mk-mini-deal"><div><h3>Harbor logistics</h3><span className="mk-mini-dot" /></div><p>Conversation and context, together</p></div>
-                </div>
-              </div>
+            <p className="mk-hero-description">Bring your connected messages, deal context, and contacts into one desktop workspace.</p>
+            <div className="mk-hero-actions">
+              <Link className="mk-button" href={ALPHA_OFFER.signupHref}>{ALPHA_OFFER.checkoutLabel}</Link>
+              <a className="mk-text-link" href="#workflow">How it works <span aria-hidden="true">→</span></a>
             </div>
-            <div className="mk-floating-intro"><span className="mk-avatar">ME</span><div><span>From the conversation</span><p>“Could you send the terms this week?”</p></div><span className="mk-intro-arrow" aria-hidden="true">↗</span></div>
-            <p className="mk-hero-caption">A conversation. A next step. A place on your desk.</p>
+            <p className="mk-hero-price"><strong>{ALPHA_OFFER.trialLabel}</strong> <span>·</span> Then {ALPHA_OFFER.priceLabel} {ALPHA_OFFER.intervalLabel} · Card required</p>
+          </div>
+          <div className="mk-hero-visual">
+            <MergeHero />
           </div>
         </div>
       </section>
