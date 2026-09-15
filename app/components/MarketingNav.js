@@ -3,10 +3,14 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import MarketingMark from './MarketingMark';
+import useSession, { clearSessionHint } from '../lib/useSession';
+import { logout } from '../lib/api';
 
 export default function MarketingNav({ signupHref, checkoutLabel }) {
   const [open, setOpen] = useState(false);
   const toggle = useRef(null);
+  const session = useSession();
+  const [signingOut, setSigningOut] = useState(false);
 
   /**
    * §2 The header is invisible at the top of the page and grows a hairline
@@ -31,9 +35,49 @@ export default function MarketingNav({ signupHref, checkoutLabel }) {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   function escape(event) {
     if (event.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); }
   }
+
+  async function onSignOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    // Forget the cached nav state FIRST. If the request fails halfway the
+    // worst outcome is a nav that offers Sign in to someone still signed in,
+    // which the next check corrects — far better than one that keeps
+    // advertising an account the server has already dropped.
+    clearSessionHint();
+    try { await logout(); } catch { /* the cookie may already be gone */ }
+    window.location.assign('/');
+  }
+
+  const who = session.user?.handle
+    ? `@${session.user.handle}`
+    : session.user?.displayName || session.user?.email || 'Your account';
+
+  /**
+   * THE SLOT IS ALWAYS THE SAME WIDTH, whichever of the three states is in it.
+   * The marketing page is statically prerendered, so the signed-in answer can
+   * only ever arrive after first paint; if the slot resized when it did, every
+   * link to its left would jump and the page would book a layout shift for it.
+   * `unknown` renders nothing, but it renders nothing *of the same size*.
+   */
+  const auth = session.phase === 'unknown'
+    ? <span className="mk-nav-auth-wait" aria-hidden="true" />
+    : session.phase === 'in'
+      ? <>
+          <span className="mk-nav-you" title={session.user?.email || undefined}>{who}</span>
+          <Link className="mk-button mk-button-small" href="/dashboard">Open dashboard</Link>
+          <button type="button" className="mk-nav-signout" disabled={signingOut} onClick={onSignOut}>
+            {signingOut ? 'Signing out…' : 'Sign out'}
+          </button>
+        </>
+      : <>
+          <Link className="mk-nav-signin" href="/login">Sign in</Link>
+          <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>
+        </>;
+
   return <header className={`mk-nav${lifted ? ' is-lifted' : ''}`} onKeyDown={escape}>
     <div className="mk-wrap mk-nav-inner">
       <Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark hover /><span>merger</span></Link>
@@ -42,8 +86,7 @@ export default function MarketingNav({ signupHref, checkoutLabel }) {
       </button>
       <nav id="marketing-navigation" aria-label="Main navigation" className={`mk-nav-links${open ? ' is-open' : ''}`} onClick={event => { if (event.target.closest('a')) setOpen(false); }}>
         <a href="#product">Product</a><a href="#workflow">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
-        <Link className="mk-nav-signin" href="/login">Sign in</Link>
-        <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>
+        <span className="mk-nav-auth">{auth}</span>
       </nav>
     </div>
   </header>;

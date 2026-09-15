@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { errorMessage, logout } from '../lib/api';
+import { clearSessionHint } from '../lib/useSession';
 import MarketingMark from './MarketingMark';
 
 export default function Shell({ children, authed = false }) {
@@ -19,6 +20,9 @@ export default function Shell({ children, authed = false }) {
     setBusy(true);
     setError('');
     try {
+      // Drop the marketing nav's cached state in the same breath, or the
+      // funnel keeps showing "Open dashboard" for an account just signed out.
+      clearSessionHint();
       await logout();
       router.replace('/login?signedOut=1');
       router.refresh();
