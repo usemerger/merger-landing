@@ -1,0 +1,232 @@
+/* ══ PRODUCT SHOWCASE ═══════════════════════════════════════════════════════
+   Three sections, each a claim beside a device. The devices are CSS 3D — a
+   perspective-transformed frame, which is what the reference sites ship and
+   what keeps this page free of a second WebGL context.
+
+   NO JAVASCRIPT IS ADDED BY ANY OF THIS. The tilt is a static transform, the
+   cursor response is :hover, and the scroll parallax is `animation-timeline:
+   view()`, which the browser runs off the compositor. Where it is unsupported
+   the device sits at its resting tilt, which is a complete design on its own —
+   the movement was never carrying the section.
+
+   This is not fussiness. The landing page already evaluates a ~620ms Three.js
+   chunk for the hero and sits exactly on the threshold where that becomes one
+   long task instead of two; 2.6kB of extra script tipped it last time and cost
+   14 Lighthouse points. So these sections add none. */
+
+.mk-showcase { padding: 8px 0 26px; }
+
+.mk-show {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 88px);
+  padding: clamp(48px, 8vw, 104px) 0;
+  border-top: 1px solid var(--line);
+}
+.mk-show:first-of-type { border-top: none; }
+
+/* The device leads on a left-sided section. Source order keeps the copy first
+   for a screen reader and for phone width, where the grid stacks. */
+.mk-show-left .mk-show-copy { order: 2; }
+.mk-show-left .mk-show-device { order: 1; }
+
+/* SPACED BY GRID GAP, NOT MARGINS, and that is not a style preference.
+   landing.css carries `.marketing-page :is(h1,h2,h3,h4,p,ul,ol,dl,dd){margin:0}`
+   at (0,2,0), and this file is loaded BEFORE it — so every margin written here
+   on a heading, paragraph or list loses twice over and silently does nothing.
+   The first render of this section had a heading with no space around it and a
+   bullet list welded to the paragraph above it for exactly that reason. Gap
+   belongs to the container, so the reset cannot reach it. */
+.mk-show-copy { display: grid; justify-items: start; row-gap: 17px; }
+.mk-show-copy h3 {
+  font: 500 clamp(28px, 3.6vw, 43px)/1.1 var(--display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.mk-show-copy h3 span { color: var(--slate); }
+.mk-show-body { color: var(--slate); max-width: 46ch; font-size: 15.5px; line-height: 1.62; }
+.mk-show-points { padding: 0; list-style: none; display: grid; gap: 11px; }
+/* One notch of extra air before the list, at a specificity the reset cannot
+   beat — three classes against its two. */
+.marketing-page .mk-show-copy .mk-show-points { margin-top: 13px; }
+.mk-show-points li {
+  position: relative; padding-left: 22px;
+  color: var(--bone); font-size: 14px; line-height: 1.5;
+}
+/* A hairline dash, not a tick. A tick claims the feature is finished and
+   verified, and three of them in a column reads as a pricing table. */
+.mk-show-points li::before {
+  content: ''; position: absolute; left: 0; top: 0.62em;
+  width: 11px; height: 1px; background: var(--gold); opacity: .8;
+}
+.mk-show-disclaimer {
+  color: var(--faint); font-size: 12.5px; text-align: center;
+  padding: 6px 0 40px; margin: 0;
+}
+
+/* ── the stage ──────────────────────────────────────────────────────────────
+   Perspective lives on the stage, not the device, so depth is a property of
+   the scene and every device in it shares one vanishing point. */
+.mk-show-device {
+  display: flex; align-items: center; justify-content: center;
+  gap: clamp(14px, 2.4vw, 34px);
+}
+.dv-stage {
+  position: relative;
+  perspective: 1400px;
+  perspective-origin: 50% 46%;
+  width: 100%;
+  max-width: 660px;
+}
+/* An EXPLICIT width, because `width: auto` on a flex item sizes to content and
+   the content here is an empty frame — the phone collapsed to a 70px pill the
+   first time this rendered. */
+.dv-stage-phone { flex: 0 0 152px; width: 152px; max-width: 152px; }
+
+/* The tilt. Small numbers on purpose: past about 9deg the screen stops reading
+   as presented and starts reading as seen from the wrong seat. */
+.dv-mac, .dv-phone {
+  transform-style: preserve-3d;
+  transition: transform var(--dur-move, .48s) var(--ease, cubic-bezier(.22, 1, .36, 1));
+}
+.dv-stage-left  .dv-mac { transform: rotateY(7deg)  rotateX(4deg) rotateZ(-0.6deg); }
+.dv-stage-right .dv-mac { transform: rotateY(-7deg) rotateX(4deg) rotateZ(0.6deg); }
+.dv-stage-phone .dv-phone { transform: rotateY(-13deg) rotateX(5deg) rotateZ(1.2deg); }
+
+/* Cursor response without a cursor listener: hovering the stage lifts the
+   device toward the viewer and flattens the tilt — the same cue a mouse
+   parallax gives, for one composited transform and zero JavaScript. */
+.dv-stage:hover .dv-mac { transform: rotateY(0deg) rotateX(1.5deg) translateZ(22px); }
+.dv-stage-phone:hover .dv-phone { transform: rotateY(-4deg) rotateX(2deg) translateZ(18px); }
+
+/* ── the Mac window ─────────────────────────────────────────────────────── */
+.dv-mac {
+  border-radius: 13px;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  /* Depth is three shadows, not one: a tight contact shadow, a wide ambient
+     one, and an inner highlight along the top edge so the bezel catches light
+     the way the gold does elsewhere on this page. */
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, .5),
+    0 34px 70px -24px rgba(0, 0, 0, .85),
+    inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+.dv-mac-bar {
+  display: flex; align-items: center; gap: 12px;
+  height: 34px; padding: 0 13px;
+  background: linear-gradient(180deg, #161D2C, #111726);
+  border-bottom: 1px solid var(--line);
+}
+.dv-lights { display: inline-flex; gap: 7px; flex: 0 0 auto; }
+.dv-lights i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+.dv-lights i:nth-child(1) { background: #E1665C; }
+.dv-lights i:nth-child(2) { background: #E2B341; }
+.dv-lights i:nth-child(3) { background: #55B860; }
+.dv-mac-title {
+  font: 400 11.5px/1 var(--mono, ui-monospace, monospace);
+  color: var(--faint); letter-spacing: .02em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ── the iPhone ─────────────────────────────────────────────────────────── */
+.dv-phone {
+  position: relative;
+  border-radius: 30px;
+  padding: 9px;
+  background: linear-gradient(160deg, #222B3C, #0C1018 60%);
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, .55),
+    0 28px 54px -20px rgba(0, 0, 0, .85),
+    inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+.dv-island {
+  position: absolute; top: 17px; left: 50%; transform: translateX(-50%);
+  width: 46px; height: 13px; border-radius: 999px;
+  background: #05070B; z-index: 2;
+}
+
+/* ── the screen, and the slot inside it ─────────────────────────────────────
+   THE ASPECT RATIO IS FIXED HERE, and that is what lets real footage drop in
+   later without moving a pixel of the page. */
+.dv-screen { aspect-ratio: 16 / 10; background: var(--ink); overflow: hidden; }
+.dv-screen-phone { aspect-ratio: 9 / 19.5; border-radius: 22px; }
+.dv-media { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.dv-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 13px;
+  /* Navy, lit from the top left, so an empty screen still reads as glass with
+     something behind it rather than as a hole cut in the page. */
+  background:
+    radial-gradient(120% 90% at 22% 8%, #1B2740 0%, transparent 58%),
+    linear-gradient(160deg, #10182A 0%, #0A0E18 100%);
+}
+.dv-watermark { opacity: .26; filter: grayscale(.2); }
+.dv-tag {
+  font: 500 10px/1 var(--mono, ui-monospace, monospace);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201, 169, 106, .38);
+  border-radius: 999px; padding: 5px 11px;
+}
+.dv-note { font-size: 11.5px; color: var(--faint); }
+.dv-screen-phone .dv-watermark { opacity: .2; }
+.dv-screen-phone .dv-note { display: none; }
+
+/* The floor. A soft ellipse under the device rather than more shadow on it, so
+   the object reads as standing in the scene instead of stuck to the page. */
+.dv-shadow {
+  position: absolute; left: 12%; right: 12%; bottom: -26px; height: 44px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, .62), transparent 72%);
+  filter: blur(9px); z-index: -1; pointer-events: none;
+}
+.dv-shadow-phone { left: 6%; right: 6%; bottom: -16px; height: 26px; }
+
+/* ── scroll parallax, driven by the browser ─────────────────────────────────
+   The stage drifts as the section crosses the viewport: no scroll listener, no
+   rAF loop, no React state. The stage moves and the device keeps its own tilt,
+   so neither transform has to know about the other. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes dv-drift {
+      from { transform: translateY(16px) rotateX(7deg); }
+      to   { transform: translateY(-16px) rotateX(1deg); }
+    }
+    .dv-stage {
+      animation: dv-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 12% exit 88%;
+    }
+  }
+}
+
+/* ── responsive ─────────────────────────────────────────────────────────────
+   At tablet width the grid becomes one column and the devices stop leaning. A
+   tilted frame in a narrow column does not read as 3D, it reads as crooked. */
+@media (max-width: 980px) {
+  .mk-show { grid-template-columns: 1fr; gap: 34px; padding: 44px 0; }
+  .mk-show-left .mk-show-copy, .mk-show-left .mk-show-device { order: initial; }
+  .dv-stage { perspective: none; max-width: 560px; }
+  .dv-stage-left .dv-mac, .dv-stage-right .dv-mac, .dv-stage-phone .dv-phone { transform: none; }
+  .dv-stage:hover .dv-mac, .dv-stage-phone:hover .dv-phone { transform: none; }
+  .mk-show-device { flex-direction: column; }
+  .dv-stage-phone { flex: 0 0 176px; width: 176px; max-width: 176px; }
+}
+@media (max-width: 560px) {
+  .dv-mac-title { display: none; }
+  .dv-shadow { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No drift, no lift, no transition. The devices are simply there, at the
+     tilt they rest at — which is the whole design, minus the movement. */
+  .dv-mac, .dv-phone { transition: none; }
+  .dv-stage { animation: none; }
+  .dv-stage:hover .dv-mac, .dv-stage-phone:hover .dv-phone { transform: none; }
+  .dv-stage-left  .dv-mac { transform: rotateY(7deg)  rotateX(4deg) rotateZ(-0.6deg); }
+  .dv-stage-right .dv-mac { transform: rotateY(-7deg) rotateX(4deg) rotateZ(0.6deg); }
+  .dv-stage-phone .dv-phone { transform: rotateY(-13deg) rotateX(5deg) rotateZ(1.2deg); }
+}
