@@ -1,70 +1,68 @@
+import Link from 'next/link';
 import { ScreenSlot } from './DeviceMockup';
+import { ALPHA_OFFER } from '../lib/billingOffer';
 
 /**
- * The mobile section: a photoreal hand holding a phone, with the app playing
- * on its screen.
+ * The mobile section: a photograph of a hand holding a phone, with the app
+ * playing on its screen.
  *
- * ═══ WHAT GOES HERE, AND WHERE ═════════════════════════════════════════════
+ * ═══ THE TWO ASSETS ════════════════════════════════════════════════════════
  *
- * TWO assets, swapped independently:
+ *   1. THE PHOTO — /showcase/hand-phone.webp, in the repo.
+ *      The 4K master it came from is beside it as hand-phone.png (3089×4096,
+ *      1.6MB). The webp is 1200px wide and 56KB, which is the one that ships:
+ *      the slot renders at most ~480 CSS px, so the master is roughly three
+ *      times more pixels than any screen can use and a hundred times the
+ *      bytes. Re-derive it if the master ever changes.
  *
- *   1. THE HAND. A photoreal image of a hand holding a phone, shot or
- *      generated, ideally a PNG with the background cut out so it can overlap
- *      the section edge. Drop it at /public/showcase/hand-phone.png and pass:
+ *   2. THE SCREEN — the same swappable slot every other mockup uses:
  *
- *        <HandPhone hand="/showcase/hand-phone.png" />
+ *        <HandPhone media={{ src: '/showcase/mobile.mp4' }} />
  *
- *      Until one exists this renders a CLEARLY MARKED stand-in — a CSS phone
- *      at roughly the right angle — so the composition can be judged without
- *      anyone mistaking it for the finished thing.
+ *      until which point it shows the navy + gem + "Preview" placeholder.
  *
- *   2. THE SCREEN. The same slot every other mockup uses:
+ * ═══ THE SCREEN QUAD, MEASURED RATHER THAN EYEBALLED ═══════════════════════
  *
- *        <HandPhone hand="..." media={{ src: '/showcase/mobile.mp4' }} />
+ * The quad's numbers in showcase.css were read off the photograph, not judged
+ * by eye. The phone's frame is markedly brighter than both the black glass and
+ * the black backdrop, so walking each row inward from the outer rail until the
+ * brightness drops gives the glass boundary directly:
  *
- * ═══ MATCHING THE SCREEN TO THE PHOTO ══════════════════════════════════════
+ *      glass left 1472px   right 2378px   top 762px   bottom 2690px
+ *      → 47.653% / 18.604% from the left and top, 29.330% × 47.070%
  *
- * The screen is a positioned, perspective-transformed quad laid over the
- * phone in the image. Every number that pins it is a CSS custom property on
- * .hp-figure in showcase.css, in one block marked SCREEN QUAD:
+ * The left edge reads 1472 at both y=900 and y=2400, so the phone is genuinely
+ * square to the camera — ALL THREE ROTATIONS ARE ZERO, and adding a decorative
+ * tilt would put the video visibly off its glass. The 906 × 1928 glass is a
+ * 0.470 ratio against a real iPhone's 0.462, which is the confirmation that
+ * those edges are the screen and not the bezel.
  *
- *     --quad-top / --quad-left / --quad-w / --quad-h   where it sits
- *     --quad-rx / --quad-ry / --quad-rz                the phone's angle
- *     --quad-radius                                     corner rounding
- *
- * Swapping in a real photograph means opening that block and tuning those
- * seven values against it — nothing else changes, and no JavaScript is
- * involved. Set them with the video visible; the fit is obvious when it is
- * wrong and invisible when it is right.
+ * Those percentages are of the PHOTOGRAPH, so .hp-figure carries the photo's
+ * own 3089/4096 aspect ratio — that is what makes them map one to one. A
+ * different photo means re-running the measurement and replacing the block.
  *
  * ═══ WHY NOT A 3D HAND ═════════════════════════════════════════════════════
  *
  * Because a real-time 3D hand looks like a real-time 3D hand. Skin, nails and
  * the way fingers deform around a hard edge are exactly what realtime
- * rendering is worst at, and the uncanny version is worse than no hand. A
- * photograph with a video masked onto the screen is how the reference does
- * it, and it costs one image plus one composited transform. The only true 3D
- * on this site stays the hero gem, which is a faceted object and the one
- * shape realtime rendering flatters.
+ * rendering is worst at. The only true 3D on this site stays the hero gem.
  */
 
-export default function HandPhone({ hand, media, alt = 'Merger running on a phone' }) {
+export default function HandPhone({
+  hand = '/showcase/hand-phone.webp',
+  media,
+  alt = 'A hand holding a phone running Merger',
+}) {
   return (
-    <figure className="hp-figure">
-      {hand
-        ? <img className="hp-photo" src={hand} alt={alt} loading="lazy" decoding="async" />
-        : (
-          /* The stand-in. Deliberately plain and deliberately labelled: the
-             point of the placeholder is that nobody can mistake it for the
-             photograph that replaces it. */
-          <div className="hp-standin" aria-hidden="true">
-            <div className="hp-standin-phone" />
-            <span className="hp-standin-tag">Hand + phone photo goes here</span>
-          </div>
-        )}
-      <div className="hp-screen">
-        <ScreenSlot media={media} tag="Preview" note={null} />
-      </div>
-    </figure>
+    <div className="hp-block">
+      {/* Behind the phone, lit by the CTA below — see .hp-bloom. */}
+      <span className="hp-bloom" aria-hidden="true" />
+      <figure className="hp-figure">
+        <img className="hp-photo" src={hand} alt={alt} width="1200" height="1591"
+             loading="lazy" decoding="async" />
+        <div className="hp-screen"><ScreenSlot media={media} tag="Preview" note={null} /></div>
+      </figure>
+      <Link className="mk-button hp-cta" href={ALPHA_OFFER.signupHref}>{ALPHA_OFFER.freeHeadline.replace(/\.$/, '')}</Link>
+    </div>
   );
 }

@@ -311,69 +311,103 @@
 .mk-show-hand { align-items: center; }
 .mk-show-hand-media { display: flex; justify-content: flex-end; min-width: 0; }
 
+.hp-block { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+
 .hp-figure {
   position: relative;
   margin: 0;
   width: 100%;
   max-width: 480px;
-  /* Fixed ratio so the section's height is decided before any image loads —
-     a photograph arriving later must not push the page around. */
-  aspect-ratio: 4 / 5;
-  /* Reaching past the wrap edge is what makes it read as entering the frame
-     rather than sitting in a box. */
-  margin-right: clamp(-64px, -4vw, 0px);
+  /* THE PHOTOGRAPH'S OWN RATIO, and that is load-bearing: the screen-quad
+     percentages below are percentages OF THE PHOTO, so the figure box and the
+     image box have to be the same shape or every one of them is off. It also
+     fixes the section's height before the image loads. */
+  aspect-ratio: 3089 / 4096;
+  z-index: 1;
 }
-.hp-photo { width: 100%; height: 100%; object-fit: contain; object-position: bottom right; display: block; }
+.hp-photo {
+  width: 100%; height: 100%; object-fit: fill; display: block;
+  /* THE PHOTO IS AN OPAQUE RECTANGLE and has to stop being one. Its backdrop
+     is (4,4,6) against the page's (8,9,12) — indistinguishable in the middle,
+     a visible edge at the border — and because it is opaque it also occludes
+     the bloom sitting behind it, silhouetting itself against its own glow.
+     Both problems are the same problem, and the mask solves both.
+     
+     ALL FOUR EDGES FADE. Two earlier attempts did not: a radial mask sized
+     past the box faded nothing at all, and leaving the right edge hard left a
+     visible vertical cut — because the seam is not the flat backdrop (which
+     really is within four values of the page) but the soft light the
+     photographer put around the subject, (22,21,19) where the page is
+     (8,9,12). That halo has to be dissolved on every side, so the wrist fades
+     slightly as it leaves the bottom-right, which is what leaving a frame
+     looks like anyway. */
+  --hp-edge:
+    linear-gradient(to right,  transparent 0%, #000 24%, #000 92%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 13%, #000 86%, transparent 100%);
+  -webkit-mask-image: var(--hp-edge);
+  -webkit-mask-composite: source-in;
+  mask-image: var(--hp-edge);
+  mask-composite: intersect;
+}
 
 /* ── SCREEN QUAD ────────────────────────────────────────────────────────────
-   These seven values are the entire fitting job. Set them with the video
-   visible: a wrong fit is obvious and a right one is invisible. The defaults
-   below are tuned to the CSS stand-in, NOT to a photograph. */
+   MEASURED OFF THE PHOTOGRAPH, not judged by eye. The frame is brighter than
+   both the glass and the backdrop, so walking inward from the outer rail until
+   the brightness drops gives the screen edge directly:
+
+       glass left 1472  right 2378  top 762  bottom 2690   (of 3089 × 4096)
+
+   The left edge reads 1472 at y=900 and again at y=2400, so the phone is
+   square to the camera and all three rotations are ZERO. A decorative tilt
+   here would sit the video visibly off its own glass. The resulting
+   906 × 1928 glass is a 0.470 ratio against a real iPhone's 0.462, which is
+   how we know these are the screen edges and not the bezel.
+
+   A different photograph means re-measuring and replacing this block. Nothing
+   else changes. */
 .hp-figure {
-  --quad-top: 21%;
-  --quad-left: 43.5%;
-  --quad-w: 35%;
-  --quad-h: 56%;
-  --quad-rx: 3deg;
-  --quad-ry: -13deg;
-  --quad-rz: -2.5deg;
-  --quad-radius: 14px;
+  --quad-left: 47.653%;
+  --quad-top: 18.604%;
+  --quad-w: 29.330%;
+  --quad-h: 47.070%;
+  --quad-rx: 0deg;
+  --quad-ry: 0deg;
+  --quad-rz: 0deg;
 }
 .hp-screen {
   position: absolute;
   top: var(--quad-top); left: var(--quad-left);
   width: var(--quad-w); height: var(--quad-h);
-  border-radius: var(--quad-radius);
+  /* Two radii, because one percentage would take its vertical value from the
+     height and this box is twice as tall as it is wide — the corners would
+     come out as ovals. 9% of the width, expressed against each axis. */
+  border-radius: 9% / 4.23%;
   overflow: hidden;
-  transform: perspective(900px) rotateX(var(--quad-rx)) rotateY(var(--quad-ry)) rotateZ(var(--quad-rz));
-  transform-origin: 50% 50%;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+  transform: rotateX(var(--quad-rx)) rotateY(var(--quad-ry)) rotateZ(var(--quad-rz));
 }
 .hp-screen .dv-placeholder { gap: 9px; }
-.hp-screen .dv-watermark { opacity: .22; }
+.hp-screen .dv-watermark { opacity: .24; }
+.hp-screen .dv-tag { font-size: 8.5px; padding: 4px 8px; letter-spacing: .12em; }
 .hp-screen .dv-note { display: none; }
 
-/* The stand-in, until a photograph exists. Plain and labelled on purpose. */
-.hp-standin {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+/* ── THE BLOOM ──────────────────────────────────────────────────────────────
+   The hero's pattern, applied to the phone: a gold layer sitting behind the
+   photograph at opacity 0, lit by :has() when the CTA under it is hovered or
+   focused. No JavaScript, and browsers without :has() get a phone that simply
+   never lights rather than a broken one. */
+.hp-bloom {
+  position: absolute; inset: 4% -14% 22% 6%;
+  z-index: 0; pointer-events: none; opacity: 0;
+  background:
+    radial-gradient(38% 42% at 56% 42%, rgba(232, 207, 151, .26), transparent 70%),
+    radial-gradient(64% 62% at 52% 52%, rgba(166, 124, 52, .16), transparent 74%);
+  transition: opacity var(--dur-reveal, .5s) var(--ease, ease);
 }
-.hp-standin-phone {
-  position: absolute;
-  top: 18%; left: 40%; width: 42%; height: 62%;
-  border-radius: 26px;
-  background: linear-gradient(155deg, #2A3448, #0B0F17 65%);
-  transform: perspective(900px) rotateX(3deg) rotateY(-13deg) rotateZ(-2.5deg);
-  box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .9), inset 0 1px 0 rgba(255, 255, 255, .09);
-}
-.hp-standin-tag {
-  position: absolute; left: 0; bottom: 6%;
-  font: 500 10px/1.5 var(--mono, ui-monospace, monospace);
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--faint);
-  border: 1px dashed var(--line-strong); border-radius: 7px;
-  padding: 7px 11px;
-}
+.hp-block:has(.hp-cta:hover) .hp-bloom,
+.hp-block:has(.hp-cta:focus-visible) .hp-bloom { opacity: 1; }
+@supports not selector(:has(*)) { .hp-bloom { display: none; } }
+
+.hp-cta { position: relative; z-index: 2; }
 
 @media (max-width: 980px) {
   .mk-show-hand-media { justify-content: center; }
@@ -382,6 +416,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .dv-toggle-btn { transition: none; }
+  /* The bloom still appears on hover — it is information, not decoration —
+     it just arrives instead of fading in. Never a pulse. */
+  .hp-bloom { transition: none; }
 }
 
 /* ══ §2 THE PRICING CARD, REVERSED ══════════════════════════════════════════
