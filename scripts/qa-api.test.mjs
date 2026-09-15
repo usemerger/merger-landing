@@ -47,8 +47,6 @@ test('scenario controls expose distinct entitlement states without offering fake
   // Never a Stripe URL from a fixture, and never a 200 it has not earned:
   // the default answer is the live one, 403 not_on_alpha_list.
   const attempt = await call('/api/billing/checkout', { plan: 'operator', alpha: true });
-  assert.equal(attempt.response.status, 403);
-  assert.equal(attempt.data.error, 'not_on_alpha_list');
   assert.equal(attempt.data.url, undefined);
   const portal = await call('/api/billing/portal', {});
   assert.equal(portal.data.error, 'billing_portal_unavailable'); assert.equal(portal.data.url, undefined);
@@ -77,12 +75,13 @@ test('error and unavailable modes can be reset through the local control page', 
   await call('/qa/scenario', { scenario: 'none' });
   assert.equal((await call('/api/billing/offers')).response.status, 404);
 
-  // Checkout speaks the real contract, and its default is the live one: the
-  // allowlist is fail-closed and empty, so everybody is 403 until invited.
-  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'not_on_alpha_list');
+  // Checkout speaks the real contract. Signup is open, so there is no invite
+  // refusal left to model — what remains is a closed window and a bad plan.
   assert.equal((await call('/api/billing/checkout', { plan: 'desk', alpha: true })).data.error, 'alpha_is_operator_only');
-  await call('/qa/scenario', { scenario: 'alphaunavailable' });
-  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'alpha_not_configured');
+  await call('/qa/scenario', { scenario: 'alphaclosed' });
+  const shut = await call('/api/billing/checkout', { plan: 'operator', alpha: true });
+  assert.equal(shut.response.status, 403);
+  assert.equal(shut.data.error, 'alpha_closed');
   await call('/qa/scenario', { scenario: 'billingerror' });
   assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'billing_provider_error');
   await call('/qa/scenario', { scenario: 'none' });

@@ -32,23 +32,51 @@ describe('joining the alpha', () => {
 
   it('states what is charged today and what is charged later, together', () => {
     render(<TestCheckout />);
-    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('$0 is charged today');
-    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('$49.99 USD/month instead of $99.99');
-    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('a card is required');
+    // $0 must never be the only number on screen. The price it becomes is one
+    // line below it, before any of the small print.
+    // Split across a <p> and its <span>, so match on the container's text
+    // rather than a string Testing Library would have to span elements to find.
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$0due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('First 2 weeks free, then $50/ month');
+    const terms = screen.getByText(/\$50 USD\/month, and your first 2 weeks are free/);
+    expect(terms).toHaveTextContent('A card is required');
+    expect(terms).toHaveTextContent('$0 is charged today');
+    expect(terms).toHaveTextContent('Cancel any time before then and you are never charged');
+    expect(screen.getByText(/Alpha members keep \$50\/month for life/)).toBeInTheDocument();
     expect(checkout).not.toHaveBeenCalled();
   });
 
-  it('answers a 403 with the invite-only panel and no way to pay full price', async () => {
-    checkout.mockRejectedValue({ status: 403, code: 'not_on_alpha_list' });
+  it('shows the closed-alpha state for a shut window, whatever it is called', async () => {
+    // The backend does not document its error bodies, so the closed-window
+    // code cannot be confirmed from outside. Every one of these has to land in
+    // the same calm state — including a bare 403 with a code nobody predicted,
+    // because with the allowlist gone a 403 can no longer mean anything else.
+    for (const err of [
+      { status: 403, code: 'alpha_closed' },
+      { status: 403, code: 'alpha_ended' },
+      { status: 403, code: 'alpha_full' },
+      { status: 403, code: 'some_code_we_did_not_predict' },
+      { status: 503, code: 'alpha_not_configured' },
+    ]) {
+      checkout.mockReset();
+      checkout.mockRejectedValue(err);
+      const { unmount } = render(<TestCheckout />);
+      fireEvent.click(join());
+      expect(await screen.findByText('The alpha isn’t taking new members right now')).toBeInTheDocument();
+      // Calm, not an error: nothing on this panel is an alert.
+      expect(screen.queryByRole('alert')).toBeNull();
+      // And no second attempt — the button is gone, not merely disabled.
+      expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
+      expect(screen.getByRole('link', { name: 'Join the waitlist' }))
+        .toHaveAttribute('href', expect.stringContaining('mailto:support@usemerger.com'));
+      unmount();
+    }
+  });
+
+  it('has no invite gate left anywhere in the join flow', async () => {
     render(<TestCheckout />);
-    fireEvent.click(join());
-    expect(await screen.findByText('The alpha is invite-only right now')).toBeInTheDocument();
-    // Calm, not an error: nothing on this panel is an alert.
-    expect(screen.queryByRole('alert')).toBeNull();
-    // And no second attempt to buy anything — the button is gone, not disabled.
-    expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
-    expect(screen.getByRole('link', { name: 'Request access' }))
-      .toHaveAttribute('href', expect.stringContaining('mailto:support@usemerger.com'));
+    expect(screen.queryByText(/invite/i)).toBeNull();
+    expect(join()).toBeEnabled();
   });
 
   it('sends an expired session to sign in and back again', async () => {
@@ -57,15 +85,6 @@ describe('joining the alpha', () => {
     fireEvent.click(join());
     expect(await screen.findByRole('link', { name: 'Sign in and continue' }))
       .toHaveAttribute('href', '/login?next=%2Fbilling');
-  });
-
-  it('treats 503 as not available right now, with no retry button', async () => {
-    checkout.mockRejectedValue({ status: 503, code: 'alpha_not_configured' });
-    render(<TestCheckout />);
-    fireEvent.click(join());
-    expect(await screen.findByText('message:alpha_not_configured')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull();
-    expect(join()).toBeEnabled();
   });
 
   it('offers a retry for a transient provider failure', async () => {

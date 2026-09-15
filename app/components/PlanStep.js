@@ -10,43 +10,57 @@ import { stripeRedirectURL } from '../lib/authFlow';
 /**
  * Joining the alpha: one POST, then a redirect.
  *
- * WHAT USED TO HAPPEN HERE, and why none of it does any more: the button was
- * gated on `GET /api/billing/offers`, whose nine fields were compared with
- * `===` before checkout was allowed. That route returns 404 and always did.
- * The gate could therefore never open — the page permanently told people
- * billing availability could not be checked, and the Join button was
- * permanently disabled. The fix is not a better gate. It is no gate: there is
- * no offers endpoint to ask, the plan copy is hardcoded, and the button goes
- * straight to checkout, which is the call that actually knows the answer.
+ * SIGNUP IS OPEN. There is no allowlist and no invite gate — anyone with an
+ * account can press this button and reach Stripe. The invite-only panel that
+ * used to live here, and the `not_on_alpha_list` reply behind it, are both
+ * gone.
  *
- * THE ANSWER THAT MATTERS IS 403. During a closed alpha, "you are not on the
- * list" is the ordinary reply for most people — their account is real, their
- * card was never asked for, and nothing they did failed. It gets its own calm
- * state, kept well away from `message`, and it must never fall through to a
- * full-price checkout.
+ * The button is never gated on a preflight call either. It used to be blocked
+ * until `GET /api/billing/offers` answered, with nine of its fields compared
+ * by `===`; that route is a 404, so the gate could never open and the button
+ * was permanently disabled. Checkout is the call that actually knows the
+ * answer, so checkout is the only call.
  */
 
 /** Which of the contract's replies came back. One state, not five booleans. */
 const PHASE = {
   IDLE: 'idle',
-  /** 403 not_on_alpha_list — invite-only. A gate, not a fault. */
-  GATED: 'gated',
+  /** The alpha window is shut. Not a fault, and not the user's doing. */
+  CLOSED: 'closed',
   /** 401 unauthorized — sign in, then come back here and carry on. */
   EXPIRED: 'expired',
-  /** 503 alpha_not_configured — off at the backend. Not worth hammering. */
-  UNAVAILABLE: 'unavailable',
   /** 502 billing_provider_error, and network trouble. Worth pressing again. */
   TRANSIENT: 'transient',
   /** Anything else, in plain language. */
   ERROR: 'error',
 };
 
-/** The codes the contract names, mapped to how the page should behave. */
+/**
+ * Codes that mean "the alpha is not taking anyone right now".
+ *
+ * MATCHED BY BEHAVIOUR AS WELL AS BY NAME, deliberately. The deployed backend
+ * does not document its error bodies — the OpenAPI schema types the request
+ * and nothing else — so the exact spelling of the closed-window code cannot be
+ * confirmed from outside. What CAN be confirmed is that the allowlist is gone,
+ * and with it the only other thing a 403 used to mean. So any 403 from
+ * checkout is treated as a closed window, and these names are recognised for a
+ * more precise message if one of them is what arrives.
+ *
+ * `alpha_not_configured` (503) lands here too. It is a different cause —
+ * billing misconfigured rather than a window deliberately shut — but it is the
+ * same fact for the person reading it: you cannot join right now, and it is
+ * not something you can fix.
+ */
+const CLOSED_CODES = new Set([
+  'alpha_closed', 'alpha_ended', 'alpha_full', 'alpha_not_open',
+  'alpha_unavailable', 'alpha_offer_unavailable', 'alpha_not_configured',
+]);
+
+/** The contract's replies, mapped to how the page should behave. */
 function phaseFor(err) {
   const { status, code } = err || {};
-  if (code === 'not_on_alpha_list' || status === 403) return PHASE.GATED;
+  if (CLOSED_CODES.has(code) || status === 403) return PHASE.CLOSED;
   if (status === 401) return PHASE.EXPIRED;
-  if (code === 'alpha_not_configured' || status === 503) return PHASE.UNAVAILABLE;
   if (code === 'billing_provider_error' || status === 502
       || code === 'network_error' || code === 'request_timeout') return PHASE.TRANSIENT;
   return PHASE.ERROR;
@@ -94,7 +108,7 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
   // Sign in and come back to the page they were on, with the offer in front of
   // them again — not to a dashboard they then have to navigate out of.
   const resumeHref = `/login?next=${encodeURIComponent(pathname || '/billing')}`;
-  const gated = ctl.phase === PHASE.GATED;
+  const closed = ctl.phase === PHASE.CLOSED;
 
   return (
     <section id="join-alpha" className="plan-step" aria-labelledby="alpha-heading">
@@ -103,40 +117,40 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
 
       <div className="alpha-summary">
         <div>
-          <span className="eyebrow">Windows alpha · invite-only</span>
+          <span className="eyebrow">Windows alpha · one person</span>
           <h3>{ALPHA_OFFER.name}</h3>
         </div>
+        {/* What is charged today is the number that belongs at this size. The
+            $50 it becomes is one line below, where it cannot be mistaken for
+            something being taken now. */}
         <p className="alpha-amount">{ALPHA_OFFER.todayLabel}<span>{ALPHA_OFFER.todayNote}</span></p>
       </div>
 
+      <p className="alpha-then">
+        {ALPHA_OFFER.trialLabel}, then <strong>{ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}</strong>
+      </p>
       <p className="muted">{ALPHA_OFFER.billingNotice}</p>
       <p className="muted mt-16">{ALPHA_OFFER.rateNotice}</p>
       <p className="field-hint mt-16">Claude requires your own Anthropic API key, with usage billed separately by Anthropic. DocuSign requires your own account. Alpha features may change.</p>
 
-      {/* NOT AN ERROR STATE. Being off the invite list is the expected answer
-          during a closed alpha. A red alert would tell someone to go back and
-          fix something that is not broken, so this is a calm panel with the one
-          action that helps — and the Join button goes away, because pressing it
-          again would only produce the same 403. There is deliberately no
-          fallback to a paid checkout: the alpha is the only thing on sale. */}
-      {gated && <div className="alpha-gate" role="status">
-        <p className="eyebrow">Invite only, for now</p>
-        <h3>The alpha is invite-only right now</h3>
+      {/* THE ALPHA IS SHUT, NOT BROKEN. Signup is open while the window is
+          open, so this is the one state where someone who did everything right
+          still cannot join. It is a calm panel rather than a red alert, the
+          Join button goes away because pressing it again would only repeat the
+          same answer, and there is no second, pricier thing to sell them. */}
+      {closed && <div className="alpha-gate" role="status">
+        <p className="eyebrow">Closed for now</p>
+        <h3>The alpha isn&rsquo;t taking new members right now</h3>
         <p className="muted">Your account is saved and nothing has been charged. The Windows
-        alpha is opening in small groups — ask for an invite and we will come back to you.</p>
+        alpha opens in groups — tell us you want in and we will come back to you when it does.</p>
         <p className="field-hint mt-16">
-          <a href="mailto:support@usemerger.com?subject=Merger%20alpha%20access&body=Please%20add%20me%20to%20the%20Merger%20alpha%20list.">Request access</a>
+          <a href="mailto:support@usemerger.com?subject=Merger%20alpha%20waitlist&body=Please%20let%20me%20know%20when%20the%20Merger%20alpha%20reopens.">Join the waitlist</a>
           {' · '}<Link href="/support">Contact support</Link>
         </p>
       </div>}
 
       {ctl.phase === PHASE.EXPIRED && <div className="alert alert-warn" role="alert">
         {ctl.message} <Link href={resumeHref}>Sign in and continue</Link>
-      </div>}
-
-      {ctl.phase === PHASE.UNAVAILABLE && <div className="alert alert-warn" role="status">
-        <p>{ctl.message}</p>
-        <p className="field-hint mt-16"><Link href="/support">Contact support</Link></p>
       </div>}
 
       {ctl.phase === PHASE.TRANSIENT && <div className="alert alert-warn" role="alert">
@@ -146,11 +160,11 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
 
       {ctl.phase === PHASE.ERROR && <div className="alert alert-error" role="alert">{ctl.message}</div>}
 
-      {!gated && <>
+      {!closed && <>
         <button className="btn btn-primary btn-block" type="button" onClick={() => ctl.start()} disabled={ctl.busy}>
           {ctl.busy ? 'Opening secure checkout…' : ALPHA_OFFER.checkoutLabel}
         </button>
-        <p className="field-hint center mt-16">Stripe collects your card securely. $0 is charged today.</p>
+        <p className="field-hint center mt-16">Stripe collects your card securely. {ALPHA_OFFER.todayLabel} is charged today, and your trial starts when you finish checkout.</p>
       </>}
 
       <p className="field-hint center mt-16"><Link href="/terms">Alpha terms</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/support">Help</Link></p>

@@ -107,7 +107,7 @@ function SignupForm() {
           <p className="eyebrow">Join Merger</p>
           <h1>{account ? 'Finish your account.' : 'Set up your deal desk.'}</h1>
           <p className="lede">{account ? `Your account for ${account.email} is ready. Reserve your handle to continue.` : 'Create your account and reserve your handle. Review the alpha terms before you join.'}</p>
-          {!account && <p className="field-hint mt-16">Windows alpha · {ALPHA_OFFER.summary}.</p>}
+          {!account && <p className="field-hint mt-16">Windows alpha · {ALPHA_OFFER.summary}. Open to anyone.</p>}
           <form className="panel mt-24" onSubmit={onSubmit} aria-busy={busy} noValidate>
             {!account && <>
               <div className="field">

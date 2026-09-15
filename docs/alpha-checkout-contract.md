@@ -34,7 +34,7 @@ Content-Type: application/json
 | status | body | what the funnel does |
 |---|---|---|
 | 200 | `{"url":"https://checkout.stripe.com/c/pay/cs_..."}` | redirect the browser to `url` |
-| 403 | `{"error":"not_on_alpha_list"}` | the invite-only panel, with a request-access path |
+| 403 | closed-window code (see below) | the closed-alpha panel, with a waitlist path |
 | 401 | `{"error":"unauthorized"}` | sign in, then resume on the same page |
 | 400 | `{"error":"alpha_is_operator_only"}` | only if `plan != "operator"`, which this client never sends |
 | 503 | `{"error":"alpha_not_configured"}` | "not available right now", no retry button |
@@ -58,18 +58,19 @@ since that route is a 404, the gate could never open and the button was
 permanently disabled behind "We could not check billing availability." Nothing
 may gate it again.
 
-## The allowlist is fail-closed and empty
+## Signup is open — there is no allowlist
 
-Every alpha checkout returns 403 until an operator runs, on the VPS:
+`not_on_alpha_list` is gone. Anyone with an account can reach Stripe Checkout.
 
-```
-docker exec merger-backend python /app/add_alpha.py <email>
-```
-
-Until then the 200 path cannot be reached from any account, and 403 is the
-correct, expected answer — not a failure state. The funnel treats it as such:
-a calm invite-only panel, no red alert, and **no fall-through to a full-price
-checkout**, because there is no full-price checkout to fall through to.
+What can still refuse a well-formed request is the alpha window being shut.
+**The exact code for that cannot be confirmed from outside**: the deployed
+OpenAPI schema types the request body and nothing else, so error bodies are
+undocumented. The client therefore matches on behaviour as well as name —
+**any 403 is treated as a closed window**, since with the allowlist gone a 403
+can no longer mean anything else — and recognises `alpha_closed`,
+`alpha_ended`, `alpha_full`, `alpha_not_open`, `alpha_unavailable` by name for
+a more precise message. `alpha_not_configured` (503) lands in the same calm
+state: a different cause, the same fact for the reader.
 
 ## Return URLs
 
@@ -87,9 +88,30 @@ nothing was charged and shows the offer again. Neither is an error state.
 
 ## The offer, in words
 
-Free during the alpha — a card is required and $0 is charged today. When the
-alpha ends, members keep 50% off: **$49.99/month instead of $99.99**, for as
-long as they stay a member. Invite-only.
+**$50 USD/month, with the first two weeks free.** A card is required at
+checkout and $0 is charged today; billing starts when the 14-day trial ends,
+and cancelling before then means no charge at all. **Alpha members keep $50/month
+for life** — the rate holds after Merger leaves alpha and the price rises.
+Open to anyone.
 
-Nothing in the funnel may say "14-day trial" or "$50/month". Those described an
-offer that no longer exists, and `tests/api.test.js` fails if they come back.
+Nothing in the funnel may say "invite-only", "50% off", "$99.99" or "$79".
+Those described two retired offers, and `tests/api.test.js` fails if any of
+them come back.
+
+## Request shape, confirmed from the deployed schema
+
+`GET https://api.buildmerger.com/openapi.json` →
+
+```jsonc
+"CheckoutBody": {
+  "properties": {
+    "plan":  { "type": "string" },            // required
+    "seats": { "anyOf": [{"type":"integer"},{"type":"null"}] },
+    "alpha": { "type": "boolean", "default": false }
+  },
+  "required": ["plan"]
+}
+```
+
+No `offer` field exists. The client sends `{plan:'operator', alpha:true}` and
+nothing else.

@@ -545,3 +545,13 @@
   background: var(--panel);
 }
 .alpha-gate h3 { font-size: 19px; margin-top: 6px; }
+
+/* The price the $0 becomes. Sits immediately under the big number so "due
+   today" and "then $50" are read as one sentence — the disclosure that stops
+   "$0" being the only figure anyone remembers. */
+.alpha-then {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: var(--bone);
+}
+.alpha-then strong { font-weight: 600; white-space: nowrap; }

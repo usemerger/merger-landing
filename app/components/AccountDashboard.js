@@ -202,13 +202,12 @@ export default function AccountDashboard() {
       <strong>Your payment did not go through.</strong>{entitled && graceDate ? ` Access continues until ${graceDate}.` : ' Update your payment method to restore access.'}{' '}
       <button type="button" className="linklike" disabled={portalBusy} onClick={openPortal}>Update payment method</button>
     </div>}
-    {/* The alpha is free, so Stripe reports it as trialing. The DATES AND THE
-        PRICE HERE ARE THE BACKEND'S, not ours — whatever it says will be
-        charged, and when, is what gets shown. Everything around them describes
-        the alpha rather than the fourteen-day trial this used to be. */}
-    {trialing && <div className="alert alert-info" role="status" aria-label="Alpha status">
-      <strong>Your alpha access is active{trialDate ? ` and free until ${trialDate}` : ''}.</strong>{' '}
-      {s.cancelAtPeriodEnd ? 'Your membership is set to end. You can use Merger until it does, with nothing to pay.' : <>{price ? `After that, ${price} is billed automatically. ` : 'Monthly billing begins when the alpha ends. '}Cancel before then and you are never charged.</>}{' '}
+    {/* THE DATES AND THE PRICE HERE ARE THE BACKEND'S, not ours — what will be
+        charged, and when, is whatever /api/billing/status reports. The copy
+        around them describes the two free weeks; the number comes from Stripe. */}
+    {trialing && <div className="alert alert-info" role="status" aria-label="Trial status">
+      <strong>Your free trial{trialDate ? ` ends on ${trialDate}` : ' is active'}.</strong>{' '}
+      {s.cancelAtPeriodEnd ? 'Your membership is set to end. You can use Merger until the trial ends, with nothing to pay.' : <>{price ? `After that, ${price} is billed automatically. ` : `After that, ${ALPHA_OFFER.priceLabel}${ALPHA_OFFER.intervalLabel} is billed automatically. `}Cancel before your trial ends and you are never charged.</>}{' '}
       <button className="linklike" type="button" onClick={openPortal} disabled={portalBusy}>Manage membership</button>
     </div>}
     {!grandfathered && !trialing && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
@@ -229,7 +228,7 @@ export default function AccountDashboard() {
           <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
           {price && <div className="stat"><div className="k">Subscription price</div><div className="v">{price}</div></div>}
           {s.seats > 1 && <div className="stat"><div className="k">Seats</div><div className="v">{s.seats}</div></div>}
-          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Free until</div><div className="v">{trialDate}</div></div>}
+          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
           {s.entitlementStatus !== 'trialing' && renewalDate && <div className="stat"><div className="k">{s.cancelAtPeriodEnd || s.entitlementStatus === 'canceled' ? 'Access until' : 'Current period ends'}</div><div className="v">{renewalDate}</div></div>}
           <div className="stat"><div className="k">Payment method</div><div className="v">{s.hasPaymentMethod ? 'On file' : 'None on file'}</div></div>
         </div>

@@ -10,7 +10,7 @@ const scenarios = {
   pastdue: 'Past due, access locked', canceled: 'Canceled subscription', complimentary: 'Complimentary account',
   checkoutpending: 'Checkout confirmation pending', errors: 'Recoverable API errors',
   nohandle: 'Account without handle', unverified: 'Email verification required',
-  alphaunavailable: 'Alpha not configured (503)', billingerror: 'Stripe provider error (502)',
+  alphaclosed: 'Alpha closed to new members (403)', billingerror: 'Stripe provider error (502)',
   canceling: 'Active, cancellation scheduled', downloadready: 'Synthetic download link (do not download)',
   trialing: 'Alpha access active (free)', trialcanceling: 'Alpha cancellation scheduled',
 };
@@ -55,7 +55,7 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
     const trialing = ['trialing', 'trialcanceling'].includes(mode);
     const entitlementStatus = mode === 'pastdue' ? 'past_due' : mode === 'canceled' ? 'canceled' : mode === 'checkoutpending' ? 'incomplete' : trialing ? 'trialing' : active ? 'active' : 'none';
     const hasHistory = active || trialing || ['pastdue', 'canceled', 'checkoutpending'].includes(mode);
-    return { configured: mode !== 'alphaunavailable', entitled: active || trialing || complimentary, grandfathered: complimentary,
+    return { configured: mode !== 'alphaclosed', entitled: active || trialing || complimentary, grandfathered: complimentary,
       entitlementStatus, offer: hasHistory ? 'alpha' : null, plan: hasHistory ? 'operator' : null, seats: 1,
       // The member rate, in cents — what is billed AFTER the alpha. $0 today is
       // not a price, it is the absence of one, so it is not modelled here.
@@ -151,13 +151,15 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
         // The contract, enforced here so a wrong body fails locally rather than
         // in production: operator + alpha, nothing else.
         if (sent?.alpha === true && sent?.plan !== 'operator') { json(response, 400, { error: 'alpha_is_operator_only' }); return; }
-        if (state.scenario === 'alphaunavailable') { json(response, 503, { error: 'alpha_not_configured', synthetic: true }); return; }
+        if (state.scenario === 'alphaclosed') { json(response, 403, { error: 'alpha_closed', synthetic: true }); return; }
         if (state.scenario === 'billingerror') { json(response, 502, { error: 'billing_provider_error', synthetic: true }); return; }
-        // THE DEFAULT IS 403, because that is what the live backend returns:
-        // the allowlist is fail-closed and currently empty. This fixture never
-        // emits a Stripe URL — the 200 path has to be proved against the real
-        // backend with a real allowlisted account, not against a made-up link.
-        json(response, 403, { error: 'not_on_alpha_list', synthetic: true }); return;
+        // SIGNUP IS OPEN, so on the real backend this is a 200 with a hosted
+        // Stripe URL. THIS FIXTURE STILL WILL NOT EMIT ONE: a synthetic link
+        // that looks like a payment page is the one thing a local fixture must
+        // never hand a browser. The 200 path is proved against the real
+        // backend on a preview deployment, not here — so the closest honest
+        // answer is "billing is not configured in this fixture".
+        json(response, 503, { error: 'alpha_not_configured', synthetic: true }); return;
       }
       if (request.method === 'POST' && path === '/api/billing/portal') {
         state.counters.portal++; json(response, 503, { error: 'billing_portal_unavailable', synthetic: true }); return;

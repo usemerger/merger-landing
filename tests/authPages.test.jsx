@@ -89,21 +89,21 @@ describe('signup and sign-in recovery', () => {
 });
 
 describe('account and checkout', () => {
-  it('shows when free access ends, the later charge, and downloads for confirmed alpha access', async () => {
+  it('shows the trial end, the later charge, and downloads for a confirmed trial', async () => {
     api.meOrNull.mockResolvedValue(account);
-    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', trialEndsAt: '2026-09-28T12:00:00Z', alphaPriceLocked: true, pricing: { amount: 4999, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } });
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', trialEndsAt: '2026-09-28T12:00:00Z', alphaPriceLocked: true, pricing: { amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } });
     render(<AccountDashboard />);
-    const alpha = await screen.findByRole('status', { name: 'Alpha status' });
-    expect(alpha).toHaveTextContent('Your alpha access is active and free until September 28, 2026');
-    expect(alpha).toHaveTextContent('After that, $49.99 / month is billed automatically.');
+    const trial = await screen.findByRole('status', { name: 'Trial status' });
+    expect(trial).toHaveTextContent('Your free trial ends on September 28, 2026');
+    expect(trial).toHaveTextContent('After that, $50.00 / month is billed automatically.');
     expect(screen.getByRole('link', { name: 'Go to downloads' })).toBeInTheDocument();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
   });
-  it('explains that canceling during the alpha prevents any charge', async () => {
+  it('explains that canceling during the trial prevents any charge', async () => {
     api.meOrNull.mockResolvedValue(account);
     api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', cancelAtPeriodEnd: true, trialEndsAt: '2026-09-28T12:00:00Z' });
     render(<AccountDashboard />);
-    expect(await screen.findByRole('status', { name: 'Alpha status' })).toHaveTextContent('Your membership is set to end. You can use Merger until it does, with nothing to pay.');
+    expect(await screen.findByRole('status', { name: 'Trial status' })).toHaveTextContent('Your membership is set to end. You can use Merger until the trial ends, with nothing to pay.');
     expect(screen.queryByText(/is billed automatically/)).not.toBeInTheDocument();
   });
   it('labels a discounted multi-seat subscription as its total price', async () => {

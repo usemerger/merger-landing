@@ -208,10 +208,11 @@ export function errorMessage(err) {
       return 'A checkout is already being processed for this account. Check your billing page before trying again.';
     case 'complimentary_access':
       return 'This account already has complimentary access. You do not need a paid subscription.';
-    // 503. Billing is configured wrong or switched off at the backend — not
-    // the user's problem and not fixable by retrying in ten seconds.
+    // 503. Billing is switched off or misconfigured at the backend — not the
+    // user's problem and not fixable by retrying in ten seconds.
     case 'alpha_not_configured':
     case 'alpha_offer_unavailable':
+    case 'alpha_unavailable':
     case 'billing_unavailable':
     case 'billing_not_configured':
       return 'Joining the alpha is not available right now. Your account is saved; please try again later.';
@@ -241,11 +242,15 @@ export function errorMessage(err) {
       // Reset links are single-use and short-lived, so a rejected token is far
       // more often expired or already spent than genuinely malformed.
       return 'This link has expired or has already been used.';
-    case 'not_on_alpha_list':
-      // The alpha is invite-only, so this is the single most likely refusal a
-      // real person will meet at checkout. It is not an error on their part and
-      // must never be dressed as one — see the dedicated panel in PlanStep.
-      return 'Your account is not on the alpha list yet.';
+    // SIGNUP IS OPEN, so there is no `not_on_alpha_list` any more. What can
+    // still refuse a well-formed request is the window being shut. PlanStep
+    // gives that its own calm panel; this sentence is the fallback for any
+    // surface that only has room for a line of text.
+    case 'alpha_closed':
+    case 'alpha_ended':
+    case 'alpha_full':
+    case 'alpha_not_open':
+      return 'The alpha is not taking new members right now.';
     case 'weak_password':
       return 'That password is too short. Use at least 8 characters.';
     case 'rate_limited':

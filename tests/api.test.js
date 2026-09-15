@@ -24,19 +24,23 @@ describe('the alpha checkout contract', () => {
   });
 
   it('surfaces each refusal the contract names by its own code', async () => {
-    for (const [status, code] of [[403, 'not_on_alpha_list'], [401, 'unauthorized'],
+    for (const [status, code] of [[403, 'alpha_closed'], [401, 'unauthorized'],
       [400, 'alpha_is_operator_only'], [503, 'alpha_not_configured'], [502, 'billing_provider_error']]) {
       vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: code }), { status })));
       await expect(checkout()).rejects.toMatchObject({ status, code });
     }
   });
 
-  it('never quotes a price the backend will not charge', () => {
-    const copy = [ALPHA_OFFER.billingNotice, ALPHA_OFFER.rateNotice, ALPHA_OFFER.summary].join(' ');
-    expect(copy).not.toMatch(/14[- ]day|\$50/);
+  it('quotes one offer, and it is the one the backend charges', () => {
+    const copy = [ALPHA_OFFER.billingNotice, ALPHA_OFFER.rateNotice, ALPHA_OFFER.summary,
+      ALPHA_OFFER.trialLabel, ALPHA_OFFER.priceLabel].join(' ');
+    // The three retired framings. Any of them reappearing means two offers are
+    // on screen at once, which is the failure this whole file exists to catch.
+    expect(copy).not.toMatch(/invite|50% off|\$99\.99|\$49\.99|\$79|\$159/i);
+    expect(copy).toContain('$50');
     expect(copy).toContain('$0');
-    expect(copy).toContain(ALPHA_OFFER.memberPrice);
-    expect(copy).toContain(ALPHA_OFFER.listPrice);
+    expect(copy).toMatch(/2 weeks free/);
+    expect(copy).toMatch(/for life/);
     expect(ALPHA_OFFER.plan).toBe('operator');
   });
 });
