@@ -14,6 +14,22 @@ import HandPhone from './HandPhone';
  * Sections alternate sides so the eye zig-zags down the page rather than
  * reading three identical rows. The tilt follows the side — a device on the
  * right leans left, toward the copy, so the two read as one object.
+ *
+ * THE DESKTOP SLOTS NOW HOLD REAL RECORDINGS; the phone does not. There is no
+ * iOS footage, and putting a desktop capture inside a phone frame would be a
+ * claim about an app that does not exist yet, so the iOS view keeps its
+ * labelled placeholder.
+ *
+ * `/showcase/bonus_deal-desk-detail.mp4` (+ .jpg) is a fourth capture — the
+ * Edit-deal depth — held in reserve. It is deliberately unplaced: every slot
+ * has footage, and a spare shown twice is worse than a spare kept.
+ *
+ * THE POSTERS POINT AT .webp, NOT THE .jpg BESIDE IT. A poster is fetched
+ * eagerly — there is no lazy loading for one — and three 1080p JPEGs came to
+ * 290KB competing with the hero for bandwidth, which pushed LCP from ~520ms
+ * to ~780ms. Re-encoded at the 1200px the slot can actually use, the same
+ * three are 78KB. The operator's JPEGs stay in the repo as the masters to
+ * re-derive from, exactly like hand-phone.png beside hand-phone.webp.
  */
 
 const SECTIONS = [
@@ -27,6 +43,8 @@ const SECTIONS = [
     device: 'both',
     title_mac: 'Merger — Inbox',
     note: 'Unified inbox',
+    mac: { src: '/showcase/section1_cross-channel.mp4', poster: '/showcase/section1_cross-channel.webp',
+           alt: 'Replying to a WhatsApp thread and then a Telegram thread from one inbox' },
   },
   {
     id: 'desk',
@@ -38,6 +56,8 @@ const SECTIONS = [
     device: 'mac',
     title_mac: 'Merger — Deal Desk',
     note: 'Deal Desk',
+    mac: { src: '/showcase/section2_ai-deal-detection.mp4', poster: '/showcase/section2_ai-deal-detection.webp',
+           alt: 'Detected deals arriving on the Deal Desk with File as deal and Dismiss' },
   },
   {
     id: 'sign',
@@ -49,6 +69,8 @@ const SECTIONS = [
     device: 'mac',
     title_mac: 'Merger — Fee agreement',
     note: 'DocuSign in a deal',
+    mac: { src: '/showcase/section3_docusign-in-deal.mp4', poster: '/showcase/section3_docusign-in-deal.webp',
+           alt: 'DocuSign opening inside a deal, with the deal’s people beside it' },
   },
 ];
 
@@ -81,9 +103,9 @@ export default function ProductShowcase() {
                 so the eye reads the claim and then finds the thing. */}
             <Reveal className="mk-show-device" delay={0.08} y={24}>
               {s.device === 'both'
-                ? <DeviceSwitcher id={s.id} title={s.title_mac} note={s.note}
+                ? <DeviceSwitcher id={s.id} title={s.title_mac} note={s.note} mac={s.mac}
                                   tilt={s.side === 'right' ? 'left' : 'right'} />
-                : <MacWindow title={s.title_mac} note={s.note}
+                : <MacWindow title={s.title_mac} note={s.note} media={s.mac}
                              tilt={s.side === 'right' ? 'left' : 'right'} />}
             </Reveal>
           </article>
@@ -114,10 +136,26 @@ export default function ProductShowcase() {
         </article>
       </div>
 
+      {/* THE ONE THING CSS CANNOT DO IS STOP A VIDEO AUTOPLAYING, so this is
+          the only script on the page — and it is an inline tag in the HTML,
+          not a module in the page chunk. That distinction is the whole reason
+          it is written this way: this page evaluates a ~620ms Three.js bundle
+          and sits on the threshold where adding to that chunk tips its
+          evaluation into one long task. Four lines parsed inline cost nothing
+          and touch no bundle.
+
+          `autoplay` stays in the markup so the normal path works with no
+          JavaScript at all; this only ever takes it AWAY, from someone who
+          asked for less movement. It runs after the videos in document order,
+          so they exist, and before they have buffered enough to start. */}
+      <script
+        dangerouslySetInnerHTML={{ __html: "(function(){try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)return;var v=document.querySelectorAll('video[data-motion]');for(var i=0;i<v.length;i++){v[i].autoplay=false;v[i].loop=false;v[i].removeAttribute('autoplay');v[i].pause();v[i].currentTime=0;}}catch(e){}})();" }}
+      />
+
       <div className="mk-wrap">
         <p className="mk-show-disclaimer">
-          Screens above are placeholders while the app footage is captured. Nothing in them
-          is a representation of the product.
+          Desktop screens are real recordings of the Windows alpha. The phone screens are
+          placeholders — there is no iOS build yet.
         </p>
       </div>
     </section>

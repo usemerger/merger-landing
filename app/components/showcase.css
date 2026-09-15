@@ -27,7 +27,13 @@
 .mk-show:first-of-type { border-top: none; }
 
 /* The device leads on a left-sided section. Source order keeps the copy first
-   for a screen reader and for phone width, where the grid stacks. */
+   for a screen reader and for phone width, where the grid stacks.
+
+   THE COLUMN WIDTHS HAVE TO SWAP WITH IT. `order` moves the items but not the
+   tracks, so on a left-sided section the device landed in the narrower 0.92fr
+   column — 474px of window against 556px in the other two, which read as the
+   middle section being mysteriously smaller. */
+.mk-show-left { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); }
 .mk-show-left .mk-show-copy { order: 2; }
 .mk-show-left .mk-show-device { order: 1; }
 
@@ -151,7 +157,14 @@
 /* ── the screen, and the slot inside it ─────────────────────────────────────
    THE ASPECT RATIO IS FIXED HERE, and that is what lets real footage drop in
    later without moving a pixel of the page. */
-.dv-screen { aspect-ratio: 16 / 10; background: var(--ink); overflow: hidden; }
+/* 16:9, MATCHING THE FOOTAGE. It was 16:10 when the slot held a drawn
+   placeholder, and with object-fit: cover a 16:9 recording in a 16:10 box
+   loses 5% off each side — which on these captures is the network rail down
+   the left edge and the Rolodex actions down the right, i.e. exactly the parts
+   that show what the product is. The window's chrome, tilt and shadow are
+   untouched; only the glass changed shape, and the ratio is still fixed, so
+   there is still nothing to shift. */
+.dv-screen { aspect-ratio: 16 / 9; background: var(--ink); overflow: hidden; }
 .dv-screen-phone { aspect-ratio: 9 / 19.5; border-radius: 22px; }
 .dv-media { display: block; width: 100%; height: 100%; object-fit: cover; }
 
@@ -470,3 +483,9 @@
   line-height: 1.7;
   margin-top: 14px;
 }
+
+/* ── the real loops ─────────────────────────────────────────────────────────
+   The video fills the glass exactly. `cover` rather than `contain`: the slot
+   is now the footage's own ratio, so cover crops nothing and simply guarantees
+   no letterbox if a future capture is a hair off. */
+.dv-screen .dv-media { width: 100%; height: 100%; object-fit: cover; display: block; }

@@ -46,8 +46,18 @@ const VIDEO = /\.(mp4|webm)$/i;
 export function ScreenSlot({ media, tag = 'Preview', note }) {
   if (media?.src) {
     return VIDEO.test(media.src)
-      ? <video className="dv-media" src={media.src} poster={media.poster} aria-label={media.alt}
-               autoPlay muted loop playsInline preload="metadata" />
+      /**
+       * `poster` is what removes the black flash: the first frame paints
+       * immediately while only metadata is fetched, and the video takes over
+       * when it is ready. `preload="metadata"` keeps three 1080p captures from
+       * pulling ~1.8MB the moment the page loads for a section most visitors
+       * scroll past.
+       *
+       * `data-motion` marks it for the reduced-motion script below — the one
+       * thing CSS cannot do is stop a video autoplaying.
+       */
+      ? <video className="dv-media" data-motion src={media.src} poster={media.poster}
+               aria-label={media.alt} autoPlay muted loop playsInline preload="metadata" />
       : <img className="dv-media" src={media.src} alt={media.alt || ''} loading="lazy" decoding="async" />;
   }
   return (
