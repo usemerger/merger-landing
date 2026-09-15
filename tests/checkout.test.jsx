@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import PlanStep, { useStartCheckout } from '../app/components/PlanStep';
 import { checkout } from '../app/lib/api';
+import { ALPHA_OFFER } from '../app/lib/billingOffer';
 
 // PlanStep resumes to the page it is ON after a 401, so the path is part of
 // the contract these tests cover.
@@ -14,7 +15,9 @@ vi.mock('../app/lib/api', () => ({
 }));
 
 function TestCheckout() { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} />; }
-const join = () => screen.getByRole('button', { name: 'Join the alpha' });
+// Read the label from the source, so renaming the button is a copy change
+// and not a test failure.
+const join = () => screen.getByRole('button', { name: ALPHA_OFFER.checkoutLabel });
 
 beforeEach(() => { checkout.mockReset(); });
 
@@ -66,7 +69,7 @@ describe('joining the alpha', () => {
       // Calm, not an error: nothing on this panel is an alert.
       expect(screen.queryByRole('alert')).toBeNull();
       // And no second attempt — the button is gone, not merely disabled.
-      expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
+      expect(screen.queryByRole('button', { name: ALPHA_OFFER.checkoutLabel })).toBeNull();
       expect(screen.getByRole('link', { name: 'Join the waitlist' }))
         .toHaveAttribute('href', expect.stringContaining('mailto:support@usemerger.com'));
       unmount();

@@ -31,9 +31,24 @@ describe('the alpha checkout contract', () => {
     }
   });
 
+  it('keeps the auto-billing disclosure next to the hook, not in the fine print', () => {
+    // COMPLIANCE, NOT COPY. Leading with "2 weeks free" is a marketing choice;
+    // saying what happens when the two weeks end, in the same breath, is not
+    // optional. If the terms line ever loses the price, the card requirement
+    // or the cancel window, the hook is no longer honest.
+    const terms = ALPHA_OFFER.trialTerms;
+    expect(ALPHA_OFFER.freeHeadline).toMatch(/2 weeks free/i);
+    expect(terms).toMatch(/\$50\/month/);
+    expect(terms).toMatch(/card required/i);
+    expect(terms).toMatch(/\$0 today/i);
+    expect(terms).toMatch(/cancel anytime before the trial ends/i);
+    expect(terms).toMatch(/for life/i);
+  });
+
   it('quotes one offer, and it is the one the backend charges', () => {
     const copy = [ALPHA_OFFER.billingNotice, ALPHA_OFFER.rateNotice, ALPHA_OFFER.summary,
-      ALPHA_OFFER.trialLabel, ALPHA_OFFER.priceLabel].join(' ');
+      ALPHA_OFFER.trialLabel, ALPHA_OFFER.priceLabel, ALPHA_OFFER.freeHeadline,
+      ALPHA_OFFER.trialTerms, ALPHA_OFFER.checkoutLabel].join(' ');
     // The three retired framings. Any of them reappearing means two offers are
     // on screen at once, which is the failure this whole file exists to catch.
     expect(copy).not.toMatch(/invite|50% off|\$99\.99|\$49\.99|\$79|\$159/i);

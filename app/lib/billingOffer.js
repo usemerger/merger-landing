@@ -42,7 +42,34 @@ export const ALPHA_OFFER = Object.freeze({
   trialLabel: 'First 2 weeks free',
   trialDaysLabel: '14-day free trial',
 
-  checkoutLabel: 'Join the alpha',
+  /** The hook, and the biggest thing on the pricing card. */
+  freeHeadline: 'Get 2 weeks free.',
+
+  /**
+   * THE DISCLOSURE, AND IT IS NOT FINE PRINT.
+   *
+   * It sits directly under the headline and directly above the button, at
+   * readable size, because the one thing a free-trial page must never do is
+   * lead with "free" and leave the card and the recurring charge to be
+   * discovered on a statement. Leading with the hook is a marketing decision;
+   * putting this next to it is not optional.
+   */
+  trialTerms: 'Then $50/month — locked in for life. Card required · $0 today · cancel anytime before the trial ends.',
+
+  /**
+   * The same disclosure again, shortened, for the line directly above the
+   * button. Saying it twice is deliberate: the terms under the headline are
+   * part of the offer, and these are what someone reads in the half-second
+   * before they click. Material terms belong at the point of action, not 263
+   * pixels above it behind a feature list — which is exactly where the first
+   * version of this card put them.
+   */
+  ctaTerms: '$0 today · then $50/month · cancel anytime before the trial ends',
+
+  /** The button. Says what pressing it starts, not what it costs. */
+  checkoutLabel: 'Start 2 weeks free',
+  /** The nav pill has room for three words, not four. */
+  navLabel: 'Join the alpha',
   signupHref: '/signup?offer=alpha',
 
   /** One line, for the places with room for exactly one. */

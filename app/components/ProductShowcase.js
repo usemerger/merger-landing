@@ -1,6 +1,7 @@
 import Reveal from './Reveal';
 import './showcase.css';
-import { MacWindow, PhoneFrame } from './DeviceMockup';
+import { DeviceSwitcher, MacWindow } from './DeviceMockup';
+import HandPhone from './HandPhone';
 
 /**
  * Three sections, three claims, one device each.
@@ -79,12 +80,39 @@ export default function ProductShowcase() {
             {/* delay, not stagger: the device settles a beat after the words,
                 so the eye reads the claim and then finds the thing. */}
             <Reveal className="mk-show-device" delay={0.08} y={24}>
-              <MacWindow title={s.title_mac} note={s.note} tilt={s.side === 'right' ? 'left' : 'right'} />
-              {s.device === 'both' && <PhoneFrame />}
+              {s.device === 'both'
+                ? <DeviceSwitcher id={s.id} title={s.title_mac} note={s.note}
+                                  tilt={s.side === 'right' ? 'left' : 'right'} />
+                : <MacWindow title={s.title_mac} note={s.note}
+                             tilt={s.side === 'right' ? 'left' : 'right'} />}
             </Reveal>
           </article>
         </div>
       ))}
+
+      {/* THE MOBILE SECTION. Separate from the toggle above on purpose: the
+          toggle answers "does it have a phone app", this answers "what is it
+          for". It is also the one section built around a photograph rather
+          than a drawn frame — see HandPhone for the two swap seams. */}
+      <div className="mk-wrap">
+        <article className="mk-show mk-show-hand" aria-labelledby="show-mobile">
+          <Reveal className="mk-show-copy" delay={0}>
+            <p className="mk-kicker">Merger on your phone</p>
+            <h3 id="show-mobile">The desk fits<br /><span>in a pocket.</span></h3>
+            <p className="mk-show-body">Every channel and every deal, on the phone you already answer.
+            Reply from the train, check what Claude filed while you were in a meeting, and let the
+            desktop be where the paperwork happens.</p>
+            <ul className="mk-show-points">
+              <li>The same inbox, the same deals</li>
+              <li>Reply on any network from your phone</li>
+              <li>Coming after the Windows alpha</li>
+            </ul>
+          </Reveal>
+          <Reveal className="mk-show-hand-media" delay={0.08} y={24}>
+            <HandPhone />
+          </Reveal>
+        </article>
+      </div>
 
       <div className="mk-wrap">
         <p className="mk-show-disclaimer">
