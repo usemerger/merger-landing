@@ -105,14 +105,30 @@ export const claimHandle = (handle) =>
 
 /* ---------------- billing ---------------- */
 
+/**
+ * The only live billing read. Answers for an account with no entitlement, so
+ * it is safe to call before anyone has subscribed.
+ *
+ * There is deliberately no `billingOffers` beside it: `/api/billing/offers`
+ * returns 404 and is not a route. Plan copy is hardcoded in lib/billingOffer.
+ */
 export const billingStatus = () => request('/api/billing/status');
-export const billingOffers = () => request('/api/billing/offers');
 
-/** Returns the hosted Stripe Checkout URL. No card data ever touches this app. */
+/**
+ * Start alpha checkout. Resolves to the hosted Stripe Checkout URL, which the
+ * caller redirects the browser to. No card data ever touches this app, and
+ * there is no Stripe.js, session id or client secret in this flow — the
+ * response carries one usable field, `url`.
+ *
+ * The body is exactly `{plan:'operator', alpha:true}`. `operator` is the only
+ * plan the alpha accepts: any other plan with `alpha:true` is refused with
+ * 400 alpha_is_operator_only, so sending one would be asking for an error we
+ * already know the answer to.
+ */
 export const checkout = () =>
   request('/api/billing/checkout', {
     method: 'POST',
-    body: { offer: 'alpha' },
+    body: { plan: 'operator', alpha: true },
   });
 
 /** Returns the hosted Stripe Customer Portal URL. */
@@ -124,14 +140,14 @@ export const download = () => request('/api/download');
 
 /* ---------------- presentation helpers ---------------- */
 
-export const PLANS = {
-  alpha: { id: 'alpha', name: 'Merger Alpha', price: 50, perSeat: false },
-  operator: { id: 'operator', name: 'Operator', perSeat: false },
-  desk: { id: 'desk', name: 'Desk', perSeat: true },
-};
-
-/** Entitlement states that unlock the product. */
-export const ENTITLED_STATUSES = ['trialing', 'active'];
+// PLANS used to live here with `alpha: { price: 50 }` in it. Nothing read it,
+// and it carried a number the backend will never charge — the kind of dead
+// constant that gets copied into live copy a year later. The plan the alpha
+// bills is in lib/billingOffer, next to the words shown about it.
+//
+// Entitlement is whatever `/api/billing/status` says `entitled` is. TRIALING
+// COUNTS AS ENTITLED and the backend already folds that in, so nothing here
+// re-derives it from the status string.
 
 export function statusLabel(status) {
   switch (status) {
@@ -181,21 +197,24 @@ export function errorMessage(err) {
     case 'handle_reserved':
       return 'That handle is already taken. Pick another.';
     case 'unknown_plan':
-    case 'unknown_offer':
-      return 'That offer is not available. Refresh this page to see the current offer.';
-    case 'offer_changed':
-      return 'The offer has changed. Open your Merger account online to review the current pricing before subscribing.';
+      return 'That plan is not available. Refresh this page and try again.';
+    // Only reachable if this client ever posts a plan other than 'operator'
+    // with alpha:true, which it does not. Said plainly rather than swallowed,
+    // because if it ever appears it is a bug here, not something the user did.
+    case 'alpha_is_operator_only':
+      return 'The alpha covers one plan only. Refresh this page and try again.';
     case 'checkout_processing':
     case 'checkout_in_progress':
       return 'A checkout is already being processed for this account. Check your billing page before trying again.';
     case 'complimentary_access':
       return 'This account already has complimentary access. You do not need a paid subscription.';
-    case 'alpha_offer_unavailable':
+    // 503. Billing is configured wrong or switched off at the backend — not
+    // the user's problem and not fixable by retrying in ten seconds.
     case 'alpha_not_configured':
-    case 'alpha_price_mismatch':
+    case 'alpha_offer_unavailable':
     case 'billing_unavailable':
     case 'billing_not_configured':
-      return 'Trial signup is temporarily unavailable. Your account is saved; please try again later.';
+      return 'Joining the alpha is not available right now. Your account is saved; please try again later.';
     case 'subscription_exists':
     case 'already_subscribed':
       return 'This account already has a subscription. Manage it from your account dashboard.';
@@ -203,6 +222,7 @@ export function errorMessage(err) {
     case 'billing_management_unavailable':
     case 'portal_not_configured':
       return 'Billing management is temporarily unavailable. Contact support@usemerger.com for help.';
+    // 502. Transient, on Stripe's side — worth pressing again.
     case 'billing_provider_error':
       return 'Stripe could not complete the request. Please try again in a moment.';
     case 'no_subscription':

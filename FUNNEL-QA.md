@@ -2,6 +2,16 @@
 
 Updated September 14, 2026.
 
+> **SUPERSEDED on September 15, 2026, for everything about the offer and the
+> billing API.** This document describes a 14-day trial at $50/month, gated on
+> `GET /api/billing/offers`. None of that exists: the offers route returns 404
+> and always did, and the alpha is now free with a card on file, converting to
+> a 50% member rate ($49.99 against a $99.99 list price), invite-only. The
+> checkout contract as built is in [`docs/alpha-checkout-contract.md`](docs/alpha-checkout-contract.md).
+>
+> Kept as-is below rather than rewritten — it is the record of what was tested
+> on the 14th, and editing it to agree with today would destroy that.
+
 ## Offer and account behavior
 
 - One public offer: **14 days free, then $50 USD/month**, one person. The trial starts on completion of Stripe Checkout; a card is required for automatic billing after the trial. Cancel before the trial ends to avoid the first subscription charge. No coupon. Creating an account is free.

@@ -38,5 +38,5 @@ export const faqs = [
   { question: 'Does Merger file deals or send documents automatically?', answer: 'You review detected deal suggestions before filing them. In DocuSign, you choose a field before inserting a value, or copy and paste it yourself. You control sending and signing inside your own DocuSign account.' },
   { question: 'Which messaging accounts can I connect?', answer: 'Use the connection options available in the Windows app. The supported accounts, history coverage, and messaging actions vary by service during alpha. Contact support if a particular network is essential to your workflow.', link: { href: '/support', label: 'Ask about your workflow' } },
   { question: 'Can I use my existing DocuSign account and templates?', answer: 'Yes. Sign in to your own DocuSign account in the embedded browser. Your Rolodex is beside it for recipient names, emails, and other available details. Copy and paste works as a fallback for fields that do not accept Insert. DocuSign access and any charges are separate from Merger.' },
-  { question: 'How does the free trial work?', offer: true },
+  { question: 'What does the alpha cost?', offer: true },
 ];

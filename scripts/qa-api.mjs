@@ -3,7 +3,6 @@
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ALPHA_OFFER } from '../app/lib/billingOffer.js';
 
 const COOKIE = 'merger_qa_session';
 const scenarios = {
@@ -11,8 +10,9 @@ const scenarios = {
   pastdue: 'Past due, access locked', canceled: 'Canceled subscription', complimentary: 'Complimentary account',
   checkoutpending: 'Checkout confirmation pending', errors: 'Recoverable API errors',
   nohandle: 'Account without handle', unverified: 'Email verification required',
-  offerunavailable: 'Paid alpha offer unavailable', canceling: 'Active, cancellation scheduled', downloadready: 'Synthetic download link (do not download)',
-  trialing: '14-day trial active', trialcanceling: 'Trial cancellation scheduled',
+  alphaunavailable: 'Alpha not configured (503)', billingerror: 'Stripe provider error (502)',
+  canceling: 'Active, cancellation scheduled', downloadready: 'Synthetic download link (do not download)',
+  trialing: 'Alpha access active (free)', trialcanceling: 'Alpha cancellation scheduled',
 };
 const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const validEmail = value => /^[^\s@]+@(?:[^\s@]+\.test|example\.(?:com|org))$/i.test(value || '');
@@ -55,9 +55,11 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
     const trialing = ['trialing', 'trialcanceling'].includes(mode);
     const entitlementStatus = mode === 'pastdue' ? 'past_due' : mode === 'canceled' ? 'canceled' : mode === 'checkoutpending' ? 'incomplete' : trialing ? 'trialing' : active ? 'active' : 'none';
     const hasHistory = active || trialing || ['pastdue', 'canceled', 'checkoutpending'].includes(mode);
-    return { configured: mode !== 'offerunavailable', entitled: active || trialing || complimentary, grandfathered: complimentary,
-      entitlementStatus, offer: hasHistory ? 'alpha' : null, plan: hasHistory ? 'alpha' : null, seats: 1,
-      pricing: hasHistory ? { amount: ALPHA_OFFER.amount, currency: ALPHA_OFFER.currency, interval: 'month', intervalCount: 1, quantity: 1 } : null,
+    return { configured: mode !== 'alphaunavailable', entitled: active || trialing || complimentary, grandfathered: complimentary,
+      entitlementStatus, offer: hasHistory ? 'alpha' : null, plan: hasHistory ? 'operator' : null, seats: 1,
+      // The member rate, in cents — what is billed AFTER the alpha. $0 today is
+      // not a price, it is the absence of one, so it is not modelled here.
+      pricing: hasHistory ? { amount: 4999, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } : null,
       hasPaymentMethod: hasHistory && mode !== 'checkoutpending', alphaPriceLocked: active || trialing,
       cancelAtPeriodEnd: ['canceling', 'trialcanceling'].includes(mode), currentPeriodEnd: trialing ? '2026-09-28T12:00:00Z' : active ? '2026-10-14T12:00:00Z' : null,
       trialEndsAt: trialing ? '2026-09-28T12:00:00Z' : null, graceEndsAt: null, billingDetailsUnavailable: false };
@@ -125,10 +127,10 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
         const handle = decodeURIComponent(path.split('/')[3]);
         json(response, 200, { handle, available: validHandle(handle) && !reservedHandles.has(handle) }); return;
       }
-      if (request.method === 'GET' && path === '/api/billing/offers') {
-        json(response, 200, { offers: [{ id: 'alpha', available: state.scenario !== 'offerunavailable', amount: ALPHA_OFFER.amount, currency: ALPHA_OFFER.currency,
-          interval: 'month', intervalCount: 1, perSeat: false, trialDays: 14, priceLockedWhileSubscribed: true }] }); return;
-      }
+      // NO /api/billing/offers HANDLER, DELIBERATELY. The live backend answers
+      // 404 for it and always did; a fixture that serves it would let the funnel
+      // be developed against a route that does not exist. It falls through to
+      // the catch-all 404 below, which is exactly what production does.
       if (!state.user) { json(response, 401, { error: 'not_authenticated' }); return; }
       if (request.method === 'GET' && path === '/api/auth/me') { json(response, 200, state.user); return; }
       if (request.method === 'POST' && path === '/api/auth/verify-email/send') {
@@ -144,8 +146,18 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
       }
       if (request.method === 'GET' && path === '/api/billing/status') { json(response, 200, billing(state)); return; }
       if (request.method === 'POST' && path === '/api/billing/checkout') {
-        state.counters.checkout++; await body(request);
-        json(response, 503, { error: 'alpha_offer_unavailable', synthetic: true }); return;
+        state.counters.checkout++;
+        const sent = await body(request);
+        // The contract, enforced here so a wrong body fails locally rather than
+        // in production: operator + alpha, nothing else.
+        if (sent?.alpha === true && sent?.plan !== 'operator') { json(response, 400, { error: 'alpha_is_operator_only' }); return; }
+        if (state.scenario === 'alphaunavailable') { json(response, 503, { error: 'alpha_not_configured', synthetic: true }); return; }
+        if (state.scenario === 'billingerror') { json(response, 502, { error: 'billing_provider_error', synthetic: true }); return; }
+        // THE DEFAULT IS 403, because that is what the live backend returns:
+        // the allowlist is fail-closed and currently empty. This fixture never
+        // emits a Stripe URL — the 200 path has to be proved against the real
+        // backend with a real allowlisted account, not against a made-up link.
+        json(response, 403, { error: 'not_on_alpha_list', synthetic: true }); return;
       }
       if (request.method === 'POST' && path === '/api/billing/portal') {
         state.counters.portal++; json(response, 503, { error: 'billing_portal_unavailable', synthetic: true }); return;

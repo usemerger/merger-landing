@@ -1,62 +1,96 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import PlanStep, { useStartCheckout } from '../app/components/PlanStep';
-import { billingOffers, checkout } from '../app/lib/api';
+import { checkout } from '../app/lib/api';
 
-vi.mock('../app/lib/api', () => ({ billingOffers: vi.fn(), checkout: vi.fn(), errorMessage: () => 'Please try again.' }));
-const available = { offers: [{ id: 'alpha', available: true, amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, perSeat: false, trialDays: 14, priceLockedWhileSubscribed: true }] };
+// PlanStep resumes to the page it is ON after a 401, so the path is part of
+// the contract these tests cover.
+vi.mock('next/navigation', () => ({ usePathname: () => '/billing' }));
+vi.mock('../app/lib/api', () => ({
+  checkout: vi.fn(),
+  // The real errorMessage is exercised in api.test.js; here the point is which
+  // STATE each reply produces, not the sentence it produces.
+  errorMessage: (err) => `message:${err?.code || err?.status || 'unknown'}`,
+}));
+
 function TestCheckout() { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} />; }
-beforeEach(() => { billingOffers.mockReset(); checkout.mockReset(); });
-describe('checkout from an existing account', () => {
-  it('makes the free trial, automatic monthly charge, and cancellation terms visible together', async () => {
-    billingOffers.mockResolvedValue(available);
+const join = () => screen.getByRole('button', { name: 'Join the alpha' });
+
+beforeEach(() => { checkout.mockReset(); });
+
+describe('joining the alpha', () => {
+  it('goes straight to checkout with no availability call in front of it', async () => {
+    // THE REGRESSION THIS GUARDS. The button used to be disabled until
+    // GET /api/billing/offers answered, and that route is a 404 — so it was
+    // disabled always. Nothing may gate it again.
+    checkout.mockReturnValue(new Promise(() => {}));
     render(<TestCheckout />);
-    const button = screen.getByRole('button', { name: 'Start 14-day free trial' });
-    await waitFor(() => expect(button).toBeEnabled());
-    expect(screen.getByText(/14 days free, then \$50 USD\/month automatically/)).toHaveTextContent('Cancel before your trial ends to avoid the first charge.');
+    expect(join()).toBeEnabled();
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledTimes(1));
+  });
+
+  it('states what is charged today and what is charged later, together', () => {
+    render(<TestCheckout />);
+    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('$0 is charged today');
+    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('$49.99 USD/month instead of $99.99');
+    expect(screen.getByText(/Free during the alpha/)).toHaveTextContent('a card is required');
     expect(checkout).not.toHaveBeenCalled();
   });
-  it('offers sign-in recovery after a session expires', async () => {
-    billingOffers.mockResolvedValue(available);
-    checkout.mockRejectedValue({ status: 401 });
+
+  it('answers a 403 with the invite-only panel and no way to pay full price', async () => {
+    checkout.mockRejectedValue({ status: 403, code: 'not_on_alpha_list' });
     render(<TestCheckout />);
-    const button = screen.getByRole('button', { name: /Start 14-day free trial/ });
-    await waitFor(() => expect(button).toBeEnabled());
-    fireEvent.click(button);
-    expect(await screen.findByRole('link', { name: 'Sign in again' })).toHaveAttribute('href', '/login?next=/billing');
+    fireEvent.click(join());
+    expect(await screen.findByText('The alpha is invite-only right now')).toBeInTheDocument();
+    // Calm, not an error: nothing on this panel is an alert.
+    expect(screen.queryByRole('alert')).toBeNull();
+    // And no second attempt to buy anything — the button is gone, not disabled.
+    expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
+    expect(screen.getByRole('link', { name: 'Request access' }))
+      .toHaveAttribute('href', expect.stringContaining('mailto:support@usemerger.com'));
   });
-  it('blocks unavailable billing and offers recovery', async () => {
-    billingOffers.mockResolvedValue({ offers: [] });
+
+  it('sends an expired session to sign in and back again', async () => {
+    checkout.mockRejectedValue({ status: 401, code: 'unauthorized' });
     render(<TestCheckout />);
-    await screen.findByText(/Trial signup is temporarily unavailable/);
-    expect(screen.getByRole('button', { name: /Start 14-day free trial/ })).toBeDisabled();
-    expect(checkout).not.toHaveBeenCalled();
-    billingOffers.mockResolvedValue(available);
-    fireEvent.click(screen.getByRole('button', { name: 'Check again' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: /Start 14-day free trial/ })).toBeEnabled());
+    fireEvent.click(join());
+    expect(await screen.findByRole('link', { name: 'Sign in and continue' }))
+      .toHaveAttribute('href', '/login?next=%2Fbilling');
   });
-  it('rechecks the offer before checkout and prevents duplicate submissions', async () => {
-    billingOffers.mockResolvedValue(available);
+
+  it('treats 503 as not available right now, with no retry button', async () => {
+    checkout.mockRejectedValue({ status: 503, code: 'alpha_not_configured' });
+    render(<TestCheckout />);
+    fireEvent.click(join());
+    expect(await screen.findByText('message:alpha_not_configured')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Try again' })).toBeNull();
+    expect(join()).toBeEnabled();
+  });
+
+  it('offers a retry for a transient provider failure', async () => {
+    checkout.mockRejectedValue({ status: 502, code: 'billing_provider_error' });
+    render(<TestCheckout />);
+    fireEvent.click(join());
+    const retry = await screen.findByRole('button', { name: 'Try again' });
+    checkout.mockResolvedValue({ url: 'https://checkout.stripe.com/c/pay/cs_test' });
+    fireEvent.click(retry);
+    await waitFor(() => expect(checkout).toHaveBeenCalledTimes(2));
+  });
+
+  it('never fires two checkouts from a double click', async () => {
     let reject;
     checkout.mockReturnValue(new Promise((_resolve, fail) => { reject = fail; }));
     render(<TestCheckout />);
-    const button = screen.getByRole('button', { name: /Start 14-day free trial/ });
-    await waitFor(() => expect(button).toBeEnabled());
+    // The same element, twice — its label changes to "Opening secure checkout…"
+    // on the first press, so re-querying by name would find nothing and the
+    // test would pass without ever attempting the second submission.
+    const button = join();
     fireEvent.click(button);
     fireEvent.click(button);
     await waitFor(() => expect(checkout).toHaveBeenCalledTimes(1));
-    expect(billingOffers).toHaveBeenCalledTimes(2);
-    reject(new Error('transient failure'));
+    reject({ status: 500 });
     await screen.findByRole('alert');
-    expect(screen.getByRole('button', { name: /Start 14-day free trial/ })).toBeEnabled();
-  });
-  it('does not checkout after an offer is withdrawn', async () => {
-    billingOffers.mockResolvedValueOnce(available).mockResolvedValue({ offers: [] });
-    render(<TestCheckout />);
-    const button = screen.getByRole('button', { name: /Start 14-day free trial/ });
-    await waitFor(() => expect(button).toBeEnabled());
-    fireEvent.click(button);
-    await screen.findByRole('alert');
-    expect(checkout).not.toHaveBeenCalled();
+    expect(join()).toBeEnabled();
   });
 });

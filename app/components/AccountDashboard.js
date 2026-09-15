@@ -104,6 +104,27 @@ export default function AccountDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [justCheckedOut, loading, user?.userId, pollCycle, router, loginPath]);
 
+  /**
+   * A COMPLETED CHECKOUT HAS ONE OBVIOUS NEXT STEP, AND IT IS NOT THIS PAGE.
+   *
+   * Stripe returns to /billing?checkout=success because the backend builds
+   * that return URL, so this is where everyone lands — but what they came for
+   * is the app. Once the server confirms entitlement (trialing counts, and the
+   * backend folds that into `entitled` itself), take them to the download.
+   *
+   * `replace`, not `push`, so Back does not walk into a checkout return that
+   * would bounce them forward again. A short beat first: the confirmation is
+   * worth seeing, and a page that vanishes the instant it appears reads as a
+   * glitch rather than a success. Anyone who would rather not wait has the
+   * link in the same alert.
+   */
+  const entitledNow = status?.entitled === true;
+  useEffect(() => {
+    if (!justCheckedOut || !entitledNow) return undefined;
+    const timer = setTimeout(() => router.replace('/download'), 1400);
+    return () => clearTimeout(timer);
+  }, [justCheckedOut, entitledNow, router]);
+
   async function openPortal() {
     if (portalPending.current) return;
     portalPending.current = true;
@@ -160,12 +181,17 @@ export default function AccountDashboard() {
     <p className="eyebrow">Account</p>
     <h1 className="dash-title">{user.email}</h1>
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
-    <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : 'Your subscription does not currently include app access.'}</p>
+    <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : 'Your membership does not currently include app access.'}</p>
     {actionError && <div className="alert alert-error" role="alert">{actionError}</div>}
     {s.configured === false && <div className="alert alert-warn">Billing is temporarily unavailable. Your account is saved; please check again later.</div>}
     {s.billingDetailsUnavailable && <div className="alert alert-warn">Current billing details could not be retrieved. <button type="button" className="linklike" onClick={load}>Try again</button></div>}
-    {canceledCheckout && !entitled && <div className="alert alert-info" role="status">Checkout was not completed. Your account is saved, and you can continue below.</div>}
-    {justCheckedOut && entitled && <div className="alert alert-info" role="status"><strong>Your account is ready.</strong> You can download Merger below.</div>}
+    {/* CANCELLED IS NOT AN ERROR. They closed a Stripe tab; nothing failed,
+        nothing was charged, and the offer is still right there below. */}
+    {canceledCheckout && !entitled && <div className="alert alert-info" role="status">Checkout was not completed and nothing was charged. Your account is saved — you can join below whenever you are ready.</div>}
+    {justCheckedOut && entitled && <div className="alert alert-info" role="status">
+      <strong>You&rsquo;re in.</strong> Taking you to the download…{' '}
+      <Link href="/download">Go now</Link>
+    </div>}
     {pendingPayment && <div className="alert alert-info" role="status">
       {pollState === 'running' || pollState === 'idle' ? 'Confirming your subscription with Stripe…' : <>
         {pollState === 'error' ? 'We could not check your subscription status.' : 'Your subscription has not been confirmed yet.'} If you completed checkout, allow a moment for confirmation before starting another subscription.{' '}
@@ -176,10 +202,14 @@ export default function AccountDashboard() {
       <strong>Your payment did not go through.</strong>{entitled && graceDate ? ` Access continues until ${graceDate}.` : ' Update your payment method to restore access.'}{' '}
       <button type="button" className="linklike" disabled={portalBusy} onClick={openPortal}>Update payment method</button>
     </div>}
-    {trialing && <div className="alert alert-info" role="status" aria-label="Trial status">
-      <strong>Your free trial{trialDate ? ` ends on ${trialDate}` : ' is active'}.</strong>{' '}
-      {s.cancelAtPeriodEnd ? 'Your trial is set to cancel. You can use Merger until it ends, with no subscription charge.' : <>{price ? `After the trial, ${price} is billed automatically. ` : 'Monthly billing begins after the trial. '}Cancel before your trial ends to avoid the first subscription charge.</>}{' '}
-      <button className="linklike" type="button" onClick={openPortal} disabled={portalBusy}>Manage trial</button>
+    {/* The alpha is free, so Stripe reports it as trialing. The DATES AND THE
+        PRICE HERE ARE THE BACKEND'S, not ours — whatever it says will be
+        charged, and when, is what gets shown. Everything around them describes
+        the alpha rather than the fourteen-day trial this used to be. */}
+    {trialing && <div className="alert alert-info" role="status" aria-label="Alpha status">
+      <strong>Your alpha access is active{trialDate ? ` and free until ${trialDate}` : ''}.</strong>{' '}
+      {s.cancelAtPeriodEnd ? 'Your membership is set to end. You can use Merger until it does, with nothing to pay.' : <>{price ? `After that, ${price} is billed automatically. ` : 'Monthly billing begins when the alpha ends. '}Cancel before then and you are never charged.</>}{' '}
+      <button className="linklike" type="button" onClick={openPortal} disabled={portalBusy}>Manage membership</button>
     </div>}
     {!grandfathered && !trialing && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
       <button type="button" className="linklike" onClick={openPortal} disabled={portalBusy}>Manage cancellation</button>
@@ -199,7 +229,7 @@ export default function AccountDashboard() {
           <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
           {price && <div className="stat"><div className="k">Subscription price</div><div className="v">{price}</div></div>}
           {s.seats > 1 && <div className="stat"><div className="k">Seats</div><div className="v">{s.seats}</div></div>}
-          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
+          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Free until</div><div className="v">{trialDate}</div></div>}
           {s.entitlementStatus !== 'trialing' && renewalDate && <div className="stat"><div className="k">{s.cancelAtPeriodEnd || s.entitlementStatus === 'canceled' ? 'Access until' : 'Current period ends'}</div><div className="v">{renewalDate}</div></div>}
           <div className="stat"><div className="k">Payment method</div><div className="v">{s.hasPaymentMethod ? 'On file' : 'None on file'}</div></div>
         </div>
@@ -211,7 +241,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Subscribe again' : 'Start your alpha trial'} note={s.entitlementStatus === 'canceled' ? 'A new subscription uses the offer currently available below.' : 'Your account and handle are ready. Review the offer before continuing to checkout.'} /></div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Join again' : 'Join the alpha'} note={s.entitlementStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Desktop app</h2></div>
       <p className="muted mt-16">{entitled ? 'Check the available installers for your computer.' : 'Downloads unlock when your subscription is confirmed.'}</p>

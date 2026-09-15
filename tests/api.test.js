@@ -1,22 +1,43 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, billingOffers, checkout, errorMessage, meOrNull } from '../app/lib/api';
-import { isAvailableAlphaOffer } from '../app/lib/billingOffer';
+import { ApiError, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
+import { ALPHA_OFFER } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
-const alpha = { id: 'alpha', available: true, amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, perSeat: false, trialDays: 14, priceLockedWhileSubscribed: true };
-describe('billing offer safety', () => {
-  it('enables only the exact advertised $50 monthly offer', () => {
-    expect(isAvailableAlphaOffer({ offers: [alpha] })).toBe(true);
-    for (const change of [{ amount: 4999 }, { amount: 9999 }, { available: false }, { interval: 'year' }, { intervalCount: 12 }, { trialDays: 0 }, { trialDays: 7 }, { trialDays: 365 }, { perSeat: true }, { currency: 'cad' }, { priceLockedWhileSubscribed: false }]) {
-      expect(isAvailableAlphaOffer({ offers: [{ ...alpha, ...change }] })).toBe(false);
-    }
-    expect(isAvailableAlphaOffer(null)).toBe(false);
-  });
-  it('sends only the public offer and same-origin credentials', async () => {
-    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ url: 'https://checkout.stripe.com/test' })));
+
+describe('the alpha checkout contract', () => {
+  it('posts exactly {plan:"operator",alpha:true} with same-origin credentials', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ url: 'https://checkout.stripe.com/c/pay/cs_test' })));
     vi.stubGlobal('fetch', fetchMock);
+    // Called with arguments on purpose: nothing a caller passes may reach the
+    // body. The plan is not the caller's to choose.
     await checkout('desk', 500);
-    expect(fetchMock).toHaveBeenCalledWith('/api/billing/checkout', expect.objectContaining({ credentials: 'include', body: '{"offer":"alpha"}', method: 'POST' }));
+    expect(fetchMock).toHaveBeenCalledWith('/api/billing/checkout', expect.objectContaining({
+      credentials: 'include', method: 'POST', body: '{"plan":"operator","alpha":true}',
+    }));
+  });
+
+  it('returns the hosted checkout URL and nothing is read but that', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      url: 'https://checkout.stripe.com/c/pay/cs_live_abc', sessionId: 'cs_live_abc', clientSecret: 'secret',
+    }))));
+    await expect(checkout()).resolves.toMatchObject({ url: 'https://checkout.stripe.com/c/pay/cs_live_abc' });
+  });
+
+  it('surfaces each refusal the contract names by its own code', async () => {
+    for (const [status, code] of [[403, 'not_on_alpha_list'], [401, 'unauthorized'],
+      [400, 'alpha_is_operator_only'], [503, 'alpha_not_configured'], [502, 'billing_provider_error']]) {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ error: code }), { status })));
+      await expect(checkout()).rejects.toMatchObject({ status, code });
+    }
+  });
+
+  it('never quotes a price the backend will not charge', () => {
+    const copy = [ALPHA_OFFER.billingNotice, ALPHA_OFFER.rateNotice, ALPHA_OFFER.summary].join(' ');
+    expect(copy).not.toMatch(/14[- ]day|\$50/);
+    expect(copy).toContain('$0');
+    expect(copy).toContain(ALPHA_OFFER.memberPrice);
+    expect(copy).toContain(ALPHA_OFFER.listPrice);
+    expect(ALPHA_OFFER.plan).toBe('operator');
   });
 });
 describe('recoverable API errors', () => {
@@ -27,17 +48,17 @@ describe('recoverable API errors', () => {
   });
   it('rejects malformed successful data instead of claiming success', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html>proxy error</html>')));
-    await expect(billingOffers()).rejects.toMatchObject({ code: 'invalid_response' });
+    await expect(billingStatus()).rejects.toMatchObject({ code: 'invalid_response' });
   });
   it('extracts structured backend errors without revealing internals', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('{"detail":{"error":"email_not_verified"}}', { status: 403 })));
-    await expect(billingOffers()).rejects.toMatchObject({ code: 'email_not_verified' });
+    await expect(billingStatus()).rejects.toMatchObject({ code: 'email_not_verified' });
     expect(errorMessage(new ApiError(400, 'private_database_connection_string'))).not.toContain('database');
   });
   it('aborts stalled requests with a retryable message', async () => {
     vi.useFakeTimers();
     vi.stubGlobal('fetch', vi.fn((_url, { signal }) => new Promise((_resolve, reject) => signal.addEventListener('abort', () => reject(new Error('abort'))))));
-    const result = billingOffers();
+    const result = billingStatus();
     const assertion = expect(result).rejects.toMatchObject({ code: 'request_timeout' });
     await vi.advanceTimersByTimeAsync(20000);
     await assertion;

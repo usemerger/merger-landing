@@ -44,7 +44,12 @@ test('scenario controls expose distinct entitlement states without offering fake
     assert.equal(download.response.status, entitled ? 200 : 403);
     if (entitled) assert.deepEqual(download.data.builds, {});
   }
-  assert.equal((await call('/api/billing/checkout', { offer: 'alpha' })).data.error, 'alpha_offer_unavailable');
+  // Never a Stripe URL from a fixture, and never a 200 it has not earned:
+  // the default answer is the live one, 403 not_on_alpha_list.
+  const attempt = await call('/api/billing/checkout', { plan: 'operator', alpha: true });
+  assert.equal(attempt.response.status, 403);
+  assert.equal(attempt.data.error, 'not_on_alpha_list');
+  assert.equal(attempt.data.url, undefined);
   const portal = await call('/api/billing/portal', {});
   assert.equal(portal.data.error, 'billing_portal_unavailable'); assert.equal(portal.data.url, undefined);
 });
@@ -61,15 +66,25 @@ test('verification and one-use reset cases stay synthetic and recoverable', asyn
   assert.equal((await call('/api/auth/password/reset', { token: 'qa-valid-reset', password: 'synthetic-password' })).data.error, 'invalid_token');
 });
 
-test('error and unavailable-offer modes can be reset through the local control page', async t => {
+test('error and unavailable modes can be reset through the local control page', async t => {
   const call = await fixture(t);
   await call('/qa/scenario', { scenario: 'errors' });
   assert.equal((await call('/api/auth/me')).response.status, 503);
   const page = await call('/qa');
   assert.match(page.data, /Local synthetic test environment/);
-  await call('/qa/scenario', { scenario: 'offerunavailable' });
-  assert.equal((await call('/api/billing/offers')).data.offers[0].available, false);
+  // The offers route must NOT exist here, the same way it does not exist in
+  // production. A fixture that answers it is how a 404 gets shipped.
   await call('/qa/scenario', { scenario: 'none' });
-  assert.equal((await call('/api/billing/offers')).data.offers[0].available, true);
+  assert.equal((await call('/api/billing/offers')).response.status, 404);
+
+  // Checkout speaks the real contract, and its default is the live one: the
+  // allowlist is fail-closed and empty, so everybody is 403 until invited.
+  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'not_on_alpha_list');
+  assert.equal((await call('/api/billing/checkout', { plan: 'desk', alpha: true })).data.error, 'alpha_is_operator_only');
+  await call('/qa/scenario', { scenario: 'alphaunavailable' });
+  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'alpha_not_configured');
+  await call('/qa/scenario', { scenario: 'billingerror' });
+  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true })).data.error, 'billing_provider_error');
+  await call('/qa/scenario', { scenario: 'none' });
   assert.equal((await call('/api/auth/me')).response.status, 200);
 });
