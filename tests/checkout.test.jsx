@@ -73,6 +73,17 @@ describe('joining the alpha', () => {
     }
   });
 
+  it('does not mistake an origin rejection for a closed alpha', async () => {
+    // The backend Origin-allowlists state-changing requests, so a preview
+    // deployment gets 403 origin_not_allowed. That must not read as "the
+    // alpha has closed" — it is a deployment problem, not an offer one.
+    checkout.mockRejectedValue({ status: 403, code: 'origin_not_allowed' });
+    render(<TestCheckout />);
+    fireEvent.click(join());
+    expect(await screen.findByRole('alert')).toHaveTextContent('message:origin_not_allowed');
+    expect(screen.queryByText(/isn’t taking new members/)).toBeNull();
+  });
+
   it('has no invite gate left anywhere in the join flow', async () => {
     render(<TestCheckout />);
     expect(screen.queryByText(/invite/i)).toBeNull();

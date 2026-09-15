@@ -42,9 +42,9 @@ const PHASE = {
  * does not document its error bodies — the OpenAPI schema types the request
  * and nothing else — so the exact spelling of the closed-window code cannot be
  * confirmed from outside. What CAN be confirmed is that the allowlist is gone,
- * and with it the only other thing a 403 used to mean. So any 403 from
- * checkout is treated as a closed window, and these names are recognised for a
- * more precise message if one of them is what arrives.
+ * and with it the only other thing a 403 used to mean. So a 403 is read as a
+ * closed window unless its code is a known non-alpha one (see below), and
+ * these names are recognised for a more precise message when one arrives.
  *
  * `alpha_not_configured` (503) lands here too. It is a different cause —
  * billing misconfigured rather than a window deliberately shut — but it is the
@@ -56,10 +56,32 @@ const CLOSED_CODES = new Set([
   'alpha_unavailable', 'alpha_offer_unavailable', 'alpha_not_configured',
 ]);
 
+/**
+ * The 403s that are NOT the alpha being shut.
+ *
+ * Found by testing rather than by reading: the backend enforces an Origin
+ * allowlist on state-changing requests, and a request from an origin it does
+ * not know — a Vercel preview URL, localhost — comes back
+ * `403 origin_not_allowed`. Without this list the catch-all above would tell
+ * a developer on a preview deployment that the alpha had closed, which is
+ * both wrong and the kind of wrong that wastes an afternoon.
+ *
+ * `email_not_verified` is here for the same reason: it is a 403 about the
+ * account, not about the window, and it has its own sentence already.
+ */
+const NOT_CLOSED_CODES = new Set([
+  'origin_not_allowed', 'email_not_verified', 'csrf_failed', 'forbidden',
+]);
+
 /** The contract's replies, mapped to how the page should behave. */
 function phaseFor(err) {
   const { status, code } = err || {};
-  if (CLOSED_CODES.has(code) || status === 403) return PHASE.CLOSED;
+  if (CLOSED_CODES.has(code)) return PHASE.CLOSED;
+  // A bare 403, or a 403 whose code is not one of the known non-alpha ones, is
+  // the window being shut: with the allowlist gone there is nothing else on
+  // this endpoint it can mean, and an unpredicted closed-window code has to
+  // land somewhere calm rather than in a red box.
+  if (status === 403 && !NOT_CLOSED_CODES.has(code)) return PHASE.CLOSED;
   if (status === 401) return PHASE.EXPIRED;
   if (code === 'billing_provider_error' || status === 502
       || code === 'network_error' || code === 'request_timeout') return PHASE.TRANSIENT;
