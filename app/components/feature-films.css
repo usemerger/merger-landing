@@ -1,0 +1,29 @@
+.mk-film-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.mk-film-tabs button { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 18px 20px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--ink-raise); color: var(--slate); text-align: left; font-size: 14px; font-weight: 500; transition: color .18s, border-color .18s, background .18s; }
+.mk-film-tabs button span { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+.mk-film-tabs button:hover { color: var(--bone); border-color: var(--slate); }
+.mk-film-tabs button[aria-selected=true] { color: var(--gold-lit); border-color: #c9a96a70; background: #c9a96a0a; }
+.mk-film-tabs button[aria-selected=true] span { color: var(--gold); }
+.mk-film-screen { border: 1px solid var(--line-strong); border-radius: 14px; overflow: hidden; background: #090b0f; }
+.mk-film-screen video { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; }
+.mk-film-context { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 28px; }
+.mk-film-context h3 { font-family: var(--display); font-size: 23px; font-weight: 500; line-height: 1.25; letter-spacing: -.03em; }
+.mk-film-context p { margin-top: 12px !important; font-size: 14px; line-height: 1.7; color: var(--slate); max-width: 48ch; }
+.mk-film-context ol { padding-left: 21px; color: var(--slate); font-size: 14px; line-height: 1.6; }
+.mk-film-context li { padding-left: 7px; margin-bottom: 9px; }
+.mk-film-context li::marker { color: var(--gold); font-family: var(--mono); font-size: 11px; }
+.mk-film-note { margin-top: 18px !important; font-size: 12px; color: var(--slate); }
+.mk-film-disclosure { margin-top: 12px !important; font-size: 11px; line-height: 1.7; color: var(--faint); }
+.mk-workflow-details { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.mk-workflow-details > summary { width: fit-content; cursor: pointer; font-size: 14px; color: var(--slate); }
+.mk-workflow-details[open] > summary { margin-bottom: 24px; }
+@media (max-width: 640px) {
+  .mk-film-tabs { gap: 6px; margin-bottom: 12px; }
+  .mk-film-tabs button { display: block; padding: 13px 10px; font-size: 12px; line-height: 1.4; }
+  .mk-film-tabs button span { display: block; margin-bottom: 6px; font-size: 10px; }
+  .mk-film-screen { border-radius: 8px; }
+  .mk-film-context { grid-template-columns: 1fr; gap: 18px; margin-top: 22px; }
+  .mk-film-context h3 { font-size: 21px; }
+  .mk-film-context p, .mk-film-context ol { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) { .mk-film-tabs button { transition: none; } }

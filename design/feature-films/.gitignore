@@ -1,0 +1,5 @@
+frames/
+*.mp4
+*-poster.*
+*-verification.json
+review.html
