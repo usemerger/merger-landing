@@ -9,6 +9,8 @@ def render(svg,w=1440):
 def render_file(path):return render(Path(path).read_text(encoding='utf-8'))
 def main():
  films=[('channels',16),('deals',18),('documents',20)]
+ only=next((a[7:].split(',') for a in sys.argv if a.startswith('--only=')),None)
+ if only: films=[f for f in films if f[0] in only]
  for name,duration in films:
   (ROOT/f'{name}-poster.png').write_bytes(render((ROOT/f'{name}-poster.svg').read_text(encoding='utf-8')))
   print(name+' poster ready',flush=True)

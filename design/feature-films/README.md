@@ -11,3 +11,7 @@ Requires Node.js, Python with `resvg_py` and Pillow (`pip install resvg-py pillo
 Run `node export-frames.mjs`, `python render-films.py`, and `python bundle-preview.py` from this folder. The self-contained review.html supports pause, replay, tabs and scrubbing. Copy the three MP4 files into `public/feature-films`; convert the poster PNGs to WebP for the website. Each video is 1440x900 at 30 fps.
 
 The renderer and font files are shared by browser and video exports. The page uses native video with controls and starts playback only while visible; reduced-motion preferences disable automatic playback. Only one video is mounted at a time.
+
+## Screenshot-based inbox and Deal Desk
+
+`messaging-scenes.mjs` recreates the supplied app layouts using fictional contacts: left channel rail and conversation list, blue outgoing messages, an enclosed compact composer, AI suggestions in the Deal Desk sidebar, and the right-hand Rolodex. Composer controls use coordinates relative to their parent box. The document scene is unchanged. To export only the revised films, pass `--only=channels,deals` to both export scripts.
