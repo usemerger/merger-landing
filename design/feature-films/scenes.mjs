@@ -1,4 +1,5 @@
 import brandIcons from './channel-icons.mjs';
+import {createMessagingScenes} from './messaging-scenes.mjs';
 
 export const FILMS = [
   {id:'channels',title:'Every channel. One workspace.',duration:16,poster:13.5,description:'Eleven offered channels converge into Merger, followed by a reply and a linked deal.'},
@@ -46,21 +47,7 @@ function cursor(t,points,start,end){
 }
 const defs=`<defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eed49d"/><stop offset="1" stop-color="#b98f4d"/></linearGradient><radialGradient id="ambient"><stop stop-color="#c3a16a" stop-opacity=".105"/><stop offset="1" stop-color="#c3a16a" stop-opacity="0"/></radialGradient><linearGradient id="scan" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#d4b474" stop-opacity="0"/><stop offset="1" stop-color="#d4b474" stop-opacity=".19"/></linearGradient><filter id="shadow" x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="22" flood-color="#000" flood-opacity=".25"/></filter><clipPath id="appClip"><rect x="64" y="178" width="1312" height="594" rx="18"/></clipPath></defs>`;
 const shell=(name='Messages')=>box(64,178,1312,594,18,C.panel,C.line)+line(64,231,1376,231)+logo(81,190,29)+txt(121,212,'merger',21,C.white,600)+txt(231,211,'/   '+name,15,C.muted)+circle(1303,205,4,'#343b45')+circle(1322,205,4,'#343b45')+circle(1341,205,4,'#343b45');
-function sidebar(selected='Morgan Ellis'){
-  let out=box(65,232,69,538,0,'#0d1117','none')+line(134,232,134,772)+line(404,232,404,772);
-  out+=box(80,254,38,38,10,'#d4b47418','#d4b47455')+txt(99,280,'◇',26,C.gold,400,'text-anchor="middle"');
-  out+=circle(99,331,17,'#202732')+txt(99,338,'↗',21,C.muted,500,'text-anchor="middle"');
-  out+=icon('siWhatsapp',88,376,22)+icon('siTelegram',88,425,22)+icon('slack',88,475,22)+avatar(99,733,'Y','#594c35',15);
-  out+=txt(156,271,'Messages',19,C.white,600)+box(151,290,236,34,7,'#0c1016',C.line)+txt(165,313,'Search conversations',13,C.muted);
-  [['Morgan Ellis','Oak Street Partners','siTelegram'],['Avery Chen','The terms look good.','siWhatsapp'],['Oak Street deal team','Documents ready for review.','slack']].forEach((r,i)=>{
-    const y=341+i*84;
-    if(r[0]===selected)out+=box(143,y-10,253,76,8,'#d4b47410','#d4b47425');
-    out+=icon(r[2],156,y+8,20)+txt(187,y+23,r[0],15,C.white,550)+txt(157,y+50,r[1],12,C.muted);
-  });
-  out+=line(153,615,384,615)+txt(157,644,'DEAL DESK',11,C.gold,600,'letter-spacing="1.5"')+txt(158,678,'Oak Street acquisition',15,C.white,500)+txt(158,703,'All the context, together.',12,C.muted);
-  return out;
-}
-const dealCard=(x,y,w=338)=>box(x,y,w,272,12,'#151c25',C.line)+badge(x+20,y+20,'ACTIVE DEAL',C.gold,116)+txt(x+20,y+79,'Oak Street acquisition',24,C.white,600)+txt(x+20,y+119,'$500,000',30,C.gold,550)+txt(x+20,y+146,'Proposed allocation',14,C.muted)+line(x+20,y+168,x+w-20,y+168)+avatar(x+38,y+204,'ME')+avatar(x+72,y+204,'AC','#514660')+avatar(x+106,y+204,'JL','#45516a')+txt(x+20,y+248,'3 participants · linked conversations',13,C.muted);
+const {messageWorkspace,dealWorkspace}=createMessagingScenes({box,txt,line,circle,icon,avatar,logo,group,enter,p,cursor,check});
 
 function channels(t){
   let intro='';
@@ -74,42 +61,14 @@ function channels(t){
   });
   intro+=group(circle(720,454,81,'#0d1118','stroke="#d4b47455"')+circle(720,454,95,'none','stroke="#d4b47413"')+logo(679,407,82)+txt(720,591,'One workspace.',24,C.white,500,'text-anchor="middle"'),p(t,.2,.8));
   intro=group(intro,1-p(t,5.5,.8));
-  let app=shell()+sidebar()+line(970,231,970,772)+avatar(445,268,'ME')+txt(477,265,'Morgan Ellis',19,C.white,600)+txt(477,290,'Telegram · Oak Street Partners',13,C.muted)+line(405,311,970,311);
-  app+=txt(994,270,'DEAL CONTEXT',12,C.gold,550,'letter-spacing="1.5"');
-  app+=enter(box(432,340,505,98,12,'#202733','none')+txt(452,374,'We have a $500,000 allocation for Oak Street.',17)+txt(452,404,'Can you send the terms this week?',17),t,6.3);
-  const reply='I’ll prepare the terms and keep the team updated.';
-  const typed=reply.slice(0,Math.floor(clamp((t-7.5)/1.8)*reply.length));
-  app+=box(427,664,518,83,12,'#0e131b','#3b4551')+txt(445,696,t<9.6?typed:'Message Morgan on Telegram…',14,t<9.6?C.white:C.muted)+pillButton(840,705,88,'Send');
-  app+=enter(box(486,472,451,92,12,'#413723','#806b42')+txt(504,505,'I’ll prepare the terms and keep the team',16,C.white)+txt(504,531,'updated.',16,C.white)+txt(890,550,'Sent',11,C.gold),t,9.65,.4,9);
-  app+=enter(dealCard(991,309,361),t,10.8,.7,20);
-  app+=enter(box(991,600,361,103,10,'#0e151b','#31493f')+check(1011,623)+txt(1043,639,'Conversation linked',16,C.green,550)+txt(1011,675,'Reply and manage the deal in one place.',13,C.muted),t,12,.55);
-  app+=cursor(t,[[8.8,746,605],[9.5,883,723,true],[10.5,1056,387],[12.6,1143,620]],8.8,13.1);
+  const toDesk=p(t,11.25,.6);
+  const app=group(messageWorkspace(t),1-toDesk)+group(dealWorkspace(t,{filed:true}),toDesk);
   return intro+enter(app,t,5.7,.75,22);
 }
 
 function deals(t){
-  let out=shell('Deal intelligence')+line(777,231,777,772);
-  out+=avatar(111,269,'ME')+txt(144,265,'Morgan Ellis',20,C.white,600)+txt(144,290,'Telegram · Oak Street Partners',13,C.muted)+badge(562,252,'CONNECTED MESSAGES',C.gold,192);
-  out+=line(65,313,777,313);
-  out+=enter(box(97,341,648,105,12,'#202733','none')+txt(120,376,'Hi, I’m Morgan Ellis at Oak Street Partners.',20)+txt(120,411,'You can reach me at morgan@example.com.',20),t,.3);
-  out+=enter(box(97,466,648,140,12,'#202733','none')+txt(120,504,'We have a $500,000 allocation for the',22)+txt(120,541,'Oak Street acquisition.',22)+txt(120,578,'Can you send the terms this week?',22),t,1);
-  const scanAlpha=p(t,2,.4)*(1-p(t,6,.5));
-  out+=group(box(97,341+(t-2)*56,648,54,0,'url(#scan)','none'),scanAlpha);
-  [[236,480,102,30,3.2],[118,518,244,30,4.1],[380,555,116,30,5.0]].forEach(([x,y,w,h,start])=>{out+=group(box(x,y,w,h,5,'#d4b47424','#d4b47470'),p(t,start,.4));});
-  const scanning=t<6.5;
-  out+=group(circle(116,650,5,C.gold)+txt(137,657,scanning?'Claude is reviewing your messages…':'Opportunity found in this conversation.',17,C.gold),p(t,2,.45));
-  out+=txt(98,737,'Your messages remain the source of truth.',14,C.muted);
-  if(t<6.6)out+=group(logo(1036,382,66)+txt(1068,499,'The next opportunity',22,C.muted,500,'text-anchor="middle"')+txt(1068,531,'might already be here.',22,C.muted,500,'text-anchor="middle"'),1-p(t,5.8,.8));
-  let card=badge(810,264,t<11.7?'POSSIBLE DEAL':'ADDED TO DEAL DESK',t<11.7?C.gold:C.green,t<11.7?136:189)+txt(810,337,'Oak Street acquisition',30,C.white,550);
-  card+=txt(810,390,'$500,000',38,C.gold,500)+txt(810,423,'Allocation',16,C.muted)+line(810,451,1335,451);
-  card+=txt(810,484,'NEXT STEP',11,C.muted,600,'letter-spacing="1.4"')+txt(810,515,'Send terms this week',20,C.white,500);
-  card+=box(810,543,527,76,9,'#0c1118','#333b46')+txt(829,572,'Source · Morgan Ellis on Telegram',14,C.muted)+txt(829,599,'“We have a $500,000 allocation…”',17,C.white);
-  if(t<11.7)card+=pillButton(810,650,202,'Add to Deal Desk')+txt(1042,678,'Dismiss',15,C.muted);
-  else card+=enter(box(810,645,527,70,10,'#14211d','#36564a')+check(831,667)+txt(865,680,'Filed with its source conversation',18,C.green,500),t,11.7,.5,8);
-  out+=enter(card,t,6.35,.75,24);
-  out+=cursor(t,[[9.2,1240,657],[10.1,1150,582],[11.1,916,672],[11.65,916,672,true],[12.4,1180,710]],9.2,12.7);
-  out+=enter(badge(1084,259,'REVIEWED BY YOU',C.green,175),t,12.1,.5,0);
-  return out;
+  const toDesk=p(t,6.1,.6);
+  return group(messageWorkspace(t,{scan:true}),1-toDesk)+group(dealWorkspace(t),toDesk);
 }
 
 function documents(t){
