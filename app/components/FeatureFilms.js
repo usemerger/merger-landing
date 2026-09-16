@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './feature-films.css';
 
 const films = [
@@ -27,6 +27,9 @@ const films = [
 function Film({ film }) {
   const video = useRef(null);
   const [unavailable, setUnavailable] = useState(false);
+  /* Mirrors the element's own state so the (chromeless) toggle can label itself
+     honestly. The element stays the source of truth — this only reads it. */
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const element = video.current;
@@ -38,9 +41,10 @@ function Film({ film }) {
       else if (!pausedByUser) element.play().catch(() => {});
     };
     const onPause = () => {
+      setPlaying(false);
       if (inView && !document.hidden && !reducedMotion.matches) pausedByUser = true;
     };
-    const onPlay = () => { pausedByUser = false; };
+    const onPlay = () => { pausedByUser = false; setPlaying(true); };
     const observer = new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;
       sync();
@@ -60,15 +64,37 @@ function Film({ film }) {
     };
   }, []);
 
+  /* NO NATIVE PLAYER CHROME.
+     These are short silent product loops, not media someone came here to watch
+     — a scrubber, a volume slider and a fullscreen button framed them as a
+     video player and drew the eye to the controls instead of the product.
+
+     They still have to be stoppable: they start on their own and run well past
+     five seconds, so WCAG 2.2.2 requires a pause mechanism. That mechanism is
+     the transparent button over the frame — no chrome until you focus it or the
+     loop is paused, which is exactly when there is something to say. */
+  const toggle = useCallback(() => {
+    const element = video.current;
+    if (!element) return;
+    // Driven by the state the label is drawn from, not by element.paused, so
+    // the button can never do the opposite of what it says.
+    if (playing) element.pause();
+    else element.play().catch(() => {});
+  }, [playing]);
+
   return <>
     <div className="mk-film-screen">
-      <video ref={video} controls muted playsInline loop preload="none"
+      <video ref={video} muted playsInline loop preload="none"
         width="1440" height="900" poster={`/feature-films/${film.id}-poster.webp`}
         aria-label={`${film.title} Animated product illustration, ${film.duration}.`}
         aria-describedby={`film-steps-${film.id}`} onError={() => setUnavailable(true)}>
         <source src={`/feature-films/${film.id}.mp4`} type="video/mp4" />
         <p>Your browser cannot play this video. <a href={`/feature-films/${film.id}.mp4`}>Open the animation</a>.</p>
       </video>
+      <button type="button" className="mk-film-toggle" data-paused={!playing}
+        onClick={toggle} aria-label={playing ? `Pause ${film.title}` : `Play ${film.title}`}>
+        <span aria-hidden="true">{playing ? 'Pause' : 'Play'}</span>
+      </button>
     </div>
     {unavailable && <p role="status" className="mk-film-note">The animation could not load. <a href={`/feature-films/${film.id}.mp4`}>Try opening the video directly</a>, or follow the steps below.</p>}
     <div className="mk-film-context">
@@ -107,6 +133,6 @@ export default function FeatureFilms() {
     <div id="film-panel" role="tabpanel" aria-labelledby={`film-tab-${film.id}`} tabIndex={0}>
       <Film key={film.id} film={film} />
     </div>
-    <p className="mk-film-disclosure">Illustrative workflows with sample data. Use the video controls to pause, replay, or watch full screen.</p>
+    <p className="mk-film-disclosure">Illustrative workflows with sample data. The loops are silent, pause when they scroll out of view, and hold still if you prefer reduced motion. Click a loop to pause or resume it.</p>
   </div>;
 }

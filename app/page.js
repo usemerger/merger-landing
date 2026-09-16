@@ -1,22 +1,10 @@
 import Link from 'next/link';
-import { features, faqs, workflowSteps } from './landingContent';
+import { faqs } from './landingContent';
 import { ALPHA_OFFER } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
-import ProductDemo from './components/ProductDemo';
 import FeatureFilms from './components/FeatureFilms';
 import MergeHero from './components/MergeHero';
-import Reveal from './components/Reveal';
-
-function FeatureIcon({ name }) {
-  const paths = {
-    messages: 'M4 5h16v11H9l-5 4V5Zm4 4h8M8 12h5',
-    review: 'M5 3h10l4 4v14H5V3Zm10 0v5h4M8 14l3 3 6-6',
-    contact: 'M5 4h15v17H5V4ZM2 8h5M2 13h5M2 18h5M10 16c0-3 6-3 6 0M15 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z',
-    document: 'M5 3h9l5 5v13H5V3Zm9 0v6h5M8 13h8M8 17h5',
-  };
-  return <svg width="27" height="27" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d={paths[name]} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>;
-}
 
 export default function LandingPage() {
   return <div className="marketing-page">
@@ -54,19 +42,10 @@ export default function LandingPage() {
 
       <div className="mk-foundations"><div className="mk-wrap"><span>One workspace for the work between messages.</span><ul><li>Messages</li><li>Deal Desk</li><li>Rolodex</li><li>DocuSign</li></ul></div></div>
 
-      <section id="product" className="mk-section mk-wrap" aria-labelledby="product-title">
-        <div className="mk-section-heading"><div><p className="mk-kicker">Built around the conversation</p><h2 id="product-title">Less copying things around.<br /><span>More keeping things together.</span></h2></div><p>Your chats contain the opportunity, the introduction, and the next step. Merger gives each one somewhere useful to live.</p></div>
-        <div className="mk-feature-grid">{features.map((feature, i) => <Reveal as="article" delay={i * 0.06} className="mk-feature" key={feature.number}><div className="mk-feature-top"><FeatureIcon name={feature.icon} /><span>{feature.number}</span></div><p className="mk-kicker">{feature.label}</p><h3>{feature.title}</h3><p>{feature.description}</p><div className="mk-feature-note">{feature.note}</div></Reveal>)}</div>
-        <a className="mk-text-link mk-feature-link" href="#workflow">Follow a sample conversation through Merger</a>
-      </section>
-
       <section id="workflow" className="mk-workflow mk-section" aria-labelledby="workflow-title"><div className="mk-wrap">
         <div className="mk-section-heading"><div><p className="mk-kicker">From hello to next steps</p><h2 id="workflow-title">The conversation is<br /><span>only the beginning.</span></h2></div><p>Watch connected messages become a clearer next step. Explore one inbox, AI deal detection, and the people beside the paperwork.</p></div>
         <FeatureFilms />
-        <details className="mk-workflow-details"><summary>Explore the Rolodex and each step interactively</summary><ProductDemo steps={workflowSteps} /></details>
       </div></section>
-
-      <section className="mk-setup mk-wrap mk-section" aria-labelledby="setup-title"><div className="mk-setup-heading"><p className="mk-kicker">Make it your desk</p><h2 id="setup-title">Your accounts.<br /><span>Your way of working.</span></h2><p>Start with the Windows app. Add the integrations you want as you build your workflow.</p><Link className="mk-text-link" href="/download">Windows download information</Link></div><ol className="mk-setup-steps"><li><span>01</span><div><h3>Connect your conversations</h3><p>Sign in to Merger and use the account connections available in the desktop app.</p></div></li><li><span>02</span><div><h3>Bring your Anthropic API key</h3><p>Enable Claude features to review potential deals and introduction details. Anthropic bills API usage separately.</p></div></li><li><span>03</span><div><h3>Keep the work moving</h3><p>File the deals you choose. Open your own DocuSign account with recipient details beside your templates.</p></div></li></ol></section>
 
       <section id="pricing" className="mk-pricing mk-section" aria-labelledby="pricing-title"><div className="mk-wrap">
         <div className="mk-section-heading"><div><p className="mk-kicker">An early seat at the desk</p><h2 id="pricing-title">{ALPHA_OFFER.priceLabel} a month.<br /><span>Locked in for life.</span></h2></div><p>Your first two weeks are free. Join during the alpha and {ALPHA_OFFER.priceLabel} stays your rate after the price rises. Your Anthropic API usage and DocuSign account are separate.</p></div>

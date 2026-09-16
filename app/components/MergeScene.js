@@ -227,21 +227,53 @@ function Gem({ assembly, drag }) {
   );
 }
 
-export default function MergeScene({ assembly, drag, live = true }) {
+/**
+ * Tells MergeHero the moment the renderer has actually put something on screen.
+ *
+ * The poster used to be hidden as soon as the canvas element existed, which is
+ * a claim about the DOM, not about WebGL — so a browser that could not give us
+ * a context produced an empty hero. This waits one real frame.
+ */
+function FirstFrame({ onReady }) {
+  const sent = useRef(false);
+  useFrame(() => {
+    if (sent.current) return;
+    sent.current = true;
+    onReady?.();
+  });
+  return null;
+}
+
+export default function MergeScene({ assembly, drag, live = true, lowPower = false, onReady, onLost }) {
   return (
     <Canvas
       // 1.5 rather than 1.75: the object is all flat facets and straight
       // edges, so the extra pixels bought very little and cost real frame time
       // on high-density displays.
-      dpr={[1, 1.5]}
+      //
+      // A phone gets MORE, not less. The canvas there is a ~350×320 band, so
+      // even at 2x it is under a megapixel — nothing for this geometry — while
+      // dropping to 1x on a 3x panel turned an object made entirely of 1px
+      // gold edges into a dotted line. Antialiasing stays on everywhere for
+      // the same reason: it is the edges or it is nothing.
+      dpr={lowPower ? [1, 2] : [1, 1.5]}
       camera={{ position: [0, 0, 6.4], fov: 38 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: true, alpha: true, powerPreference: lowPower ? 'default' : 'high-performance' }}
       // A touch over 1: the scene is deliberately dark and the highlights need
       // headroom to read as gloss rather than as grey.
-      onCreated={({ gl }) => { gl.toneMappingExposure = 1.25; }}
+      onCreated={({ gl }) => {
+        gl.toneMappingExposure = 1.25;
+        // A lost context leaves a blank canvas behind. Say so, so the hero can
+        // put the still back instead of showing an empty box.
+        gl.domElement.addEventListener('webglcontextlost', (event) => {
+          event.preventDefault();
+          onLost?.();
+        });
+      }}
       // Off entirely when nobody is looking — see MergeHero.
       frameloop={live ? 'always' : 'never'}
     >
+      <FirstFrame onReady={onReady} />
       {/* Almost no ambient: fill light is what kills specular contrast, and
           contrast is the only reason a black object on a black page is visible. */}
       <ambientLight intensity={0.08} />

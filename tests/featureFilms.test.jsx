@@ -44,14 +44,30 @@ describe('feature animation playback', () => {
     expect(play).toHaveBeenCalledTimes(1);
   });
 
-  it('does not autoplay with reduced motion and keeps controls available', () => {
+  it('does not autoplay with reduced motion and still offers a way to play', () => {
     preference.matches = true;
     const { container } = render(<FeatureFilms />);
     act(() => observers[0]([{ isIntersecting: true }]));
     expect(play).not.toHaveBeenCalled();
-    expect(container.querySelector('video')).toHaveAttribute('controls');
+    // The native player chrome is gone; the pause mechanism WCAG 2.2.2 asks
+    // for is the button over the frame, and it announces the stopped state.
+    expect(container.querySelector('video')).not.toHaveAttribute('controls');
+    const toggle = screen.getByRole('button', { name: /^Play / });
+    expect(toggle).toHaveAttribute('data-paused', 'true');
     fireEvent.error(container.querySelector('video'));
     expect(screen.getByRole('status')).toHaveTextContent('could not load');
     expect(screen.getByRole('link', { name: /Try opening/ })).toHaveAttribute('href', '/feature-films/channels.mp4');
+  });
+
+  it('the frame button stops and restarts the loop', () => {
+    const { container } = render(<FeatureFilms />);
+    const video = container.querySelector('video');
+    act(() => observers[0]([{ isIntersecting: true }]));
+    act(() => fireEvent.play(video));
+    fireEvent.click(screen.getByRole('button', { name: /^Pause / }));
+    expect(pause).toHaveBeenCalled();
+    act(() => fireEvent.pause(video));
+    fireEvent.click(screen.getByRole('button', { name: /^Play / }));
+    expect(play).toHaveBeenCalledTimes(2);
   });
 });
