@@ -4,6 +4,7 @@ import { ALPHA_OFFER } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
 import ProductDemo from './components/ProductDemo';
+import FeatureFilms from './components/FeatureFilms';
 import MergeHero from './components/MergeHero';
 import Reveal from './components/Reveal';
 
@@ -60,8 +61,9 @@ export default function LandingPage() {
       </section>
 
       <section id="workflow" className="mk-workflow mk-section" aria-labelledby="workflow-title"><div className="mk-wrap">
-        <div className="mk-section-heading"><div><p className="mk-kicker">From hello to next steps</p><h2 id="workflow-title">The conversation is<br /><span>only the beginning.</span></h2></div><p>Explore a simple example. Follow the message, review the suggestion, keep the introduction, and prepare the paperwork.</p></div>
-        <ProductDemo steps={workflowSteps} />
+        <div className="mk-section-heading"><div><p className="mk-kicker">From hello to next steps</p><h2 id="workflow-title">The conversation is<br /><span>only the beginning.</span></h2></div><p>Watch connected messages become a clearer next step. Explore one inbox, AI deal detection, and the people beside the paperwork.</p></div>
+        <FeatureFilms />
+        <details className="mk-workflow-details"><summary>Explore the Rolodex and each step interactively</summary><ProductDemo steps={workflowSteps} /></details>
       </div></section>
 
       <section className="mk-setup mk-wrap mk-section" aria-labelledby="setup-title"><div className="mk-setup-heading"><p className="mk-kicker">Make it your desk</p><h2 id="setup-title">Your accounts.<br /><span>Your way of working.</span></h2><p>Start with the Windows app. Add the integrations you want as you build your workflow.</p><Link className="mk-text-link" href="/download">Windows download information</Link></div><ol className="mk-setup-steps"><li><span>01</span><div><h3>Connect your conversations</h3><p>Sign in to Merger and use the account connections available in the desktop app.</p></div></li><li><span>02</span><div><h3>Bring your Anthropic API key</h3><p>Enable Claude features to review potential deals and introduction details. Anthropic bills API usage separately.</p></div></li><li><span>03</span><div><h3>Keep the work moving</h3><p>File the deals you choose. Open your own DocuSign account with recipient details beside your templates.</p></div></li></ol></section>
