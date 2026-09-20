@@ -4,7 +4,20 @@ import Shell from '../components/Shell';
 export const metadata = { title: 'Privacy', description: 'How the Merger alpha handles account information, messages, billing, and connected services.' };
 
 export default function PrivacyPage() {
-  return <Shell><main className="legal-main"><p className="eyebrow">Merger alpha</p><h1>How your information is used.</h1><p>Updated September 14, 2026. This notice covers the Merger website and Windows alpha. Contact <a href="mailto:support@usemerger.com">support@usemerger.com</a> with privacy questions or requests about your information.</p>
+  return <Shell><main className="legal-main"><p className="eyebrow">Merger alpha</p><h1>How your information is used.</h1><p>Updated September 20, 2026. This notice covers the Merger website and Windows alpha. Contact <a href="mailto:support@usemerger.com">support@usemerger.com</a> with privacy questions or requests about your information.</p>
+    {/* NEW COLLECTION, NEW SECTION. The waitlist takes an email address, a
+        role, an optional firm and a referral relationship from people who do
+        not have an account and may never create one — none of which the
+        sections below describe, because they are all written about account
+        holders. It is placed first because for most visitors it is now the
+        only processing that applies to them.
+
+        DESCRIPTIVE, NOT PROMISSORY. Every sentence states what the system
+        does and what the reader can ask for; none of it invents a retention
+        period, a legal basis, or a transfer mechanism, because those are
+        claims only a lawyer should make. FLAGGED FOR REAL LEGAL REVIEW
+        before this goes to production. */}
+    <h2>Alpha waitlist</h2><p>Joining the alpha waitlist records the email address you enter, the role you select, the firm name if you provide one, your position in the queue, and a referral code generated for you. If you arrived from someone else’s referral link, the referral code from that link is recorded with your entry so the referral can be credited.</p><p>Your email address is used to confirm that you joined and to send you an invitation when a seat becomes available, which is the consent you give when you submit the form. Your browser also stores your referral code and any referral code you arrived with, so that returning to this site shows your position instead of an empty form; clearing your browser’s site data removes both.</p><p>Waitlist entries are used to operate the alpha rollout and are not sold. Contact <a href="mailto:support@usemerger.com">support@usemerger.com</a> to be removed from the waitlist or to ask what is held for your address.</p>
     <h2>Account and service information</h2><p>Merger processes your email address, display name, handle, password hash, and account identifiers to create your account and sign you in. Session cookies keep you signed in. Subscription identifiers, payment status, and billing dates are used to determine access and display your account status.</p>
     <h2>Messages and connected accounts</h2><p>Connecting a messaging service lets Merger process the messages, contact details, and connection credentials needed to provide that integration. Information may be processed and stored by Merger’s server infrastructure as well as on your device. Do not assume that connected messages remain only on your computer.</p><p>Contacts and deals you save are used to provide the Rolodex and Deal Desk. The connected messaging providers continue to process information under their own privacy policies.</p>
     <h2>Optional Claude features</h2><p>When you enable an AI scan, message content and relevant context are sent to Anthropic to generate suggestions using your API key. Review the scan settings before enabling automatic scanning. Anthropic’s policies and your Anthropic account terms govern its processing of those requests. AI results may include contact details or deal information drawn from the messages you choose to scan.</p>

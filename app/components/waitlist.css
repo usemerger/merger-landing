@@ -1,0 +1,246 @@
+/* The waitlist, in the hero.
+ *
+ * ONE RESERVED BOX, TWO STATES. .wl-slot carries a min-height tall enough for
+ * whichever of the form and the status panel is taller at that breakpoint,
+ * because a returning visitor's panel replaces the form a tick after first
+ * paint (their stored code has to be checked first) and an unreserved swap
+ * would book a layout shift on the primary CTA. The numbers below were
+ * measured, not guessed — see the QA notes on this branch.
+ *
+ * A NOTE ON SPECIFICITY. landing.css resets margins with
+ * `.marketing-page :is(h1,h2,h3,h4,p,ul,ol,dl,dd){margin:0}` at (0,2,0) and it
+ * loads BEFORE this file, so a single-class `p` rule here loses and every
+ * margin silently disappears. Spacing is therefore done with grid `gap`
+ * wherever possible, and the few rules that must set a margin on a `p` are
+ * written to out-specify that reset rather than relying on source order.
+ */
+
+.wl-slot { margin-top: 30px; min-height: 322px; }
+
+/* ── the form ───────────────────────────────────────────────────────────── */
+
+.wl-form { display: grid; gap: 14px; max-width: 470px; }
+.wl-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.wl-field { display: grid; gap: 7px; min-width: 0; }
+
+.wl-field label,
+.wl-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.wl-optional { text-transform: none; letter-spacing: 0; }
+
+.wl-field input,
+.wl-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: rgba(15, 22, 38, .6);
+  color: var(--bone);
+  font-family: var(--body);
+  font-size: 15px;
+  transition: border-color var(--dur-micro) var(--ease), background var(--dur-micro) var(--ease);
+}
+.wl-field input::placeholder { color: var(--faint); }
+.wl-field input:hover,
+.wl-field select:hover { border-color: var(--slate); }
+.wl-field input:focus-visible,
+.wl-field select:focus-visible {
+  outline: none;
+  border-color: var(--gold);
+  background: rgba(15, 22, 38, .9);
+}
+/* The native arrow is drawn in the OS's colours and reads as a light-theme
+   control dropped onto a dark page. Replaced with one that matches the type. */
+.wl-field select {
+  appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5 6 6.5l5-5' stroke='%2398A2B8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+/* The options list is drawn by the OS, which does not inherit the page's
+   colours — set them explicitly or the menu is black text on black. */
+.wl-field select option { background: #0F1626; color: var(--bone); }
+
+/* RESERVED FOR TWO LINES, AND THAT IS A CLS FIX, not a spacing preference.
+ *
+ * Measured on a cold load at 412px with the CPU throttled 4x — Lighthouse's
+ * own conditions — this line is TWO lines wide in the fallback stack and ONE
+ * in Geist. So when the webfont swapped it collapsed 39px -> 20px and lifted
+ * the submit button 19px with it, which was the whole of a 0.043 CLS: the
+ * layout-shifts audit named `button.mk-button` with cause "Web font loaded",
+ * and nothing else on the page moved at all.
+ *
+ * Two fixes, because the first one alone was not enough:
+ *
+ *   · the box is reserved at 3.1em — two lines of this element's own 12.5px at
+ *     line-height 1.55 — so the container cannot resize; and
+ *   · the label breaks its two sentences with an explicit <br> (see
+ *     WaitlistForm), so the LINE COUNT cannot change either.
+ *
+ * Reserving the box on its own still scored 0.019: Chrome's layout-instability
+ * accounting follows the text's line boxes, not just the element rect, so a
+ * second line collapsing into the first is a shift even when nothing around it
+ * moves and the top edge is pinned. Only removing the reflow removes the score.
+ */
+.wl-consent {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  min-height: 3.1em;
+  margin-top: 2px;
+  color: var(--slate);
+  font-size: 12.5px;
+  line-height: 1.55;
+  cursor: pointer;
+}
+.wl-consent input {
+  width: 16px; height: 16px; margin-top: 1px;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+.wl-consent a { color: var(--slate); text-decoration: underline; text-underline-offset: 2px; }
+.wl-consent a:hover { color: var(--gold-lit); }
+
+.wl-submit { width: 100%; justify-content: center; margin-top: 2px; }
+
+.marketing-page .wl-form .wl-terms,
+.marketing-page .wl-form .wl-error {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.wl-terms { color: var(--faint); }
+.wl-error { color: #F0A9A0; }
+
+/* ── the status panel ───────────────────────────────────────────────────── */
+
+.wl-status {
+  display: grid;
+  gap: 20px;
+  max-width: 470px;
+  padding: 22px 22px 24px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(201, 169, 106, .05), rgba(15, 22, 38, .5));
+}
+.wl-kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.marketing-page .wl-status .wl-position {
+  margin-top: 10px;
+  font-size: 25px;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  color: var(--bone);
+}
+.wl-position strong {
+  font-weight: 500;
+  color: var(--gold-lit);
+  /* The number is the whole point of the panel; keep the digits aligned so a
+     #9 and a #1104 sit on the same baseline grid. */
+  font-variant-numeric: tabular-nums;
+}
+.marketing-page .wl-status .wl-sub {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+.wl-refer { display: grid; gap: 9px; }
+.wl-link-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.wl-link {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(8, 9, 12, .6);
+  color: var(--slate);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-overflow: ellipsis;
+}
+.wl-link:focus-visible { outline: none; border-color: var(--gold); color: var(--bone); }
+.wl-copy {
+  padding: 10px 18px;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  background: rgba(201, 169, 106, .1);
+  color: var(--gold-lit);
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--dur-micro) var(--ease), color var(--dur-micro) var(--ease);
+}
+.wl-copy:hover { background: rgba(201, 169, 106, .2); color: #FFF; }
+.wl-copy:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.marketing-page .wl-refer .wl-copy-note,
+.marketing-page .wl-refer .wl-count,
+.marketing-page .wl-status .wl-hook {
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.wl-copy-note { color: var(--gold); }
+/* Reserves the line whether or not it has anything in it, so confirming a copy
+   never nudges the referral count down the panel. */
+.wl-copy-note:empty::before { content: '\00a0'; }
+.wl-count { color: var(--slate); }
+.wl-count strong { color: var(--bone); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+.wl-share {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--slate);
+  font-family: var(--body);
+  font-size: 12.5px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.wl-share:hover { color: var(--gold-lit); }
+
+.wl-hook { padding-top: 16px; border-top: 1px solid var(--line); color: var(--faint); }
+.wl-hook strong { color: var(--slate); font-weight: 500; }
+
+/* ── the standalone panel (the /alpha invite page) ──────────────────────── */
+
+.wl-panel { max-width: 470px; margin-top: 26px; }
+.wl-panel .wl-slot { margin-top: 0; }
+
+/* ── narrow ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 980px) {
+  /* Stacked layout: the form is the width of the column, and the reserved box
+     grows because the fields wrap to one per row below. */
+  .wl-form, .wl-status { max-width: none; }
+  .wl-slot { min-height: 366px; }
+}
+
+@media (max-width: 560px) {
+  /* Role and Firm side by side leaves a ~130px select that cannot show
+     "Broker / Intermediary" — one per row below this. */
+  .wl-row { grid-template-columns: 1fr; gap: 14px; }
+  .wl-slot { min-height: 430px; }
+  .wl-status { padding: 18px 18px 20px; }
+  .marketing-page .wl-status .wl-position { font-size: 22px; }
+  .wl-link { font-size: 11px; }
+  .wl-copy { padding: 10px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-field input, .wl-field select, .wl-copy { transition: none; }
+}

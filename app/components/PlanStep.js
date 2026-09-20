@@ -10,10 +10,17 @@ import { stripeRedirectURL } from '../lib/authFlow';
 /**
  * Joining the alpha: one POST, then a redirect.
  *
- * SIGNUP IS OPEN. There is no allowlist and no invite gate — anyone with an
- * account can press this button and reach Stripe. The invite-only panel that
- * used to live here, and the `not_on_alpha_list` reply behind it, are both
- * gone.
+ * NOTHING IN THIS COMPONENT GATES ANYONE. The old allowlist panel and the
+ * `not_on_alpha_list` reply behind it are gone, and they are not coming back
+ * here: anyone who reaches this button can press it and get to Stripe.
+ *
+ * What changed around it is WHO REACHES IT. The public funnel is a waitlist
+ * now, so the marketing page links to /#waitlist and the only path to this
+ * panel is the invite door at /alpha?invite= (or an account that is already
+ * signed in). That door is a matter of routing, not of permission — see
+ * app/alpha/page.js, which is explicit about what it can and cannot enforce.
+ * If admission ever has to be enforced rather than merely directed, the place
+ * for it is the checkout endpoint, which is the only thing that can refuse.
  *
  * The button is never gated on a preflight call either. It used to be blocked
  * until `GET /api/billing/offers` answered, with nine of its fields compared
@@ -165,8 +172,11 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
         <h3>The alpha isn&rsquo;t taking new members right now</h3>
         <p className="muted">Your account is saved and nothing has been charged. The Windows
         alpha opens in groups — tell us you want in and we will come back to you when it does.</p>
+        {/* There is a real waitlist now, so this stops being a mailto someone
+            has to write themselves and becomes the same queue everyone else
+            joins — with a position and a referral link at the end of it. */}
         <p className="field-hint mt-16">
-          <a href="mailto:support@usemerger.com?subject=Merger%20alpha%20waitlist&body=Please%20let%20me%20know%20when%20the%20Merger%20alpha%20reopens.">Join the waitlist</a>
+          <Link href="/#waitlist">Join the waitlist</Link>
           {' · '}<Link href="/support">Contact support</Link>
         </p>
       </div>}

@@ -714,6 +714,11 @@ button, input, textarea, select { font: inherit; }
 .mk-pill:hover { border-color: var(--slate); color: var(--bone); }
 
 .mk-hero-actions { display: flex; align-items: center; gap: 28px; margin-top: 38px; flex-wrap: wrap; }
+/* The waitlist form is the hero's CTA now, so the only thing left beside it is
+   the quiet link into the product. It sits under the form rather than beside
+   it: a second control on the same row as a submit button reads as a choice,
+   and there is only one thing to do here. */
+.marketing-page .mk-hero-secondary { margin-top: 18px; font-size: 13px; }
 .mk-hero-price { margin-top: 26px !important; color: var(--faint); font-size: 12.5px; }
 .mk-hero-price strong { color: var(--slate); font-weight: 500; }
 

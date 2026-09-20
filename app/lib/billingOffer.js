@@ -9,12 +9,17 @@
 //   · Alpha members keep $50/month FOR LIFE. When Merger leaves alpha and
 //     the price rises, people who joined during the alpha stay at $50 for as
 //     long as their membership is active.
-//   · OPEN. Anyone can join. There is no allowlist and no invite.
+//   · Reached by invitation now, not from the marketing page. The public
+//     front door is the waitlist (see WAITLIST below) and checkout is behind
+//     /alpha?invite=. The PRICE did not change — only who reaches the button.
 //
-// Nothing here may say "invite-only", "50% off", "$99.99" or "$79": those
-// described two earlier offers, both retired. A funnel that quotes a price the
-// backend will not charge is worse than one that quotes nothing, so the copy
-// and the tests that guard it live together.
+// None of the PRICE strings below may say "50% off", "$99.99" or "$79": those
+// described two earlier offers, both retired, and tests/api.test.js fails if
+// any of them comes back. (That test also bans the word "invite" from the
+// price copy — it is guarding the retired "invite-only 50% off" framing, so
+// keep how-you-get-in out of the billing strings and say it in WAITLIST.)
+// A funnel that quotes a price the backend will not charge is worse than one
+// that quotes nothing, so the copy and the tests that guard it live together.
 //
 // THERE IS NO OFFERS ENDPOINT. `/api/billing/offers` returns 404 and is not a
 // route. Plan copy is hardcoded here; the only live billing read is
@@ -43,6 +48,11 @@ export const ALPHA_OFFER = Object.freeze({
   trialDaysLabel: '14-day free trial',
 
   checkoutLabel: 'Join the alpha',
+  /**
+   * Where the "join" button goes FROM AN INVITE. The public marketing page no
+   * longer points anyone here — it points at the waitlist — but the invite
+   * path, the signup flow and the billing page all still need it.
+   */
   signupHref: '/signup?offer=alpha',
 
   /** One line, for the places with room for exactly one. */
@@ -61,4 +71,52 @@ export const ALPHA_OFFER = Object.freeze({
   rateNotice:
     'Alpha members keep $50/month for life. When Merger leaves alpha and the price '
     + 'rises, your rate stays at $50 for as long as your membership stays active.',
+});
+
+/**
+ * The waitlist, in one place, for the same reason the offer is.
+ *
+ * The price strings here are DERIVED from ALPHA_OFFER rather than retyped.
+ * The whole point of the file above is that one number lives in one spot, and
+ * a waitlist that promises "$50 for life" while the offer says something else
+ * is exactly the failure that rule exists to prevent.
+ */
+export const WAITLIST = Object.freeze({
+  /** The public CTA, everywhere it appears. */
+  cta: 'Join the alpha waitlist',
+  ctaShort: 'Join the waitlist',
+  /** The anchor the nav and the lower CTAs scroll to. */
+  href: '#waitlist',
+
+  eyebrow: 'Windows alpha · joining in groups',
+  heading: 'Get in line for the alpha.',
+  blurb: 'Merger is opening to a small group at a time. Join the waitlist and we will '
+    + 'email you an invite when a seat opens.',
+
+  /**
+   * The reason to join now rather than later — the same promise as the offer.
+   *
+   * `intervalLabel` is "/ month" with a leading space, which is right beside a
+   * big number in the pricing card ("$50 / month") and wrong inside a
+   * sentence ("$50/ month for life"). So these read the PRICE from the offer —
+   * the number that must never be retyped — and say the period in words.
+   */
+  hook: `The first to join lock in ${ALPHA_OFFER.priceLabel} a month for life.`,
+  hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month with the first two weeks free. `
+    + 'Nothing is charged while you are on the list, and you only pay if you accept an invite.',
+
+  /** What moving up actually takes. */
+  referPrompt: 'Refer dealmakers to move up the list.',
+
+  /** Consent. Said in the words the privacy notice uses, not a softer version. */
+  consent: 'I agree to be emailed about Merger.',
+
+  roles: Object.freeze([
+    'PE',
+    'Search Fund',
+    'Broker / Intermediary',
+    'Family Office',
+    'VC',
+    'Other',
+  ]),
 });

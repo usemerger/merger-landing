@@ -67,8 +67,11 @@ describe('joining the alpha', () => {
       expect(screen.queryByRole('alert')).toBeNull();
       // And no second attempt — the button is gone, not merely disabled.
       expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
+      // There is a real waitlist now, so the way out of this panel is the same
+      // queue everyone else joins — with a position and a referral link at the
+      // end of it — rather than a mailto the person has to compose themselves.
       expect(screen.getByRole('link', { name: 'Join the waitlist' }))
-        .toHaveAttribute('href', expect.stringContaining('mailto:support@usemerger.com'));
+        .toHaveAttribute('href', '/#waitlist');
       unmount();
     }
   });
