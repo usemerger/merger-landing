@@ -54,3 +54,23 @@ take a database backup, and coordinate the backend and desktop authentication
 release. Email-address changes and account deletion currently use support.
 
 No production rollout is authorized by this preview deployment document.
+
+## Verified in this build
+
+- Vercel production-mode build of the dedicated preview succeeds (19 routes).
+- Frontend suite: 98 component tests and four synthetic HTTP tests passed before
+  the final referral fix; its 24 targeted regression tests also passed.
+- Backend suite: 140 tests passed, including disposable PostgreSQL coverage;
+  13 final persistence regressions passed after billing review corrections.
+- All 32 staging checks passed both against the isolated API and through the
+  deployed website's same-origin rewrite, including cookies, verification,
+  admission, Stripe test checkout creation, signed webhook activation, billing
+  portal creation, download authorization, cancellation and returning-trial rules.
+- Browser review covered desktop and mobile layouts, sign-in, profile saving,
+  waiting-account download denial, invitation review/acceptance, accurate trial
+  cancellation messaging, and preview-specific referral URLs.
+- Invitation reminders were checked in dry-run mode. The scheduler remains an
+  operator template and is not enabled. External email delivery and production
+  desktop authentication were not exercised.
+
+Published deployment: `merger-orbit-preview-q7f8tjlpx-merger1.vercel.app`.
