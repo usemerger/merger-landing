@@ -1,0 +1,2 @@
+.account-preview-notice{position:fixed;z-index:100;inset:auto 12px 10px auto;max-width:calc(100vw - 24px);padding:8px 13px;border:1px solid #ffffff26;border-radius:99px;background:#151516f2;box-shadow:0 2px 12px #0003;color:#b7b7bd;font:11px/1.5 var(--font-geist),sans-serif;pointer-events:none}
+@media(max-width:600px){.account-preview-notice{font-size:9px;padding:6px 10px;inset:auto 8px 7px;max-width:none;text-align:center}}

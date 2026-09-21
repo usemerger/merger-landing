@@ -7,11 +7,17 @@ const nextConfig = {
 
   async headers() {
     return [
+      ...(process.env.NEXT_PUBLIC_ACCOUNT_PREVIEW === '1' ? [{ source: '/:path*', headers: [
+        { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+      ] }] : []),
       { source: '/:path*', headers: [
         { key: 'X-Content-Type-Options', value: 'nosniff' },
         { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       ] },
-      { source: '/reset-password', headers: [
+      { source: '/api/:path*', headers: [
+        { key: 'Cache-Control', value: 'private, no-store' },
+      ] },
+      { source: '/:page(reset-password|invite|verify-email)', headers: [
         { key: 'Referrer-Policy', value: 'no-referrer' },
         { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
       ] },
