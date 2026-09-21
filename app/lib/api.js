@@ -1,11 +1,11 @@
-// Same-origin API client (§1).
+// Same-origin API client (Â§1).
 //
 // Every call here uses a RELATIVE /api/... path. next.config.js rewrites those to
 // https://api.buildmerger.com/api/... server-side, so from the browser's point of view
 // the API is first-party. That is what lets the backend's HttpOnly, Secure,
 // SameSite=Lax `merger_session` cookie be sent and stored normally.
 //
-// Never point a browser fetch at api.buildmerger.com directly — a Lax cookie would not
+// Never point a browser fetch at api.buildmerger.com directly â€” a Lax cookie would not
 // travel on a cross-site XHR and every authenticated call would 401.
 
 /**
@@ -58,10 +58,10 @@ async function request(path, { method = 'GET', body } = {}) {
 
 /* ---------------- auth ---------------- */
 
-export const signup = (email, password, displayName) =>
+export const signup = (email, password, displayName, waitlist) =>
   request('/api/auth/signup', {
     method: 'POST',
-    body: { email, password, ...(displayName ? { displayName } : {}) },
+    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-09-21' } : {}) },
   });
 
 export const login = (email, password) =>
@@ -69,12 +69,25 @@ export const login = (email, password) =>
 
 export const logout = () => request('/api/auth/logout', { method: 'POST' });
 
+export const logoutAll = () => request('/api/auth/logout-all', { method: 'POST' });
+
+/* Account admission is separate from billing. Only the server grants capabilities. */
+export const accountAccess = () => request('/api/account/access');
+export const accountWaitlist = (details = {}) => request('/api/account/waitlist', { method: 'POST', body: details });
+export const acceptInvitation = (token) => request('/api/account/invitation/accept', {
+  method: 'POST', body: token ? { token } : {},
+});
+export const adminWaitlist = () => request('/api/admin/waitlist');
+export const adminInvite = (id) => request(`/api/admin/waitlist/${encodeURIComponent(id)}/invite`, { method: 'POST' });
+export const adminRevoke = (id) => request(`/api/admin/waitlist/${encodeURIComponent(id)}/revoke`, { method: 'POST' });
+export const updateProfile = (displayName) => request('/api/account/profile', { method: 'PATCH', body: { displayName } });
+
 export const resendVerification = () => request('/api/auth/verify-email/send', { method: 'POST' });
 
 /**
  * Request a reset email. The backend answers {ok:true} whether or not the address
  * is registered, so callers must show the same neutral confirmation either way and
- * never branch on the result — doing so would leak which emails have accounts.
+ * never branch on the result â€” doing so would leak which emails have accounts.
  */
 export const forgotPassword = (email) =>
   request('/api/auth/password/forgot', { method: 'POST', body: { email } });
@@ -117,7 +130,7 @@ export const billingStatus = () => request('/api/billing/status');
 /**
  * Start alpha checkout. Resolves to the hosted Stripe Checkout URL, which the
  * caller redirects the browser to. No card data ever touches this app, and
- * there is no Stripe.js, session id or client secret in this flow — the
+ * there is no Stripe.js, session id or client secret in this flow â€” the
  * response carries one usable field, `url`.
  *
  * The body is exactly `{plan:'operator', alpha:true}`. `operator` is the only
@@ -141,7 +154,7 @@ export const download = () => request('/api/download');
 /* ---------------- presentation helpers ---------------- */
 
 // PLANS used to live here with `alpha: { price: 50 }` in it. Nothing read it,
-// and it carried a number the backend will never charge — the kind of dead
+// and it carried a number the backend will never charge â€” the kind of dead
 // constant that gets copied into live copy a year later. The plan the alpha
 // bills is in lib/billingOffer, next to the words shown about it.
 //
@@ -189,6 +202,19 @@ export function formatDate(iso) {
 export function errorMessage(err) {
   const code = err && err.code;
   switch (code) {
+    case 'invitation_required':
+    case 'invite_required':
+      return 'An invitation is required to activate Merger. Check your account for your waitlist status.';
+    case 'invite_wrong_account':
+      return 'This invitation belongs to a different account. Sign out and use the email that received it.';
+    case 'invite_expired':
+      return 'This invitation has expired. Your account and waitlist history are saved. Contact support for a new invitation.';
+    case 'invite_revoked':
+      return 'This invitation is no longer active. Open your latest invitation or contact support.';
+    case 'invite_not_found':
+      return 'This invitation could not be found. Open the latest link from your invitation email.';
+    case 'origin_not_allowed':
+      return 'Account actions are not available on this preview yet. Please try again once the preview is connected.';
     case 'email_taken':
       return 'An account already exists for that email. Try signing in instead.';
     case 'invalid_credentials':
@@ -208,7 +234,7 @@ export function errorMessage(err) {
       return 'A checkout is already being processed for this account. Check your billing page before trying again.';
     case 'complimentary_access':
       return 'This account already has complimentary access. You do not need a paid subscription.';
-    // 503. Billing is switched off or misconfigured at the backend — not the
+    // 503. Billing is switched off or misconfigured at the backend â€” not the
     // user's problem and not fixable by retrying in ten seconds.
     case 'alpha_not_configured':
     case 'alpha_offer_unavailable':
@@ -223,7 +249,7 @@ export function errorMessage(err) {
     case 'billing_management_unavailable':
     case 'portal_not_configured':
       return 'Billing management is temporarily unavailable. Contact support@usemerger.com for help.';
-    // 502. Transient, on Stripe's side — worth pressing again.
+    // 502. Transient, on Stripe's side â€” worth pressing again.
     case 'billing_provider_error':
       return 'Stripe could not complete the request. Please try again in a moment.';
     case 'no_subscription':
@@ -235,17 +261,13 @@ export function errorMessage(err) {
     case 'email_not_verified':
       return 'Verify your email before continuing. Use the link in your inbox or request a new one.';
     case 'invalid_handle':
-      return 'Use 3–30 lowercase letters, numbers, or underscores for your handle.';
+      return 'Use 3â€“30 lowercase letters, numbers, or underscores for your handle.';
     case 'handle_already_set':
       return 'Your account already has a handle. Refresh to continue.';
     case 'invalid_token':
       // Reset links are single-use and short-lived, so a rejected token is far
       // more often expired or already spent than genuinely malformed.
       return 'This link has expired or has already been used.';
-    // SIGNUP IS OPEN, so there is no `not_on_alpha_list` any more. What can
-    // still refuse a well-formed request is the window being shut. PlanStep
-    // gives that its own calm panel; this sentence is the fallback for any
-    // surface that only has room for a line of text.
     case 'alpha_closed':
     case 'alpha_ended':
     case 'alpha_full':
@@ -263,7 +285,7 @@ export function errorMessage(err) {
       return 'The server returned an unexpected response. Please try again.';
     default: {
       // A backend blip (a 502 from the gateway, say) has no `error` code, and the
-      // synthesised message is a bare "request_failed_502" — never show that to a
+      // synthesised message is a bare "request_failed_502" â€” never show that to a
       // person. Anything unrecognised gets plain language instead.
       const status = err && err.status;
       if (status >= 500) {

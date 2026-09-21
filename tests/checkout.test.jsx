@@ -55,7 +55,6 @@ describe('joining the alpha', () => {
       { status: 403, code: 'alpha_closed' },
       { status: 403, code: 'alpha_ended' },
       { status: 403, code: 'alpha_full' },
-      { status: 403, code: 'some_code_we_did_not_predict' },
       { status: 503, code: 'alpha_not_configured' },
     ]) {
       checkout.mockReset();
@@ -87,10 +86,12 @@ describe('joining the alpha', () => {
     expect(screen.queryByText(/isn’t taking new members/)).toBeNull();
   });
 
-  it('has no invite gate left anywhere in the join flow', async () => {
+  it('shows an admission refusal without pretending the alpha is closed', async () => {
+    checkout.mockRejectedValue({ status: 403, code: 'invitation_required' });
     render(<TestCheckout />);
-    expect(screen.queryByText(/invite/i)).toBeNull();
-    expect(join()).toBeEnabled();
+    fireEvent.click(join());
+    expect(await screen.findByRole('alert')).toHaveTextContent('message:invitation_required');
+    expect(screen.queryByText(/isn’t taking new members/)).toBeNull();
   });
 
   it('sends an expired session to sign in and back again', async () => {

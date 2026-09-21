@@ -8,7 +8,7 @@ vi.mock('../app/components/Shell', () => ({ default: ({ children }) => <>{childr
 vi.mock('../app/components/PlanStep', () => ({ default: () => <div data-testid="checkout">Review paid alpha</div>, useStartCheckout: () => ({ start: vi.fn(), busy: false }) }));
 vi.mock('../app/lib/api', async (original) => {
   const actual = await original();
-  return { ...actual, meOrNull: vi.fn(), signup: vi.fn(), login: vi.fn(), claimHandle: vi.fn(), handleAvailable: vi.fn(), resendVerification: vi.fn(), billingStatus: vi.fn(), billingPortal: vi.fn(), download: vi.fn(), resetPassword: vi.fn(), forgotPassword: vi.fn() };
+  return { ...actual, accountAccess: vi.fn(), accountWaitlist: vi.fn(), acceptInvitation: vi.fn(), meOrNull: vi.fn(), signup: vi.fn(), login: vi.fn(), claimHandle: vi.fn(), handleAvailable: vi.fn(), resendVerification: vi.fn(), billingStatus: vi.fn(), billingPortal: vi.fn(), download: vi.fn(), resetPassword: vi.fn(), forgotPassword: vi.fn() };
 });
 
 import * as api from '../app/lib/api';
@@ -29,6 +29,7 @@ beforeEach(() => {
   api.meOrNull.mockResolvedValue(null);
   api.handleAvailable.mockResolvedValue({ available: true });
   api.billingStatus.mockResolvedValue(noSubscription);
+  api.accountAccess.mockImplementation(async () => ({ user: { id: account.userId, email: account.email, emailVerified: true }, admission: { status: 'accepted' }, waitlist: null, capabilities: { canCheckout: true, canDownload: false, canUseApp: false }, billing: noSubscription }));
   api.signup.mockResolvedValue({ ok: true });
   api.claimHandle.mockImplementation(async (handle) => ({ ok: true, handle }));
 });
@@ -41,20 +42,15 @@ describe('signup and sign-in recovery', () => {
     render(<LoginPage />);
     await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/download'));
   });
-  it('resumes handle claim without recreating the account or automatically charging', async () => {
-    api.claimHandle.mockRejectedValueOnce(new api.ApiError(409, 'handle_taken'));
+  it('creates a waitlist account without reserving a handle or offering checkout', async () => {
     render(<SignupPage />);
     await screen.findByRole('button', { name: 'Create account' });
-    fill('Email', 'person@example.com'); fill('Password', 'fixture-password'); fill('Your handle', 'person');
+    fill('Name', 'Morgan Ellis'); fill('Email', 'person@example.com'); fill('Password', 'fixture-password');
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await screen.findByRole('button', { name: 'Reserve handle' });
-    expect(api.signup).toHaveBeenCalledTimes(1);
-    expect(screen.queryByLabelText('Password', { exact: true })).not.toBeInTheDocument();
-    fill('Your handle', 'person2');
-    fireEvent.click(screen.getByRole('button', { name: 'Reserve handle' }));
-    await screen.findByTestId('checkout');
-    expect(api.signup).toHaveBeenCalledTimes(1);
-    expect(api.claimHandle).toHaveBeenLastCalledWith('person2');
+    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fdashboard'));
+    expect(api.signup).toHaveBeenCalledWith('person@example.com', 'fixture-password', 'Morgan Ellis', {});
+    expect(api.claimHandle).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
   });
   it('keeps a session outage distinct from being signed out and supports retry', async () => {
     api.meOrNull.mockRejectedValueOnce(new api.ApiError(502));
@@ -64,16 +60,15 @@ describe('signup and sign-in recovery', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
     await screen.findByRole('button', { name: 'Create account' });
   });
-  it('offers verification resend after the backend requires a verified email', async () => {
-    api.claimHandle.mockRejectedValueOnce(new api.ApiError(403, 'email_not_verified'));
-    api.resendVerification.mockResolvedValue({ ok: true });
+  it('recovers a signup response loss without creating a second account', async () => {
+    api.signup.mockRejectedValueOnce(new api.ApiError(502));
     render(<SignupPage />);
     await screen.findByRole('button', { name: 'Create account' });
-    fill('Email', 'person@example.com'); fill('Password', 'fixture-password'); fill('Your handle', 'person');
+    api.meOrNull.mockResolvedValue(account);
+    fill('Name', 'Morgan'); fill('Email', 'person@example.com'); fill('Password', 'fixture-password');
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Resend verification email' }));
-    await screen.findByText(/Verification email sent/);
-    expect(api.resendVerification).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fdashboard'));
+    expect(api.signup).toHaveBeenCalledTimes(1);
   });
   it('blocks malformed email and replaces an unsafe return URL on login', async () => {
     nav.query = 'next=/%5Cevil.test';
@@ -127,7 +122,7 @@ describe('account and checkout', () => {
     api.meOrNull.mockResolvedValue(account);
     api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing' });
     render(<AccountDashboard />);
-    await screen.findByRole('heading', { name: account.email });
+    await screen.findByRole('heading', { name: 'Your Merger account.' });
     expect(screen.queryByRole('link', { name: 'Go to downloads' })).not.toBeInTheDocument();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
   });

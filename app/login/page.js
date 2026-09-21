@@ -52,6 +52,7 @@ function LoginForm() {
       <div className="auth-card narrow">
         <p className="eyebrow">Welcome back</p>
         <h1>Sign in to Merger.</h1>
+        <p className="lede">Your waitlist, membership, and desktop app. One account.</p>
         {params.get('signedOut') === '1' && <p className="alert alert-info" role="status">You’re signed out.</p>}
 
         <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
@@ -94,7 +95,7 @@ function LoginForm() {
         </form>
 
         <p className="form-foot">
-          No account yet? <Link href="/signup">Create an account</Link>
+          No account yet? <Link href={`/signup?next=${encodeURIComponent(next)}`}>Create an account</Link>
         </p>
         <p className="form-foot" style={{ marginTop: 10 }}>
           <Link href="/forgot-password">Forgot your password?</Link>

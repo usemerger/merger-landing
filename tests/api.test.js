@@ -1,8 +1,25 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
+import { ApiError, accountAccess, acceptInvitation, accountWaitlist, signup, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
 import { ALPHA_OFFER } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe('account admission contract', () => {
+  it('creates a waitlist account with consent versions and without payment data', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('{"ok":true}'));
+    vi.stubGlobal('fetch', fetchMock);
+    await signup('person@example.com', 'fixture-password', 'Morgan', { ref: 'source123' });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'person@example.com', password: 'fixture-password', displayName: 'Morgan', waitlist: { ref: 'source123' }, termsVersion: '2026-09-21', privacyVersion: '2026-09-21' });
+  });
+  it('uses authenticated account endpoints and sends private tokens only in acceptance bodies', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => new Response('{"ok":true}'));
+    vi.stubGlobal('fetch', fetchMock);
+    await accountAccess(); await accountWaitlist({ ref: 'public123' }); await acceptInvitation('private-token');
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual(['/api/account/access', '/api/account/waitlist', '/api/account/invitation/accept']);
+    expect(fetchMock.mock.calls.every(([, options]) => options.credentials === 'include')).toBe(true);
+    expect(JSON.parse(fetchMock.mock.calls[2][1].body)).toEqual({ token: 'private-token' });
+  });
+});
 
 describe('the alpha checkout contract', () => {
   it('posts exactly {plan:"operator",alpha:true} with same-origin credentials', async () => {

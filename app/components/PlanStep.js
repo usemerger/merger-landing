@@ -7,27 +7,8 @@ import { checkout, errorMessage } from '../lib/api';
 import { ALPHA_OFFER } from '../lib/billingOffer';
 import { stripeRedirectURL } from '../lib/authFlow';
 
-/**
- * Joining the alpha: one POST, then a redirect.
- *
- * NOTHING IN THIS COMPONENT GATES ANYONE. The old allowlist panel and the
- * `not_on_alpha_list` reply behind it are gone, and they are not coming back
- * here: anyone who reaches this button can press it and get to Stripe.
- *
- * What changed around it is WHO REACHES IT. The public funnel is a waitlist
- * now, so the marketing page links to /#waitlist and the only path to this
- * panel is the invite door at /alpha?invite= (or an account that is already
- * signed in). That door is a matter of routing, not of permission — see
- * app/alpha/page.js, which is explicit about what it can and cannot enforce.
- * If admission ever has to be enforced rather than merely directed, the place
- * for it is the checkout endpoint, which is the only thing that can refuse.
- *
- * The button is never gated on a preflight call either. It used to be blocked
- * until `GET /api/billing/offers` answered, with nine of its fields compared
- * by `===`; that route is a 404, so the gate could never open and the button
- * was permanently disabled. Checkout is the call that actually knows the
- * answer, so checkout is the only call.
- */
+// Rendered only after accountAccess grants canCheckout. The checkout endpoint
+// repeats verification/admission checks; the browser cannot grant eligibility.
 
 /** Which of the contract's replies came back. One state, not five booleans. */
 const PHASE = {
@@ -42,53 +23,15 @@ const PHASE = {
   ERROR: 'error',
 };
 
-/**
- * Codes that mean "the alpha is not taking anyone right now".
- *
- * MATCHED BY BEHAVIOUR AS WELL AS BY NAME, deliberately. The deployed backend
- * does not document its error bodies — the OpenAPI schema types the request
- * and nothing else — so the exact spelling of the closed-window code cannot be
- * confirmed from outside. What CAN be confirmed is that the allowlist is gone,
- * and with it the only other thing a 403 used to mean. So a 403 is read as a
- * closed window unless its code is a known non-alpha one (see below), and
- * these names are recognised for a more precise message when one arrives.
- *
- * `alpha_not_configured` (503) lands here too. It is a different cause —
- * billing misconfigured rather than a window deliberately shut — but it is the
- * same fact for the person reading it: you cannot join right now, and it is
- * not something you can fix.
- */
 const CLOSED_CODES = new Set([
   'alpha_closed', 'alpha_ended', 'alpha_full', 'alpha_not_open',
   'alpha_unavailable', 'alpha_offer_unavailable', 'alpha_not_configured',
-]);
-
-/**
- * The 403s that are NOT the alpha being shut.
- *
- * Found by testing rather than by reading: the backend enforces an Origin
- * allowlist on state-changing requests, and a request from an origin it does
- * not know — a Vercel preview URL, localhost — comes back
- * `403 origin_not_allowed`. Without this list the catch-all above would tell
- * a developer on a preview deployment that the alpha had closed, which is
- * both wrong and the kind of wrong that wastes an afternoon.
- *
- * `email_not_verified` is here for the same reason: it is a 403 about the
- * account, not about the window, and it has its own sentence already.
- */
-const NOT_CLOSED_CODES = new Set([
-  'origin_not_allowed', 'email_not_verified', 'csrf_failed', 'forbidden',
 ]);
 
 /** The contract's replies, mapped to how the page should behave. */
 function phaseFor(err) {
   const { status, code } = err || {};
   if (CLOSED_CODES.has(code)) return PHASE.CLOSED;
-  // A bare 403, or a 403 whose code is not one of the known non-alpha ones, is
-  // the window being shut: with the allowlist gone there is nothing else on
-  // this endpoint it can mean, and an unpredicted closed-window code has to
-  // land somewhere calm rather than in a red box.
-  if (status === 403 && !NOT_CLOSED_CODES.has(code)) return PHASE.CLOSED;
   if (status === 401) return PHASE.EXPIRED;
   if (code === 'billing_provider_error' || status === 502
       || code === 'network_error' || code === 'request_timeout') return PHASE.TRANSIENT;
@@ -162,7 +105,7 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
       <p className="muted mt-16">{ALPHA_OFFER.rateNotice}</p>
       <p className="field-hint mt-16">Claude requires your own Anthropic API key, with usage billed separately by Anthropic. DocuSign requires your own account. Alpha features may change.</p>
 
-      {/* THE ALPHA IS SHUT, NOT BROKEN. Signup is open while the window is
+      {/* THE ALPHA IS SHUT, NOT BROKEN. Admission is separate from signup; the window is
           open, so this is the one state where someone who did everything right
           still cannot join. It is a calm panel rather than a red alert, the
           Join button goes away because pressing it again would only repeat the

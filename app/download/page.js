@@ -4,14 +4,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../components/Shell';
-import PlanStep, { useStartCheckout } from '../components/PlanStep';
 import { download, errorMessage, meOrNull, statusLabel } from '../lib/api';
 import { normalizeInstallers } from '../lib/authFlow';
 
 export default function DownloadPage() {
   const router = useRouter();
   const [state, setState] = useState({ phase: 'loading' });
-  const checkoutCtl = useStartCheckout();
   const generation = useRef(0);
   const pending = useRef(false);
 
@@ -31,7 +29,7 @@ export default function DownloadPage() {
       } catch (error) {
         if (request !== generation.current) return;
         // Permission errors unrelated to subscription must remain errors.
-        if (error?.code === 'subscription_required') {
+        if (['subscription_required', 'email_not_verified', 'invitation_required', 'invite_required'].includes(error?.code)) {
           setState({ phase: 'locked', user, entitlementStatus: error.body?.entitlementStatus || 'none' });
           return;
         }
@@ -56,20 +54,10 @@ export default function DownloadPage() {
   </main></Shell>;
 
   if (state.phase === 'locked') {
-    const canceled = state.entitlementStatus === 'canceled';
-    const canSubscribe = state.user.handle && ['none', 'canceled', 'incomplete_expired'].includes(state.entitlementStatus);
     return <Shell authed><main className="dash-main">
-      <p className="eyebrow">Downloads</p>
-      <h1 className="dash-title">Alpha access unlocks Merger.</h1>
-      <p className="dash-sub">Your membership status is <strong>{statusLabel(state.entitlementStatus).toLowerCase()}</strong>. Downloads unlock when the server confirms access.</p>
-      <div className="panel mt-24">
-        {canSubscribe ? <PlanStep ctl={checkoutCtl} heading={canceled ? 'Join again' : 'Join the alpha'} note={canceled ? 'Review the alpha terms before joining again.' : 'Your account and handle are ready. Review the terms to continue.'} /> : <>
-          <h2>{!state.user.handle ? 'Finish your account' : 'Manage your membership'}</h2>
-          <p className="muted mt-16">{!state.user.handle ? 'Reserve your handle from your account before joining.' : 'Review your payment and membership details from your account.'}</p>
-          <div className="dl-row"><Link className="btn btn-primary btn-sm" href="/dashboard">Go to your account</Link></div>
-        </>}
-      </div>
-      <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={load}>Check access again</button><Link className="btn btn-ghost btn-sm" href="/dashboard">Your account</Link></div>
+      <p className="eyebrow">Downloads</p><h1 className="dash-title">Your next step is in your account.</h1>
+      <p className="dash-sub">Downloads unlock after your invitation and activation are confirmed. Your account shows whether to verify your email, wait for access, or finish activation.</p>
+      <div className="panel mt-24"><h2>One account, on the web and desktop.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Go to your account</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
     </main></Shell>;
   }
 
