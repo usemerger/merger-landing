@@ -105,6 +105,10 @@ function Film({ film }) {
   </>;
 }
 
+export function DocumentFilm() {
+  return <Film film={films[2]} />;
+}
+
 export default function FeatureFilms() {
   const [active, setActive] = useState(0);
   const tabs = useRef([]);

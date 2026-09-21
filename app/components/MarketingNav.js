@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import MarketingMark from './MarketingMark';
+import SingularityButton from './SingularityButton';
 import useSession, { clearSessionHint } from '../lib/useSession';
 import { logout } from '../lib/api';
 
-export default function MarketingNav({ signupHref, checkoutLabel }) {
+export default function MarketingNav({ signupHref, checkoutLabel, singularity = false }) {
   const [open, setOpen] = useState(false);
   const toggle = useRef(null);
   const session = useSession();
@@ -75,7 +76,7 @@ export default function MarketingNav({ signupHref, checkoutLabel }) {
         </>
       : <>
           <Link className="mk-nav-signin" href="/login">Sign in</Link>
-          <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>
+          {singularity ? <SingularityButton className="sf-nav-cta" href={signupHref}>{checkoutLabel}</SingularityButton> : <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>}
         </>;
 
   return <header className={`mk-nav${lifted ? ' is-lifted' : ''}`} onKeyDown={escape}>

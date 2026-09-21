@@ -98,7 +98,8 @@ describe('joining the waitlist', () => {
     expect(textOf('.wl-count')).toMatch(/3 referrals so far/i);
     expect(textOf('.wl-count')).toContain(WAITLIST.referPrompt);
     // The hook has to quote the same number the offer charges.
-    expect(textOf('.wl-hook')).toContain(`${ALPHA_OFFER.priceLabel} a month for life`);
+    expect(textOf('.wl-hook')).toContain(`${ALPHA_OFFER.priceLabel}/month`);
+    expect(textOf('.wl-hook')).toContain('membership stays active');
     expect(screen.queryByRole('button', { name: WAITLIST.cta })).toBeNull();
   });
 

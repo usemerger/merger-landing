@@ -3,62 +3,73 @@ import { faqs } from './landingContent';
 import { ALPHA_OFFER, WAITLIST } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
-import FeatureFilms from './components/FeatureFilms';
+import { DocumentFilm } from './components/FeatureFilms';
 import MergeHero from './components/MergeHero';
 import WaitlistForm from './components/WaitlistForm';
+import SingularityButton from './components/SingularityButton';
+import ChannelOrbit from './components/ChannelOrbit';
+import DealStory from './components/DealStory';
+import './singularity-funnel.css';
+
+const invitationTerms = 'Joining the waitlist is free. When you receive and accept an invitation, you can start a 14-day free trial with a card. After the trial, Merger is $50 USD/month plus applicable tax. Cancel before the trial ends to avoid a charge.';
+
+function SectionLabel({ number, children }) {
+  return <p className="sf-label"><span>{number}</span>{children}</p>;
+}
 
 export default function LandingPage() {
-  return <div className="marketing-page">
+  return <div className="marketing-page sf-page">
     <a className="mk-skip-link" href="#main-content">Skip to content</a>
-    <MarketingNav signupHref={WAITLIST.href} checkoutLabel={WAITLIST.ctaShort} />
+    <MarketingNav signupHref={WAITLIST.href} checkoutLabel={WAITLIST.ctaShort} singularity />
     <main id="main-content">
-      <section id="waitlist" className="mk-hero" aria-labelledby="hero-title">
-        {/* §5 THE HERO REACTS TO THE PRIMARY ACTION.
-            Two light layers sit behind everything: an always-on floor sweep
-            (the reference's page is not flat black — it has a floor), and a
-            gold bloom that only rises when the CTA is hovered.
-
-            Driven by :has() rather than React state on purpose. The hover has
-            no business re-rendering the hero, and a CSS-only path keeps working
-            with JS still loading — which is exactly when a first visitor is
-            most likely to be moving the mouse toward the button. */}
-        <div className="mk-hero-floor" aria-hidden="true" />
-        <div className="mk-hero-bloom" aria-hidden="true" />
-        <div className="mk-wrap mk-hero-grid">
-          <div className="mk-hero-copy">
-            <p className="mk-pill"><span className="mk-status-dot" /> {WAITLIST.eyebrow}</p>
-            <h1 id="hero-title">Good deals start in a <span>conversation.</span></h1>
-            <p className="mk-hero-description">Bring your connected messages, deal context, and contacts into one desktop workspace.</p>
-            {/* THE FORM IS THE CTA. It replaces the button pair rather than
-                sitting below it: the public front door is the waitlist now,
-                and a button that scrolls somewhere else to do the same job is
-                a step this funnel does not need to charge anyone. */}
-            <WaitlistForm />
-            <p className="mk-hero-secondary"><a className="mk-text-link" href="#workflow">See how it works</a></p>
+      <section className="sf-hero" aria-labelledby="hero-title">
+        <div className="sf-hero-atmosphere" aria-hidden="true" />
+        <div className="mk-wrap sf-hero-grid">
+          <div className="sf-hero-copy">
+            <p className="sf-eyebrow"><span className="sf-live-dot" /> IN DEVELOPMENT · WINDOWS ALPHA</p>
+            <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
+            <p className="sf-intro">Bring your messaging channels into one app. Find the opportunities in your conversations, and give every deal a place to move forward.</p>
+            <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-watch-link" href="#workflow"><span aria-hidden="true">↘</span> See it in motion</a></div>
+            <p className="sf-hero-note">Early access by invitation. No card to join.</p>
           </div>
-          <div className="mk-hero-visual">
-            <MergeHero />
-          </div>
+          <div className="sf-hero-art"><MergeHero /><span className="sf-art-index" aria-hidden="true">FRAGMENTED. CONNECTED. MERGED.</span></div>
         </div>
+        <div className="mk-wrap sf-hero-footer"><span>Everything you need, drawn together.</span><a href="#workflow">Explore the workspace <span aria-hidden="true">↓</span></a></div>
       </section>
 
-      <div className="mk-foundations"><div className="mk-wrap"><span>One workspace for the work between messages.</span><ul><li>Messages</li><li>Deal Desk</li><li>Rolodex</li><li>DocuSign</li></ul></div></div>
+      <div className="sf-chapters mk-wrap" aria-label="The Merger workflow">
+        <a href="#workflow"><span>01</span><div>Connect your channels<small>One place for every conversation</small></div><span aria-hidden="true">↗</span></a>
+        <a href="#deal-desk"><span>02</span><div>Find the opportunity<small>Messages become meaningful next steps</small></div><span aria-hidden="true">↗</span></a>
+        <a href="#documents"><span>03</span><div>Move the deal forward<small>People, context, and paperwork together</small></div><span aria-hidden="true">↗</span></a>
+      </div>
 
-      <section id="workflow" className="mk-workflow mk-section" aria-labelledby="workflow-title"><div className="mk-wrap">
-        <div className="mk-section-heading"><div><p className="mk-kicker">From hello to next steps</p><h2 id="workflow-title">The conversation is<br /><span>only the beginning.</span></h2></div><p>Watch connected messages become a clearer next step. Explore one inbox, AI deal detection, and the people beside the paperwork.</p></div>
-        <FeatureFilms />
+      <section id="workflow" className="sf-section sf-channels mk-wrap" aria-labelledby="channels-title">
+        <div className="sf-section-heading"><div><SectionLabel number="01">CONNECTED CONVERSATIONS</SectionLabel><h2 id="channels-title">Different channels.<br /><span>The same center.</span></h2></div><p>Your network lives in different places. Your work doesn’t have to. Read and reply to connected conversations from one Merger workspace.</p></div>
+        <ChannelOrbit />
+        <div className="sf-section-foot"><span>YOUR ACCOUNTS. YOUR CONVERSATIONS.</span><p>Available connections, message history, and actions vary by service during alpha. SMS and iMessage are not included.</p></div>
+      </section>
+
+      <section id="deal-desk" className="sf-section sf-deal-section" aria-labelledby="deal-title"><div className="mk-wrap">
+        <div className="sf-section-heading"><div><SectionLabel number="02">FROM MESSAGE TO MOMENTUM</SectionLabel><h2 id="deal-title">A message is the start.<br /><span>Give the deal a home.</span></h2></div><p>Claude can recognize a possible deal in your connected messages. You review it. Deal Desk keeps the conversations, terms, people, and next step together.</p></div>
+        <DealStory />
+        <div className="sf-value-row"><div><span>CONTEXT</span><h3>Keep the original conversation.</h3><p>Go back to where the opportunity began, with its channel and participants attached.</p></div><div><span>CLARITY</span><h3>Know what happens next.</h3><p>Bring the terms, timeline, and people into the same view as the work.</p></div><div><span>CONTROL</span><h3>Your judgment stays central.</h3><p>Accept a suggestion or create a deal yourself. You decide what belongs on the desk.</p></div></div>
+        <p className="sf-detail-note">AI features use your own Anthropic API key. API usage is billed separately.</p>
       </div></section>
 
-      <section id="pricing" className="mk-pricing mk-section" aria-labelledby="pricing-title"><div className="mk-wrap">
-        <div className="mk-section-heading"><div><p className="mk-kicker">An early seat at the desk</p><h2 id="pricing-title">{ALPHA_OFFER.priceLabel} a month.<br /><span>Locked in for life.</span></h2></div><p>Merger is opening in groups. Join the waitlist now and your seat is {ALPHA_OFFER.priceLabel} a month — with the first two weeks free — for as long as you keep it. Your Anthropic API usage and DocuSign account are separate.</p></div>
-        <div className="mk-pricing-grid"><article className="mk-alpha-plan"><div className="mk-plan-heading"><div><span className="mk-kicker">Windows desktop</span><h3>{ALPHA_OFFER.name}</h3></div><span className="mk-plan-badge">Early access</span></div><div className="mk-plan-price"><strong>{ALPHA_OFFER.priceLabel}</strong><span>{ALPHA_OFFER.intervalLabel}<small>{ALPHA_OFFER.trialLabel} · {ALPHA_OFFER.todayLabel} today</small></span></div><p className="mk-plan-rate">{ALPHA_OFFER.rateNotice}</p><ul className="mk-plan-features"><li>Connected messages in one workspace</li><li>Deal Desk and Rolodex</li><li>Claude features with your Anthropic API key</li><li>DocuSign in the app with your own account</li></ul><a className="mk-button" href={WAITLIST.href}>{WAITLIST.cta}</a><p className="mk-plan-billing">{WAITLIST.hookNote} {ALPHA_OFFER.billingNotice}</p><p className="mk-plan-extras">Anthropic API usage and DocuSign charges are not included.</p></article>
-          <div className="mk-plan-aside"><div className="mk-alpha-note"><span className="mk-kicker">Help shape what comes next</span><h3>For people who work through conversations.</h3><p>The alpha is for trying Merger in your day-to-day workflow and telling us where it needs to improve.</p><Link className="mk-text-link" href="/support">Talk to us before joining</Link></div><div className="mk-team-interest"><span className="mk-kicker">Teams · future interest</span><h3>Building a desk for your team?</h3><p>Team plans are not available to purchase yet. Tell us what your team needs.</p><a className="mk-text-link" href="mailto:support@usemerger.com?subject=Merger%20team%20interest">Email team interest</a></div></div></div>
+      <section id="documents" className="sf-section sf-document-section mk-wrap" aria-labelledby="documents-title">
+        <div className="sf-document-copy"><SectionLabel number="03">THE PEOPLE BEHIND THE PAPERWORK</SectionLabel><h2 id="documents-title">From introduction<br /><span>to the dotted line.</span></h2><p>Your Rolodex keeps the details people share. Open DocuSign inside Merger, with the right names and emails beside the document.</p><ol className="sf-document-steps"><li><span>01</span><div>Find the people in your deal.<small>Names, email addresses, and context in your Rolodex.</small></div></li><li><span>02</span><div>Put their details to work.<small>Copy or insert into the recipient field you select.</small></div></li><li><span>03</span><div>Review. Then send.<small>You control the document in your own DocuSign account.</small></div></li></ol><p className="sf-detail-note">DocuSign access and charges are separate.</p></div>
+        <div className="sf-document-film"><div className="sf-film-heading"><span><MarketingMark size={18} /> MERGER / DOCUMENTS</span><span>PRODUCT WALKTHROUGH</span></div><DocumentFilm /></div>
+      </section>
+
+      <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
+        <div className="sf-access-copy"><SectionLabel number="04">AN EARLY SEAT AT THE DESK</SectionLabel><h2>Help shape<br /><span>what comes next.</span></h2><p>Merger is in development. We’re opening the Windows alpha in groups so we can build around the people who use it.</p><div className="sf-price"><strong>{ALPHA_OFFER.priceLabel}</strong><span>/ month<small>After your invitation and 14-day free trial.</small></span></div><p className="sf-rate">Join during alpha. Keep the $50 monthly rate for as long as your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
+        <div id="waitlist" className="sf-waitlist-card"><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>EARLY ACCESS / WAITLIST</p><MarketingMark size={25} /></div><h3>Your place in the orbit.</h3><p className="sf-waitlist-intro">Join the list. We’ll email you when a seat opens.</p><WaitlistForm /><div className="sf-waitlist-bottom"><span>01 JOIN</span><i /><span>02 GET INVITED</span><i /><span>03 BUILD WITH US</span></div></div>
       </div></section>
 
-      <section id="faq" className="mk-faq mk-wrap mk-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><p className="mk-kicker">Before you join</p><h2 id="faq-title">A few useful<br /> <span>details.</span></h2><p>Have something else in mind?</p><Link className="mk-text-link" href="/support">Get in touch</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${WAITLIST.hookNote} ${ALPHA_OFFER.billingNotice} ${ALPHA_OFFER.rateNotice}` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
+      <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A LITTLE MORE CLARITY</SectionLabel><h2 id="faq-title">Before you<br /><span>enter the orbit.</span></h2><Link className="sf-watch-link" href="/support">Have a question? Get in touch ↗</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
 
-      <section className="mk-final"><div className="mk-wrap"><MarketingMark size={42} /><p className="mk-kicker">Messages into momentum</p><h2>Your next deal<br />is already a <span>conversation.</span></h2><p>Give it a home in Merger.</p><a className="mk-button" href={WAITLIST.href}>{WAITLIST.cta}</a><span className="mk-final-price">{WAITLIST.hook} No card to join the list.</span></div></section>
+      <section className="sf-final"><div className="sf-final-orbits" aria-hidden="true"><i /><i /><i /></div><div className="mk-wrap"><MarketingMark size={48} /><p className="sf-eyebrow">MESSAGES INTO MOMENTUM</p><h2>Your next deal is<br /><span>already a conversation.</span></h2><SingularityButton href="#waitlist">Find your place in Merger</SingularityButton><p>Join the waitlist. Be part of what comes next.</p></div></section>
     </main>
-    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>A place for the work in your conversations.</p><nav aria-label="Footer navigation"><Link href="/download">Download</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows alpha · Built with feedback</span></div></div></footer>
+    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows alpha · In development</span></div></div></footer>
   </div>;
 }

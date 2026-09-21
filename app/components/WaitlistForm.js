@@ -22,6 +22,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import SingularityButton from './SingularityButton';
 import './waitlist.css';
 import { WAITLIST } from '../lib/billingOffer';
 import {
@@ -238,9 +239,9 @@ export default function WaitlistForm() {
 
       {error && <p className="wl-error" role="alert">{error}</p>}
 
-      <button className="mk-button wl-submit" type="submit" disabled={busy}>
-        {busy ? 'Joining…' : WAITLIST.cta}
-      </button>
+      <SingularityButton className="wl-submit" type="submit" busy={busy} busyLabel="Joining…">
+        {WAITLIST.cta}
+      </SingularityButton>
 
       <p className="wl-terms">
         {WAITLIST.hook} No card, and nothing charged, to join the list.

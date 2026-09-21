@@ -101,7 +101,7 @@ export const WAITLIST = Object.freeze({
    * sentence ("$50/ month for life"). So these read the PRICE from the offer —
    * the number that must never be retyped — and say the period in words.
    */
-  hook: `The first to join lock in ${ALPHA_OFFER.priceLabel} a month for life.`,
+  hook: `Alpha members keep ${ALPHA_OFFER.priceLabel}/month while their membership stays active.`,
   hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month with the first two weeks free. `
     + 'Nothing is charged while you are on the list, and you only pay if you accept an invite.',
 
