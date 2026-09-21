@@ -245,7 +245,7 @@ export default function AccountDashboard() {
 
     <div className="panel mt-24">
       <div className="panel-head"><h2>Subscription</h2><StatusPill status={s.entitlementStatus} grandfathered={grandfathered} /></div>
-      {!entitled && !hasSubscription && <p className="muted mt-16">No subscription has started. {admitted ? 'Your trial starts only after you complete checkout.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
+      {!entitled && !hasSubscription && <p className="muted mt-16">No subscription has started. {admitted ? access.rollout?.trialEligible === true ? 'Your trial starts only after you complete checkout.' : 'Your membership begins after you complete checkout. Review the current terms below.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
       {grandfathered ? <p className="muted mt-16">Founding account — complimentary. You have access to Merger with no subscription and nothing to pay.</p> : <>
         <div className="stat-grid">
           <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
@@ -263,7 +263,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} heading={s.entitlementStatus === 'canceled' ? 'Join again' : 'Join the alpha'} note={s.entitlementStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} heading={s.entitlementStatus === 'canceled' ? 'Join again' : 'Join the alpha'} note={s.entitlementStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Desktop app</h2></div>
       <p className="muted mt-16">{entitled ? 'Check the available installers for your computer.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>

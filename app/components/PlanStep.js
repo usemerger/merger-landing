@@ -75,12 +75,17 @@ export function useStartCheckout() {
   return { busy, phase, message, start };
 }
 
-export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
+export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialEligible }) {
   const pathname = usePathname();
   // Sign in and come back to the page they were on, with the offer in front of
   // them again — not to a dashboard they then have to navigate out of.
   const resumeHref = `/login?next=${encodeURIComponent(pathname || '/billing')}`;
   const closed = ctl.phase === PHASE.CLOSED;
+  const termsKnown = typeof trialEligible === 'boolean';
+  const returning = trialEligible === false;
+  const today = returning ? ALPHA_OFFER.priceLabel : ALPHA_OFFER.todayLabel;
+
+  if (!termsKnown) return <section className="plan-step"><h2>Confirm your activation terms.</h2><p className="muted mt-16">Your account’s trial eligibility could not be confirmed. Refresh your account before continuing to checkout.</p><p className="field-hint mt-16"><Link href="/dashboard">Return to your account</Link></p></section>;
 
   return (
     <section id="join-alpha" className="plan-step" aria-labelledby="alpha-heading">
@@ -92,17 +97,14 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
           <span className="eyebrow">Windows alpha · one person</span>
           <h3>{ALPHA_OFFER.name}</h3>
         </div>
-        {/* What is charged today is the number that belongs at this size. The
-            $50 it becomes is one line below, where it cannot be mistaken for
-            something being taken now. */}
-        <p className="alpha-amount">{ALPHA_OFFER.todayLabel}<span>{ALPHA_OFFER.todayNote}</span></p>
+        <p className="alpha-amount">{today}<span>{ALPHA_OFFER.todayNote}</span></p>
       </div>
 
       <p className="alpha-then">
-        {ALPHA_OFFER.trialLabel}, then <strong>{ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}</strong>
+        {returning ? 'Renews at ' : `${ALPHA_OFFER.trialLabel}, then `}<strong>{ALPHA_OFFER.priceLabel}{ALPHA_OFFER.intervalLabel}</strong>
       </p>
-      <p className="muted">{ALPHA_OFFER.billingNotice}</p>
-      <p className="muted mt-16">{ALPHA_OFFER.rateNotice}</p>
+      <p className="muted">{returning ? `${ALPHA_OFFER.priceLabel} USD is due when you complete checkout, plus applicable tax. A card is required. Your membership renews at ${ALPHA_OFFER.priceLabel}/month until canceled. This account has had a membership before, so another free trial does not apply.` : ALPHA_OFFER.billingNotice}</p>
+      <p className="muted mt-16">{returning ? `A previous alpha rate guarantee ends when that membership ends. This new membership uses the current alpha offer of ${ALPHA_OFFER.priceLabel}/month, which stays in place while this membership remains active.` : ALPHA_OFFER.rateNotice}</p>
       <p className="field-hint mt-16">Claude requires your own Anthropic API key, with usage billed separately by Anthropic. DocuSign requires your own account. Alpha features may change.</p>
 
       {/* THE ALPHA IS SHUT, NOT BROKEN. Admission is separate from signup; the window is
@@ -137,9 +139,9 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note }) {
 
       {!closed && <>
         <button className="btn btn-primary btn-block" type="button" onClick={() => ctl.start()} disabled={ctl.busy}>
-          {ctl.busy ? 'Opening secure checkout…' : ALPHA_OFFER.checkoutLabel}
+          {ctl.busy ? 'Opening secure checkout…' : returning ? 'Restart membership — $50/month' : ALPHA_OFFER.checkoutLabel}
         </button>
-        <p className="field-hint center mt-16">Stripe collects your card securely. {ALPHA_OFFER.todayLabel} is charged today, and your trial starts when you finish checkout.</p>
+        <p className="field-hint center mt-16">Stripe collects your card securely. {returning ? `${ALPHA_OFFER.priceLabel} plus applicable tax is charged when you finish checkout. Access begins after payment is confirmed.` : `${ALPHA_OFFER.todayLabel} is charged today, and your trial starts when you finish checkout.`}</p>
       </>}
 
       <p className="field-hint center mt-16"><Link href="/terms">Alpha terms</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/support">Help</Link></p>

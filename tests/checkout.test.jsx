@@ -13,7 +13,7 @@ vi.mock('../app/lib/api', () => ({
   errorMessage: (err) => `message:${err?.code || err?.status || 'unknown'}`,
 }));
 
-function TestCheckout() { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} />; }
+function TestCheckout({ trialEligible = true }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} />; }
 const join = () => screen.getByRole('button', { name: 'Join the alpha' });
 
 beforeEach(() => { checkout.mockReset(); });
@@ -44,6 +44,24 @@ describe('joining the alpha', () => {
     expect(terms).toHaveTextContent('Cancel any time before then and you are never charged');
     expect(screen.getByText(/Alpha members keep \$50\/month for life/)).toBeInTheDocument();
     expect(checkout).not.toHaveBeenCalled();
+  });
+
+  it('quotes immediate billing without a trial for a returning member', () => {
+    render(<TestCheckout trialEligible={false} />);
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$50due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('Renews at $50/ month');
+    expect(screen.getByText(/another free trial does not apply/)).toBeInTheDocument();
+    expect(screen.getByText(/A previous alpha rate guarantee ends/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Restart membership — $50/month' })).toBeEnabled();
+    expect(screen.queryByText(/first 2 weeks are free|trial starts when|\$0/i)).not.toBeInTheDocument();
+  });
+
+  it('does not offer checkout until trial eligibility is confirmed', () => {
+    const ctl = { phase: 'idle', busy: false, start: vi.fn() };
+    render(<PlanStep ctl={ctl} />);
+    expect(screen.getByRole('heading', { name: 'Confirm your activation terms.' })).toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    expect(screen.queryByText(/\$0|First 2 weeks free/i)).not.toBeInTheDocument();
   });
 
   it('shows the closed-alpha state for a shut window, whatever it is called', async () => {

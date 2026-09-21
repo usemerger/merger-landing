@@ -79,6 +79,14 @@ describe('invitation lifecycle', () => {
     expect(screen.queryByRole('button', { name: 'Accept invitation' })).not.toBeInTheDocument();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
   });
+  it('does not promise another trial in a returning-member invitation', async () => {
+    nav.query = 'token=private-token';
+    api.accountAccess.mockResolvedValue({ ...waiting, rollout: { trialEligible: false } });
+    render(<InvitePage />);
+    await screen.findByRole('button', { name: 'Accept invitation' });
+    expect(screen.getByText(/As a returning member, \$50 plus applicable tax is due at checkout/)).toBeInTheDocument();
+    expect(screen.queryByText(/Your first 14 days are free/)).not.toBeInTheDocument();
+  });
   it('accepts only explicitly and updates from the server response', async () => {
     nav.query = 'token=private-token';
     api.acceptInvitation.mockResolvedValue({ ...waiting, admission: { status: 'accepted' }, capabilities: { ...waiting.capabilities, canCheckout: true } });

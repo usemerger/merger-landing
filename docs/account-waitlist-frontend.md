@@ -31,3 +31,7 @@ The preview must point at the new isolated backend. There is deliberately no com
 ## Remaining operational choices
 
 The staff UI supports manually reviewed cohorts, not an automated reminder scheduler or arbitrary cohort labels/preferences editing. Optional marketing preferences are not collected. The signup consent record covers displayed terms/privacy and necessary account/access email only. Email changes require support; a new verified-email change flow should be built before exposing an editable address.
+
+## Returning membership correction
+
+Activation copy now uses the backend `rollout.trialEligible` flag. Only explicit true advertises the 14-day/$0-today trial. False shows $50 due at checkout plus applicable tax, monthly renewal, no second trial, and the new-membership rate terms. Missing eligibility suppresses checkout until account terms can be confirmed. Invitation and dashboard copy follow the same rule. Returning-membership and unknown-eligibility regression tests pass.
