@@ -105,6 +105,10 @@ function Film({ film }) {
   </>;
 }
 
+export function DealFilm() {
+  return <Film film={films[1]} />;
+}
+
 export function DocumentFilm() {
   return <Film film={films[2]} />;
 }

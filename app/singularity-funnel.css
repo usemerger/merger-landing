@@ -48,7 +48,13 @@
 .sf-page .sf-value-row h3{font-size:16px;font-weight:500;letter-spacing:-.03em;margin-top:11px}
 .sf-page .sf-value-row p{font-size:12px;line-height:1.8;color:#8e918d;margin-top:10px}
 .sf-page .sf-detail-note{font-size:10px;color:#82857f;margin-top:25px;line-height:1.7}
-.sf-document-section{display:grid;grid-template-columns:.83fr 1.17fr;gap:58px;align-items:center}
+.sf-document-section{display:block}
+.sf-product-film{min-width:0}
+.sf-product-film .mk-film-screen{border-color:#b09a6738;box-shadow:0 25px 70px #0003}
+.sf-product-film .mk-film-context{gap:48px}
+.sf-product-film .mk-film-context h3{font-size:21px;color:#dedbd3}
+.sf-product-film .mk-film-context p,.sf-product-film .mk-film-context ol{font-size:13px;color:#9d9f98}
+.sf-product-film .mk-film-note{font-size:11px;line-height:1.7;color:#92958c}
 .sf-document-copy h2{font-size:clamp(33px,3.8vw,51px)}
 .sf-page .sf-document-copy>p:not(.sf-label):not(.sf-detail-note){font-size:14px;line-height:1.85;color:#9d9f98;margin-top:24px;max-width:370px}
 .sf-page .sf-document-steps{list-style:none;padding:0;display:grid;gap:23px;margin-top:31px}

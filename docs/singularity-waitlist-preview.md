@@ -11,8 +11,8 @@ Built from `funnel/waitlist-referrals` at `632e28c` in an isolated worktree on `
 - Use the same Geist and Geist Mono family with a more deliberate hierarchy, tighter display typography, warmer secondary tones, and varied section layouts.
 - ChannelOrbit uses lightweight SVG/DOM animation: ten channel icons orbit, gather into a diamond formation, and release. Selecting a channel changes a fictional inbox; selecting Merger restores the combined view.
 - SingularityButton uses six animated shell fragments over a gold core and fine threads. Type stays readable while the shell moves. Hover, focus, and press bring the shell together. The form retains native submission behavior and a stable busy label.
-- DealStory demonstrates a single fictional message becoming a possible deal, reviewed filing, source-preserving organization, and document preparation with a Rolodex contact. Manual controls, pause, replay, focus protection, and reduced motion are included.
-- Keep the approved DocuSign film visible in its own section instead of hiding all product proof in one tab group.
+- Per the September 21 preference, keep ChannelOrbit for feature 1 and use the original approved AI deal-detection and DocuSign films for features 2 and 3. Both films have full-width frames, explicit pause/play, offscreen pausing, and reduced-motion posters. The interactive DealStory component remains in source for future use but is not mounted on the landing page.
+- Keep both approved films visible in their own sections instead of hiding product proof in one tab group.
 - Separate joining the free waitlist from accepting an invitation and starting the future paid trial. Pricing remains $50/month after 14 days, retained while alpha membership stays active.
 
 ## Main code
@@ -25,6 +25,7 @@ Built from `funnel/waitlist-referrals` at `632e28c` in an isolated worktree on `
 
 ## Validation
 
+- September 21 film preference update: restored the approved AI deal-detection film, retained the original DocuSign film, and widened both frames. The 12 existing film/workflow tests passed, the Vercel build succeeded, desktop and 390px layouts were inspected, and published AI video pause/resume was verified. Deployment: `https://merger-orbit-preview-ankfoh71a-merger1.vercel.app`.
 - Vercel production build succeeded for the separate `merger-orbit-preview` project.
 - 90 Vitest tests and 4 synthetic HTTP API tests passed.
 - Desktop, 390px and 320px layouts checked visually. Channel filtering, reviewed deal filing, document preparation, contact insertion, mobile navigation, and waitlist validation checked through the UI.

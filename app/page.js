@@ -3,12 +3,11 @@ import { faqs } from './landingContent';
 import { ALPHA_OFFER, WAITLIST } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
-import { DocumentFilm } from './components/FeatureFilms';
+import { DealFilm, DocumentFilm } from './components/FeatureFilms';
 import MergeHero from './components/MergeHero';
 import WaitlistForm from './components/WaitlistForm';
 import SingularityButton from './components/SingularityButton';
 import ChannelOrbit from './components/ChannelOrbit';
-import DealStory from './components/DealStory';
 import './singularity-funnel.css';
 
 const invitationTerms = 'Joining the waitlist is free. When you receive and accept an invitation, you can start a 14-day free trial with a card. After the trial, Merger is $50 USD/month plus applicable tax. Cancel before the trial ends to avoid a charge.';
@@ -51,14 +50,15 @@ export default function LandingPage() {
 
       <section id="deal-desk" className="sf-section sf-deal-section" aria-labelledby="deal-title"><div className="mk-wrap">
         <div className="sf-section-heading"><div><SectionLabel number="02">FROM MESSAGE TO MOMENTUM</SectionLabel><h2 id="deal-title">A message is the start.<br /><span>Give the deal a home.</span></h2></div><p>Claude can recognize a possible deal in your connected messages. You review it. Deal Desk keeps the conversations, terms, people, and next step together.</p></div>
-        <DealStory />
+        <div className="sf-product-film"><DealFilm /></div>
         <div className="sf-value-row"><div><span>CONTEXT</span><h3>Keep the original conversation.</h3><p>Go back to where the opportunity began, with its channel and participants attached.</p></div><div><span>CLARITY</span><h3>Know what happens next.</h3><p>Bring the terms, timeline, and people into the same view as the work.</p></div><div><span>CONTROL</span><h3>Your judgment stays central.</h3><p>Accept a suggestion or create a deal yourself. You decide what belongs on the desk.</p></div></div>
         <p className="sf-detail-note">AI features use your own Anthropic API key. API usage is billed separately.</p>
       </div></section>
 
       <section id="documents" className="sf-section sf-document-section mk-wrap" aria-labelledby="documents-title">
-        <div className="sf-document-copy"><SectionLabel number="03">THE PEOPLE BEHIND THE PAPERWORK</SectionLabel><h2 id="documents-title">From introduction<br /><span>to the dotted line.</span></h2><p>Your Rolodex keeps the details people share. Open DocuSign inside Merger, with the right names and emails beside the document.</p><ol className="sf-document-steps"><li><span>01</span><div>Find the people in your deal.<small>Names, email addresses, and context in your Rolodex.</small></div></li><li><span>02</span><div>Put their details to work.<small>Copy or insert into the recipient field you select.</small></div></li><li><span>03</span><div>Review. Then send.<small>You control the document in your own DocuSign account.</small></div></li></ol><p className="sf-detail-note">DocuSign access and charges are separate.</p></div>
-        <div className="sf-document-film"><div className="sf-film-heading"><span><MarketingMark size={18} /> MERGER / DOCUMENTS</span><span>PRODUCT WALKTHROUGH</span></div><DocumentFilm /></div>
+        <div className="sf-section-heading"><div><SectionLabel number="03">THE PEOPLE BEHIND THE PAPERWORK</SectionLabel><h2 id="documents-title">From introduction<br /><span>to the dotted line.</span></h2></div><p>Your Rolodex keeps the details people share. Open DocuSign inside Merger, with the right names and emails beside the document.</p></div>
+        <div className="sf-product-film"><DocumentFilm /></div>
+        <p className="sf-detail-note">Illustrative workflows with sample data. Select a video to pause or resume. DocuSign access and charges are separate.</p>
       </section>
 
       <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
