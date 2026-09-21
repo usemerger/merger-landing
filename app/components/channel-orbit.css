@@ -121,3 +121,16 @@
 @media (prefers-reduced-motion: reduce) {
   .channel-orbit *, .channel-orbit *::before, .channel-orbit *::after { animation: none !important; transition: none !important; }
 }
+
+/* Channel selection and playback use the same quiet, rounded controls. */
+.co-motion-controls { gap: 8px; }
+.co-motion-controls button, .co-selection-note > button { border: 1px solid #353539; border-radius: 999px; background: #ffffff03; padding: 8px 12px; color: #babac3; transition: background 180ms ease, border-color 180ms ease; }
+.co-motion-controls button:hover:not(:disabled), .co-selection-note > button:hover:not(:disabled) { border-color: #64646c; background: #ffffff08; color: #fff; }
+.co-channel-symbol { border-radius: 50%; background: linear-gradient(145deg, #242427, #131315); }
+.co-channel, .co-channel:focus-visible, .co-center { border-radius: 999px; }
+.co-center { border-color: transparent; }
+.co-composer { border-radius: 999px; }
+.co-composer-send { border-radius: 50%; }
+@media (max-width: 980px) { .co-channel-symbol { border-radius: 50%; } }
+@media (max-width: 430px) { .co-channel-symbol { border-radius: 50%; } .co-motion-controls button { padding: 7px 10px; } }
+@media (prefers-reduced-motion: reduce) { .co-motion-controls button, .co-selection-note > button { transition: none; } }

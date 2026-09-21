@@ -1,20 +1,16 @@
 :root {
-  /* ── §1 CANVAS: near-black with a navy undertone ────────────────────────
-     v1 sat at #0F1319 — a lifted grey that read as "dark theme", not as the
-     near-black the reference gets its depth from. These are genuinely dark,
-     with the blue kept in the panels rather than the base so the page has a
-     cool cast without ever looking navy. */
-  --ink: #08090C;          /* the ground */
-  --ink-raise: #0A0C12;    /* barely-there lift, for banded sections */
-  --panel: #0F1626;        /* raised surfaces — this is where the navy lives */
-  --line: #1B2436;
-  --line-strong: #27324A;
+  /* Neutral surfaces let the product and the gold Singularity mark lead. */
+  --ink: #09090B;
+  --ink-raise: #101012;
+  --panel: #141416;
+  --line: #262629;
+  --line-strong: #39393E;
 
   /* Text: white, not bone. The reference runs #F0F0F0 on black and the
      contrast is most of why it feels crisp. */
-  --bone: #F4F6FB;
-  --slate: #98A2B8;
-  --faint: #6F7B92;
+  --bone: #F5F5F5;
+  --slate: #A1A1AA;
+  --faint: #84848D;
 
   /* ── GOLD, REFLECTIVE ───────────────────────────────────────────────────
      A single flat hex reads as paint. Metal needs a light and a shadow side,
@@ -615,38 +611,23 @@ button, input, textarea, select { font: inherit; }
 /* Body copy stays grotesque and quiet; the serif is for display only. */
 .mk-hero-description { font-family: var(--body); font-size: 17px; color: var(--slate); max-width: 46ch; }
 
-/* ── §1 GOLD, REFLECTIVE, AND ONLY ON THE PRIMARY ACTION ───────────────── */
+/* Quiet pill buttons. No ambient animation on actions. */
 .mk-button {
-  background: var(--gold-grad);
-  border: none;
-  color: #120E06;
+  border: 1px solid var(--bone);
+  border-radius: 999px;
+  background: var(--bone);
+  color: #141416;
   font-family: var(--body);
-  font-weight: 600;
-  letter-spacing: -.01em;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .28) inset, 0 8px 24px rgba(166, 124, 52, .22);
-  transition: transform var(--dur-move) var(--ease), box-shadow var(--dur-move) var(--ease), filter var(--dur-micro) var(--ease);
+  font-weight: 550;
+  letter-spacing: -.015em;
+  box-shadow: 0 1px 2px #0002;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
 }
-.marketing-page .mk-button:hover {
-  background: var(--gold-grad);
-  color: #120E06;
-  /* A lift, not a colour change: metal catches more light when it moves. */
-  transform: translateY(-1px);
-  filter: brightness(1.06);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .38) inset, 0 12px 34px rgba(166, 124, 52, .34);
-}
-.mk-button-quiet {
-  background: transparent;
-  border: 1px solid var(--line-strong);
-  color: var(--bone);
-  box-shadow: none;
-}
-.marketing-page .mk-button-quiet:hover {
-  background: rgba(244, 246, 251, .05);
-  border-color: var(--slate);
-  color: var(--bone);
-  filter: none;
-}
-
+.marketing-page .mk-button:hover { background: #fff; border-color: #fff; color: #09090b; transform: translateY(-1px); }
+.marketing-page .mk-button:active { transform: none; }
+.mk-button-quiet { background: #ffffff05; border-color: var(--line-strong); color: var(--bone); box-shadow: none; }
+.marketing-page .mk-button-quiet:hover { background: #ffffff0a; border-color: #606066; color: #fff; }
+.mk-button:disabled { opacity: .55; cursor: not-allowed; }
 /* ── §6 HERO: the reference's structural rhythm, Merger's content ──────────
    A tall band with the headline left and the stone right, and a great deal of
    nothing around both. The discipline of the reference is as much what is left
@@ -816,59 +797,4 @@ button, input, textarea, select { font: inherit; }
   background: rgba(8, 9, 12, .72);
   backdrop-filter: blur(12px) saturate(120%);
   border-bottom-color: var(--line);
-}
-
-/* ── §4 REFLECTIVE GOLD WITH A TRAVELLING SHEEN ────────────────────────────
-   Flat gold reads as paint. Real metal has a highlight that moves as the light
-   or the viewer does, so the button carries a brighter band that sweeps across
-   it on a long loop — slow enough to read as a reflection catching the light
-   rather than as a glint effect.
-
-   The sheen is a pseudo-element with its own gradient, so the base gold stays
-   exactly the specified ramp and the animation cannot drift it. */
-.mk-button {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.mk-button::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    105deg,
-    transparent 38%,
-    rgba(255, 252, 244, .58) 47%,
-    rgba(255, 255, 255, .78) 50%,
-    rgba(255, 252, 244, .58) 53%,
-    transparent 62%
-  );
-  /* Three widths of travel: most of the loop is the highlight being off the
-     button, which is what makes each pass feel like an event rather than a
-     strobe. */
-  background-size: 300% 100%;
-  background-position: 130% 0;
-  /* LINEAR, not the UI easing. --ease is heavily front-loaded, which whipped
-     the band across in the first fraction of the sweep and then held it still
-     — a glint, which is exactly what this is not meant to be. A reflection
-     travelling at constant speed is what reads as metal catching light. */
-  animation: mk-sheen 2.6s linear infinite;
-}
-@keyframes mk-sheen {
-  /* The band crosses in ~0.9s of a 2.6s loop. The first timing gave one pass
-     every six seconds, which meant most people looking at the button never saw
-     it happen at all — the effect has to recur often enough to read as the
-     surface being reflective rather than as a one-off animation. */
-  0%   { background-position: 130% 0; }
-  35%  { background-position: -30% 0; }
-  100% { background-position: -30% 0; }
-}
-
-/* §4 Static gold under reduced motion — no sweep at all, rather than a faster
-   one. The global rule already zeroes durations; this removes the animation so
-   nothing sits mid-sweep at a random position. */
-@media (prefers-reduced-motion: reduce) {
-  .mk-button::after { animation: none; background-position: 130% 0; }
 }

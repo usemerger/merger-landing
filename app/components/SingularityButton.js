@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 import './singularity-button.css';
 
 /**
- * A native link or button with an animated obsidian shell.
+ * A quiet pill action. The existing component name keeps consumers compatible.
  * Keep children as the resting label; busyLabel overlays it without resizing.
  */
 const SingularityButton = forwardRef(function SingularityButton({
@@ -43,21 +43,6 @@ const SingularityButton = forwardRef(function SingularityButton({
     className={`singularity-button ${className}`.trim()}
     onClick={handleClick}
   >
-    <span className="singularity-button__field" aria-hidden="true">
-      <span className="singularity-button__halo" />
-      <span className="singularity-button__core" />
-      <svg className="singularity-button__threads" viewBox="0 0 300 60" preserveAspectRatio="none">
-        <path d="M8 14 147 30 290 8M4 45 147 30 286 52M61 2 147 30 239 58M117 0 147 30 186 60" />
-        <ellipse cx="147" cy="30" rx="102" ry="20" />
-      </svg>
-      <span className="singularity-button__fragment singularity-button__fragment--1" />
-      <span className="singularity-button__fragment singularity-button__fragment--2" />
-      <span className="singularity-button__fragment singularity-button__fragment--3" />
-      <span className="singularity-button__fragment singularity-button__fragment--4" />
-      <span className="singularity-button__fragment singularity-button__fragment--5" />
-      <span className="singularity-button__fragment singularity-button__fragment--6" />
-      <span className="singularity-button__finish" />
-    </span>
     <span className="singularity-button__content">
       <span className="singularity-button__label">
         <span className="singularity-button__rest-label" aria-hidden={busy && busyLabel ? true : undefined}>{children}</span>

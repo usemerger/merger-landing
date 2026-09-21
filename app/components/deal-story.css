@@ -259,3 +259,7 @@
   .ds-story *, .ds-story *::before, .ds-story *::after { animation: none !important; transition: none !important; }
   .ds-stage-progress { display: none; }
 }
+
+/* Rounded controls stay consistent if the alternate interactive demo is used. */
+.ds-stage, .ds-action, .ds-text-action, .ds-contact-use, .ds-rolodex-button { border-radius: 999px; }
+.ds-next-stage { border-radius: 50%; }

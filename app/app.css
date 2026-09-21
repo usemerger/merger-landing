@@ -47,15 +47,18 @@
   color: var(--bone);
 }
 .linklike {
-  background: none;
-  border: 0;
-  padding: 0;
+  background: #ffffff04;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  min-height: 36px;
+  padding: 6px 13px;
   color: var(--slate);
   font: inherit;
   cursor: pointer;
 }
 .linklike:hover {
   color: var(--bone);
+  background: #ffffff0a;
 }
 
 /* ---------- centred auth card ---------- */
@@ -90,8 +93,8 @@
 /* ---------- panels ---------- */
 .panel {
   border: 1px solid var(--line);
-  border-radius: 14px;
-  background: linear-gradient(180deg, var(--ink-2), var(--ink));
+  border-radius: 18px;
+  background: var(--panel);
   padding: 26px;
 }
 .panel + .panel {
@@ -469,10 +472,12 @@
 .app-nav .brand svg { color: var(--brass); }
 .app-nav-links a { text-decoration: none; }
 .app-nav-links [aria-current='page'] { color: var(--bone); }
-.app-shell .btn, .app-shell .nav-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 12px 20px; border: 1px solid var(--line-strong); border-radius: 8px; font: 600 14px/1.4 var(--body, sans-serif); text-decoration: none; cursor: pointer; color: var(--bone); background: var(--ink-3); }
-.app-shell .btn-primary, .app-shell .nav-cta { background: var(--brass); border-color: var(--brass); color: #171410; }
-.app-shell .btn:hover:not(:disabled), .app-shell .nav-cta:hover { border-color: var(--brass-bright); }
-.app-shell .btn-primary:hover:not(:disabled), .app-shell .nav-cta:hover { background: var(--brass-bright); color: #171410; }
+.app-shell .btn, .app-shell .nav-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 12px 20px; border: 1px solid var(--line-strong); border-radius: 999px; font: 550 14px/1.4 var(--body, sans-serif); text-decoration: none; cursor: pointer; color: var(--bone); background: #ffffff04; transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
+.app-shell .btn-primary, .app-shell .nav-cta { background: var(--bone); border-color: var(--bone); color: #141416; }
+.app-shell .btn:hover:not(:disabled), .app-shell .nav-cta:hover { border-color: #606066; background: #ffffff0a; }
+.app-shell .btn-primary:hover:not(:disabled), .app-shell .nav-cta:hover { background: #fff; border-color: #fff; color: #09090b; }
+@media (hover: hover) { .app-shell .btn:hover:not(:disabled), .app-shell .nav-cta:hover { transform: translateY(-1px); } }
+.app-shell .btn:active:not(:disabled), .app-shell .nav-cta:active { transform: none; }
 .account-menu { display: none; }
 .skip-link { position: fixed; left: 16px; top: -100px; z-index: 100; padding: 12px 16px; color: var(--ink); background: var(--brass-bright); border-radius: 6px; }
 .skip-link:focus { top: 12px; }
@@ -490,7 +495,9 @@
 .field-hint { font: 400 13px/1.6 var(--body, sans-serif); letter-spacing: 0; }
 .field-hint a { color: var(--brass-bright); text-decoration: underline; }
 .field-hint.bad { color: #efb7b7; }
-.pw-toggle { min-height: 44px; font: 500 12px var(--body, sans-serif); text-transform: none; letter-spacing: 0; }
+.pw-toggle { min-height: 36px; margin-right: 5px; padding: 8px 11px; border-radius: 999px; background: #ffffff05; font: 500 12px var(--body, sans-serif); text-transform: none; letter-spacing: 0; }
+.pw-toggle:hover { background: #ffffff0a; }
+.pw-toggle:focus-visible { border-radius: 999px; }
 .pw-wrap:focus-within, .handle-wrap:focus-within { box-shadow: 0 0 0 2px rgba(205,169,112,.14); }
 .pw-wrap input:focus-visible, .handle-wrap input:focus-visible { outline: none; }
 .app-shell input[aria-invalid='true'], .pw-wrap:has(input[aria-invalid='true']), .handle-wrap:has(input[aria-invalid='true']) { border-color: #df9b9b; }
@@ -517,7 +524,7 @@
 .support-grid .btn { margin-top: 16px; }
 @media (max-width: 660px) {
   .app-nav-inner { flex-wrap: wrap; padding: 16px 20px; gap: 14px; }
-  .account-menu { display: block; border: 1px solid var(--line-strong); padding: 10px 14px; min-height: 44px; border-radius: 7px; color: var(--bone); background: var(--ink-3); font: inherit; }
+  .account-menu { display: block; border: 1px solid var(--line-strong); padding: 10px 14px; min-height: 44px; border-radius: 999px; color: var(--bone); background: var(--ink-3); font: inherit; }
   .app-nav-links { display: none; width: 100%; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-top: 12px; border-top: 1px solid var(--line); }
   .app-nav-links.is-open { display: flex; }
   .app-nav-links > a, .app-nav-links > button { min-height: 44px; display: inline-flex; align-items: center; }

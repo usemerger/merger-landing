@@ -1,5 +1,5 @@
 .mk-film-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-.mk-film-tabs button { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 18px 20px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--ink-raise); color: var(--slate); text-align: left; font-size: 14px; font-weight: 500; transition: color .18s, border-color .18s, background .18s; }
+.mk-film-tabs button { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 18px 20px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--ink-raise); color: var(--slate); text-align: left; font-size: 14px; font-weight: 500; transition: color .18s, border-color .18s, background .18s; }
 .mk-film-tabs button span { font-family: var(--mono); font-size: 11px; color: var(--faint); }
 .mk-film-tabs button:hover { color: var(--bone); border-color: var(--slate); }
 .mk-film-tabs button[aria-selected=true] { color: var(--gold-lit); border-color: #c9a96a70; background: #c9a96a0a; }
