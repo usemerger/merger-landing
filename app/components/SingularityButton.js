@@ -11,7 +11,6 @@ const SingularityButton = forwardRef(function SingularityButton({
   children,
   href,
   className = '',
-  arrow = true,
   busy = false,
   busyLabel,
   disabled = false,
@@ -48,9 +47,6 @@ const SingularityButton = forwardRef(function SingularityButton({
         <span className="singularity-button__rest-label" aria-hidden={busy && busyLabel ? true : undefined}>{children}</span>
         {busy && busyLabel && <span className="singularity-button__busy-label">{busyLabel}</span>}
       </span>
-      {arrow && <span className="singularity-button__icon" aria-hidden="true">
-        {busy ? <span className="singularity-button__spinner" /> : <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M11 5l5 5-5 5" /></svg>}
-      </span>}
     </span>
   </Tag>;
 });

@@ -124,8 +124,6 @@ export default function ChannelOrbit({ paused = false }) {
   const focused = useRef(false);
   const [selected, setSelected] = useState('all');
   const [userPaused, setUserPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const [replay, setReplay] = useState(0);
 
   useEffect(() => {
     const host = root.current;
@@ -168,7 +166,6 @@ export default function ChannelOrbit({ paused = false }) {
       else frame = 0;
     };
     const sync = () => {
-      setReduced(preference.matches);
       host.dataset.motion = paused || userPaused || preference.matches || !visible || document.hidden ? 'paused' : 'playing';
       cancelAnimationFrame(frame);
       last = 0;
@@ -182,19 +179,14 @@ export default function ChannelOrbit({ paused = false }) {
     draw();
     sync();
     return () => { cancelAnimationFrame(frame); observer?.disconnect(); preference.removeEventListener('change', sync); document.removeEventListener('visibilitychange', sync); };
-  }, [paused, userPaused, replay]);
+  }, [paused, userPaused]);
 
-  const restart = () => { clock.current = 0; setReplay((value) => value + 1); setUserPaused(false); };
   const active = CHANNELS.find((channel) => channel.id === selected);
 
   return <div className="channel-orbit" ref={root}>
-    <div className="co-toolbar"><span><span className="co-tiny-diamond" />10 CHANNELS · ONE WORKSPACE</span><div className="co-motion-controls">
-      <button type="button" disabled={reduced || paused} onClick={() => setUserPaused((value) => !value)} aria-label={userPaused ? 'Play channel animation' : 'Pause channel animation'}><span aria-hidden="true">{userPaused || reduced || paused ? '▷' : 'Ⅱ'}</span>{reduced ? 'Motion reduced' : paused ? 'Paused' : userPaused ? 'Play' : 'Pause'}</button>
-      <button type="button" disabled={reduced || paused} onClick={restart} aria-label="Replay channel animation"><span aria-hidden="true">↻</span>Replay</button>
-    </div></div>
     <div className="co-layout">
       <div className="co-system">
-        <div className="co-universe" onPointerEnter={() => { hovered.current = true; }} onPointerLeave={() => { hovered.current = false; }} onFocusCapture={() => { focused.current = true; }} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) focused.current = false; }}>
+        <div className="co-universe" role="group" tabIndex={0} aria-label="Connected messaging animation" aria-description="Select a channel to preview it. Press Space on the animation to pause or resume its motion." onKeyDown={(event) => { if (event.target === event.currentTarget && event.key === ' ') { event.preventDefault(); setUserPaused(value => !value); } }} onPointerEnter={() => { hovered.current = true; }} onPointerLeave={() => { hovered.current = false; }} onFocusCapture={() => { focused.current = true; }} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) focused.current = false; }}>
           <svg className="co-orbit-lines" viewBox="0 0 680 520" aria-hidden="true">
             <defs><radialGradient id={`${uid}-aura`}><stop stopColor="#b38638" stopOpacity=".18" /><stop offset=".35" stopColor="#92631b" stopOpacity=".08" /><stop offset="1" stopColor="#92631b" stopOpacity="0" /></radialGradient><linearGradient id={`${uid}-ring`}><stop stopColor="#d4b779" stopOpacity=".08" /><stop offset=".5" stopColor="#d4b779" stopOpacity=".48" /><stop offset="1" stopColor="#d4b779" stopOpacity=".04" /></linearGradient></defs>
             <ellipse cx="340" cy="252" rx="270" ry="224" fill={`url(#${uid}-aura)`} />
@@ -209,7 +201,7 @@ export default function ChannelOrbit({ paused = false }) {
         </div>
         <div className="co-system-caption"><span ref={phaseLabel}>Your conversations, in one orbit.</span><p>Choose a channel to see it in Merger.</p></div>
       </div>
-      <div className="co-preview-column"><span className="co-preview-connector" aria-hidden="true" /><PreviewInbox selected={selected} /><p className="co-selection-note" role="status">{active ? `Showing a sample ${active.name} conversation.` : 'Sample conversations from connected channels.'} <button type="button" onClick={() => setSelected('all')} disabled={selected === 'all'}>Show all channels ↗</button></p></div>
+      <div className="co-preview-column"><span className="co-preview-connector" aria-hidden="true" /><PreviewInbox selected={selected} /><p className="co-selection-note" role="status">{active ? `Showing a sample ${active.name} conversation.` : 'Sample conversations from connected channels.'} <button type="button" onClick={() => setSelected('all')} disabled={selected === 'all'}>Show all channels</button></p></div>
     </div>
     <p className="co-availability">Illustrative preview. Network availability and messaging actions vary by service during alpha.</p>
   </div>;

@@ -64,15 +64,8 @@ function Film({ film }) {
     };
   }, []);
 
-  /* NO NATIVE PLAYER CHROME.
-     These are short silent product loops, not media someone came here to watch
-     — a scrubber, a volume slider and a fullscreen button framed them as a
-     video player and drew the eye to the controls instead of the product.
-
-     They still have to be stoppable: they start on their own and run well past
-     five seconds, so WCAG 2.2.2 requires a pause mechanism. That mechanism is
-     the transparent button over the frame — no chrome until you focus it or the
-     loop is paused, which is exactly when there is something to say. */
+  /* The frame itself remains clickable and keyboard-operable without adding
+     visible playback controls to the product illustration. */
   const toggle = useCallback(() => {
     const element = video.current;
     if (!element) return;
@@ -92,9 +85,7 @@ function Film({ film }) {
         <p>Your browser cannot play this video. <a href={`/feature-films/${film.id}.mp4`}>Open the animation</a>.</p>
       </video>
       <button type="button" className="mk-film-toggle" data-paused={!playing}
-        onClick={toggle} aria-label={playing ? `Pause ${film.title}` : `Play ${film.title}`}>
-        <span aria-hidden="true">{playing ? 'Pause' : 'Play'}</span>
-      </button>
+        onClick={toggle} aria-label={playing ? `Pause ${film.title}` : `Play ${film.title}`} />
     </div>
     {unavailable && <p role="status" className="mk-film-note">The animation could not load. <a href={`/feature-films/${film.id}.mp4`}>Try opening the video directly</a>, or follow the steps below.</p>}
     <div className="mk-film-context">

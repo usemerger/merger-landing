@@ -24,18 +24,13 @@
 .singularity-button__label { position: relative; }
 .singularity-button__busy-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
 .singularity-button__rest-label[aria-hidden='true'] { visibility: hidden; }
-.singularity-button__icon { display: flex; align-items: center; justify-content: center; flex: 0 0 17px; width: 17px; height: 17px; }
-.singularity-button__icon svg { width: 17px; height: 17px; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: transform 180ms ease; }
-.singularity-button__spinner { width: 14px; height: 14px; border: 1.5px solid #14141630; border-top-color: currentColor; border-radius: 50%; animation: singularity-button-spin .8s linear infinite; }
 .singularity-button:focus-visible { outline: 2px solid #d7b777; outline-offset: 4px; }
 .singularity-button:active:not(:disabled):not([aria-disabled='true']) { transform: translateY(0); background: #dedee1; }
 @media (hover: hover) {
   .singularity-button:hover:not(:disabled):not([aria-disabled='true']) { background: #fff; border-color: #fff; color: #09090b; transform: translateY(-1px); box-shadow: 0 3px 12px #0002; }
-  .singularity-button:hover:not(:disabled):not([aria-disabled='true']) .singularity-button__icon svg { transform: translateX(2px); }
 }
 .singularity-button:is(:disabled, [aria-disabled='true']) { cursor: not-allowed; opacity: .55; }
 .singularity-button[data-busy='true'] { cursor: progress; opacity: .8; }
-@keyframes singularity-button-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .singularity-button, .singularity-button * { animation: none !important; transition: none !important; transform: none !important; }
 }

@@ -28,8 +28,7 @@ export default function FallbackStage({ className = '', onMounted, reason }) {
   /** The shape InspectionFallback reads every frame. Matches Singularity's. */
   const motion = useRef({ yaw: 0, pitch: 0, pointerX: 0, pointerY: 0, release: 0, interacting: false });
   const pointer = useRef(null);
-  const [phase, setPhase] = useState('In equilibrium');
-  const [released, setReleased] = useState(false);
+  const released = useRef(false);
   const [live, setLive] = useState(true);
   const host = useRef(null);
 
@@ -53,17 +52,15 @@ export default function FallbackStage({ className = '', onMounted, reason }) {
     return () => { observer?.disconnect(); document.removeEventListener('visibilitychange', update); };
   }, []);
 
-  const onPhase = useCallback((next, manualActive = false) => {
-    setPhase(next);
-    if (!manualActive) setReleased(false);
+  const onPhase = useCallback((_phase, manualActive = false) => {
+    if (!manualActive) released.current = false;
   }, []);
 
   const release = useCallback(() => {
-    if (released || quiet) return;
+    if (released.current || quiet) return;
     motion.current.release += 1;
-    setReleased(true);
-    setPhase('Releasing');
-  }, [released, quiet]);
+    released.current = true;
+  }, [quiet]);
 
   const pointerDown = (event) => {
     if (event.button !== 0 || !event.isPrimary || quiet || pointer.current) return;
@@ -106,7 +103,7 @@ export default function FallbackStage({ className = '', onMounted, reason }) {
 
   return (
     <div ref={host} className={`singularity-stage ${className}${quiet ? ' is-reduced' : ''}`}
-      data-renderer="svg" data-ready="false" data-motion={quiet ? 'reduced' : 'full'} data-phase={phase}>
+      data-renderer="svg" data-ready="false" data-motion={quiet ? 'reduced' : 'full'}>
       <div className="singularity-aura" aria-hidden="true" />
       <div className="singularity-orbit orbit-one" aria-hidden="true" />
       <div className="singularity-orbit orbit-two" aria-hidden="true" />
@@ -121,22 +118,6 @@ export default function FallbackStage({ className = '', onMounted, reason }) {
         <div className="singularity-fallback">
           <InspectionFallback motion={motion} active={live && !quiet} quiet={quiet} onPhase={onPhase} />
         </div>
-      </div>
-      <div className="singularity-coordinate coord-top" aria-hidden="true"><span>MRG—01</span><span>FIELD ACTIVE</span></div>
-      <div className="singularity-control">
-        <span className="singularity-state"><i />{quiet ? 'Motion paused' : phase}</span>
-        {!quiet && <button type="button" onClick={release} disabled={released}
-          aria-label="Release the singularity and watch the logo reassemble">
-          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true">
-            <path d="m10 2 7 8-7 8-7-8 7-8Z" stroke="currentColor" />
-            <path d="M10 6v8M6 10h8" stroke="currentColor" />
-          </svg>
-          <span>{released ? 'Returning to equilibrium' : 'Release the singularity'}</span>
-          <span className="singularity-control-arrow">↗</span>
-        </button>}
-        <span className="singularity-gesture">
-          {quiet ? 'Reduced motion is enabled' : 'Auto inspection · drag to explore'}
-        </span>
       </div>
     </div>
   );

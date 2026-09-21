@@ -28,18 +28,12 @@ export default function LandingPage() {
             <p className="sf-eyebrow"><span className="sf-live-dot" /> Built for the way deals happen</p>
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
-            <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger <span aria-hidden="true">↗</span></a></div>
+            <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
             <p className="sf-hero-note">Windows alpha · Early access by invitation · No card to join</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
         </div>
       </section>
-
-      <div className="sf-chapters mk-wrap" aria-label="The Merger workflow">
-        <a href="#workflow"><span>01</span><div>Connected messaging<small>Every conversation, one place</small></div><span aria-hidden="true">↗</span></a>
-        <a href="#deal-desk"><span>02</span><div>Deal intelligence<small>Find the opportunity in the conversation</small></div><span aria-hidden="true">↗</span></a>
-        <a href="#documents"><span>03</span><div>People & paperwork<small>Keep the next step within reach</small></div><span aria-hidden="true">↗</span></a>
-      </div>
 
       <section id="workflow" className="sf-section sf-channels mk-wrap" aria-labelledby="channels-title">
         <div className="sf-section-heading"><div><SectionLabel number="01">Connected messaging</SectionLabel><h2 id="channels-title">Your network is everywhere.<br /><span>Your workspace isn’t.</span></h2></div><p>Bring your messaging accounts together. Read and reply across connected channels without losing the thread.</p></div>
@@ -64,7 +58,7 @@ export default function LandingPage() {
         <div id="waitlist" className="sf-waitlist-card"><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Join the waitlist</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Create your Merger account. We’ll let you know when your invitation is ready.</p><WaitlistForm /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Get invited</span><i /><span>Get started</span></div></div>
       </div></section>
 
-      <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us <span aria-hidden="true">↗</span></Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
+      <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
 
       <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="#waitlist">Join the waitlist</SingularityButton></div></section>
     </main>

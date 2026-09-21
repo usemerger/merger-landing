@@ -1,13 +1,6 @@
 .channel-orbit { --co-gold: #d8b878; --co-muted: #9198a7; position: relative; isolation: isolate; width: 100%; max-width: 1220px; margin-inline: auto; color: #f0f0ed; }
-.co-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 62px; border-block: 1px solid #cbae7324; }
-.co-toolbar > span { display: inline-flex; align-items: center; gap: 11px; color: #bfb7a6; font: 10px/1.5 var(--mono); letter-spacing: .1em; }
 .co-tiny-diamond { display: inline-block; flex-shrink: 0; width: 6px; height: 6px; background: var(--co-gold); transform: rotate(45deg); box-shadow: 0 0 12px #ddb46b30; }
-.co-motion-controls { display: flex; gap: 18px; }
-.co-motion-controls button { display: inline-flex; align-items: center; gap: 7px; border: 0; padding: 10px 0; background: none; color: #b3b4ba; font-size: 11px; white-space: nowrap; }
-.co-motion-controls button span { color: #d6bf91; font-size: 16px; line-height: 1; }
-.co-motion-controls button:hover { color: #f1ddba; }
-.co-motion-controls button:disabled { opacity: .55; cursor: default; }
-.co-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .86fr); align-items: center; gap: 20px; padding-block: 36px 32px; }
+.co-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .86fr); align-items: center; gap: 20px; padding-block: 0 32px; }
 .co-system { min-width: 0; }
 .co-universe { position: relative; width: 100%; aspect-ratio: 680 / 520; }
 .co-orbit-lines { position: absolute; width: 100%; height: 100%; inset: 0; overflow: visible; pointer-events: none; }
@@ -87,7 +80,7 @@
   .co-thread { padding-inline: 17px; }
 }
 @media (max-width: 760px) {
-  .co-layout { grid-template-columns: 1fr; gap: 37px; padding-top: 30px; }
+  .co-layout { grid-template-columns: 1fr; gap: 37px; padding-top: 0; }
   .co-system { width: 100%; max-width: 590px; margin-inline: auto; }
   .co-preview-column { width: 100%; max-width: 430px; margin-inline: auto; }
   .co-preview-connector { width: 1px; height: 33px; right: 50%; top: -34px; background: linear-gradient(180deg, transparent, #b693514a); }
@@ -95,10 +88,6 @@
   .co-system-caption { margin-top: 22px; }
   .co-channel-symbol { width: 43px; height: 43px; }
   .co-center > svg { width: 81px; height: 81px; }
-  .co-toolbar { gap: 10px; }
-  .co-toolbar > span { font-size: 8px; letter-spacing: .04em; gap: 7px; }
-  .co-motion-controls { gap: 12px; }
-  .co-motion-controls button { font-size: 10px; }
   .co-selection-note { align-items: center !important; }
 }
 @media (max-width: 430px) {
@@ -114,23 +103,20 @@
   .co-center-glow { left: 0; }
   .co-axis-label { font-size: 6px; letter-spacing: .12em; }
   .co-system-caption > span { font-size: 12px; }
-  .co-toolbar { flex-wrap: wrap; gap: 0; padding-block: 7px; }
-  .co-motion-controls { margin-left: auto; }
   .co-inbox-bar { padding-inline: 13px; gap: 9px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .channel-orbit *, .channel-orbit *::before, .channel-orbit *::after { animation: none !important; transition: none !important; }
 }
 
-/* Channel selection and playback use the same quiet, rounded controls. */
-.co-motion-controls { gap: 8px; }
-.co-motion-controls button, .co-selection-note > button { border: 1px solid #353539; border-radius: 999px; background: #ffffff03; padding: 8px 12px; color: #babac3; transition: background 180ms ease, border-color 180ms ease; }
-.co-motion-controls button:hover:not(:disabled), .co-selection-note > button:hover:not(:disabled) { border-color: #64646c; background: #ffffff08; color: #fff; }
+/* Channel selection uses the same quiet, rounded controls. */
+.co-selection-note > button { border: 1px solid #353539; border-radius: 999px; background: #ffffff03; padding: 8px 12px; color: #babac3; transition: background 180ms ease, border-color 180ms ease; }
+.co-selection-note > button:hover:not(:disabled) { border-color: #64646c; background: #ffffff08; color: #fff; }
 .co-channel-symbol { border-radius: 50%; background: linear-gradient(145deg, #242427, #131315); }
 .co-channel, .co-channel:focus-visible, .co-center { border-radius: 999px; }
 .co-center { border-color: transparent; }
 .co-composer { border-radius: 999px; }
 .co-composer-send { border-radius: 50%; }
 @media (max-width: 980px) { .co-channel-symbol { border-radius: 50%; } }
-@media (max-width: 430px) { .co-channel-symbol { border-radius: 50%; } .co-motion-controls button { padding: 7px 10px; } }
-@media (prefers-reduced-motion: reduce) { .co-motion-controls button, .co-selection-note > button { transition: none; } }
+@media (max-width: 430px) { .co-channel-symbol { border-radius: 50%; } }
+@media (prefers-reduced-motion: reduce) { .co-selection-note > button { transition: none; } }

@@ -2,7 +2,7 @@
 .singularity-aura{position:absolute;width:80%;height:72%;left:12%;top:8%;border-radius:50%;background:radial-gradient(ellipse,rgba(174,119,32,.09),rgba(112,80,37,.027) 44%,transparent 71%);pointer-events:none}
 .singularity-orbit{position:absolute;top:45%;left:11%;width:79%;height:25%;border:1px solid rgba(210,169,94,.065);border-radius:50%;transform:rotate(-25deg);pointer-events:none}
 .singularity-orbit.orbit-two{transform:rotate(31deg);top:42%;width:86%;left:7%;border-color:rgba(210,169,94,.035)}
-.singularity-interaction{position:absolute;inset:0 0 67px;cursor:grab;touch-action:pan-y pinch-zoom;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
+.singularity-interaction{position:absolute;inset:0;cursor:grab;touch-action:pan-y pinch-zoom;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
 .singularity-interaction:active{cursor:grabbing}
 .singularity-interaction:focus-visible{outline:1px solid #9a7842;outline-offset:-18px;border-radius:30px}
 .singularity-canvas,.singularity-fallback{position:absolute;inset:0;pointer-events:none}
@@ -13,21 +13,10 @@
 .singularity-poster{width:74%;height:92%;overflow:visible;animation:singularity-poster-float 8s ease-in-out infinite}
 .singularity-poster-pieces polygon{transform-box:fill-box;transform-origin:center;transition:transform 1s cubic-bezier(.64,0,.94,.48)}
 .singularity-poster.is-released .singularity-poster-pieces polygon{animation:singularity-poster-release 3.1s both}
-.singularity-coordinate{position:absolute;top:30px;left:9%;right:9%;display:flex;justify-content:space-between;font-family:var(--font-mono,ui-monospace,monospace);font-size:9px;font-weight:400;letter-spacing:.17em;color:rgba(185,169,143,.4);pointer-events:none}
-.singularity-coordinate span:last-child:before{content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:#b89a65;margin:0 7px 2px 0;box-shadow:0 0 8px #ad8742}
-.singularity-control{position:absolute;left:0;right:0;bottom:12px;display:flex;flex-direction:column;align-items:center;gap:11px}
-.singularity-state{display:flex;align-items:center;gap:7px;font-family:var(--font-mono,ui-monospace,monospace);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:#817664;min-height:12px}
-.singularity-state i{width:3px;height:3px;border-radius:50%;background:#c3a265}
-.singularity-control button{display:flex;align-items:center;justify-content:center;gap:10px;min-width:226px;height:39px;padding:0 14px;border-radius:5px;border:1px solid rgba(192,158,98,.25);background:linear-gradient(115deg,rgba(194,151,71,.095),rgba(148,119,65,.025));color:#d8c3a1;font:inherit;font-size:11px;font-weight:450;cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s}
-.singularity-control button:hover:enabled{border-color:rgba(230,194,124,.6);background:rgba(194,151,71,.11);box-shadow:0 0 24px rgba(211,159,65,.07)}
-.singularity-control button:focus-visible{outline:2px solid #d7b570;outline-offset:4px}
-.singularity-control button:disabled{cursor:default;color:#aa997c;border-color:rgba(192,158,98,.13)}
-.singularity-control-arrow{margin-left:8px;opacity:.5;font-size:15px}
-.singularity-gesture{font-family:var(--font-mono,ui-monospace,monospace);font-size:9px;color:#69655f;letter-spacing:.015em}
 .singularity-stage.is-reduced .singularity-interaction{cursor:default}
 .singularity-poster.is-quiet{animation:none}
 .singularity-poster.is-quiet .singularity-poster-pieces polygon{animation-play-state:paused}
 @keyframes singularity-poster-float{0%,100%{transform:translateY(0) rotate(-.5deg)}50%{transform:translateY(-7px) rotate(.5deg)}}
 @keyframes singularity-poster-release{0%{transform:translate(0,0);animation-timing-function:cubic-bezier(.15,.76,.23,1)}15%,40%{transform:translate(var(--shift-x),var(--shift-y)) rotate(3deg);animation-timing-function:cubic-bezier(.85,0,.98,.25)}85%{transform:translate(0,0) rotate(0);animation-timing-function:ease-out}90%{transform:scale(.992)}100%{transform:translate(0,0) rotate(0) scale(1)}}
-@media(max-width:720px){.singularity-stage{min-height:420px}.singularity-coordinate{top:19px;left:6%;right:6%;font-size:8px}.singularity-interaction{inset:0 -10px 68px}.singularity-control{bottom:7px;gap:9px}.singularity-control button{height:38px}.singularity-orbit{top:39%}.singularity-orbit.orbit-two{top:38%}.singularity-poster{width:78%;height:95%}}
+@media(max-width:720px){.singularity-stage{min-height:420px}.singularity-interaction{inset:0 -10px}.singularity-orbit{top:39%}.singularity-orbit.orbit-two{top:38%}.singularity-poster{width:78%;height:95%}}
 @media(prefers-reduced-motion:reduce){.singularity-poster{animation:none}.singularity-canvas,.singularity-fallback,.singularity-poster-pieces polygon{transition:none}}

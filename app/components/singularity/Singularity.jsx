@@ -235,13 +235,11 @@ export default function Singularity({ className = '', paused = false, forceFallb
   const [compact,setCompact] = useState(false);
   const [reduced,setReduced] = useState(true);
   const [live,setLive] = useState(true);
-  const [phase,setPhase] = useState('In equilibrium');
-  const [released,setReleased] = useState(false);
+  const released = useRef(false);
   const onFailure = useCallback(() => { setFailed(true); setReady(false); }, []);
   const onReady = useCallback(() => setReady(true), []);
-  const onPhase = useCallback((next,manualActive=false) => {
-    setPhase(next);
-    if (!manualActive) setReleased(false);
+  const onPhase = useCallback((_phase,manualActive=false) => {
+    if (!manualActive) released.current = false;
   }, []);
 
   useEffect(() => {
@@ -289,11 +287,10 @@ export default function Singularity({ className = '', paused = false, forceFallb
   }, [enhanced,ready,live,onFailure]);
 
   const release = useCallback(() => {
-    if (released || quiet) return;
+    if (released.current || quiet) return;
     motion.current.release += 1;
-    setReleased(true);
-    setPhase('Releasing');
-  }, [released,quiet]);
+    released.current = true;
+  }, [quiet]);
 
   const pointerDown = event => {
     if (event.button !== 0 || !event.isPrimary || quiet || pointer.current) return;
@@ -335,7 +332,7 @@ export default function Singularity({ className = '', paused = false, forceFallb
   };
 
   return (
-    <div ref={host} className={`singularity-stage ${className}${enhanced && ready ? ' is-ready' : ''}${quiet ? ' is-reduced' : ''}`} data-renderer={enhanced && ready ? 'webgl' : 'svg'} data-ready={enhanced && ready} data-motion={quiet ? 'reduced' : 'full'} data-phase={phase}>
+    <div ref={host} className={`singularity-stage ${className}${enhanced && ready ? ' is-ready' : ''}${quiet ? ' is-reduced' : ''}`} data-renderer={enhanced && ready ? 'webgl' : 'svg'} data-ready={enhanced && ready} data-motion={quiet ? 'reduced' : 'full'}>
       <div className="singularity-aura" aria-hidden="true"/>
       <div className="singularity-orbit orbit-one" aria-hidden="true"/>
       <div className="singularity-orbit orbit-two" aria-hidden="true"/>
@@ -351,15 +348,6 @@ export default function Singularity({ className = '', paused = false, forceFallb
             </Canvas>
           </GraphicsBoundary>
         </div>}
-      </div>
-      <div className="singularity-coordinate coord-top" aria-hidden="true"><span>MRG—01</span><span>FIELD ACTIVE</span></div>
-      <div className="singularity-control">
-        <span className="singularity-state"><i/>{quiet ? 'Motion paused' : phase}</span>
-        {!quiet && <button type="button" onClick={release} disabled={released} aria-label="Release the singularity and watch the logo reassemble">
-          <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true"><path d="m10 2 7 8-7 8-7-8 7-8Z" stroke="currentColor"/><path d="M10 6v8M6 10h8" stroke="currentColor"/></svg>
-          <span>{released ? 'Returning to equilibrium' : 'Release the singularity'}</span><span className="singularity-control-arrow">↗</span>
-        </button>}
-        <span className="singularity-gesture">{reduced ? 'Reduced motion is enabled' : paused ? 'Resume motion to interact' : 'Auto inspection · drag to explore'}</span>
       </div>
     </div>
   );

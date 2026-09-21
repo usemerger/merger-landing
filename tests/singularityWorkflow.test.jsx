@@ -70,13 +70,12 @@ describe('Singularity channel preview', () => {
     preference.matches = true;
     render(<ChannelOrbit />);
     setVisible();
-    expect(screen.getByRole('button', { name: 'Pause channel animation' })).toBeDisabled();
     expect(requestAnimationFrame).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByRole('button', { name: 'Preview WhatsApp in Merger' }));
     expect(screen.getByRole('heading', { name: 'WhatsApp' })).toBeVisible();
     expect(screen.getByText('The owner is ready to talk. Can I send the details?')).toBeVisible();
-    fireEvent.click(screen.getByRole('button', { name: /Show all channels ↗/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Show all channels', exact: true }));
     expect(screen.getByRole('heading', { name: 'All conversations' })).toBeVisible();
   });
 });
