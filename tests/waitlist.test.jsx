@@ -4,7 +4,7 @@ const nav = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => nav }));
 vi.mock('next/link', () => ({ default: ({ children, ...props }) => <a {...props}>{children}</a> }));
 import WaitlistForm from '../app/components/WaitlistForm';
-import { captureRef, storedRef, validCode, referralLink } from '../app/lib/waitlist';
+import { accountReferralLink, captureRef, storedRef, validCode, referralLink } from '../app/lib/waitlist';
 import { WAITLIST } from '../app/lib/billingOffer';
 beforeEach(() => { vi.restoreAllMocks(); nav.push.mockReset(); localStorage.clear(); sessionStorage.clear(); window.history.replaceState({}, '', '/'); });
 
@@ -46,6 +46,14 @@ describe('account-backed waitlist entry', () => {
 });
 
 describe('referral attribution', () => {
+  it('uses a same-environment fallback and rejects unsafe or mismatched account links', () => {
+    const row = { referralCode: 'public123' };
+    const preview = 'https://merger-orbit-preview.vercel.app';
+    expect(accountReferralLink(row, preview)).toBe(`${preview}/?ref=public123`);
+    expect(accountReferralLink({ ...row, referralUrl: 'javascript:alert(1)' }, preview)).toBe(`${preview}/?ref=public123`);
+    expect(accountReferralLink({ ...row, referralUrl: 'https://usemerger.com/?ref=another123' }, preview)).toBe(`${preview}/?ref=public123`);
+    expect(accountReferralLink({ referralCode: '../../bad' }, preview)).toBe('');
+  });
   it('preserves first referral for a later visit', () => {
     expect(captureRef('?ref=first111')).toBe('first111');
     expect(captureRef('?ref=second22')).toBe('first111');

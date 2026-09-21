@@ -187,6 +187,21 @@ export function forgetCode() {
 
 export const referralLink = (code) => `${SITE_ORIGIN}/?ref=${code}`;
 
+/** Account referrals stay in the backend's environment, including staging. */
+export function accountReferralLink(row, fallbackOrigin = typeof location !== 'undefined' ? location.origin : SITE_ORIGIN) {
+  if (!validCode(row?.referralCode)) return '';
+  try {
+    const url = new URL(row.referralUrl);
+    if (url.protocol === 'https:' && !url.username && !url.password &&
+        url.searchParams.get('ref') === row.referralCode) return url.href;
+  } catch { /* Older backends may not include referralUrl. */ }
+  try {
+    const origin = new URL(fallbackOrigin);
+    if (!['https:', 'http:'].includes(origin.protocol) || origin.username || origin.password) return '';
+    return `${origin.origin}/?ref=${encodeURIComponent(row.referralCode)}`;
+  } catch { return ''; }
+}
+
 /* ─────────────────────────── analytics ────────────────────────────────── */
 
 /**

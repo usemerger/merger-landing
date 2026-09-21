@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { accountWaitlist, errorMessage, formatDate } from '../lib/api';
-import { captureRef, referralLink } from '../lib/waitlist';
+import { accountReferralLink, captureRef } from '../lib/waitlist';
 
 export default function AccountWaitlist({ access, onChange }) {
   const [busy, setBusy] = useState(false);
@@ -14,7 +14,7 @@ export default function AccountWaitlist({ access, onChange }) {
   const status = access.admission?.status;
   const invited = status === 'invited';
   const accepted = ['accepted', 'member'].includes(status);
-  const shareUrl = row?.referralCode ? referralLink(row.referralCode) : '';
+  const shareUrl = accountReferralLink(row);
   async function join() {
     if (pending.current) return;
     pending.current = true; setBusy(true); setError('');

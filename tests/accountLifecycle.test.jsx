@@ -14,7 +14,7 @@ import AdminWaitlistPage from '../app/admin/waitlist/page';
 import ProfilePage from '../app/profile/page';
 const user = { id: 'account1', userId: 'account1', email: 'person@example.com', displayName: 'Morgan Ellis', emailVerified: true, handle: 'morgan' };
 const billing = { entitlementStatus: 'none', entitled: false };
-const waiting = { user, admission: { status: 'waiting' }, waitlist: { status: 'waiting', referralCode: 'public123', position: 12, referralCount: 2 }, capabilities: { canCheckout: false, canDownload: false, canUseApp: false, isAdmin: false }, billing };
+const waiting = { user, admission: { status: 'waiting' }, waitlist: { status: 'waiting', referralCode: 'public123', referralUrl: 'https://usemerger.com/?ref=public123', position: 12, referralCount: 2 }, capabilities: { canCheckout: false, canDownload: false, canUseApp: false, isAdmin: false }, billing };
 beforeEach(() => {
   vi.clearAllMocks(); nav.query = ''; nav.pathname = '/dashboard';
   api.accountAccess.mockResolvedValue(waiting); api.meOrNull.mockResolvedValue(user); api.billingStatus.mockResolvedValue(billing);
@@ -22,6 +22,11 @@ beforeEach(() => {
 });
 
 describe('server-authorized account states', () => {
+  it('keeps staging referral codes on the authoritative preview origin', async () => {
+    api.accountAccess.mockResolvedValue({ ...waiting, waitlist: { ...waiting.waitlist, referralUrl: 'https://merger-orbit-preview.vercel.app/?ref=public123' } });
+    render(<AccountDashboard />);
+    expect(await screen.findByLabelText('Your referral link')).toHaveValue('https://merger-orbit-preview.vercel.app/?ref=public123');
+  });
   it('keeps waiting users out of checkout even with forged client invite state', async () => {
     sessionStorage.setItem('merger_invite', 'anything');
     nav.query = 'invite=anything';
