@@ -112,7 +112,9 @@ describe('profile and staff rollout', () => {
   it('saves profile through the current-account endpoint', async () => {
     api.updateProfile.mockResolvedValue({ ...user, displayName: 'Morgan E' });
     render(<ProfilePage />);
-    fireEvent.change(await screen.findByLabelText('Name'), { target: { value: 'Morgan E' } });
+    expect(await screen.findByLabelText('Name')).toHaveAttribute('type', 'text');
+    expect(screen.getByLabelText('Email')).toHaveAttribute('type', 'text');
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Morgan E' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save profile' }));
     await screen.findByText('Your profile has been saved.');
     expect(api.updateProfile).toHaveBeenCalledExactlyOnceWith('Morgan E');

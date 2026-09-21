@@ -21,6 +21,7 @@ const PHASE = {
   TRANSIENT: 'transient',
   /** Anything else, in plain language. */
   ERROR: 'error',
+  OFFER_CHANGED: 'offer_changed',
 };
 
 const CLOSED_CODES = new Set([
@@ -31,6 +32,7 @@ const CLOSED_CODES = new Set([
 /** The contract's replies, mapped to how the page should behave. */
 function phaseFor(err) {
   const { status, code } = err || {};
+  if (code === 'trial_offer_changed') return PHASE.OFFER_CHANGED;
   if (CLOSED_CODES.has(code)) return PHASE.CLOSED;
   if (status === 401) return PHASE.EXPIRED;
   if (code === 'billing_provider_error' || status === 502
@@ -84,6 +86,8 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
   const termsKnown = typeof trialEligible === 'boolean';
   const returning = trialEligible === false;
   const today = returning ? ALPHA_OFFER.priceLabel : ALPHA_OFFER.todayLabel;
+
+  if (ctl.phase === PHASE.OFFER_CHANGED) return <section className="plan-step"><h2>Your activation terms changed.</h2><div className="alert alert-warn" role="alert"><p>{ctl.message}</p><button className="btn btn-ghost btn-sm mt-16" type="button" onClick={() => window.location.reload()}>Refresh account terms</button></div></section>;
 
   if (!termsKnown) return <section className="plan-step"><h2>Confirm your activation terms.</h2><p className="muted mt-16">Your account’s trial eligibility could not be confirmed. Refresh your account before continuing to checkout.</p><p className="field-hint mt-16"><Link href="/dashboard">Return to your account</Link></p></section>;
 

@@ -45,6 +45,7 @@ describe('signup and sign-in recovery', () => {
   it('creates a waitlist account without reserving a handle or offering checkout', async () => {
     render(<SignupPage />);
     await screen.findByRole('button', { name: 'Create account' });
+    expect(screen.getByLabelText('Name')).toHaveAttribute('type', 'text');
     fill('Name', 'Morgan Ellis'); fill('Email', 'person@example.com'); fill('Password', 'fixture-password');
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
     await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fdashboard'));
@@ -86,7 +87,7 @@ describe('signup and sign-in recovery', () => {
 describe('account and checkout', () => {
   it('shows the trial end, the later charge, and downloads for a confirmed trial', async () => {
     api.meOrNull.mockResolvedValue(account);
-    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', trialEndsAt: '2026-09-28T12:00:00Z', alphaPriceLocked: true, pricing: { amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } });
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'trialing', entitled: true, offer: 'alpha', cancelAtPeriodEnd: false, trialEndsAt: '2026-09-28T12:00:00Z', alphaPriceLocked: true, pricing: { amount: 5000, currency: 'usd', interval: 'month', intervalCount: 1, quantity: 1 } });
     render(<AccountDashboard />);
     const trial = await screen.findByRole('status', { name: 'Trial status' });
     expect(trial).toHaveTextContent('Your free trial ends on September 28, 2026');
@@ -100,6 +101,30 @@ describe('account and checkout', () => {
     render(<AccountDashboard />);
     expect(await screen.findByRole('status', { name: 'Trial status' })).toHaveTextContent('Your membership is set to end. You can use Merger until the trial ends, with nothing to pay.');
     expect(screen.queryByText(/is billed automatically/)).not.toBeInTheDocument();
+  });
+  it('uses a custom cancellation date even when period-end cancellation is false', async () => {
+    api.meOrNull.mockResolvedValue(account);
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitlementStatus: 'active', entitled: true, offer: 'alpha', cancelAtPeriodEnd: false, cancelAt: '2026-10-04T12:00:00Z', currentPeriodEnd: '2026-10-12T12:00:00Z', alphaPriceLocked: true });
+    render(<AccountDashboard />);
+    expect(await screen.findByText(/Your subscription is set to end on October 4, 2026/)).toBeInTheDocument();
+    expect(screen.getByText('Access until').parentElement).toHaveTextContent('October 4, 2026');
+  });
+  it('does not invent a renewal price or cancellation state if billing details fail', async () => {
+    api.meOrNull.mockResolvedValue(account);
+    api.accountAccess.mockResolvedValue({ user: { ...account, emailVerified: true }, admission: { status: 'member' }, capabilities: { canUseApp: true, canDownload: true, canCheckout: false }, billing: { entitlementStatus: 'trialing', plan: 'desk', trialEndsAt: '2026-09-28T12:00:00Z' } });
+    api.billingStatus.mockRejectedValue(new api.ApiError(502));
+    render(<AccountDashboard />);
+    expect(await screen.findByRole('status', { name: 'Trial status' })).toHaveTextContent('Renewal and cancellation details are not available yet');
+    expect(screen.queryByText(/is billed automatically/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/\$50/)).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Go to downloads' })).toBeInTheDocument();
+  });
+  it('uses Stripe for an unknown custom-price charge instead of the alpha price', async () => {
+    api.meOrNull.mockResolvedValue(account);
+    api.billingStatus.mockResolvedValue({ ...noSubscription, entitled: true, entitlementStatus: 'trialing', plan: 'desk', cancelAtPeriodEnd: false, pricing: null });
+    render(<AccountDashboard />);
+    expect(await screen.findByRole('status', { name: 'Trial status' })).toHaveTextContent('View your upcoming charge in Stripe.');
+    expect(screen.queryByText(/\$50/)).not.toBeInTheDocument();
   });
   it('labels a discounted multi-seat subscription as its total price', async () => {
     api.meOrNull.mockResolvedValue(account);

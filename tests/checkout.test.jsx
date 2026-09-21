@@ -130,6 +130,16 @@ describe('joining the alpha', () => {
     await waitFor(() => expect(checkout).toHaveBeenCalledTimes(2));
   });
 
+  it('requires refreshed terms after the server discovers previous membership', async () => {
+    checkout.mockRejectedValue({ status: 409, code: 'trial_offer_changed' });
+    render(<TestCheckout />);
+    fireEvent.click(join());
+    await screen.findByRole('button', { name: 'Refresh account terms' });
+    expect(screen.queryByText(/First 2 weeks free|\$0/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Join the alpha' })).not.toBeInTheDocument();
+    expect(checkout).toHaveBeenCalledTimes(1);
+  });
+
   it('never fires two checkouts from a double click', async () => {
     let reject;
     checkout.mockReturnValue(new Promise((_resolve, fail) => { reject = fail; }));

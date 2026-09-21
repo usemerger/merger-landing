@@ -229,6 +229,8 @@ export function errorMessage(err) {
     // because if it ever appears it is a bug here, not something the user did.
     case 'alpha_is_operator_only':
       return 'The alpha covers one plan only. Refresh this page and try again.';
+    case 'trial_offer_changed':
+      return 'We found a previous membership on this account. No checkout was created and nothing was charged. Refresh your account to review the returning-member price before continuing.';
     case 'checkout_processing':
     case 'checkout_in_progress':
       return 'A checkout is already being processed for this account. Check your billing page before trying again.';

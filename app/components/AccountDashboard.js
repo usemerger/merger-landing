@@ -187,6 +187,11 @@ export default function AccountDashboard() {
   const canSubscribe = access.capabilities?.canCheckout === true && !grandfathered && !entitled && !pendingPayment && !hasSubscription && Boolean(user.handle);
   const renewalDate = formatDate(s.currentPeriodEnd);
   const trialDate = formatDate(s.trialEndsAt);
+  const cancellationAt = s.cancelAt || (s.cancelAtPeriodEnd === true ? s.currentPeriodEnd || s.trialEndsAt : null);
+  const cancellationDate = formatDate(cancellationAt);
+  const cancellationScheduled = s.cancelAtPeriodEnd === true || Boolean(formatDate(s.cancelAt));
+  const cancellationKnown = typeof s.cancelAtPeriodEnd === 'boolean' || Boolean(cancellationDate);
+  const cancellationInTrial = cancellationDate && trialDate && new Date(cancellationAt) <= new Date(s.trialEndsAt);
   const graceDate = formatDate(s.graceEndsAt);
   const verified = access.user?.emailVerified === true;
   const admitted = ['accepted', 'member'].includes(access.admission?.status);
@@ -229,10 +234,10 @@ export default function AccountDashboard() {
         around them describes the two free weeks; the number comes from Stripe. */}
     {trialing && <div className="alert alert-info" role="status" aria-label="Trial status">
       <strong>Your free trial{trialDate ? ` ends on ${trialDate}` : ' is active'}.</strong>{' '}
-      {s.cancelAtPeriodEnd ? 'Your membership is set to end. You can use Merger until the trial ends, with nothing to pay.' : <>{price ? `After that, ${price} is billed automatically. ` : `After that, ${ALPHA_OFFER.priceLabel}${ALPHA_OFFER.intervalLabel} is billed automatically. `}Cancel before your trial ends and you are never charged.</>}{' '}
+      {cancellationScheduled ? cancellationInTrial ? <>{new Date(cancellationAt).getTime() === new Date(s.trialEndsAt).getTime() ? 'Your membership is set to end. You can use Merger until the trial ends, with nothing to pay.' : `Your membership is set to end on ${cancellationDate}, before the trial ends, with nothing to pay.`}</> : <>Your membership is set to end{cancellationDate ? ` on ${cancellationDate}` : ''}. Check Stripe for the cancellation date and any payment due before then.</> : cancellationKnown ? <>{price ? `After that, ${price} is billed automatically. ` : 'View your upcoming charge in Stripe. '}Cancel before your trial ends and you are never charged.</> : <>Renewal and cancellation details are not available yet. Check your current billing details in Stripe.</>}{' '}
       <button className="linklike" type="button" onClick={openPortal} disabled={portalBusy}>Manage membership</button>
     </div>}
-    {!grandfathered && !trialing && s.cancelAtPeriodEnd && <div className="alert alert-warn">Your subscription is set to end{renewalDate ? ` on ${renewalDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
+    {!grandfathered && !trialing && cancellationScheduled && <div className="alert alert-warn">Your subscription is set to end{cancellationDate ? ` on ${cancellationDate}` : ' at the end of this billing period'}. {s.alphaPriceLocked && 'Your alpha price guarantee ends when the subscription ends.'}{' '}
       <button type="button" className="linklike" onClick={openPortal} disabled={portalBusy}>Manage cancellation</button>
     </div>}
 
@@ -245,14 +250,14 @@ export default function AccountDashboard() {
 
     <div className="panel mt-24">
       <div className="panel-head"><h2>Subscription</h2><StatusPill status={s.entitlementStatus} grandfathered={grandfathered} /></div>
-      {!entitled && !hasSubscription && <p className="muted mt-16">No subscription has started. {admitted ? access.rollout?.trialEligible === true ? 'Your trial starts only after you complete checkout.' : 'Your membership begins after you complete checkout. Review the current terms below.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
+      {!entitled && !hasSubscription && <p className="muted mt-16">{s.entitlementStatus === 'canceled' ? 'Your previous membership has ended. ' : 'No subscription has started. '}{admitted ? access.rollout?.trialEligible === true ? 'Your trial starts only after you complete checkout.' : 'Your membership begins after you complete checkout. Review the current terms below.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
       {grandfathered ? <p className="muted mt-16">Founding account — complimentary. You have access to Merger with no subscription and nothing to pay.</p> : <>
         <div className="stat-grid">
           <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
           {price && <div className="stat"><div className="k">Subscription price</div><div className="v">{price}</div></div>}
           {s.seats > 1 && <div className="stat"><div className="k">Seats</div><div className="v">{s.seats}</div></div>}
           {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
-          {s.entitlementStatus !== 'trialing' && renewalDate && <div className="stat"><div className="k">{s.cancelAtPeriodEnd || s.entitlementStatus === 'canceled' ? 'Access until' : 'Current period ends'}</div><div className="v">{renewalDate}</div></div>}
+          {s.entitlementStatus !== 'trialing' && (renewalDate || cancellationDate) && <div className="stat"><div className="k">{cancellationScheduled ? 'Access until' : s.entitlementStatus === 'canceled' ? 'Last billing period ended' : 'Current period ends'}</div><div className="v">{cancellationScheduled ? cancellationDate || renewalDate : renewalDate}</div></div>}
           {typeof s.hasPaymentMethod === 'boolean' && <div className="stat"><div className="k">Payment method</div><div className="v">{s.hasPaymentMethod ? 'On file' : 'None on file'}</div></div>}
         </div>
         {price && <p className="field-hint mt-16">Recurring subtotal before tax, credits, or invoice adjustments. View invoices in Manage billing for final amounts.</p>}
