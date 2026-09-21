@@ -230,6 +230,12 @@
   .wl-slot { min-height: 366px; }
 }
 
+@media (max-width: 980px) {
+  /* Part of keeping the submit button above the fold on a phone — see the
+     .mk-hero padding note in landing.css. */
+  .wl-slot { margin-top: 22px; }
+}
+
 @media (max-width: 560px) {
   /* Role and Firm side by side leaves a ~130px select that cannot show
      "Broker / Intermediary" — one per row below this. */

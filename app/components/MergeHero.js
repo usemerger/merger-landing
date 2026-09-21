@@ -1,172 +1,154 @@
 'use client';
 
 /**
- * The hero's 3D slot, and every guarantee attached to it.
+ * The hero's 3D slot: a sized box, a poster, and a decision about what to load.
  *
- * MergeScene is the art. This file is the engineering around it, and it is the
- * part that decides whether the hero reads as premium or as a liability:
+ * WHAT CHANGED. This used to own a WebGL scene end to end — the probe, the
+ * render loop, the drag handling, the first-frame signal. The approved
+ * Singularity component owns all of that itself, so keeping both would have
+ * meant two WebGL2 probes each creating and discarding a context (Safari caps
+ * live contexts at 16), two IntersectionObservers, two reduced-motion
+ * listeners, and — the deciding problem — two pointer-drag systems on
+ * overlapping elements, which do not merely duplicate but actively fight:
+ * `touch-action: pan-y` here against `pan-y pinch-zoom` there, with both
+ * calling setPointerCapture on the same gesture.
  *
- *   · the scene is dynamically imported with ssr:false and only after first
- *     paint, so three.js is never in the initial bundle and can never be the
- *     LCP element
- *   · the box is reserved at every breakpoint and a poster fills it from the
- *     first frame, so nothing moves when the canvas arrives (CLS ~0)
- *   · prefers-reduced-motion never loads the scene at all — it gets the
- *     resolved still, which is the honest reading of the preference
- *   · the render loop stops when the tab is hidden or the hero scrolls away
+ * So this is shape 2 from the brief: Singularity owns the canvas lifecycle and
+ * this file is reduced to the three jobs the scaffold was actually good at.
  *
- * The poster is inline SVG rather than an image file: it is a few hundred bytes
- * of the same geometry, it needs no second network round trip before the hero
- * looks finished, and it cannot 404.
+ *   1. RESERVE THE BOX. The container is sized identically at every breakpoint
+ *      whether the scene loads, falls back, or never arrives — so nothing can
+ *      push the hero copy around at any point in the page's life. That is the
+ *      whole CLS story and it is unchanged.
  *
- * ── WHY THIS FILE CHANGED ─────────────────────────────────────────────────
- * Three separate reports, one cause each, all of them this file's fault:
+ *   2. PAINT SOMETHING IMMEDIATELY. A 35kB webp poster fills that box from
+ *      first paint and fades once a stage has rendered. (The source poster is
+ *      a 794kB PNG. Shipping that as a first-paint image would have been a
+ *      repeat of a mistake this project already made once — three 1080p JPEGs
+ *      pushed LCP 520ms -> 780ms before being re-encoded. 1000x1100 webp q72
+ *      is 35kB and visually identical on a dark render.)
  *
- *   "it doesn't show on my phone" — the scene was gated on viewport WIDTH
- *     (≤820px never mounted), so every phone and every narrow window got a flat
- *     SVG outline blown up to fill the column. The gate is now CAPABILITY, not
- *     size: if the device can run it, it runs it, phone included.
- *
- *   "it doesn't work on iPhone" — .mh-host carried `touch-action: none` at
- *     every width, including the widths where no canvas was ever mounted. That
- *     is a ~400px band across the hero where a touch drag scrolls nothing. The
- *     grab affordance is now attached only while the scene is actually live,
- *     and it is `pan-y`, so a vertical swipe always belongs to the page.
- *
- *   "it doesn't show in another browser" — the poster faded out on `is-live`,
- *     which was set by an IntersectionObserver that knows nothing about WebGL.
- *     If context creation failed, the hero went to an empty box. The poster now
- *     waits for a frame the renderer actually produced, and comes back if the
- *     context is later lost.
+ *   3. DECIDE WHAT TO DOWNLOAD, BEFORE DOWNLOADING IT. This is the part that
+ *      matters most. Singularity.jsx imports three/fiber/drei at module scope,
+ *      so its own `forceFallback` prop can only be reached after ~600kB of
+ *      WebGL has already been fetched. The brief requires three.js not to be
+ *      requested at all on the reduced-motion / no-WebGL / ?graphics=svg
+ *      paths, so the choice has to be made HERE, before the import — and the
+ *      fallback path imports InspectionFallback alone, which pulls no three.
  */
 
 import dynamic from 'next/dynamic';
 import { Component, useCallback, useEffect, useRef, useState } from 'react';
 
-/**
- * The resolved state, drawn flat.
- *
- * Doubles as the poster (shown until the canvas has drawn) and as the entire
- * hero under reduced motion or wherever WebGL is unavailable — so it has to
- * look deliberate on its own, not like a placeholder someone forgot to
- * replace. The soft gold falloff behind it is what keeps a thin outline from
- * reading as a wireframe when it is the only thing in the box.
- */
-function ResolvedMark({ title }) {
-  return (
-    <svg className="mh-poster" viewBox="0 0 240 240" role="img" aria-label={title}>
-      <defs>
-        <linearGradient id="mh-face" x1="40" y1="20" x2="200" y2="220" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#1B2330" />
-          <stop offset=".55" stopColor="#11161E" />
-          <stop offset="1" stopColor="#0B0F15" />
-        </linearGradient>
-        <radialGradient id="mh-halo" cx="120" cy="120" r="96" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#C9A96A" stopOpacity=".16" />
-          <stop offset="1" stopColor="#C9A96A" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      {/* The light the stone would have been sitting in. */}
-      <circle cx="120" cy="120" r="96" fill="url(#mh-halo)" />
-      {/* The gem: the same faceted diamond as the logo, resolved. */}
-      <g fill="url(#mh-face)" stroke="#C9A96A" strokeWidth="1.1" strokeLinejoin="round">
-        <path d="M120 34 56 116l64 90 64-90z" opacity=".95" />
-        <path d="M120 34 56 116h128z" opacity=".55" />
-        <path d="M120 34v172" strokeOpacity=".45" fill="none" />
-        <path d="M56 116h128" strokeOpacity=".45" fill="none" />
-      </g>
-    </svg>
-  );
-}
+/** ssr:false keeps every one of these out of the server render and the initial chunk. */
+const SingularityStage = dynamic(() => import('./singularity/SingularityStage'), { ssr: false, loading: () => null });
+const FallbackStage = dynamic(() => import('./singularity/FallbackStage'), { ssr: false, loading: () => null });
 
-// ssr:false keeps three.js out of the server render AND out of the initial
-// client bundle — Next code-splits it into its own chunk fetched on demand.
-const MergeScene = dynamic(() => import('./MergeScene'), {
-  ssr: false,
-  loading: () => null,
-});
+/** Which presentation this visitor gets. `pending` until the client decides. */
+const MODE = { PENDING: 'pending', WEBGL: 'webgl', SVG: 'svg' };
 
 /**
- * A scene that throws must not take the hero with it.
+ * A stage that throws must not take the hero with it.
  *
- * react-three-fiber throws synchronously when it cannot get a context, and a
- * three.js release can throw on a driver it does not like. Either way the
- * correct outcome is the poster, not a blank column and a broken page.
+ * Singularity has its own graphics boundary for render-time failures inside
+ * the canvas. This one is a level up and catches what that cannot: a failed
+ * JavaScript chunk, or a module that throws on evaluation. The brief asks for
+ * exactly this outer boundary. Either way the poster is still underneath, so
+ * the failure costs the animation and nothing else.
  */
-class SceneBoundary extends Component {
+class StageBoundary extends Component {
   constructor(props) { super(props); this.state = { failed: false }; }
   static getDerivedStateFromError() { return { failed: true }; }
   componentDidCatch() { this.props.onFail?.(); }
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-/** At or below this, run the scene at 1x with no antialias rather than not at all. */
-const LOW_POWER_MAX = 820;
-
 /**
- * Can this machine be asked to run the scene at all?
+ * Can this visitor be sent 600kB of WebGL, and should they be?
  *
- * Deliberately NOT a width test. A phone from the last several years runs
- * thirteen flat-shaded octahedra without noticing; a two-core machine with no
- * hardware WebGL does not, whatever size its monitor is.
+ * Deliberately not a width test — a phone from the last several years runs
+ * this scene in its compact mode without noticing, and Singularity has its own
+ * `max-width: 720px` path for that. What is being decided here is only whether
+ * downloading three.js could ever pay off.
  */
-function canRunScene() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  // Both of these are absent in Safari — absent means "no answer", not "weak".
-  if (navigator.deviceMemory && navigator.deviceMemory < 2) return false;
-  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return false;
+function decideMode() {
+  try {
+    // An explicit request for the SVG path wins over everything, so the
+    // fallback can be reviewed on any machine. Matches the review project's
+    // own ?graphics=svg convention.
+    if (new URLSearchParams(window.location.search).get('graphics') === 'svg') {
+      return { mode: MODE.SVG, reason: 'forced' };
+    }
+  } catch { /* no URL to read */ }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return { mode: MODE.SVG, reason: 'reduced-motion' };
+  }
+
+  // Absent in Safari — absent means "no answer", not "weak", so only an
+  // explicit low number disqualifies.
+  if (navigator.deviceMemory && navigator.deviceMemory < 2) return { mode: MODE.SVG, reason: 'low-memory' };
+  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return { mode: MODE.SVG, reason: 'low-cores' };
+
   try {
     const probe = document.createElement('canvas').getContext('webgl2');
-    if (!probe) return false;
-    // Hand the context straight back. Browsers cap live contexts (Safari at
-    // 16), and a probe that keeps one is a context the real canvas cannot have.
+    if (!probe) return { mode: MODE.SVG, reason: 'no-webgl2' };
+    // Hand the context straight back: browsers cap live contexts, and a probe
+    // that keeps one is a context the real canvas cannot have.
     probe.getExtension('WEBGL_lose_context')?.loseContext();
-    return true;
-  } catch { return false; }
+  } catch { return { mode: MODE.SVG, reason: 'no-webgl2' }; }
+
+  return { mode: MODE.WEBGL, reason: 'eligible' };
 }
 
 export default function MergeHero() {
   const hostRef = useRef(null);
-  /** 0 scattered → 1 assembled. Driven by a timer on mount, NOT by scroll:
-   *  §4 asks for the pieces to come together on load and settle. Scroll only
-   *  nudges the settled stone afterwards. A ref, not state — it changes every
-   *  frame and must never cause a React render. */
-  const assembly = useRef(0);
-  /** Drag state. dx/dy are the pixels moved since the last frame consumed
-   *  them; vx/vy are the angular velocity the scene decays after release. */
-  const drag = useRef({ active: false, dx: 0, dy: 0, vx: 0, vy: 0 });
-  const [mount, setMount] = useState(false);
-  const [live, setLive] = useState(false);
-  /** THE POSTER'S RELEASE CONDITION. Not "the canvas element exists" and not
-   *  "the hero is on screen" — a frame the renderer actually drew. Until this
-   *  is true the still IS the hero, which is the only correct answer on a
-   *  browser or a driver that could not give us a context. */
-  const [ready, setReady] = useState(false);
-  const [lowPower, setLowPower] = useState(false);
+  const [{ mode, reason }, setDecision] = useState({ mode: MODE.PENDING, reason: '' });
+  /** True once a stage has rendered — the poster's release condition. */
+  const [staged, setStaged] = useState(false);
+  /** The hero is on (or near) screen, so loading it is worth the bytes. */
+  const [near, setNear] = useState(false);
 
-  const onReady = useCallback(() => setReady(true), []);
-  /** Context lost (GPU reset, tab evicted on iOS, too many contexts on the
-   *  page). Put the still back rather than leaving an empty box. */
-  const onLost = useCallback(() => setReady(false), []);
-  const onFail = useCallback(() => { setReady(false); setMount(false); }, []);
+  const onMounted = useCallback(() => setStaged(true), []);
+  const onFail = useCallback(() => setStaged(false), []);
 
+  useEffect(() => { setDecision(decideMode()); }, []);
+
+  /**
+   * NEAR-VIEWPORT GATE. The brief asks that three.js and the GLB not be
+   * requested until the hero is close to being seen. On a desktop the hero is
+   * the top of the page, so this fires essentially at once; on a phone the
+   * waitlist form pushes the art below the fold and the download genuinely
+   * waits. 300px of rootMargin means it is decoded by the time it is scrolled
+   * to rather than starting then.
+   */
   useEffect(() => {
-    // Decide once, on the client, with everything available.
-    if (!canRunScene()) return;
-    setLowPower(window.matchMedia(`(max-width: ${LOW_POWER_MAX}px)`).matches);
+    const host = hostRef.current;
+    if (!host) return;
+    if (typeof IntersectionObserver === 'undefined') { setNear(true); return; }
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setNear(true); io.disconnect(); }
+    }, { rootMargin: '300px' });
+    io.observe(host);
+    return () => io.disconnect();
+  }, []);
 
-    // AFTER `load`, THEN IN IDLE TIME. Parsing and evaluating three.js is ~580ms
-    // of script work; while that sat inside the first few seconds it competed
-    // with interactivity and pushed Total Blocking Time to 520ms, which cost
-    // ~15 Lighthouse points on its own. Waiting for the load event moves that
-    // work past the window where the page is meant to be responding to the
-    // person, and the assembly still plays well within the time anyone spends
-    // reading the headline.
+  /**
+   * And even when it is near, the WebGL chunk waits for the page to finish
+   * loading and then for idle time. Parsing and evaluating three.js is
+   * hundreds of milliseconds of script work; inside the first few seconds it
+   * competes with the waitlist form for the main thread, and the form is the
+   * only thing on this page anyone has to be able to use. The SVG path does
+   * not wait — it is a few kB and it IS the picture.
+   */
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    if (mode !== MODE.WEBGL || !near) return;
     let cancel = () => {};
     const schedule = () => {
-      const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+      const request = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
       const clear = window.cancelIdleCallback || clearTimeout;
-      const handle = idle(() => setMount(true), { timeout: 1500 });
+      const handle = request(() => setIdle(true), { timeout: 1500 });
       cancel = () => clear(handle);
     };
     if (document.readyState === 'complete') schedule();
@@ -175,115 +157,43 @@ export default function MergeHero() {
       cancel = () => window.removeEventListener('load', schedule);
     }
     return () => cancel();
-  }, []);
+  }, [mode, near]);
 
-  // §1 DRAG IS THE ONLY INPUT.
-  //
-  // The cursor-follow parallax and the scroll nudge are both gone. Following
-  // the pointer everywhere made the object feel wired to the page rather than
-  // sitting in it — and it meant simply moving the mouse toward the CTA swung
-  // the gem around, so it was never actually still.
-  //
-  // Pointer events (not mouse) so a touch drag works identically, and capture
-  // so a drag that leaves the hero keeps tracking instead of sticking.
-  //
-  // Bound only once a frame has been drawn. Before that there is nothing to
-  // turn, and these listeners plus `touch-action` were quietly making the hero
-  // a dead zone for touch scrolling on every device that never got a canvas.
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host || !ready) return;
-    let id = null;
-    let last = null;
-
-    const down = (e) => {
-      if (e.button != null && e.button !== 0) return;
-      id = e.pointerId;
-      last = { x: e.clientX, y: e.clientY };
-      drag.current.active = true;
-      try { host.setPointerCapture(id); } catch { /* not capturable */ }
-    };
-    const move = (e) => {
-      if (!drag.current.active || e.pointerId !== id || !last) return;
-      // Normalised by viewport width so the same gesture turns it the same
-      // amount on a laptop and on a 4K display.
-      drag.current.dx += (e.clientX - last.x) / window.innerWidth;
-      drag.current.dy += (e.clientY - last.y) / window.innerWidth;
-      last = { x: e.clientX, y: e.clientY };
-    };
-    const up = (e) => {
-      if (e.pointerId !== id) return;
-      drag.current.active = false;
-      drag.current.dx = 0; drag.current.dy = 0;
-      last = null;
-      try { host.releasePointerCapture(id); } catch { /* already released */ }
-      id = null;
-    };
-
-    host.addEventListener('pointerdown', down);
-    host.addEventListener('pointermove', move, { passive: true });
-    host.addEventListener('pointerup', up);
-    // `touch-action: pan-y` means the browser takes the gesture over the moment
-    // a touch turns into a vertical scroll, and tells us by cancelling the
-    // pointer. Treat that exactly like a release: the page keeps the gesture.
-    host.addEventListener('pointercancel', up);
-    return () => {
-      host.removeEventListener('pointerdown', down);
-      host.removeEventListener('pointermove', move);
-      host.removeEventListener('pointerup', up);
-      host.removeEventListener('pointercancel', up);
-    };
-  }, [ready]);
-
-  // ASSEMBLE ON LOAD. Runs once the canvas is mounted, on rAF rather than a
-  // CSS transition because the value feeds three.js directly. Slow enough to be
-  // watched — the whole point is that someone sees twelve pieces become one.
-  useEffect(() => {
-    if (!mount) return;
-    let raf = 0;
-    let start = 0;
-    const DURATION = 2200;
-    const tick = (now) => {
-      if (!start) start = now;
-      const t = Math.min(1, (now - start) / DURATION);
-      // Long decelerating tail: arriving with weight, never springing.
-      assembly.current = 1 - Math.pow(1 - t, 3);
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [mount]);
-
-  // Stop rendering when nobody is looking. A hero that keeps a GPU busy in a
-  // background tab is the difference between a site that feels expensive and
-  // one that drains a laptop.
-  useEffect(() => {
-    if (!mount) return;
-    const host = hostRef.current;
-    if (!host) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setLive(entry.isIntersecting && !document.hidden),
-      { threshold: 0.01 },
-    );
-    io.observe(host);
-    const onVis = () => setLive(!document.hidden && !!host.getBoundingClientRect().height
-      && host.getBoundingClientRect().bottom > 0
-      && host.getBoundingClientRect().top < window.innerHeight);
-    document.addEventListener('visibilitychange', onVis);
-    return () => { io.disconnect(); document.removeEventListener('visibilitychange', onVis); };
-  }, [mount]);
+  const showWebgl = mode === MODE.WEBGL && near && idle;
+  const showSvg = mode === MODE.SVG && near;
 
   return (
-    <div className={`mh-host${ready ? ' is-interactive' : ''}`} ref={hostRef}>
-      {/* Always present, underneath. It is the poster before the canvas draws
-          and the whole hero when the canvas never will. */}
-      <ResolvedMark title="Twelve conversations merging into one deal desk" />
-      {mount && (
-        <div className={`mh-canvas ${ready ? 'is-ready' : ''}`} aria-hidden="true">
-          <SceneBoundary onFail={onFail}>
-            <MergeScene assembly={assembly} drag={drag} live={live}
-              lowPower={lowPower} onReady={onReady} onLost={onLost} />
-          </SceneBoundary>
+    // data-* here is not decoration: which of the three presentations a
+    // visitor got, and why, is otherwise invisible from the outside — and this
+    // is exactly the decision most likely to be wrong on a device nobody in
+    // the room is holding.
+    <div className={`mh-host${staged ? ' is-staged' : ''}`} ref={hostRef}
+      data-mode={mode} data-reason={reason || 'pending'} data-near={near} data-idle={idle}>
+      {/*
+        The poster. Always present, always underneath, and the whole hero until
+        a stage renders — which is the only correct answer on a browser that
+        could not give us a context. `fetchPriority="high"` because within its
+        own box it is the largest paint the hero has; it is 35kB, so this costs
+        nothing worth measuring.
+      */}
+      <img
+        className="mh-poster"
+        src="/models/merger-singularity-poster.webp"
+        alt=""
+        aria-hidden="true"
+        width="1000"
+        height="1100"
+        decoding="async"
+        fetchPriority="high"
+      />
+
+      {(showWebgl || showSvg) && (
+        <div className="mh-stage">
+          <StageBoundary onFail={onFail}>
+            {showWebgl
+              ? <SingularityStage onMounted={onMounted} />
+              : <FallbackStage onMounted={onMounted} reason={reason} />}
+          </StageBoundary>
         </div>
       )}
     </div>

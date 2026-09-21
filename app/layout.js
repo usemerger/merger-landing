@@ -25,8 +25,13 @@ export const metadata = {
     'Bring connected messages, reviewed deal suggestions, contact details, and your own DocuSign account into one Windows desktop workspace. Explore the Merger alpha.',
   applicationName: 'Merger',
   icons: {
-    icon: [{ url: '/merger-logo.svg', type: 'image/svg+xml' }],
-    apple: [{ url: '/merger-logo.svg' }],
+    // The gold mark, not the glossy-black gem. A browser tab is usually a dark
+    // strip and the old artwork disappeared into it for the same reason it
+    // disappeared on the page — see MarketingMark. Solid gold needs no rescue,
+    // and a favicon is the one place a drop-shadow rim could never have been
+    // applied anyway.
+    icon: [{ url: '/merger-logo-gold.svg', type: 'image/svg+xml' }],
+    apple: [{ url: '/merger-logo-gold.svg' }],
   },
 };
 

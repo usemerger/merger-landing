@@ -1,0 +1,251 @@
+{
+  "blender": "5.2.2 LTS",
+  "coordinateSystem": "glTF: +Y up, +Z front, +X right",
+  "source": "Seven-region original Merger polygon logo",
+  "meshNodes": 22,
+  "triangles": 792,
+  "bounds": {
+    "min": [
+      -1.858047,
+      -2.291444,
+      -0.678919
+    ],
+    "max": [
+      1.858034,
+      2.29122,
+      0.678919
+    ]
+  },
+  "geometryRevision": "sculptural-volume-v2",
+  "topology": "All 22 shards are closed, consistently oriented, positive-volume solids.",
+  "glbBytes": 104204,
+  "materials": [
+    "Obsidian / black graphite",
+    "Obsidian / angled face",
+    "Polished fracture bevel",
+    "Exposed inner gold",
+    "Obsidian / back"
+  ],
+  "shards": [
+    {
+      "name": "shard_00",
+      "region": "upper_left",
+      "restPosition": [
+        -1.038338,
+        1.214649,
+        0.015649
+      ],
+      "seed": 0.0
+    },
+    {
+      "name": "shard_01",
+      "region": "upper_left",
+      "restPosition": [
+        -1.321522,
+        0.470429,
+        -0.040124
+      ],
+      "seed": 1.618034
+    },
+    {
+      "name": "shard_02",
+      "region": "upper_left",
+      "restPosition": [
+        -0.768969,
+        1.041976,
+        -0.060417
+      ],
+      "seed": 3.236068
+    },
+    {
+      "name": "shard_03",
+      "region": "crown",
+      "restPosition": [
+        -0.310661,
+        0.920545,
+        0.003694
+      ],
+      "seed": 4.854102
+    },
+    {
+      "name": "shard_04",
+      "region": "crown",
+      "restPosition": [
+        -0.310661,
+        0.084809,
+        0.034512
+      ],
+      "seed": 6.472136
+    },
+    {
+      "name": "shard_05",
+      "region": "crown",
+      "restPosition": [
+        0.304053,
+        0.084809,
+        -0.030383
+      ],
+      "seed": 8.09017
+    },
+    {
+      "name": "shard_06",
+      "region": "crown",
+      "restPosition": [
+        0.304053,
+        0.920545,
+        -0.070556
+      ],
+      "seed": 9.708204
+    },
+    {
+      "name": "shard_07",
+      "region": "upper_right",
+      "restPosition": [
+        1.325539,
+        0.463939,
+        -0.011977
+      ],
+      "seed": 11.326238
+    },
+    {
+      "name": "shard_08",
+      "region": "upper_right",
+      "restPosition": [
+        1.042356,
+        1.208158,
+        0.032934
+      ],
+      "seed": 12.944272
+    },
+    {
+      "name": "shard_09",
+      "region": "upper_right",
+      "restPosition": [
+        0.772986,
+        1.035485,
+        -0.014481
+      ],
+      "seed": 14.562306
+    },
+    {
+      "name": "shard_10",
+      "region": "lower_left",
+      "restPosition": [
+        -0.811813,
+        -0.932399,
+        -0.057242
+      ],
+      "seed": 16.18034
+    },
+    {
+      "name": "shard_11",
+      "region": "lower_left",
+      "restPosition": [
+        -1.314291,
+        -0.12429,
+        -0.022392
+      ],
+      "seed": 17.798374
+    },
+    {
+      "name": "shard_12",
+      "region": "lower_left",
+      "restPosition": [
+        -1.067369,
+        -0.776993,
+        0.010844
+      ],
+      "seed": 19.416408
+    },
+    {
+      "name": "shard_13",
+      "region": "lower_center_left",
+      "restPosition": [
+        -0.164828,
+        -1.183475,
+        -0.013759
+      ],
+      "seed": 21.034442
+    },
+    {
+      "name": "shard_14",
+      "region": "lower_center_left",
+      "restPosition": [
+        -0.449738,
+        -0.46861,
+        -0.031534
+      ],
+      "seed": 22.652476
+    },
+    {
+      "name": "shard_15",
+      "region": "lower_center_left",
+      "restPosition": [
+        -0.449738,
+        -1.12822,
+        -0.011862
+      ],
+      "seed": 24.27051
+    },
+    {
+      "name": "shard_16",
+      "region": "lower_center_right",
+      "restPosition": [
+        0.442122,
+        -0.464947,
+        -0.012491
+      ],
+      "seed": 25.888544
+    },
+    {
+      "name": "shard_17",
+      "region": "lower_center_right",
+      "restPosition": [
+        0.157212,
+        -1.179811,
+        -0.034028
+      ],
+      "seed": 27.506578
+    },
+    {
+      "name": "shard_18",
+      "region": "lower_center_right",
+      "restPosition": [
+        0.442122,
+        -1.124556,
+        -0.015812
+      ],
+      "seed": 29.124612
+    },
+    {
+      "name": "shard_19",
+      "region": "lower_right",
+      "restPosition": [
+        1.309193,
+        -0.127862,
+        0.013952
+      ],
+      "seed": 30.742646
+    },
+    {
+      "name": "shard_20",
+      "region": "lower_right",
+      "restPosition": [
+        0.806715,
+        -0.93597,
+        -0.017497
+      ],
+      "seed": 32.36068
+    },
+    {
+      "name": "shard_21",
+      "region": "lower_right",
+      "restPosition": [
+        1.062271,
+        -0.780565,
+        -0.059616
+      ],
+      "seed": 33.978714
+    }
+  ]
+}

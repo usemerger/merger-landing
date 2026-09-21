@@ -23,6 +23,13 @@
      ONLY — the moment it spreads further the discretion is gone. */
   --gold-lit: #E8CF97;
   --gold: #C9A96A;
+  /* THE MARK'S OWN GOLD, kept separate from the CTA ramp above on purpose.
+     The accent gradient is tuned to read as metal on a button; the logo is a
+     flat fill and wants a single approved value (#d7b777, from the Singularity
+     direction). Tying the two together would mean a change to one silently
+     restyling the other. */
+  --mark-gold: #d7b777;
+  --mark-gold-lit: #ecd2a2;
   --gold-deep: #A67C34;
   --gold-grad: linear-gradient(135deg, var(--gold-lit) 0%, var(--gold) 46%, var(--gold-deep) 100%);
   --brass: var(--gold);          /* legacy alias: older rules still read this */
@@ -509,50 +516,34 @@ button, input, textarea, select { font: inherit; }
   position: absolute;
   inset: 0;
   z-index: 0;
-  overflow: hidden;
-  /* Inert until there is something to turn. `touch-action: none` sat here
-     unconditionally, including at the widths where no canvas was ever mounted
-     — which made a ~400px band across the hero a place where a touch drag
-     scrolled nothing at all. That is what "it doesn't work on iPhone" was. */
+  /* Inert. Every pointer interaction belongs to the Singularity stage, which
+     sets its own cursor and touch-action on the element that wants them. The
+     host must not claim the gesture before the stage exists — that is what
+     made a ~400px band of the hero a dead zone for touch scrolling before. */
   pointer-events: none;
 }
-/* §1 The stone is draggable, so it must receive pointer events — it was
-   pointer-events:none while the cursor-parallax did the work. The cursor says
-   so; without it a draggable object looks like a picture.
-
-   `pan-y`, not `none`: the browser keeps vertical scrolling and hands us the
-   horizontal component, so the gem can never trap the page. Applied only once
-   the renderer has drawn a frame (MergeHero adds the class). */
-.mh-host.is-interactive { pointer-events: auto; cursor: grab; touch-action: pan-y; }
-.mh-host.is-interactive:active { cursor: grabbing; }
-/* Only the canvas is grabbable; the poster underneath is decorative and must
-   not eat clicks meant for whatever sits behind the hero visual. */
-.mh-poster { pointer-events: none; }
+.mh-stage { position: absolute; inset: 0; pointer-events: auto; }
 .mk-hero > .mk-wrap { position: relative; z-index: 1; }
-.mh-poster,
-.mh-canvas {
+
+/* THE POSTER AND THE STAGE OCCUPY THE SAME BOX, always.
+   That is the entire CLS story: the container is sized by .mk-hero-visual at
+   every breakpoint, the poster fills it from first paint, and the stage
+   replaces it in place. Nothing here can move the hero copy at any point. */
+.mh-poster {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: .92;
+  transition: opacity var(--dur-reveal) var(--ease);
 }
-/* The poster fades out once the canvas is live rather than being removed — a
-   swap would blink, and it is also the permanent hero under reduced motion. */
-/* Keyed on `is-ready` — a frame the renderer actually produced — not on
-   `is-live`, which only ever meant "the hero is on screen". A browser that
-   could not get a WebGL context used to satisfy `is-live` and hide the still,
-   leaving an empty hero. Now it keeps the still. */
-.mh-poster { opacity: .85; transition: opacity var(--dur-move) var(--ease); }
-.mh-canvas { opacity: 0; transition: opacity var(--dur-move) var(--ease); }
-.mh-canvas.is-ready { opacity: 1; }
-.mh-canvas.is-ready + .mh-poster,
-.mh-host:has(.mh-canvas.is-ready) .mh-poster { opacity: 0; }
-
-/* The still is centred and generous on desktop, smaller and higher on phones
-   where it sits behind stacked copy rather than beside it. */
-.mh-poster { object-fit: contain; opacity: .5; }
-.mk-hero .mh-canvas { opacity: 0; }
-.mk-hero .mh-canvas.is-ready { opacity: 1; }
+/* Keyed on a stage having RENDERED, not on the hero being on screen. A
+   browser that cannot get a WebGL context keeps the poster, which is the
+   honest outcome; the old rule faded it on an IntersectionObserver that knew
+   nothing about WebGL and could leave an empty hero. */
+.mh-host.is-staged .mh-poster { opacity: 0; }
 
 /* ── the mark ──────────────────────────────────────────────────────────────
    The artwork is glossy-black facets with TRANSPARENT bevels between them. It
@@ -566,48 +557,26 @@ button, input, textarea, select { font: inherit; }
   flex: none;
   align-items: center;
   justify-content: center;
+  /* The approved gold. The mark's single path is filled with currentColor, so
+     this one declaration is the whole of the logo's colour — and any surface
+     that wants a different tint overrides it here rather than shipping a
+     second asset. */
+  color: var(--mark-gold);
+  transition: color var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease);
 }
-.mk-mark img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  /* Two shadows, not one: a tight brass rim for the facet edges and a wider,
-     dimmer halo so the silhouette separates from the panel behind it. */
-  filter:
-    drop-shadow(0 0 .5px var(--brass))
-    drop-shadow(0 0 1px rgba(201, 169, 106, .85))
-    drop-shadow(0 0 7px rgba(201, 169, 106, .22));
-  transition: filter var(--dur-micro) var(--ease), transform var(--dur-micro) var(--ease);
-}
+.mk-mark svg { width: 100%; height: 100%; display: block; }
 
-/* The hover variant, on the nav mark only.
-   Loaded as a background on a pseudo-element rather than a second <img>: the
-   file is 400KB of keyframed SVG, and this way the browser does not fetch it
-   until the rule first applies — so it costs nothing to anyone who never
-   hovers the logo, which is most people on a phone. */
-.mk-mark-hover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: center / contain no-repeat;
-  opacity: 0;
-  transition: opacity var(--dur-micro) var(--ease);
-  pointer-events: none;
+/* THE GOLD RIM IS GONE, and so is the hover artwork.
+   The drop-shadow stack that used to live here existed to rescue a near-black
+   logo on an ink background — see MarketingMark for why the old artwork needed
+   it. A gold mark does not. The 400kB keyframed merger-logo-hover.svg swap is
+   gone with it; the hover accent is now a shade brighter and a hair larger,
+   which costs nothing and never shows black. */
+.mk-brand:hover .mk-mark-hover,
+.mk-mark-hover:hover {
+  color: var(--mark-gold-lit);
+  transform: scale(1.04);
 }
-.mk-brand:hover .mk-mark-hover::after,
-.mk-mark-hover:hover::after {
-  background-image: url('/merger-logo-hover.svg');
-  opacity: 1;
-}
-.mk-brand:hover .mk-mark-hover img,
-.mk-mark-hover:hover img { opacity: 0; }
-.mk-brand:hover .mk-mark img {
-  filter:
-    drop-shadow(0 0 .5px var(--brass-bright))
-    drop-shadow(0 0 2px rgba(224, 193, 140, .95))
-    drop-shadow(0 0 12px rgba(201, 169, 106, .3));
-}
-
 /* ── §2/§6 THE HEADLINE IS THE DESIGN ──────────────────────────────────────
    The reference runs ~96px at weight 400 with tight leading, and that single
    choice carries the whole composition. A grotesque at 69/500 cannot do this
@@ -698,7 +667,7 @@ button, input, textarea, select { font: inherit; }
   position: relative;
   z-index: 2;
 }
-.mk-hero-visual { position: relative; min-height: 520px; padding: 0; }
+.mk-hero-visual { position: relative; height: 620px; padding: 0; }
 .mk-hero-copy { position: relative; }
 
 /* The pill above the headline. */
@@ -759,20 +728,23 @@ button, input, textarea, select { font: inherit; }
 @supports not selector(:has(*)) { .mk-hero-bloom { display: none; } }
 
 /* The stone fills its column and is no longer hidden behind a card. */
-.mk-hero .mh-host { position: absolute; inset: -12% -6%; overflow: visible; }
-.mk-hero .mh-poster { opacity: .9; }
-/* Stacked layout: the visual is a wide, short band under the copy, and a
-   square mark stretched across it reads as an outline someone forgot to crop.
-   Hold it to the band's height and centre it. */
-@media (max-width: 980px) {
-  .mk-hero .mh-host { inset: 0; }
-  .mk-hero .mh-poster { width: auto; height: 100%; margin-inline: auto; inset-inline: 0; }
-}
+.mk-hero .mh-host { position: absolute; inset: 0; overflow: visible; }
 
 @media (max-width: 980px) {
-  .mk-hero { min-height: 0; padding-block: 72px 40px; }
+  /* 52px, not 72. The submit button is the only thing on this page anyone has
+     to be able to reach, and measured at 393x852 it finished 19px BELOW the
+     fold — so a visitor's first screen showed a form they could not complete
+     without scrolling. Reclaimed from the hero's top padding and the form's
+     own offset (see waitlist.css), which together buy 28px and put the button
+     at 843 with room to spare. */
+  .mk-hero { min-height: 0; padding-block: 52px 40px; }
   .mk-hero-grid { grid-template-columns: 1fr; gap: 36px; }
-  .mk-hero-visual { min-height: 320px; order: 2; }
+  .mk-hero-visual { height: 480px; order: 2; }
+}
+/* Matches singularity.css's own compact breakpoint, where the stage drops its
+   min-height to 420. Kept in step so the reserved box and the stage agree. */
+@media (max-width: 720px) {
+  .mk-hero-visual { height: 420px; }
   .mk-hero h1 { max-width: none; }
 }
 
