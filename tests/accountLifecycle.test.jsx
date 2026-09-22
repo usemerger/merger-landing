@@ -35,6 +35,7 @@ describe('server-authorized account states', () => {
     expect(screen.getByDisplayValue('https://usemerger.com/?ref=public123')).toBeInTheDocument();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Reserve handle' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Manage waitlist' })).not.toBeInTheDocument();
   });
   it('keeps account and waitlist usable when billing fails', async () => {
     api.billingStatus.mockRejectedValue(new api.ApiError(502));
@@ -114,6 +115,11 @@ describe('invitation lifecycle', () => {
 });
 
 describe('profile and staff rollout', () => {
+  it('makes waitlist management discoverable from an authorized staff account', async () => {
+    api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, isAdmin: true } });
+    render(<AccountDashboard />);
+    expect(await screen.findByRole('link', { name: 'Manage waitlist' })).toHaveAttribute('href', '/admin/waitlist');
+  });
   it('saves profile through the current-account endpoint', async () => {
     api.updateProfile.mockResolvedValue({ ...user, displayName: 'Morgan E' });
     render(<ProfilePage />);
@@ -134,7 +140,7 @@ describe('profile and staff rollout', () => {
     api.adminWaitlist.mockResolvedValue({ waitlist: [{ id: 3, email: 'test@example.com', accountLinked: true, emailVerified: true, admitted: false }] });
     api.adminInvite.mockResolvedValue({ ok: true, emailed: true });
     render(<AdminWaitlistPage />);
-    fireEvent.click(await screen.findByRole('checkbox', { name: 'Select for invitation' }));
+    fireEvent.click(await screen.findByRole('checkbox', { name: 'Select for invitation for test@example.com' }));
     fireEvent.click(screen.getByRole('button', { name: 'Review invitations' }));
     expect(api.adminInvite).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'Send 1 invitation' }));
