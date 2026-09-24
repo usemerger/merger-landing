@@ -28,6 +28,10 @@
 .wa-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; flex-wrap: wrap; }
 .wa-text-button { padding: 8px 0; border: 0; background: transparent; color: #babac2; font: 500 12px var(--body); cursor: pointer; text-underline-offset: 4px; }
 .wa-text-button:hover:not(:disabled) { color: white; text-decoration: underline; }
+.wa-pagination { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 20px; padding: 14px 20px; border-top: 1px solid var(--line); color: #a5a5af; font-size: 12px; font-variant-numeric: tabular-nums; }
+.wa-pagination-actions { display: flex; align-items: center; gap: 12px; }
+.wa-pagination-actions > span { color: var(--faint); font-size: 11px; }
+.wa-review .wa-pagination { margin: 0 0 20px; padding: 0; border: 0; }
 .wa-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .wa-table th { padding: 11px 14px; border-block: 1px solid var(--line); font-size: 11px; color: #93939d; font-weight: 450; text-align: left; }
 .wa-table td { padding: 19px 14px; border-bottom: 1px solid #ffffff07; vertical-align: middle; }
@@ -134,6 +138,8 @@
   .wa-toolbar > p { font-size: 11px; }
   .wa-selection { padding: 16px; flex-wrap: wrap; }
   .wa-selection .wa-actions { justify-content: space-between; width: 100%; }
+  .wa-pagination { padding: 14px 16px; }
+  .wa-pagination-actions { flex-wrap: wrap; gap: 10px; }
   .wa-table { display: block; }
   .wa-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
   .wa-table tbody { display: block; }

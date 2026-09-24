@@ -4,10 +4,9 @@ import { CELL_LIMIT, COLUMN_LIMIT, FILE_LIMIT, IMPORT_LIMIT } from './waitlistIm
 XLSX.set_cptable(cptable);
 
 function tooManyRows() { throw new Error('Use a sheet with up to 1,000 contacts and one header row. Split larger lists into smaller files.'); }
-function checkCell(value) {
-  if (String(value).length > CELL_LIMIT) throw new Error('A cell is too long. Keep contact fields under 4,096 characters.');
-  return String(value);
-}
+// Keep a bounded preview, plus one overflow character. Extra export columns
+// must not prevent mapping; mapImportRows rejects oversized selected fields.
+const previewCell = (value) => String(value).slice(0, CELL_LIMIT + 1);
 
 // CSV remains text: numbers, leading zeros, and values beginning with = are never evaluated.
 export function parseCsv(text) {
@@ -22,20 +21,20 @@ export function parseCsv(text) {
   }
   const delimiter = Object.keys(separators).sort((a, b) => separators[b] - separators[a])[0];
   const rows = []; let cells = [], cell = '', inQuotes = false, closed = false, line = 1, rowLine = 1;
-  const endCell = () => { cells.push(checkCell(cell)); cell = ''; closed = false; if (cells.length > COLUMN_LIMIT) throw new Error('Use a sheet with 100 columns or fewer.'); };
-  const endRow = () => { endCell(); if (cells.some((value) => value.trim())) rows.push({ row: rowLine, cells }); cells = []; if (rows.length > IMPORT_LIMIT + 1) tooManyRows(); };
+  const append = (value) => { if (cell.length <= CELL_LIMIT) cell += value; };
+  const endCell = () => { cells.push(cell); cell = ''; closed = false; if (cells.length > COLUMN_LIMIT) throw new Error('Use a sheet with 100 columns or fewer.'); };
+  const endRow = () => { endCell(); if (cells.some((value) => value.length > CELL_LIMIT || value.trim())) rows.push({ row: rowLine, cells }); cells = []; if (rows.length > IMPORT_LIMIT + 1) tooManyRows(); };
   for (let i = 0; i < text.length; i++) {
     const c = text[i];
     if (inQuotes) {
-      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else { inQuotes = false; closed = true; } }
-      else { cell += c; if (c === '\n') line++; }
+      if (c === '"') { if (text[i + 1] === '"') { append('"'); i++; } else { inQuotes = false; closed = true; } }
+      else { append(c); if (c === '\n') line++; }
     } else if (c === delimiter) endCell();
     else if (c === '\n' || c === '\r') { endRow(); if (c === '\r' && text[i + 1] === '\n') i++; line++; rowLine = line; }
     else if (c === '"' && !cell && !closed) inQuotes = true;
     else if (closed && /\s/.test(c)) continue;
     else if (closed || c === '"') throw new Error(`The CSV has an unexpected quote near row ${line}. Export it again and retry.`);
-    else cell += c;
-    if (cell.length > CELL_LIMIT) checkCell(cell);
+    else append(c);
   }
   if (inQuotes) throw new Error('The CSV contains an unclosed quote. Export it again and retry.');
   if (cell || cells.length || closed) endRow();
@@ -71,9 +70,9 @@ export function parseImportBuffer(buffer, filename, selectedSheet) {
     for (let c = 0; c <= range.e.c; c++) {
       const cell = ws[XLSX.utils.encode_cell({ r, c })];
       if (cell?.f) formulas.push(c);
-      cells.push(checkCell(cell ? cell.w ?? cell.v ?? '' : ''));
+      cells.push(previewCell(cell ? cell.w ?? cell.v ?? '' : ''));
     }
-    if (cells.some((value) => value.trim()) || formulas.length) rows.push({ row: r + 1, cells, formulas });
+    if (cells.some((value) => value.length > CELL_LIMIT || value.trim()) || formulas.length) rows.push({ row: r + 1, cells, formulas });
   }
   if (!rows.length) throw new Error('This sheet does not contain any contacts.');
   return { sheetNames, sheet, rows };

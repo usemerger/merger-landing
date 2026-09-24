@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const nav = vi.hoisted(() => ({ replace: vi.fn() }));
@@ -26,6 +26,7 @@ const unverified = signup('unverified', 'unverified@example.test', { emailVerifi
 const unlinked = signup('unlinked', 'unlinked@example.test', { accountLinked: false, emailVerified: false });
 const invited = signup('invited', 'invited@example.test', { invitation: pending });
 const admitted = signup('admitted', 'admitted@example.test', { admitted: true, invitation: { ...pending, status: 'accepted' } });
+const largeQueue = (count = 1025) => Array.from({ length: count }, (_, index) => signup(`person-${index}`, `person-${index}@example.test`));
 
 function row(email) { return screen.getByText(email).closest('tr'); }
 function select(email) { fireEvent.click(within(row(email)).getByRole('checkbox')); }
@@ -90,6 +91,37 @@ describe('waitlist administration', () => {
     fireEvent.click(button(/^Invited/));
     expect(screen.queryByText(expired.email)).not.toBeInTheDocument();
     expect(row(invited.email)).toBeInTheDocument();
+  });
+
+  it('updates invitation views and eligibility when an invitation expires without a refresh', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'] });
+    vi.setSystemTime(new Date('2026-09-24T12:00:00Z'));
+    let view;
+    try {
+      const expiring = signup('expiring', 'expiring@example.test', { invitation: { ...pending, expiresAt: new Date(Date.now() + 1000).toISOString() } });
+      api.adminWaitlist.mockResolvedValue({ waitlist: [expiring] });
+      await act(async () => { view = render(<AdminWaitlistPage />); });
+      fireEvent.click(button('Invited'));
+      expect(row(expiring.email)).toBeInTheDocument();
+      expect(within(button('Invited')).getByText('1')).toBeInTheDocument();
+      expect(within(button('Ready to invite')).getByText('0')).toBeInTheDocument();
+
+      act(() => { vi.advanceTimersByTime(999); });
+      expect(row(expiring.email)).toBeInTheDocument();
+      act(() => { vi.advanceTimersByTime(2); });
+      expect(screen.queryByText(expiring.email)).not.toBeInTheDocument();
+      expect(within(button('Invited')).getByText('0')).toBeInTheDocument();
+      expect(within(button('Ready to invite')).getByText('1')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'No signups match this view.' })).toBeInTheDocument();
+      fireEvent.click(button('Ready to invite'));
+      expect(within(row(expiring.email)).getByText('Expired')).toBeInTheDocument();
+      expect(within(row(expiring.email)).getByRole('checkbox')).toBeEnabled();
+      expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+      expect(api.adminInvite).not.toHaveBeenCalled();
+    } finally {
+      view?.unmount();
+      vi.useRealTimers();
+    }
   });
 
   it('requires an explicit recipient review before sending, and does not send twice on a double click', async () => {
@@ -255,5 +287,172 @@ describe('waitlist administration', () => {
     expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument();
     expect(button('Import contacts')).toBeEnabled();
     expect(row(ready.email)).toBeInTheDocument();
+  });
+});
+
+describe('waitlist administration with large queues', () => {
+  it('bounds the rendered table to one page and adds only the currently expanded details', async () => {
+    const people = largeQueue(20000);
+    await show(people);
+    const table = screen.getByRole('table');
+    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
+    expect(within(table).getAllByRole('row')).toHaveLength(51);
+    expect(screen.getByText('Showing 1–50 of 20,000')).toBeInTheDocument();
+    expect(row(people[49].email)).toBeInTheDocument();
+    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
+    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeDisabled();
+
+    fireEvent.click(button(`View details for ${people[0].email}`));
+    expect(within(table).getAllByRole('row')).toHaveLength(52);
+    expect(within(table).getAllByText('Email verification')).toHaveLength(1);
+    fireEvent.click(button(`View details for ${people[1].email}`));
+    expect(within(table).getAllByRole('row')).toHaveLength(52);
+    expect(within(table).getAllByText('Email verification')).toHaveLength(1);
+    expect(button(`View details for ${people[0].email}`)).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('Showing 51–100 of 20,000')).toBeInTheDocument();
+    expect(within(table).getAllByRole('row')).toHaveLength(51);
+    expect(row(people[50].email)).toBeInTheDocument();
+    expect(row(people[99].email)).toBeInTheDocument();
+    expect(screen.queryByText(people[0].email)).not.toBeInTheDocument();
+    expect(screen.queryByText(people[100].email)).not.toBeInTheDocument();
+    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeEnabled();
+    fireEvent.click(within(pages).getByRole('button', { name: 'Previous' }));
+    expect(row(people[0].email)).toBeInTheDocument();
+    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
+    expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+    expect(api.adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('searches and filters the full queue and resets the current page when the view changes', async () => {
+    const people = largeQueue();
+    people[1000] = { ...people[1000], name: 'Distant Prospect' };
+    people[1001] = { ...people[1001], emailVerified: false };
+    people[1002] = { ...people[1002], invitation: pending };
+    people[1003] = { ...people[1003], admitted: true, invitation: { ...pending, status: 'accepted' } };
+    await show(people);
+    const search = screen.getByRole('searchbox');
+    const nextPage = () => fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+
+    nextPage();
+    fireEvent.change(search, { target: { value: 'DISTANT PROSPECT' } });
+    expect(row(people[1000].email)).toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
+    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
+    fireEvent.change(search, { target: { value: '' } });
+    expect(screen.getByText('Showing 1–50 of 1,025')).toBeInTheDocument();
+
+    for (const [view, person] of [
+      ['Needs verification', people[1001]],
+      ['Invited', people[1002]],
+      ['Admitted', people[1003]],
+    ]) {
+      nextPage();
+      fireEvent.click(button(view));
+      expect(row(person.email)).toBeInTheDocument();
+      expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
+      expect(screen.queryByText(people[0].email)).not.toBeInTheDocument();
+      fireEvent.click(button('All signups'));
+      expect(screen.getByText('Showing 1–50 of 1,025')).toBeInTheDocument();
+    }
+
+    nextPage();
+    fireEvent.click(button('Ready to invite'));
+    expect(row(people[0].email)).toBeInTheDocument();
+    fireEvent.change(search, { target: { value: 'person-100' } });
+    for (const index of [100, 1000, 1004, 1005, 1006, 1007, 1008, 1009]) expect(row(people[index].email)).toBeInTheDocument();
+    for (const index of [1001, 1002, 1003]) expect(screen.queryByText(people[index].email)).not.toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(9);
+    expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+  });
+
+  it('clamps a page after the queue shrinks and keeps that page when the queue grows again', async () => {
+    const people = largeQueue();
+    await show(people);
+    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('Showing 101–150 of 1,025')).toBeInTheDocument();
+
+    api.adminWaitlist.mockResolvedValue({ waitlist: people.slice(0, 75) });
+    fireEvent.click(button('Refresh'));
+    await screen.findByText('Showing 51–75 of 75');
+    expect(row(people[50].email)).toBeInTheDocument();
+    expect(row(people[74].email)).toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(26);
+    expect(within(pages).getByRole('button', { name: 'Next' })).toBeDisabled();
+
+    api.adminWaitlist.mockResolvedValue({ waitlist: people });
+    fireEvent.click(button('Refresh'));
+    await screen.findByText('Showing 51–100 of 1,025');
+    expect(row(people[50].email)).toBeInTheDocument();
+    expect(row(people[99].email)).toBeInTheDocument();
+    expect(screen.queryByText(people[100].email)).not.toBeInTheDocument();
+    expect(within(pages).getByRole('button', { name: 'Next' })).toBeEnabled();
+    expect(api.adminWaitlist).toHaveBeenCalledTimes(3);
+    expect(api.adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('preserves selections across pages and views and sends every selected recipient exactly once', async () => {
+    const people = largeQueue();
+    people[50] = { ...people[50], invitation: pending };
+    await show(people);
+    select(people[0].email);
+    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    select(people[50].email);
+    fireEvent.click(within(pages).getByRole('button', { name: 'Previous' }));
+    expect(within(row(people[0].email)).getByRole('checkbox')).toBeChecked();
+    fireEvent.click(button('Invited'));
+    expect(within(row(people[50].email)).getByRole('checkbox')).toBeChecked();
+    fireEvent.click(button('Ready to invite'));
+    expect(within(row(people[0].email)).getByRole('checkbox')).toBeChecked();
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: people[1000].email } });
+    select(people[1000].email);
+    expect(screen.getByText('3 selected')).toBeInTheDocument();
+
+    fireEvent.click(button('Review invitations'));
+    const review = screen.getByRole('region', { name: 'Review this invitation batch' });
+    const recipients = [people[0], people[50], people[1000]];
+    for (const person of recipients) expect(within(review).getByText(person.email)).toBeInTheDocument();
+    expect(within(review).getAllByRole('listitem')).toHaveLength(3);
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    fireEvent.click(within(review).getByRole('button', { name: 'Send 3 invitations' }));
+    await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
+    expect(api.adminInvite.mock.calls).toEqual(recipients.map((person) => [person.id]));
+    await waitFor(() => expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument());
+    expect(within(row(people[1000].email)).getByRole('checkbox')).not.toBeChecked();
+  });
+
+  it('paginates a large recipient review while sending the complete selected batch', async () => {
+    const people = largeQueue();
+    await show(people);
+    const checkboxes = within(screen.getByRole('table')).getAllByRole('checkbox');
+    act(() => { for (const checkbox of checkboxes) fireEvent.click(checkbox); });
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    select(people[50].email);
+    fireEvent.click(button('Review invitations'));
+
+    const review = screen.getByRole('region', { name: 'Review this invitation batch' });
+    const recipients = within(review).getByRole('list', { name: 'Invitation recipients' });
+    const pages = within(review).getByRole('navigation', { name: 'Invitation review pages' });
+    expect(within(recipients).getAllByRole('listitem')).toHaveLength(50);
+    expect(within(recipients).getByText(people[0].email)).toBeInTheDocument();
+    expect(within(recipients).getByText(people[49].email)).toBeInTheDocument();
+    expect(within(recipients).queryByText(people[50].email)).not.toBeInTheDocument();
+    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeDisabled();
+    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    expect(within(recipients).getAllByRole('listitem')).toHaveLength(1);
+    expect(within(recipients).getByText(people[50].email)).toBeInTheDocument();
+    expect(within(recipients).queryByText(people[0].email)).not.toBeInTheDocument();
+    expect(within(pages).getByRole('button', { name: 'Next' })).toBeDisabled();
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(51);
+    expect(api.adminInvite).not.toHaveBeenCalled();
+
+    fireEvent.click(within(review).getByRole('button', { name: 'Send 51 invitations' }));
+    await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
+    expect(api.adminInvite.mock.calls).toEqual(people.slice(0, 51).map((person) => [person.id]));
+    await waitFor(() => expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument());
   });
 });

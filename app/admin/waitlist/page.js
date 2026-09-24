@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../../components/Shell';
@@ -7,18 +7,20 @@ import { accountAccess, adminInvite, adminRevoke, adminWaitlist, errorMessage, f
 import './waitlist-admin.css';
 import WaitlistImport from './WaitlistImport';
 
-function inviteStatus(row) {
-  if (row.invitation?.status === 'pending' && row.invitation.expiresAt && new Date(row.invitation.expiresAt).getTime() <= Date.now()) return 'expired';
+const PAGE_SIZE = 50;
+
+function inviteStatus(row, now = Date.now()) {
+  if (row.invitation?.status === 'pending' && row.invitation.expiresAt && new Date(row.invitation.expiresAt).getTime() <= now) return 'expired';
   return row.invitation?.status;
 }
-function canSelect(row) { return row.accountLinked && row.emailVerified && !row.admitted && inviteStatus(row) !== 'accepted'; }
-function isReady(row) { return canSelect(row) && inviteStatus(row) !== 'pending'; }
-function rowStatus(row) {
-  if (row.admitted || inviteStatus(row) === 'accepted') return { label: 'Admitted', tone: 'good' };
-  if (inviteStatus(row) === 'pending') return { label: 'Invited', tone: 'gold' };
-  if (inviteStatus(row) === 'expired') return { label: 'Expired', tone: 'muted' };
-  if (inviteStatus(row) === 'revoked') return { label: 'Revoked', tone: 'muted' };
-  if (isReady(row)) return { label: 'Ready to invite', tone: 'ready' };
+function canSelect(row, status = inviteStatus(row)) { return row.accountLinked && row.emailVerified && !row.admitted && status !== 'accepted'; }
+function isReady(row, status = inviteStatus(row)) { return canSelect(row, status) && status !== 'pending'; }
+function rowStatus(row, status = inviteStatus(row)) {
+  if (row.admitted || status === 'accepted') return { label: 'Admitted', tone: 'good' };
+  if (status === 'pending') return { label: 'Invited', tone: 'gold' };
+  if (status === 'expired') return { label: 'Expired', tone: 'muted' };
+  if (status === 'revoked') return { label: 'Revoked', tone: 'muted' };
+  if (isReady(row, status)) return { label: 'Ready to invite', tone: 'ready' };
   return { label: 'Waiting', tone: 'muted' };
 }
 function verificationLabel(row) { return row.verificationPending ? 'Needs verification' : !row.accountLinked ? 'Account not linked' : row.emailVerified ? 'Verified' : 'Needs verification'; }
@@ -44,6 +46,9 @@ export default function AdminWaitlistPage() {
   const [phase, setPhase] = useState('loading');
   const [filter, setFilter] = useState('all');
   const [query, setQuery] = useState('');
+  const [page, setPage] = useState(0);
+  const [reviewPage, setReviewPage] = useState(0);
+  const [statusTime, setStatusTime] = useState(Date.now);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [selected, setSelected] = useState([]);
@@ -71,7 +76,8 @@ export default function AdminWaitlistPage() {
       if (id !== request.current) return;
       const next = result.waitlist || [];
       setRows(next); setTotalCount(result.totalCount ?? next.length); setTruncated(!!result.truncated);
-      setSelected((current) => current.filter((selectedId) => next.some((row) => row.id === selectedId && canSelect(row))));
+      const selectableIds = new Set(next.filter((row) => canSelect(row)).map((row) => row.id));
+      setSelected((current) => current.filter((selectedId) => selectableIds.has(selectedId)));
       setPhase('ready'); setQueueFresh(true); setUpdated(new Date()); loaded.current = true;
     } catch (err) {
       if (id !== request.current) return;
@@ -86,20 +92,20 @@ export default function AdminWaitlistPage() {
 
   async function inviteSelected() {
     if (pending.current || refreshing || !queueFresh || !review || !selected.length) return;
-    const recipients = rows.filter((row) => selected.includes(row.id) && canSelect(row));
-    if (!recipients.length) return;
+    const batch = recipients.filter((row) => canSelect(row));
+    if (!batch.length) return;
     pending.current = true; setBusy(true); setError(''); setMessage('');
     let sent = 0; const failures = [];
     try {
-      for (let index = 0; index < recipients.length; index += 1) {
-        const row = recipients[index];
+      for (let index = 0; index < batch.length; index += 1) {
+        const row = batch[index];
         try {
           const result = await adminInvite(row.id);
           if (result.emailed) sent += 1; else failures.push(row.id);
         } catch (err) {
           failures.push(row.id);
           if (err?.status === 401 || err?.status === 403) {
-            failures.push(...recipients.slice(index + 1).map((recipient) => recipient.id));
+            failures.push(...batch.slice(index + 1).map((recipient) => recipient.id));
             break;
           }
         }
@@ -122,21 +128,38 @@ export default function AdminWaitlistPage() {
     setSelected((value) => checked ? [...new Set([...value, row.id])] : value.filter((id) => id !== row.id));
   }
 
-  const counts = {
-    all: rows.length,
-    unverified: rows.filter((row) => !row.emailVerified).length,
-    eligible: rows.filter(isReady).length,
-    invited: rows.filter((row) => !row.admitted && inviteStatus(row) === 'pending').length,
-    admitted: rows.filter((row) => row.admitted || inviteStatus(row) === 'accepted').length,
-  };
-  const visible = rows.filter((row) => {
-    const matchesFilter = filter === 'all' || (filter === 'unverified' ? !row.emailVerified : filter === 'eligible' ? isReady(row) : filter === 'invited' ? !row.admitted && inviteStatus(row) === 'pending' : row.admitted || inviteStatus(row) === 'accepted');
-    return matchesFilter && `${row.name || ''} ${row.email} ${row.firm || ''} ${row.role || ''}`.toLowerCase().includes(query.trim().toLowerCase());
-  });
-  const recipients = rows.filter((row) => selected.includes(row.id));
-  const reissueCount = recipients.filter((row) => row.invitation).length;
+  const { entries, counts, nextExpiry } = useMemo(() => {
+    const now = Date.now();
+    const counts = { all: rows.length, unverified: 0, eligible: 0, invited: 0, admitted: 0 };
+    let nextExpiry = Infinity;
+    const entries = rows.map((row) => {
+      const status = inviteStatus(row, now);
+      const views = { unverified: !row.emailVerified, eligible: isReady(row, status), invited: !row.admitted && status === 'pending', admitted: row.admitted || status === 'accepted' };
+      for (const view of Object.keys(views)) if (views[view]) counts[view] += 1;
+      if (status === 'pending' && row.invitation.expiresAt) nextExpiry = Math.min(nextExpiry, new Date(row.invitation.expiresAt).getTime() || Infinity);
+      return { row, views, status: rowStatus(row, status), selectable: canSelect(row, status), searchText: `${row.name || ''} ${row.email} ${row.firm || ''} ${row.role || ''}`.toLowerCase() };
+    });
+    return { entries, counts, nextExpiry };
+  }, [rows, statusTime]);
+  // Keep memoized invitation views accurate when an active invitation expires.
+  useEffect(() => {
+    if (!Number.isFinite(nextExpiry)) return;
+    const timer = setTimeout(() => setStatusTime(Date.now()), Math.min(Math.max(nextExpiry - Date.now(), 0) + 1, 2147483647));
+    return () => clearTimeout(timer);
+  }, [nextExpiry, statusTime]);
+  const normalizedQuery = query.trim().toLowerCase();
+  const visible = useMemo(() => entries.filter((entry) => (filter === 'all' || entry.views[filter]) && entry.searchText.includes(normalizedQuery)), [entries, filter, normalizedQuery]);
+  const currentPage = Math.min(page, Math.max(0, Math.ceil(visible.length / PAGE_SIZE) - 1));
+  const pageEntries = useMemo(() => visible.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE), [visible, currentPage]);
+  useEffect(() => { setPage(currentPage); }, [currentPage]);
+  const selectedIds = useMemo(() => new Set(selected), [selected]);
+  const recipients = useMemo(() => rows.filter((row) => selectedIds.has(row.id)), [rows, selectedIds]);
+  const reissueCount = useMemo(() => recipients.filter((row) => row.invitation).length, [recipients]);
+  const currentReviewPage = Math.min(reviewPage, Math.max(0, Math.ceil(recipients.length / PAGE_SIZE) - 1));
+  const reviewRecipients = useMemo(() => recipients.slice(currentReviewPage * PAGE_SIZE, (currentReviewPage + 1) * PAGE_SIZE), [recipients, currentReviewPage]);
   const locked = busy || refreshing;
   const actionLocked = locked || !queueFresh;
+  function changePage(nextPage) { setPage(nextPage); setExpanded(null); setRevokeReview(null); }
 
   return <Shell authed><main className="wa-main">
     <header className="wa-heading"><div><p className="eyebrow">Staff workspace</p><h1>Waitlist</h1><p className="wa-lede">Meet the people waiting for Merger. Invite them when you’re ready.</p></div>{phase === 'ready' && <div className="wa-actions"><button type="button" className="btn btn-primary" disabled={locked || importOpen} onClick={() => { setImportOpen(true); setReview(false); }}>Import contacts</button><button type="button" className="btn btn-ghost wa-refresh" disabled={locked} onClick={load}><Icon name="refresh" className={refreshing ? 'wa-spinning' : undefined} />{refreshing ? 'Refreshing…' : 'Refresh'}</button></div>}</header>
@@ -146,29 +169,37 @@ export default function AdminWaitlistPage() {
     {message && <div className="wa-notice" role="status"><Icon name="check" /><div><p>{message}</p>{message.includes('email') && <small>“Sent” means accepted by the email provider. Confirm arrival in the recipient’s inbox.</small>}</div><button type="button" className="wa-icon-button" aria-label="Dismiss update" onClick={() => setMessage('')}><Icon name="close" /></button></div>}
 
     {phase === 'ready' && <>
-      {importOpen && <WaitlistImport onClose={() => setImportOpen(false)} onImported={() => { setFilter('all'); setQuery(''); setSelected([]); load(); }} />}
+      {importOpen && <WaitlistImport onClose={() => setImportOpen(false)} onImported={() => { setFilter('all'); setQuery(''); changePage(0); setSelected([]); load(); }} />}
       <section className="wa-stats" aria-label="Waitlist views">{[
         ['all', 'All signups', 'Everyone on the waitlist'],
         ['unverified', 'Needs verification', 'Awaiting a verified email'],
         ['eligible', 'Ready to invite', 'Verified, without an active invite'],
         ['invited', 'Invited', 'Waiting to accept'],
         ['admitted', 'Admitted', 'Invitation accepted or access granted'],
-      ].map(([value, label, description]) => <button key={value} type="button" className={`wa-stat${filter === value ? ' is-active' : ''}`} aria-label={label} aria-pressed={filter === value} onClick={() => setFilter(value)}><span className="wa-stat-label">{label}</span><strong>{counts[value]}</strong><span className="wa-stat-description">{description}</span></button>)}</section>
+      ].map(([value, label, description]) => <button key={value} type="button" className={`wa-stat${filter === value ? ' is-active' : ''}`} aria-label={label} aria-pressed={filter === value} onClick={() => { setFilter(value); changePage(0); }}><span className="wa-stat-label">{label}</span><strong>{counts[value]}</strong><span className="wa-stat-description">{description}</span></button>)}</section>
 
       <section className="wa-queue" aria-label="Waitlist signups">
         {truncated && <div className="wa-notice" role="status">Showing the first {rows.length.toLocaleString()} of {totalCount.toLocaleString()} signups. Search and counts below apply to the loaded entries.</div>}
-        <div className="wa-toolbar"><div className="wa-search"><Icon name="search" /><label className="wa-sr-only" htmlFor="queue-search">Find name, email, firm, or role</label><input id="queue-search" type="search" placeholder="Search name, email, firm, or role…" value={query} onChange={(event) => setQuery(event.target.value)} /></div><p>{visible.length} {visible.length === 1 ? 'person' : 'people'} shown <span>· {totalCount} total</span></p></div>
-        <div className="wa-selection" aria-live="polite"><div><strong>{selected.length ? `${selected.length} selected` : 'Choose your next invitations'}</strong><p>{selected.length ? 'Selections stay with you when you change views.' : 'Select verified accounts, then review before sending.'}</p></div>{selected.length > 0 && <div className="wa-actions"><button type="button" className="wa-text-button" disabled={locked} onClick={() => { setSelected([]); setReview(false); }}>Clear selection</button><button type="button" className="btn btn-primary" disabled={actionLocked || review} onClick={() => { setReview(true); setRevokeReview(null); }}>Review invitations</button></div>}</div>
+        <div className="wa-toolbar"><div className="wa-search"><Icon name="search" /><label className="wa-sr-only" htmlFor="queue-search">Find name, email, firm, or role</label><input id="queue-search" type="search" placeholder="Search name, email, firm, or role…" value={query} onChange={(event) => { setQuery(event.target.value); changePage(0); }} /></div><p>{visible.length.toLocaleString()} {visible.length === 1 ? 'person matches' : 'people match'} <span>· {totalCount.toLocaleString()} total</span></p></div>
+        <div className="wa-selection" aria-live="polite"><div><strong>{selected.length ? `${selected.length} selected` : 'Choose your next invitations'}</strong><p>{selected.length ? 'Selections stay with you when you change pages or views.' : 'Select verified accounts, then review before sending.'}</p></div>{selected.length > 0 && <div className="wa-actions"><button type="button" className="wa-text-button" disabled={locked} onClick={() => { setSelected([]); setReview(false); }}>Clear selection</button><button type="button" className="btn btn-primary" disabled={actionLocked || review} onClick={() => { setReviewPage(0); setReview(true); setRevokeReview(null); }}>Review invitations</button></div>}</div>
 
-        {review && <section className="wa-review" aria-labelledby="batch-review-title"><div className="wa-review-heading"><div><p className="wa-kicker">Invitation review</p><h2 id="batch-review-title" ref={reviewHeading} tabIndex={-1}>Review this invitation batch</h2></div><span className="wa-badge gold">{recipients.length} {recipients.length === 1 ? 'recipient' : 'recipients'}</span></div><p>An access invitation will be emailed to each person below. Invitations do not start subscriptions or a trial.</p><ul>{recipients.map((row) => <li key={row.id}><span>{row.email}</span>{row.invitation && <span className="wa-badge muted">Reissue</span>}</li>)}</ul>{reissueCount > 0 && <p className="wa-review-warning">Reissuing {reissueCount === 1 ? 'this invitation invalidates its' : `these ${reissueCount} invitations invalidates their`} previous {reissueCount === 1 ? 'link' : 'links'}, even if the new email cannot be delivered.</p>}<div className="wa-actions"><button type="button" className="btn btn-primary" disabled={actionLocked} onClick={inviteSelected}>{busy ? 'Sending invitations…' : `Send ${recipients.length} invitation${recipients.length === 1 ? '' : 's'}`}</button><button type="button" className="btn btn-ghost" disabled={locked} onClick={() => setReview(false)}>Back to selection</button></div></section>}
+        {review && <section className="wa-review" aria-labelledby="batch-review-title"><div className="wa-review-heading"><div><p className="wa-kicker">Invitation review</p><h2 id="batch-review-title" ref={reviewHeading} tabIndex={-1}>Review this invitation batch</h2></div><span className="wa-badge gold">{recipients.length} {recipients.length === 1 ? 'recipient' : 'recipients'}</span></div><p>An access invitation will be emailed to all {recipients.length} selected {recipients.length === 1 ? 'recipient' : 'recipients'} across every review page. Invitations do not start subscriptions or a trial.</p><ul id="invitation-recipients" aria-label="Invitation recipients">{reviewRecipients.map((row) => <li key={row.id}><span>{row.email}</span>{row.invitation && <span className="wa-badge muted">Reissue</span>}</li>)}</ul>{recipients.length > PAGE_SIZE && <Pagination label="Invitation review pages" page={currentReviewPage} total={recipients.length} onChange={setReviewPage} controlsId="invitation-recipients" disabled={locked} />}{reissueCount > 0 && <p className="wa-review-warning">Reissuing {reissueCount === 1 ? 'this invitation invalidates its' : `these ${reissueCount} invitations invalidates their`} previous {reissueCount === 1 ? 'link' : 'links'}, even if the new email cannot be delivered.</p>}<div className="wa-actions"><button type="button" className="btn btn-primary" disabled={actionLocked} onClick={inviteSelected}>{busy ? 'Sending invitations…' : `Send ${recipients.length} invitation${recipients.length === 1 ? '' : 's'}`}</button><button type="button" className="btn btn-ghost" disabled={locked} onClick={() => setReview(false)}>Back to selection</button></div></section>}
 
-        {visible.length === 0 ? <div className="wa-empty wa-table-empty"><Icon name="people" /><h2>{rows.length ? 'No signups match this view.' : 'Your waitlist starts here.'}</h2><p>{rows.length ? 'Try another search or view to find the people you’re looking for.' : 'Waitlist signups and imported contacts appear here, including people awaiting email verification.'}</p>{rows.length > 0 && <button type="button" className="btn btn-ghost" onClick={() => { setQuery(''); setFilter('all'); }}>Show all signups</button>}</div> : <div className="wa-table-wrap"><table className="wa-table"><caption className="wa-sr-only">Waitlist signups and invitation eligibility</caption><thead><tr><th scope="col" className="wa-check-column"><span className="wa-sr-only">Select</span></th><th scope="col">Person</th><th scope="col">Account</th><th scope="col">Access</th><th scope="col">Joined</th><th scope="col" className="wa-referrals">Referrals</th><th scope="col"><span className="wa-sr-only">Details</span></th></tr></thead><tbody>{visible.map((row) => <WaitlistRow key={row.id} row={row} status={rowStatus(row)} selectable={canSelect(row)} selected={selected.includes(row.id)} locked={actionLocked} expanded={expanded === row.id} confirmingRevoke={revokeReview === row.id} onSelect={(checked) => toggleSelection(row, checked)} onExpand={() => { setExpanded(expanded === row.id ? null : row.id); setRevokeReview(null); }} onReviewRevoke={() => { setRevokeReview(row.id); setReview(false); }} onCancelRevoke={() => setRevokeReview(null)} onRevoke={() => revoke(row.id)} />)}</tbody></table></div>}
+        {visible.length === 0 ? <div className="wa-empty wa-table-empty"><Icon name="people" /><h2>{rows.length ? 'No signups match this view.' : 'Your waitlist starts here.'}</h2><p>{rows.length ? 'Try another search or view to find the people you’re looking for.' : 'Waitlist signups and imported contacts appear here, including people awaiting email verification.'}</p>{rows.length > 0 && <button type="button" className="btn btn-ghost" onClick={() => { setQuery(''); setFilter('all'); changePage(0); }}>Show all signups</button>}</div> : <><Pagination label="Waitlist pages" page={currentPage} total={visible.length} onChange={changePage} controlsId="waitlist-table" /><div className="wa-table-wrap"><table id="waitlist-table" className="wa-table"><caption className="wa-sr-only">Waitlist signups and invitation eligibility</caption><thead><tr><th scope="col" className="wa-check-column"><span className="wa-sr-only">Select</span></th><th scope="col">Person</th><th scope="col">Account</th><th scope="col">Access</th><th scope="col">Joined</th><th scope="col" className="wa-referrals">Referrals</th><th scope="col"><span className="wa-sr-only">Details</span></th></tr></thead><tbody>{pageEntries.map(({ row, status, selectable }) => <WaitlistRow key={row.id} row={row} status={status} selectable={selectable} selected={selectedIds.has(row.id)} locked={actionLocked} expanded={expanded === row.id} confirmingRevoke={revokeReview === row.id} onSelect={(checked) => toggleSelection(row, checked)} onExpand={() => { setExpanded(expanded === row.id ? null : row.id); setRevokeReview(null); }} onReviewRevoke={() => { setRevokeReview(row.id); setReview(false); }} onCancelRevoke={() => setRevokeReview(null)} onRevoke={() => revoke(row.id)} />)}</tbody></table></div></>}
         <footer className="wa-table-footer"><span>{refreshing ? 'Updating the list…' : updated ? `Updated ${updated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : ''}</span><span>Imported contacts stay queued until their account is verified.</span></footer>
       </section>
 
       <details className="wa-guide"><summary><span><span className="wa-guide-label">Before your first batch</span><strong>Test the rollout</strong></span><Icon name="chevron" /></summary><div className="wa-guide-body"><p>Rehearse on the isolated preview with separate test accounts. Preview emails are captured in the test inbox instead of being sent to real recipients. Keep your staff session in this browser and use a private window for the test account.</p><a className="btn btn-ghost wa-test-link" href="https://merger-orbit-preview.vercel.app/signup" target="_blank" rel="noopener noreferrer">Open test signup</a><ol><li><strong>Join as a new user.</strong><span>Open the test signup in a private window, create an account, and use its captured verification email.</span></li><li><strong>Check the test waitlist.</strong><span>Open the preview’s admin dashboard, refresh, and search the exact test email. It should show a verified account, ready to invite.</span></li><li><strong>Send one test invitation.</strong><span>Select only your test account, review the recipient, and send. Find the invitation in the test inbox.</span></li><li><strong>Accept the invitation.</strong><span>Open the captured invitation in the private window and accept while signed in as the test user. Refresh the test dashboard to confirm they are admitted.</span></li></ol><p className="wa-guide-note">Production and preview have separate accounts and signups. On the live site, invitation emails go to real recipients. Joining, sending an invitation, and accepting it do not start a trial or charge a card.</p></div></details>
     </>}
   </main></Shell>;
+}
+
+function Pagination({ label, page, total, onChange, controlsId, disabled = false }) {
+  const pageCount = Math.ceil(total / PAGE_SIZE);
+  return <nav className="wa-pagination" aria-label={label}>
+    <span role="status">Showing {(page * PAGE_SIZE + 1).toLocaleString()}–{Math.min((page + 1) * PAGE_SIZE, total).toLocaleString()} of {total.toLocaleString()}</span>
+    <div className="wa-pagination-actions"><button type="button" className="btn btn-ghost" aria-controls={controlsId} disabled={disabled || page === 0} onClick={() => onChange(page - 1)}>Previous</button><span>Page {page + 1} of {pageCount}</span><button type="button" className="btn btn-ghost" aria-controls={controlsId} disabled={disabled || page + 1 >= pageCount} onClick={() => onChange(page + 1)}>Next</button></div>
+  </nav>;
 }
 
 function WaitlistRow({ row, status, selectable, selected, locked, expanded, confirmingRevoke, onSelect, onExpand, onReviewRevoke, onCancelRevoke, onRevoke }) {

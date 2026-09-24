@@ -1,4 +1,4 @@
-import { IMPORT_LIMIT, FILE_LIMIT } from './waitlistImportLimits';
+import { IMPORT_LIMIT, FILE_LIMIT, CELL_LIMIT } from './waitlistImportLimits';
 export { IMPORT_LIMIT, FILE_LIMIT, COLUMN_LIMIT, CELL_LIMIT } from './waitlistImportLimits';
 
 export function checkFile(file) {
@@ -23,10 +23,10 @@ export async function readImportFile(file, sheet) {
 
 const key = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 const aliases = {
-  email: ['email', 'emailaddress', 'emailid', 'contactemail', 'workemail'],
+  email: ['email', 'emailaddress', 'emailid', 'contactemail', 'workemail', 'recommendedemail'],
   name: ['name', 'fullname', 'contactname', 'displayname'],
   firstName: ['firstname', 'first', 'givenname'], lastName: ['lastname', 'last', 'surname', 'familyname'],
-  firm: ['company', 'firm', 'organization', 'organisation', 'companyname'], role: ['role', 'title', 'jobtitle', 'position'],
+  firm: ['company', 'firm', 'organization', 'organisation', 'companyname', 'employer'], role: ['role', 'title', 'jobtitle', 'position'],
 };
 export function guessMapping(cells, headers = true) {
   const mapping = Object.fromEntries(Object.keys(aliases).map((field) => [field, '']));
@@ -50,6 +50,12 @@ export function mapImportRows(sheet, mapping, headers = true) {
   const data = headers ? sheet.rows.slice(1) : sheet.rows;
   const rows = [];
   for (const entry of data) {
+    for (const [field, column] of used) {
+      if (String(entry.cells[Number(column)] ?? '').length > CELL_LIMIT) {
+        const label = { email: 'Email address', name: 'Full name', firstName: 'First name', lastName: 'Last name', firm: 'Company', role: 'Role' }[field];
+        throw new Error(`Row ${entry.row}: ${label} is over 4,096 characters. Choose the correct column or shorten that contact field.`);
+      }
+    }
     const value = (field) => mapping[field] === '' ? '' : String(entry.cells[Number(mapping[field])] || '').trim();
     const values = { name: mapping.name !== '' ? value('name') : [value('firstName'), value('lastName')].filter(Boolean).join(' '), email: value('email'), firm: value('firm'), role: value('role') };
     if (used.some(([, column]) => entry.formulas?.includes(Number(column)))) throw new Error(`Row ${entry.row} contains a formula in a selected column. Paste those cells as values before importing.`);

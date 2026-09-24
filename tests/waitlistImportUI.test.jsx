@@ -40,6 +40,20 @@ beforeEach(() => {
 });
 
 describe('staff contact import', () => {
+  it('reviews contacts with long unused export columns, but blocks selecting those columns', async () => {
+    readImportFile.mockResolvedValue({ ...parsed, rows: [parsed.rows[0], { row: 2, cells: ['Morgan Ellis', 'morgan@example.com', 'Oak Street', 'Partner', 'x'.repeat(4097)] }] });
+    await choose();
+    fireEvent.change(screen.getByRole('combobox', { name: 'Role column' }), { target: { value: '4' } });
+    fireEvent.click(button('Review contacts'));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Row 2: Role is over 4,096 characters');
+    expect(api.adminPreviewWaitlistImport).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByRole('combobox', { name: 'Role column' }), { target: { value: '3' } });
+    fireEvent.click(button('Review contacts'));
+    await screen.findByRole('heading', { name: 'Review your import' });
+    expect(api.adminPreviewWaitlistImport).toHaveBeenCalledExactlyOnceWith([contact]);
+    expect(api.adminImportWaitlist).not.toHaveBeenCalled();
+  });
+
   it('reviews only mapped fields without adding contacts before explicit confirmation', async () => {
     const { onImported } = await review();
     expect(api.adminPreviewWaitlistImport).toHaveBeenCalledExactlyOnceWith([contact]);

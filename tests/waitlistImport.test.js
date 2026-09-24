@@ -101,14 +101,44 @@ describe('contact spreadsheet parsing', () => {
     expect(() => parseImportBuffer(new ArrayBuffer(FILE_LIMIT + 1), 'contacts.csv')).toThrow(/smaller than 5 MB/i);
   });
 
-  it('accepts 1,000 contacts and rejects excess rows, columns, and cell length', () => {
+  it('accepts 1,000 contacts and rejects excess rows and columns', () => {
     const contacts = Array.from({ length: 1000 }, (_, i) => `Person ${i},person${i}@example.com`);
     expect(mapped(['Name,Email', ...contacts].join('\n'))).toHaveLength(1000);
     expect(() => parseCsv(['Name,Email', ...contacts, 'Overflow,overflow@example.com'].join('\n'))).toThrow(/1,000 contacts/i);
     expect(() => parseCsv(Array.from({ length: 101 }, (_, i) => `Column${i}`).join(','))).toThrow(/100 columns/i);
-    expect(() => parseCsv('Name,Email\n' + 'x'.repeat(4097) + ',pat@example.com')).toThrow(/4,096 characters/i);
     const headerless = parseCsv([...contacts, 'Overflow,overflow@example.com'].join('\n'));
     expect(() => mapImportRows(headerless, guessMapping(headerless.rows[0].cells, false), false)).toThrow(/1,000 people/i);
+  });
+
+  it('ignores oversized quoted export columns while retaining CSV boundaries and later contacts', () => {
+    const skills = ('Skills, "quoted"\n').repeat(1000);
+    const text = `Name,Recommended Email,Skills & Endorsements,Employer,Title\nPat,pat@example.com,${safeCsvCell(skills)},Oak Street,Partner\nMorgan,morgan@example.com,Short,Northline,Founder`;
+    const sheet = parseCsv(text);
+    expect(sheet.rows[1].cells[2]).toHaveLength(4097);
+    expect(mapImportRows(sheet, guessMapping(sheet.rows[0].cells))).toEqual([
+      { row: 2, name: 'Pat', email: 'pat@example.com', firm: 'Oak Street', role: 'Partner' },
+      { row: 1003, name: 'Morgan', email: 'morgan@example.com', firm: 'Northline', role: 'Founder' },
+    ]);
+    expect(() => mapImportRows(sheet, { ...guessMapping(sheet.rows[0].cells), role: '2' })).toThrow(/Row 2: Role is over 4,096 characters/);
+    expect(() => parseCsv(`Name,Email,Notes\nPat,pat@example.com,"${'x'.repeat(10000)}`)).toThrow(/unclosed quote/i);
+  });
+
+  it('ignores long unused workbook cells but never imports a truncated contact field', () => {
+    const buffer = workbook({ Contacts: [['Name', 'Email', 'Skills'], ['Pat', 'pat@example.com', 'x'.repeat(6000)]] });
+    const sheet = parseImportBuffer(buffer, 'contacts.xlsx');
+    const mapping = guessMapping(sheet.rows[0].cells);
+    expect(sheet.rows[1].cells[2]).toHaveLength(4097);
+    expect(mapImportRows(sheet, mapping)[0]).toEqual({ row: 2, name: 'Pat', email: 'pat@example.com', firm: '', role: '' });
+    expect(() => mapImportRows(sheet, { ...mapping, name: '2' })).toThrow(/Row 2: Full name is over 4,096 characters/);
+  });
+
+  it('checks the selected contact cell before trimming and accepts the exact length boundary', () => {
+    expect(mapped('Name,Email\n' + 'x'.repeat(4096) + ',pat@example.com')[0].name).toHaveLength(4096);
+    expect(() => mapped('Name,Email\n' + 'x'.repeat(4097) + ',pat@example.com')).toThrow(/Row 2: Full name is over 4,096 characters/);
+    expect(() => mapped('Name,Email\n' + ' '.repeat(4097) + ',pat@example.com')).toThrow(/4,096 characters/);
+    expect(() => mapped('Name,Email\nPat,pat@example.com\n,' + ' '.repeat(4097) + 'morgan@example.com')).toThrow(/Row 3: Email address is over 4,096 characters/);
+    const sheet = parseImportBuffer(workbook({ Contacts: [['Name', 'Email'], ['Pat', 'pat@example.com'], ['', ' '.repeat(4097) + 'morgan@example.com']] }), 'contacts.xlsx');
+    expect(() => mapImportRows(sheet, guessMapping(sheet.rows[0].cells))).toThrow(/Row 3: Email address is over 4,096 characters/);
   });
 
   it('enforces the same row and column limits on Excel worksheets', () => {
@@ -124,6 +154,9 @@ describe('contact field mapping and safe result exports', () => {
       row: 2, name: 'José Núñez', email: 'jose@example.com', firm: 'Élan', role: 'Managing partner',
     });
     expect(mapped('First,Last,Full name,Email\nIgnored,Ignored,Preferred Name,pat@example.com')[0].name).toBe('Preferred Name');
+    expect(mapped('Name,Email Lookup Status,Recommended Email,Recommended Work Email,Employer,Title\nPat,Found,pat@example.com,work@example.com,Oak Street,Partner')[0]).toEqual({
+      row: 2, name: 'Pat', email: 'pat@example.com', firm: 'Oak Street', role: 'Partner',
+    });
   });
 
   it('requires an email mapping and prevents one selected column from filling two fields', () => {
