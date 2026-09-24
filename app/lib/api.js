@@ -78,6 +78,8 @@ export const acceptInvitation = (token) => request('/api/account/invitation/acce
   method: 'POST', body: token ? { token } : {},
 });
 export const adminWaitlist = () => request('/api/admin/waitlist');
+export const adminPreviewWaitlistImport = (rows) => request('/api/admin/waitlist/import/preview', { method: 'POST', body: { rows } });
+export const adminImportWaitlist = (batch) => request('/api/admin/waitlist/import', { method: 'POST', body: batch });
 export const adminInvite = (id) => request(`/api/admin/waitlist/${encodeURIComponent(id)}/invite`, { method: 'POST' });
 export const adminRevoke = (id) => request(`/api/admin/waitlist/${encodeURIComponent(id)}/revoke`, { method: 'POST' });
 export const updateProfile = (displayName) => request('/api/account/profile', { method: 'PATCH', body: { displayName } });

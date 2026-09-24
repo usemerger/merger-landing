@@ -202,6 +202,7 @@ describe('waitlist administration', () => {
     await screen.findByRole('heading', { name: 'Staff access required' });
     expect(api.adminWaitlist).not.toHaveBeenCalled();
     expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(screen.queryByRole('button', { name: 'Import contacts' })).not.toBeInTheDocument();
   });
 
   it('redirects an expired session to sign-in with the dashboard destination preserved', async () => {
@@ -217,5 +218,42 @@ describe('waitlist administration', () => {
     await screen.findByRole('heading', { name: 'Staff access required' });
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Review invitations' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Import contacts' })).not.toBeInTheDocument();
+  });
+
+  it('includes unlinked imported contacts in Needs verification while keeping invitations disabled', async () => {
+    const imported = signup('imported', 'imported@example.test', { name: 'Morgan Ellis', source: 'admin_import', accountLinked: false, emailVerified: false });
+    await show([ready, unverified, imported]);
+    fireEvent.click(button('Needs verification'));
+    expect(button('Needs verification')).toHaveAttribute('aria-pressed', 'true');
+    expect(within(button('Needs verification')).getByText('2')).toBeInTheDocument();
+    expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
+    expect(row(unverified.email)).toBeInTheDocument();
+    expect(within(row(imported.email)).getByText('Account not linked')).toBeInTheDocument();
+    expect(within(row(imported.email)).getByRole('checkbox')).toBeDisabled();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('shows an imported name alongside its email and finds it through case-insensitive name search', async () => {
+    const imported = signup('imported', 'imported@example.test', { name: 'Morgan Ellis', source: 'admin_import', accountLinked: false, emailVerified: false });
+    await show([ready, imported]);
+    expect(within(row(imported.email)).getByRole('button', { name: 'Morgan Ellis' })).toBeInTheDocument();
+    expect(within(row(imported.email)).getByText('Imported')).toBeInTheDocument();
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'ELLIS' } });
+    expect(row(imported.email)).toBeInTheDocument();
+    expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
+  });
+
+  it('lets staff open and close contact import without changing the queue or sending invitations', async () => {
+    await show([ready]);
+    fireEvent.click(button('Import contacts'));
+    expect(screen.getByRole('heading', { name: 'Import to waitlist' })).toBeInTheDocument();
+    expect(button('Import contacts')).toBeDisabled();
+    expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    fireEvent.click(button('Close'));
+    expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument();
+    expect(button('Import contacts')).toBeEnabled();
+    expect(row(ready.email)).toBeInTheDocument();
   });
 });
