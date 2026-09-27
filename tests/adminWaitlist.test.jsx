@@ -5,14 +5,18 @@ const nav = vi.hoisted(() => ({ replace: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => nav }));
 vi.mock('next/link', () => ({ default: ({ children, ...props }) => <a {...props}>{children}</a> }));
 vi.mock('../app/components/Shell', () => ({ default: ({ children }) => <>{children}</> }));
+vi.mock('../app/lib/waitlistImport', async (original) => ({ ...await original(), readImportFile: vi.fn() }));
 vi.mock('../app/lib/api', async (original) => ({
   ...await original(), accountAccess: vi.fn(), adminWaitlist: vi.fn(), adminInvite: vi.fn(), adminRevoke: vi.fn(),
+  adminPreviewWaitlistImport: vi.fn(), adminImportWaitlist: vi.fn(),
 }));
 
 import * as api from '../app/lib/api';
+import { readImportFile } from '../app/lib/waitlistImport';
 import AdminWaitlistPage from '../app/admin/waitlist/page';
 
 const staff = { capabilities: { isAdmin: true } };
+const importer = { capabilities: { isAdmin: false, canViewWaitlist: true, canImportWaitlist: true, canManageWaitlistInvitations: false } };
 const pending = { status: 'pending', deliveryStatus: 'sent', expiresAt: '2099-10-05T12:00:00Z', cohort: 'alpha' };
 const signup = (id, email, overrides = {}) => ({
   id, email, accountLinked: true, emailVerified: true, admitted: false,
@@ -287,6 +291,107 @@ describe('waitlist administration', () => {
     expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument();
     expect(button('Import contacts')).toBeEnabled();
     expect(row(ready.email)).toBeInTheDocument();
+  });
+});
+
+describe('limited waitlist access', () => {
+  it('lets an importer browse the full queue and invitation details without invitation controls', async () => {
+    api.accountAccess.mockResolvedValue(importer);
+    const people = [ready, invited, unverified, ...largeQueue(49)];
+    await show(people);
+    expect(api.adminWaitlist).toHaveBeenCalledOnce();
+    expect(within(button('All signups')).getByText('52')).toBeInTheDocument();
+    expect(screen.getByText('Showing 1–50 of 52')).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('columnheader', { name: 'Select' })).not.toBeInTheDocument();
+    expect(screen.queryByText('Choose your next invitations')).not.toBeInTheDocument();
+    expect(screen.queryByText('Test the rollout')).not.toBeInTheDocument();
+    fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('Showing 51–52 of 52')).toBeInTheDocument();
+    fireEvent.click(button('Invited'));
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'INVITED@' } });
+    expect(row(invited.email)).toBeInTheDocument();
+    fireEvent.click(button(`View details for ${invited.email}`));
+    expect(screen.getByText('Sent to email provider')).toBeInTheDocument();
+    expect(screen.getByText('alpha')).toBeInTheDocument();
+    expect(screen.getByText('Email delivery').closest('td')).toHaveAttribute('colspan', '6');
+    expect(screen.queryByRole('button', { name: /Revoke|Review invitations|Send \d+ invitation/ })).not.toBeInTheDocument();
+    expect(button('Import contacts')).toBeEnabled();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(api.adminRevoke).not.toHaveBeenCalled();
+  });
+
+  it.each(['csv', 'xls', 'xlsx'])('lets an importer review and add %s contacts without granting or sending invitations', async (extension) => {
+    api.accountAccess.mockResolvedValue(importer);
+    const contact = { row: 2, name: 'Morgan Ellis', email: 'morgan@example.com', firm: '', role: '' };
+    readImportFile.mockResolvedValue({ sheetNames: ['Contacts'], sheet: 'Contacts', rows: [
+      { row: 1, cells: ['Name', 'Email'] }, { row: 2, cells: [contact.name, contact.email] },
+    ] });
+    api.adminPreviewWaitlistImport.mockResolvedValue({ summary: { ready: 1, existing: 0, duplicate: 0, invalid: 0 }, rows: [{ ...contact, status: 'new' }] });
+    api.adminImportWaitlist.mockResolvedValue({ summary: { added: 1, existing: 0, duplicate: 0, invalid: 0 }, rows: [{ ...contact, status: 'added' }] });
+    await show([invited]);
+    fireEvent.click(button('Import contacts'));
+    expect(button('Download CSV template')).toBeInTheDocument();
+    const file = new File(['synthetic contacts'], `contacts.${extension}`);
+    fireEvent.change(screen.getByLabelText('Contact spreadsheet'), { target: { files: [file] } });
+    await screen.findByRole('heading', { name: 'Match your columns' });
+    fireEvent.click(button('Review contacts'));
+    await screen.findByRole('heading', { name: 'Review your import' });
+    expect(api.adminPreviewWaitlistImport).toHaveBeenCalledExactlyOnceWith([contact]);
+    expect(api.adminImportWaitlist).not.toHaveBeenCalled();
+    fireEvent.click(button('Add 1 to waitlist'));
+    await screen.findByRole('heading', { name: '1 person added to the queue' });
+    expect(api.adminImportWaitlist).toHaveBeenCalledExactlyOnceWith({ batchId: expect.any(String), filename: file.name, rows: [contact] });
+    await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
+    expect(button('Download results')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Revoke|Review invitations|Send \d+ invitation/ })).not.toBeInTheDocument();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(api.adminRevoke).not.toHaveBeenCalled();
+  });
+
+  it('keeps a viewer without import capability out of import and invitation actions', async () => {
+    api.accountAccess.mockResolvedValue({ capabilities: { canViewWaitlist: true } });
+    await show([invited]);
+    fireEvent.click(button(`View details for ${invited.email}`));
+    expect(screen.getByText('Sent to email provider')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Import contacts|Revoke|Review invitations/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    expect(api.adminPreviewWaitlistImport).not.toHaveBeenCalled();
+    expect(api.adminImportWaitlist).not.toHaveBeenCalled();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(api.adminRevoke).not.toHaveBeenCalled();
+  });
+
+  it('clears invitation selections when an administrator becomes a limited importer', async () => {
+    await show([ready, invited]);
+    select(ready.email);
+    fireEvent.click(button('Review invitations'));
+    expect(button('Send 1 invitation')).toBeInTheDocument();
+    api.accountAccess.mockResolvedValue(importer);
+    fireEvent.click(button('Refresh'));
+    await waitFor(() => expect(screen.queryByRole('checkbox')).not.toBeInTheDocument());
+    expect(screen.queryByRole('button', { name: /Review invitations|Send \d+ invitation/ })).not.toBeInTheDocument();
+    fireEvent.click(button(`View details for ${invited.email}`));
+    expect(screen.queryByRole('button', { name: /Revoke/ })).not.toBeInTheDocument();
+    expect(button('Import contacts')).toBeEnabled();
+    api.accountAccess.mockResolvedValue(staff);
+    fireEvent.click(button('Refresh'));
+    await waitFor(() => expect(within(row(ready.email)).getByRole('checkbox')).toBeEnabled());
+    expect(within(row(ready.email)).getByRole('checkbox')).not.toBeChecked();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(api.adminRevoke).not.toHaveBeenCalled();
+  });
+
+  it('closes an open import when import capability is removed on refresh', async () => {
+    api.accountAccess.mockResolvedValue(importer);
+    await show([ready]);
+    fireEvent.click(button('Import contacts'));
+    api.accountAccess.mockResolvedValue({ capabilities: { canViewWaitlist: true } });
+    fireEvent.click(button('Refresh'));
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument());
+    expect(row(ready.email)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Import contacts' })).not.toBeInTheDocument();
+    expect(api.adminImportWaitlist).not.toHaveBeenCalled();
   });
 });
 

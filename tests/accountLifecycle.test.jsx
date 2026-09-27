@@ -120,6 +120,17 @@ describe('profile and staff rollout', () => {
     render(<AccountDashboard />);
     expect(await screen.findByRole('link', { name: 'Manage waitlist' })).toHaveAttribute('href', '/admin/waitlist');
   });
+  it.each([['dashboard', AccountDashboard], ['profile', ProfilePage]])('links a limited waitlist importer from their %s', async (_page, Page) => {
+    api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, canViewWaitlist: true, canImportWaitlist: true, canManageWaitlistInvitations: false } });
+    render(<Page />);
+    expect(await screen.findByRole('link', { name: 'View waitlist' })).toHaveAttribute('href', '/admin/waitlist');
+    expect(screen.queryByRole('link', { name: /Manage waitlist|Manage rollout/ })).not.toBeInTheDocument();
+  });
+  it('keeps the existing administrator link on their profile', async () => {
+    api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, isAdmin: true } });
+    render(<ProfilePage />);
+    expect(await screen.findByRole('link', { name: 'Manage rollout' })).toHaveAttribute('href', '/admin/waitlist');
+  });
   it('saves profile through the current-account endpoint', async () => {
     api.updateProfile.mockResolvedValue({ ...user, displayName: 'Morgan E' });
     render(<ProfilePage />);

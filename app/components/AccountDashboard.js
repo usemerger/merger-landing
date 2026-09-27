@@ -12,6 +12,7 @@ import { accountAccess, billingPortal, billingStatus, errorMessage, formatDate, 
 import { pollEntitlement, safeReturnPath, stripeRedirectURL, validHandle } from '../lib/authFlow';
 import { ALPHA_OFFER } from '../lib/billingOffer';
 import useHandleClaim from '../lib/useHandleClaim';
+import { waitlistPermissions } from '../lib/waitlistPermissions';
 
 function StatusPill({ status, grandfathered }) {
   if (grandfathered) return <span className="pill good">Complimentary</span>;
@@ -206,7 +207,7 @@ export default function AccountDashboard() {
     <p className="dash-handle">{user.email}</p>
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
     <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to finish joining the waitlist.' : admitted ? 'Your invitation is accepted. Finish activation when you’re ready.' : 'Your account is ready. We’ll keep your access progress here.'}</p>
-    {access.capabilities?.isAdmin === true && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">Manage waitlist</Link></div>}
+    {waitlistPermissions(access.capabilities).canViewWaitlist && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">{waitlistPermissions(access.capabilities).canManageWaitlistInvitations ? 'Manage waitlist' : 'View waitlist'}</Link></div>}
     {actionError && <div className="alert alert-error" role="alert">{actionError}</div>}
     {billingError && <div className="alert alert-warn" role="status">Billing details are temporarily unavailable. Your account and waitlist are still available. <button className="linklike" type="button" onClick={load}>Retry billing</button></div>}
     {!verified && <VerificationPanel email={user.email} onCheck={load} />}

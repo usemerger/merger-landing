@@ -152,6 +152,10 @@
   .wa-details-toggle .wa-icon-button { height: 28px; }
   .wa-table td[data-label]:not(.wa-person) { display: flex; align-items: center; justify-content: space-between; gap: 12px; grid-column: 2 / 4; }
   .wa-table td[data-label]:not(.wa-person)::before { content: attr(data-label); color: #7e7e8a; font-size: 10px; }
+  .wa-table-viewer tbody > tr:not(.wa-detail-row) { grid-template-columns: minmax(0, 1fr) 32px; }
+  .wa-table-viewer .wa-person { grid-column: 1; }
+  .wa-table-viewer .wa-details-toggle { grid-column: 2; }
+  .wa-table-viewer td[data-label]:not(.wa-person) { grid-column: 1 / 3; }
   .wa-table td[data-label='Access'] { flex-wrap: wrap; }
   .wa-delivery-failed { width: 100%; text-align: right; margin-top: -7px; }
   .wa-table .wa-referrals { text-align: left; font-size: 11px; }
