@@ -188,6 +188,15 @@
 .wi-error { padding:13px 16px; margin-top:20px !important; border:1px solid #d98f8f35; border-radius:10px; background:#d98f8f08; color:#e7baba; font-size:13px; }
 .wi-progress { display:flex; align-items:center; gap:12px; margin-top:16px !important; font-size:13px; color:#d7c095; }
 .wi-progress .wa-loader { width:16px; height:16px; margin:0; }
+.wi-progress-block { margin:20px 0; padding:16px; border:1px solid var(--line); border-radius:12px; background:#ffffff02; }
+.wi-progress-block .wi-progress { margin-top:0 !important; flex-wrap:wrap; }
+.wi-progress-block .wi-progress > span:nth-last-child(2) { flex:1; }
+.wi-progress-meter { display:block; width:100%; height:5px; margin-top:15px; border:0; border-radius:8px; overflow:hidden; background:#28282c; accent-color:#c9a96a; }
+.wi-progress-meter::-webkit-progress-bar { background:#28282c; }
+.wi-progress-meter::-webkit-progress-value { background:#c9a96a; border-radius:8px; transition:width 180ms ease; }
+.wi-progress-meter::-moz-progress-bar { background:#c9a96a; }
+.wi-report-pages { display:flex; align-items:center; justify-content:flex-end; gap:15px; margin-top:14px; }
+.wi-report-pages span { color:#aaaab4; font-size:12px; font-variant-numeric:tabular-nums; }
 .wi-file-row { display:flex; align-items:center; gap:22px; margin-top:24px; }
 .wi-file { position:relative; display:flex; flex-direction:column; justify-content:center; gap:6px; flex:1; padding:25px; border:1px dashed #4a4438; border-radius:12px; background:#c9a96a04; min-width:0; cursor:pointer; }
 .wi-file:hover, .wi-file:focus-within { border-color:#c9a96a; background:#c9a96a08; }
@@ -221,7 +230,7 @@
 .wi-table { width:100%; border-collapse:collapse; text-align:left; font-size:12px; }
 .wi-table th { position:sticky; top:0; padding:12px 14px; font-size:11px; font-weight:500; color:#9a9aa5; background:#19191c; }
 .wi-table td { padding:13px 14px; border-top:1px solid var(--line); vertical-align:top; max-width:260px; overflow-wrap:anywhere; }
-.wi-table td:first-child { color:#8f8f9a; font-size:11px; width:55px; }
+.wi-table td:first-child { color:#8f8f9a; font-size:11px; width:76px; white-space:nowrap; font-variant-numeric:tabular-nums; }
 .wi-table small { display:block; font-size:10px; color:#aaaab5; margin-top:6px; max-width:260px; }
 .wi-invalid { color:#e0aaa2; border-color:#d98f8f30; background:#d98f8f08; }
 .wi-no-rows { padding:24px; color:#a1a1ac; font-size:12px; text-align:center; }

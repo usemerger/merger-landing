@@ -1,77 +1,74 @@
-import { IMPORT_LIMIT, FILE_LIMIT, CELL_LIMIT } from './waitlistImportLimits';
-export { IMPORT_LIMIT, FILE_LIMIT, COLUMN_LIMIT, CELL_LIMIT } from './waitlistImportLimits';
+import { checkFile } from './waitlistImportFields';
+export { checkFile, guessMapping, mapImportRows, mapImportEntry, validateMapping, safeCsvCell, resultsCsv } from './waitlistImportFields';
+export { IMPORT_LIMIT, FILE_LIMIT, EXCEL_FILE_LIMIT, COLUMN_LIMIT, CELL_LIMIT, BATCH_SIZE } from './waitlistImportLimits';
 
-export function checkFile(file) {
-  if (!/\.(csv|xls|xlsx)$/i.test(file.name)) throw new Error('Choose a CSV, XLS, or XLSX file.');
-  if (!file.size) throw new Error('This file is empty.');
-  if (file.size > FILE_LIMIT) throw new Error('Choose a file smaller than 5 MB. Split larger lists into batches of 1,000 people.');
-}
-
-// Parse in a disposable worker so a malformed workbook cannot freeze the dashboard.
-export async function readImportFile(file, sheet) {
+// Only the File handle crosses into the worker. Full spreadsheets and reports
+// stay there; the dashboard receives a small column preview and bounded batches.
+export async function createImportSession(file, selectedSheet, onProgress, signal) {
+  if (signal?.aborted) throw new Error('This import was cancelled.');
   checkFile(file);
-  const buffer = await file.arrayBuffer();
-  return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL('./waitlistImport.worker.js', import.meta.url));
-    const finish = (error, result) => { clearTimeout(timer); worker.terminate(); error ? reject(new Error(error)) : resolve(result); };
-    const timer = setTimeout(() => finish('This file took too long to read. Export a smaller CSV and try again.'), 15000);
-    worker.onmessage = ({ data }) => finish(data.error, data.result);
-    worker.onerror = () => finish('We could not read this spreadsheet. Try exporting it as a CSV.');
-    worker.postMessage({ buffer, filename: file.name, sheet }, [buffer]);
+  const worker = new Worker(new URL('./waitlistImport.worker.js', import.meta.url));
+  const pending = new Map();
+  let nextId = 0, closed = false;
+  const abort = () => destroy('This import was cancelled.');
+  const destroy = (reason = 'This import was closed.') => {
+    if (closed) return;
+    closed = true;
+    signal?.removeEventListener('abort', abort);
+    worker.terminate();
+    for (const request of pending.values()) { clearTimeout(request.timer); request.reject(new Error(reason)); }
+    pending.clear();
+  };
+  signal?.addEventListener('abort', abort, { once: true });
+  const arm = (id, request) => {
+    clearTimeout(request.timer);
+    request.timer = setTimeout(() => destroy('This file stopped responding. Export it as a CSV or try a smaller file.'), 120000);
+  };
+  worker.onmessage = ({ data }) => {
+    if (data.progress) {
+      const request = pending.get(data.id);
+      if (request) arm(data.id, request);
+      onProgress?.(data.progress);
+      return;
+    }
+    const request = pending.get(data.id);
+    if (!request) return;
+    clearTimeout(request.timer); pending.delete(data.id);
+    if (data.error) request.reject(new Error(data.error)); else request.resolve(data.result);
+  };
+  worker.onerror = () => destroy('The import worker stopped. Export this spreadsheet as a CSV and try again.');
+  worker.onmessageerror = () => destroy('The import worker could not transfer this result. Please retry the import.');
+  const call = (method, args = []) => new Promise((resolve, reject) => {
+    if (closed) { reject(new Error('This import was closed.')); return; }
+    const id = ++nextId;
+    const request = { resolve, reject, timer: null };
+    pending.set(id, request); arm(id, request);
+    try { worker.postMessage({ id, method, args }); } catch (error) { destroy(error.message); }
   });
+  try {
+    const metadata = await call('init', [file, selectedSheet]);
+    return {
+      ...metadata,
+      get closed() { return closed; },
+      prepare: (mapping, headers = true) => call('prepare', [mapping, headers]),
+      getBatch: (index) => call('getBatch', [index]),
+      setReportBatch: (index, response) => call('setReportBatch', [index, response]),
+      getSummary: () => call('getSummary'),
+      getReportPage: (options = {}) => call('getReportPage', [options]),
+      getCommitBatch: (index) => call('getCommitBatch', [index]),
+      applyCommitBatch: (index, response) => call('applyCommitBatch', [index, response]),
+      exportReport: () => call('exportReport'),
+      destroy,
+    };
+  } catch (error) { destroy(); throw error; }
 }
 
-const key = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-const aliases = {
-  email: ['email', 'emailaddress', 'emailid', 'contactemail', 'workemail', 'recommendedemail'],
-  name: ['name', 'fullname', 'contactname', 'displayname'],
-  firstName: ['firstname', 'first', 'givenname'], lastName: ['lastname', 'last', 'surname', 'familyname'],
-  firm: ['company', 'firm', 'organization', 'organisation', 'companyname', 'employer'], role: ['role', 'title', 'jobtitle', 'position'],
-};
-export function guessMapping(cells, headers = true) {
-  const mapping = Object.fromEntries(Object.keys(aliases).map((field) => [field, '']));
-  if (headers) {
-    for (const [field, names] of Object.entries(aliases)) {
-      const index = cells.findIndex((value) => names.includes(key(value)));
-      if (index >= 0) mapping[field] = String(index);
-    }
-  } else {
-    const email = cells.findIndex((value) => /\S+@\S+\.\S+/.test(value));
-    if (email >= 0) mapping.email = String(email);
-  }
-  if (mapping.name !== '') { mapping.firstName = ''; mapping.lastName = ''; }
-  return mapping;
-}
-
-export function mapImportRows(sheet, mapping, headers = true) {
-  if (mapping.email === '') throw new Error('Choose the column containing email addresses.');
-  const used = Object.entries(mapping).filter(([field, column]) => column !== '' && !(mapping.name !== '' && ['firstName', 'lastName'].includes(field)));
-  if (new Set(used.map(([, column]) => column)).size !== used.length) throw new Error('Choose a different column for each field.');
-  const data = headers ? sheet.rows.slice(1) : sheet.rows;
-  const rows = [];
-  for (const entry of data) {
-    for (const [field, column] of used) {
-      if (String(entry.cells[Number(column)] ?? '').length > CELL_LIMIT) {
-        const label = { email: 'Email address', name: 'Full name', firstName: 'First name', lastName: 'Last name', firm: 'Company', role: 'Role' }[field];
-        throw new Error(`Row ${entry.row}: ${label} is over 4,096 characters. Choose the correct column or shorten that contact field.`);
-      }
-    }
-    const value = (field) => mapping[field] === '' ? '' : String(entry.cells[Number(mapping[field])] || '').trim();
-    const values = { name: mapping.name !== '' ? value('name') : [value('firstName'), value('lastName')].filter(Boolean).join(' '), email: value('email'), firm: value('firm'), role: value('role') };
-    if (used.some(([, column]) => entry.formulas?.includes(Number(column)))) throw new Error(`Row ${entry.row} contains a formula in a selected column. Paste those cells as values before importing.`);
-    if (!Object.values(values).some(Boolean)) continue;
-    rows.push({ row: entry.row, ...values });
-  }
-  if (!rows.length) throw new Error('No contacts were found in these columns. Check your column choices and header setting.');
-  if (rows.length > IMPORT_LIMIT) throw new Error('Import up to 1,000 people at a time. Split this list into smaller files.');
-  return rows;
-}
-
-export function safeCsvCell(value) {
-  const text = String(value ?? '');
-  const safe = /^[\s\uFEFF]*[=+@-]/.test(text) || /^[\t\r\n]/.test(text) ? `'${text}` : text;
-  return `"${safe.replace(/"/g, '""')}"`;
-}
-export function resultsCsv(rows) {
-  return '\uFEFF' + [['Row', 'Name', 'Email', 'Company', 'Role', 'Result', 'Details'], ...rows.map((row) => [row.row, row.name, row.email, row.firm, row.role, row.status, row.error || ''])].map((row) => row.map(safeCsvCell).join(',')).join('\r\n');
+// Legacy callers receive only the column preview. New import flows must retain
+// createImportSession() and use prepare()/getBatch() for the complete file.
+export async function readImportFile(file, sheet) {
+  const session = await createImportSession(file, sheet);
+  const { sheetNames, rows, columnCount, totalRows } = session;
+  const result = { sheetNames, sheet: session.sheet, rows, columnCount, totalRows };
+  session.destroy();
+  return result;
 }

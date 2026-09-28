@@ -1,4 +1,9 @@
-export const IMPORT_LIMIT = 1000;
-export const FILE_LIMIT = 5 * 1024 * 1024;
+export const IMPORT_LIMIT = 500000;
+export const FILE_LIMIT = 250 * 1024 * 1024;
+export const EXCEL_FILE_LIMIT = 50 * 1024 * 1024;
+export const BATCH_SIZE = 500;
+export const BATCH_BYTE_LIMIT = 1536 * 1024;
+export const EXCEL_INFLATED_LIMIT = 256 * 1024 * 1024;
+export const PREVIEW_ROWS = 11;
 export const COLUMN_LIMIT = 100;
 export const CELL_LIMIT = 4096;

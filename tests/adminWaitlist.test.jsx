@@ -5,14 +5,14 @@ const nav = vi.hoisted(() => ({ replace: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => nav }));
 vi.mock('next/link', () => ({ default: ({ children, ...props }) => <a {...props}>{children}</a> }));
 vi.mock('../app/components/Shell', () => ({ default: ({ children }) => <>{children}</> }));
-vi.mock('../app/lib/waitlistImport', async (original) => ({ ...await original(), readImportFile: vi.fn() }));
+vi.mock('../app/lib/waitlistImport', async (original) => ({ ...await original(), createImportSession: vi.fn() }));
 vi.mock('../app/lib/api', async (original) => ({
   ...await original(), accountAccess: vi.fn(), adminWaitlist: vi.fn(), adminInvite: vi.fn(), adminRevoke: vi.fn(),
   adminPreviewWaitlistImport: vi.fn(), adminImportWaitlist: vi.fn(),
 }));
 
 import * as api from '../app/lib/api';
-import { readImportFile } from '../app/lib/waitlistImport';
+import { createImportSession } from '../app/lib/waitlistImport';
 import AdminWaitlistPage from '../app/admin/waitlist/page';
 
 const staff = { capabilities: { isAdmin: true } };
@@ -35,8 +35,26 @@ const largeQueue = (count = 1025) => Array.from({ length: count }, (_, index) =>
 function row(email) { return screen.getByText(email).closest('tr'); }
 function select(email) { fireEvent.click(within(row(email)).getByRole('checkbox')); }
 function button(name) { return screen.getByRole('button', { name }); }
+function pageResponse(rows, { page = 0, pageSize = 50, q = '', filter = 'all' } = {}) {
+  const views = (row) => {
+    const status = row.invitation?.status === 'pending' && new Date(row.invitation.expiresAt).getTime() <= Date.now() ? 'expired' : row.invitation?.status;
+    const admitted = row.admitted || status === 'accepted';
+    return { all: true, unverified: !row.emailVerified, eligible: row.accountLinked && row.emailVerified && !admitted && status !== 'pending', invited: !row.admitted && status === 'pending', admitted };
+  };
+  const counts = Object.fromEntries(['all', 'unverified', 'eligible', 'invited', 'admitted'].map((key) => [key, rows.filter((row) => views(row)[key]).length]));
+  const matching = rows.filter((row) => views(row)[filter] && `${row.name || ''} ${row.email} ${row.firm || ''} ${row.role || ''}`.toLowerCase().includes(q.toLowerCase()));
+  const actualPage = Math.min(page, Math.max(0, Math.ceil(matching.length / pageSize) - 1));
+  return { waitlist: matching.slice(actualPage * pageSize, (actualPage + 1) * pageSize), totalCount: rows.length, filteredCount: matching.length, counts, page: actualPage, pageSize, hasMore: (actualPage + 1) * pageSize < matching.length };
+}
+function serve(rows) { api.adminWaitlist.mockImplementation(async (options) => pageResponse(rows, options)); }
+async function click(element) { await act(async () => { fireEvent.click(element); }); }
+async function searchFor(value) {
+  fireEvent.change(screen.getByRole('searchbox'), { target: { value } });
+  await waitFor(() => expect(api.adminWaitlist).toHaveBeenLastCalledWith(expect.objectContaining({ q: value.trim(), page: 0 })));
+  await waitFor(() => expect(button('Refresh')).toBeEnabled());
+}
 async function show(rows = [ready]) {
-  api.adminWaitlist.mockResolvedValue({ waitlist: rows });
+  serve(rows);
   render(<AdminWaitlistPage />);
   await screen.findByText(rows[0].email);
 }
@@ -63,13 +81,13 @@ describe('waitlist administration', () => {
 
   it('combines the ready-to-invite filter with case-insensitive email, firm, or role search', async () => {
     await show([ready, second, unverified, invited, admitted]);
-    fireEvent.click(button(/Ready to invite/i));
+    await click(button(/Ready to invite/i));
     expect(row(ready.email)).toBeInTheDocument();
     expect(row(second.email)).toBeInTheDocument();
     for (const person of [unverified, invited, admitted]) expect(screen.queryByText(person.email)).not.toBeInTheDocument();
     const search = screen.getByRole('searchbox');
     for (const query of ['NORTHLINE', 'Broker', 'second@']) {
-      fireEvent.change(search, { target: { value: query } });
+      await searchFor(query);
       expect(row(second.email)).toBeInTheDocument();
       expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
     }
@@ -77,10 +95,10 @@ describe('waitlist administration', () => {
 
   it('shows only pending invitations or admitted accounts in their respective views', async () => {
     await show([ready, invited, admitted]);
-    fireEvent.click(button(/^Invited/));
+    await click(button(/^Invited/));
     expect(row(invited.email)).toBeInTheDocument();
     expect(screen.queryByText(admitted.email)).not.toBeInTheDocument();
-    fireEvent.click(button(/^Admitted/));
+    await click(button(/^Admitted/));
     expect(row(admitted.email)).toBeInTheDocument();
     expect(screen.queryByText(invited.email)).not.toBeInTheDocument();
   });
@@ -88,11 +106,11 @@ describe('waitlist administration', () => {
   it('allows expired invitations to be reissued without classifying them as active invitations', async () => {
     const expired = signup('expired', 'expired@example.test', { invitation: { ...pending, expiresAt: '2020-01-01T00:00:00Z' } });
     await show([expired, invited]);
-    fireEvent.click(button(/Ready to invite/i));
+    await click(button(/Ready to invite/i));
     expect(row(expired.email)).toBeInTheDocument();
     expect(within(row(expired.email)).getByRole('checkbox')).toBeEnabled();
     expect(screen.queryByText(invited.email)).not.toBeInTheDocument();
-    fireEvent.click(button(/^Invited/));
+    await click(button(/^Invited/));
     expect(screen.queryByText(expired.email)).not.toBeInTheDocument();
     expect(row(invited.email)).toBeInTheDocument();
   });
@@ -103,24 +121,24 @@ describe('waitlist administration', () => {
     let view;
     try {
       const expiring = signup('expiring', 'expiring@example.test', { invitation: { ...pending, expiresAt: new Date(Date.now() + 1000).toISOString() } });
-      api.adminWaitlist.mockResolvedValue({ waitlist: [expiring] });
+      serve([expiring]);
       await act(async () => { view = render(<AdminWaitlistPage />); });
-      fireEvent.click(button('Invited'));
+      await click(button('Invited'));
       expect(row(expiring.email)).toBeInTheDocument();
       expect(within(button('Invited')).getByText('1')).toBeInTheDocument();
       expect(within(button('Ready to invite')).getByText('0')).toBeInTheDocument();
 
-      act(() => { vi.advanceTimersByTime(999); });
+      await act(async () => { vi.advanceTimersByTime(999); });
       expect(row(expiring.email)).toBeInTheDocument();
-      act(() => { vi.advanceTimersByTime(2); });
+      await act(async () => { vi.advanceTimersByTime(2); });
       expect(screen.queryByText(expiring.email)).not.toBeInTheDocument();
       expect(within(button('Invited')).getByText('0')).toBeInTheDocument();
       expect(within(button('Ready to invite')).getByText('1')).toBeInTheDocument();
       expect(screen.getByRole('heading', { name: 'No signups match this view.' })).toBeInTheDocument();
-      fireEvent.click(button('Ready to invite'));
+      await click(button('Ready to invite'));
       expect(within(row(expiring.email)).getByText('Expired')).toBeInTheDocument();
       expect(within(row(expiring.email)).getByRole('checkbox')).toBeEnabled();
-      expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+      expect(api.adminWaitlist).toHaveBeenCalledTimes(4);
       expect(api.adminInvite).not.toHaveBeenCalled();
     } finally {
       view?.unmount();
@@ -133,7 +151,7 @@ describe('waitlist administration', () => {
     api.adminInvite.mockImplementation(() => new Promise((resolve) => { finish = resolve; }));
     await show([ready, second]);
     select(ready.email);
-    fireEvent.click(button('Review invitations'));
+    await click(button('Review invitations'));
     expect(api.adminInvite).not.toHaveBeenCalled();
     const review = screen.getByRole('region', { name: 'Review this invitation batch' });
     expect(within(review).getByText(ready.email)).toBeInTheDocument();
@@ -148,7 +166,7 @@ describe('waitlist administration', () => {
   it('warns that reissuing a pending invitation invalidates its previous link', async () => {
     await show([invited]);
     select(invited.email);
-    fireEvent.click(button('Review invitations'));
+    await click(button('Review invitations'));
     const review = screen.getByRole('region', { name: 'Review this invitation batch' });
     expect(within(review).getByText(/previous link/i)).toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
@@ -162,13 +180,13 @@ describe('waitlist administration', () => {
       { ...second, invitation: { ...pending, deliveryStatus: 'failed' } },
     ] });
     select(ready.email); select(second.email);
-    fireEvent.click(button('Review invitations'));
-    fireEvent.click(button('Send 2 invitations'));
+    await click(button('Review invitations'));
+    await click(button('Send 2 invitations'));
     await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument());
     expect(within(row(ready.email)).getByRole('checkbox')).not.toBeChecked();
     expect(within(row(second.email)).getByRole('checkbox')).toBeChecked();
-    fireEvent.click(button('Review invitations'));
+    await click(button('Review invitations'));
     const review = screen.getByRole('region', { name: 'Review this invitation batch' });
     expect(within(review).queryByText(ready.email)).not.toBeInTheDocument();
     expect(within(review).getByText(second.email)).toBeInTheDocument();
@@ -179,8 +197,8 @@ describe('waitlist administration', () => {
     api.adminInvite.mockRejectedValue(new api.ApiError(403));
     await show([ready, second]);
     select(ready.email); select(second.email);
-    fireEvent.click(button('Review invitations'));
-    fireEvent.click(button('Send 2 invitations'));
+    await click(button('Review invitations'));
+    await click(button('Send 2 invitations'));
     await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
     expect(api.adminInvite).toHaveBeenCalledExactlyOnceWith(ready.id);
   });
@@ -189,7 +207,7 @@ describe('waitlist administration', () => {
     await show([ready, second]);
     select(ready.email); select(second.email);
     api.adminWaitlist.mockResolvedValue({ waitlist: [{ ...ready, admitted: true }] });
-    fireEvent.click(button(/Refresh/i));
+    await click(button(/Refresh/i));
     await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByText(second.email)).not.toBeInTheDocument());
     const review = screen.queryByRole('button', { name: 'Review invitations' });
@@ -203,7 +221,7 @@ describe('waitlist administration', () => {
     await show([ready]);
     select(ready.email);
     api.adminWaitlist.mockRejectedValue(new api.ApiError(503));
-    fireEvent.click(button(/Refresh/i));
+    await click(button(/Refresh/i));
     await screen.findByRole('alert');
     for (const action of screen.queryAllByRole('button', { name: /Review invitations|Send \d+ invitation/ })) {
       expect(action).toBeDisabled();
@@ -211,24 +229,24 @@ describe('waitlist administration', () => {
     expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
     api.adminWaitlist.mockResolvedValue({ waitlist: [ready] });
-    fireEvent.click(button('Try again'));
+    await click(button('Try again'));
     await waitFor(() => expect(button('Review invitations')).toBeEnabled());
-    fireEvent.click(button('Review invitations'));
-    fireEvent.click(button('Send 1 invitation'));
+    await click(button('Review invitations'));
+    await click(button('Send 1 invitation'));
     await waitFor(() => expect(api.adminInvite).toHaveBeenCalledExactlyOnceWith(ready.id));
   });
 
   it('requires revocation confirmation and supports cancelling without changing the invitation', async () => {
     await show([invited]);
-    fireEvent.click(button(`View details for ${invited.email}`));
-    fireEvent.click(button('Revoke invitation'));
+    await click(button(`View details for ${invited.email}`));
+    await click(button('Revoke invitation'));
     expect(button('Confirm revoke')).toBeInTheDocument();
     expect(api.adminRevoke).not.toHaveBeenCalled();
-    fireEvent.click(button('Keep invitation'));
+    await click(button('Keep invitation'));
     expect(screen.queryByRole('button', { name: 'Confirm revoke' })).not.toBeInTheDocument();
     expect(api.adminRevoke).not.toHaveBeenCalled();
-    fireEvent.click(button('Revoke invitation'));
-    fireEvent.click(button('Confirm revoke'));
+    await click(button('Revoke invitation'));
+    await click(button('Confirm revoke'));
     await waitFor(() => expect(api.adminRevoke).toHaveBeenCalledExactlyOnceWith(invited.id));
   });
 
@@ -260,7 +278,7 @@ describe('waitlist administration', () => {
   it('includes unlinked imported contacts in Needs verification while keeping invitations disabled', async () => {
     const imported = signup('imported', 'imported@example.test', { name: 'Morgan Ellis', source: 'admin_import', accountLinked: false, emailVerified: false });
     await show([ready, unverified, imported]);
-    fireEvent.click(button('Needs verification'));
+    await click(button('Needs verification'));
     expect(button('Needs verification')).toHaveAttribute('aria-pressed', 'true');
     expect(within(button('Needs verification')).getByText('2')).toBeInTheDocument();
     expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
@@ -275,19 +293,19 @@ describe('waitlist administration', () => {
     await show([ready, imported]);
     expect(within(row(imported.email)).getByRole('button', { name: 'Morgan Ellis' })).toBeInTheDocument();
     expect(within(row(imported.email)).getByText('Imported')).toBeInTheDocument();
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'ELLIS' } });
+    await searchFor('ELLIS');
     expect(row(imported.email)).toBeInTheDocument();
     expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
   });
 
   it('lets staff open and close contact import without changing the queue or sending invitations', async () => {
     await show([ready]);
-    fireEvent.click(button('Import contacts'));
+    await click(button('Import contacts'));
     expect(screen.getByRole('heading', { name: 'Import to waitlist' })).toBeInTheDocument();
     expect(button('Import contacts')).toBeDisabled();
     expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
     expect(api.adminInvite).not.toHaveBeenCalled();
-    fireEvent.click(button('Close'));
+    await click(button('Close'));
     expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument();
     expect(button('Import contacts')).toBeEnabled();
     expect(row(ready.email)).toBeInTheDocument();
@@ -306,12 +324,12 @@ describe('limited waitlist access', () => {
     expect(screen.queryByRole('columnheader', { name: 'Select' })).not.toBeInTheDocument();
     expect(screen.queryByText('Choose your next invitations')).not.toBeInTheDocument();
     expect(screen.queryByText('Test the rollout')).not.toBeInTheDocument();
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
     expect(screen.getByText('Showing 51–52 of 52')).toBeInTheDocument();
-    fireEvent.click(button('Invited'));
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'INVITED@' } });
+    await click(button('Invited'));
+    await searchFor('INVITED@');
     expect(row(invited.email)).toBeInTheDocument();
-    fireEvent.click(button(`View details for ${invited.email}`));
+    await click(button(`View details for ${invited.email}`));
     expect(screen.getByText('Sent to email provider')).toBeInTheDocument();
     expect(screen.getByText('alpha')).toBeInTheDocument();
     expect(screen.getByText('Email delivery').closest('td')).toHaveAttribute('colspan', '6');
@@ -324,35 +342,48 @@ describe('limited waitlist access', () => {
   it.each(['csv', 'xls', 'xlsx'])('lets an importer review and add %s contacts without granting or sending invitations', async (extension) => {
     api.accountAccess.mockResolvedValue(importer);
     const contact = { row: 2, name: 'Morgan Ellis', email: 'morgan@example.com', firm: '', role: '' };
-    readImportFile.mockResolvedValue({ sheetNames: ['Contacts'], sheet: 'Contacts', rows: [
+    const destroy = vi.fn();
+    let report = [];
+    createImportSession.mockResolvedValue({ sheetNames: ['Contacts'], sheet: 'Contacts', columnCount: 2, totalRows: 2, rows: [
       { row: 1, cells: ['Name', 'Email'] }, { row: 2, cells: [contact.name, contact.email] },
-    ] });
+    ],
+      prepare: async () => ({ total: 1, batchCount: 1 }), getBatch: async () => [contact],
+      getCommitBatch: async () => [contact], destroy,
+      setReportBatch: async (_index, result) => { report = result.rows; return result.summary; },
+      applyCommitBatch: async (_index, result) => { report = result.rows; return result.summary; },
+      getReportPage: async () => ({ rows: report, total: report.length }),
+    });
     api.adminPreviewWaitlistImport.mockResolvedValue({ summary: { ready: 1, existing: 0, duplicate: 0, invalid: 0 }, rows: [{ ...contact, status: 'new' }] });
-    api.adminImportWaitlist.mockResolvedValue({ summary: { added: 1, existing: 0, duplicate: 0, invalid: 0 }, rows: [{ ...contact, status: 'added' }] });
+    api.adminImportWaitlist.mockImplementation(async (request) => ({ ok: true, batchId: request.batchId, summary: { added: 1, existing: 0, duplicate: 0, invalid: 0 }, rows: [{ ...contact, status: 'added' }] }));
     await show([invited]);
-    fireEvent.click(button('Import contacts'));
+    await click(button('Import contacts'));
     expect(button('Download CSV template')).toBeInTheDocument();
     const file = new File(['synthetic contacts'], `contacts.${extension}`);
     fireEvent.change(screen.getByLabelText('Contact spreadsheet'), { target: { files: [file] } });
     await screen.findByRole('heading', { name: 'Match your columns' });
-    fireEvent.click(button('Review contacts'));
+    await click(button('Review contacts'));
     await screen.findByRole('heading', { name: 'Review your import' });
     expect(api.adminPreviewWaitlistImport).toHaveBeenCalledExactlyOnceWith([contact]);
     expect(api.adminImportWaitlist).not.toHaveBeenCalled();
-    fireEvent.click(button('Add 1 to waitlist'));
+    await click(button('Add 1 to waitlist'));
     await screen.findByRole('heading', { name: '1 person added to the queue' });
     expect(api.adminImportWaitlist).toHaveBeenCalledExactlyOnceWith({ batchId: expect.any(String), filename: file.name, rows: [contact] });
     await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(button('Refresh')).toBeEnabled());
+    expect(destroy).not.toHaveBeenCalled();
     expect(button('Download results')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Revoke|Review invitations|Send \d+ invitation/ })).not.toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
     expect(api.adminRevoke).not.toHaveBeenCalled();
+    await click(button('Done'));
+    expect(destroy).toHaveBeenCalled();
+    expect(screen.queryByRole('button', { name: 'Download results' })).not.toBeInTheDocument();
   });
 
   it('keeps a viewer without import capability out of import and invitation actions', async () => {
     api.accountAccess.mockResolvedValue({ capabilities: { canViewWaitlist: true } });
     await show([invited]);
-    fireEvent.click(button(`View details for ${invited.email}`));
+    await click(button(`View details for ${invited.email}`));
     expect(screen.getByText('Sent to email provider')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Import contacts|Revoke|Review invitations/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
@@ -365,17 +396,17 @@ describe('limited waitlist access', () => {
   it('clears invitation selections when an administrator becomes a limited importer', async () => {
     await show([ready, invited]);
     select(ready.email);
-    fireEvent.click(button('Review invitations'));
+    await click(button('Review invitations'));
     expect(button('Send 1 invitation')).toBeInTheDocument();
     api.accountAccess.mockResolvedValue(importer);
-    fireEvent.click(button('Refresh'));
+    await click(button('Refresh'));
     await waitFor(() => expect(screen.queryByRole('checkbox')).not.toBeInTheDocument());
     expect(screen.queryByRole('button', { name: /Review invitations|Send \d+ invitation/ })).not.toBeInTheDocument();
-    fireEvent.click(button(`View details for ${invited.email}`));
+    await click(button(`View details for ${invited.email}`));
     expect(screen.queryByRole('button', { name: /Revoke/ })).not.toBeInTheDocument();
     expect(button('Import contacts')).toBeEnabled();
     api.accountAccess.mockResolvedValue(staff);
-    fireEvent.click(button('Refresh'));
+    await click(button('Refresh'));
     await waitFor(() => expect(within(row(ready.email)).getByRole('checkbox')).toBeEnabled());
     expect(within(row(ready.email)).getByRole('checkbox')).not.toBeChecked();
     expect(api.adminInvite).not.toHaveBeenCalled();
@@ -385,9 +416,9 @@ describe('limited waitlist access', () => {
   it('closes an open import when import capability is removed on refresh', async () => {
     api.accountAccess.mockResolvedValue(importer);
     await show([ready]);
-    fireEvent.click(button('Import contacts'));
+    await click(button('Import contacts'));
     api.accountAccess.mockResolvedValue({ capabilities: { canViewWaitlist: true } });
-    fireEvent.click(button('Refresh'));
+    await click(button('Refresh'));
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Import to waitlist' })).not.toBeInTheDocument());
     expect(row(ready.email)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Import contacts' })).not.toBeInTheDocument();
@@ -395,169 +426,134 @@ describe('limited waitlist access', () => {
   });
 });
 
-describe('waitlist administration with large queues', () => {
-  it('bounds the rendered table to one page and adds only the currently expanded details', async () => {
-    const people = largeQueue(20000);
-    await show(people);
-    const table = screen.getByRole('table');
-    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
-    expect(within(table).getAllByRole('row')).toHaveLength(51);
-    expect(screen.getByText('Showing 1–50 of 20,000')).toBeInTheDocument();
-    expect(row(people[49].email)).toBeInTheDocument();
-    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
-    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeDisabled();
 
-    fireEvent.click(button(`View details for ${people[0].email}`));
-    expect(within(table).getAllByRole('row')).toHaveLength(52);
-    expect(within(table).getAllByText('Email verification')).toHaveLength(1);
-    fireEvent.click(button(`View details for ${people[1].email}`));
-    expect(within(table).getAllByRole('row')).toHaveLength(52);
-    expect(within(table).getAllByText('Email verification')).toHaveLength(1);
-    expect(button(`View details for ${people[0].email}`)).toHaveAttribute('aria-expanded', 'false');
-
-    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
-    expect(screen.getByText('Showing 51–100 of 20,000')).toBeInTheDocument();
-    expect(within(table).getAllByRole('row')).toHaveLength(51);
-    expect(row(people[50].email)).toBeInTheDocument();
-    expect(row(people[99].email)).toBeInTheDocument();
-    expect(screen.queryByText(people[0].email)).not.toBeInTheDocument();
-    expect(screen.queryByText(people[100].email)).not.toBeInTheDocument();
-    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeEnabled();
-    fireEvent.click(within(pages).getByRole('button', { name: 'Previous' }));
-    expect(row(people[0].email)).toBeInTheDocument();
-    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
-    expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
+describe('server-paged waitlist', () => {
+  it('requests only 50 rows and reaches the final contacts of a 500,000-person queue', async () => {
+    api.adminWaitlist.mockImplementation(async ({ page, pageSize, q, filter }) => ({
+      waitlist: Array.from({ length: 50 }, (_, offset) => signup(page * 50 + offset, `person-${page * 50 + offset}@example.test`)),
+      totalCount: 500000, filteredCount: 500000, counts: { all: 500000, eligible: 500000 }, page, pageSize, hasMore: page < 9999,
+    }));
+    render(<AdminWaitlistPage />);
+    await screen.findByText('person-0@example.test');
+    expect(api.adminWaitlist).toHaveBeenCalledExactlyOnceWith({ page: 0, pageSize: 50, q: '', filter: 'all' });
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(51);
+    expect(screen.getByText('Showing 1–50 of 500,000')).toBeInTheDocument();
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Last' }));
+    expect(api.adminWaitlist).toHaveBeenLastCalledWith({ page: 9999, pageSize: 50, q: '', filter: 'all' });
+    expect(screen.getByText('person-499999@example.test')).toBeInTheDocument();
+    expect(screen.getByText('Showing 499,951–500,000 of 500,000')).toBeInTheDocument();
+    expect(screen.queryByText('person-0@example.test')).not.toBeInTheDocument();
+    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(51);
+    expect(within(button('All signups')).getByText('500000')).toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
   });
 
-  it('searches and filters the full queue and resets the current page when the view changes', async () => {
-    const people = largeQueue();
-    people[1000] = { ...people[1000], name: 'Distant Prospect' };
-    people[1001] = { ...people[1001], emailVerified: false };
-    people[1002] = { ...people[1002], invitation: pending };
-    people[1003] = { ...people[1003], admitted: true, invitation: { ...pending, status: 'accepted' } };
+  it('searches the server and resets page for search and filter changes', async () => {
+    const people = largeQueue(1100);
+    people[1000] = { ...people[1000], name: 'Distant Prospect', emailVerified: false };
     await show(people);
-    const search = screen.getByRole('searchbox');
-    const nextPage = () => fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
-
-    nextPage();
-    fireEvent.change(search, { target: { value: 'DISTANT PROSPECT' } });
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    await searchFor('DISTANT PROSPECT');
+    expect(row(people[1000].email)).toBeInTheDocument();
+    expect(screen.getByText('Showing 1–1 of 1')).toBeInTheDocument();
+    expect(within(button('All signups')).getByText('1100')).toBeInTheDocument();
+    await searchFor('');
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    await click(button('Needs verification'));
+    expect(api.adminWaitlist).toHaveBeenLastCalledWith({ page: 0, pageSize: 50, q: '', filter: 'unverified' });
     expect(row(people[1000].email)).toBeInTheDocument();
     expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
-    expect(screen.queryByText(people[50].email)).not.toBeInTheDocument();
-    fireEvent.change(search, { target: { value: '' } });
-    expect(screen.getByText('Showing 1–50 of 1,025')).toBeInTheDocument();
-
-    for (const [view, person] of [
-      ['Needs verification', people[1001]],
-      ['Invited', people[1002]],
-      ['Admitted', people[1003]],
-    ]) {
-      nextPage();
-      fireEvent.click(button(view));
-      expect(row(person.email)).toBeInTheDocument();
-      expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(2);
-      expect(screen.queryByText(people[0].email)).not.toBeInTheDocument();
-      fireEvent.click(button('All signups'));
-      expect(screen.getByText('Showing 1–50 of 1,025')).toBeInTheDocument();
-    }
-
-    nextPage();
-    fireEvent.click(button('Ready to invite'));
-    expect(row(people[0].email)).toBeInTheDocument();
-    fireEvent.change(search, { target: { value: 'person-100' } });
-    for (const index of [100, 1000, 1004, 1005, 1006, 1007, 1008, 1009]) expect(row(people[index].email)).toBeInTheDocument();
-    for (const index of [1001, 1002, 1003]) expect(screen.queryByText(people[index].email)).not.toBeInTheDocument();
-    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(9);
-    expect(api.adminWaitlist).toHaveBeenCalledTimes(1);
   });
 
-  it('clamps a page after the queue shrinks and keeps that page when the queue grows again', async () => {
-    const people = largeQueue();
+  it('debounces search and ignores responses for an older query, including during the debounce interval', async () => {
+    await show();
+    let finishOld;
+    api.adminWaitlist.mockImplementation(({ q, ...options }) => q === 'old' ? new Promise((resolve) => { finishOld = resolve; }) : Promise.resolve(pageResponse([second], { q, ...options })));
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'o' } });
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'old' } });
+    await waitFor(() => expect(finishOld).toBeTypeOf('function'));
+    expect(api.adminWaitlist).toHaveBeenCalledTimes(2);
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'second' } });
+    await act(async () => { finishOld(pageResponse([signup('stale', 'stale@example.test')], { q: '' })); });
+    expect(screen.queryByText('stale@example.test')).not.toBeInTheDocument();
+    await screen.findByText(second.email);
+    expect(api.adminWaitlist).toHaveBeenLastCalledWith({ page: 0, pageSize: 50, q: 'second', filter: 'all' });
+    expect(screen.queryByText('stale@example.test')).not.toBeInTheDocument();
+  });
+
+  it('reloads safely when a pending search is cleared back to the current query', async () => {
+    await show();
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'partial' } });
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: '' } });
+    await waitFor(() => expect(button('Refresh')).toBeEnabled());
+    expect(row(ready.email)).toBeInTheDocument();
+    select(ready.email);
+    expect(button('Review invitations')).toBeEnabled();
+  });
+
+  it('uses the server clamp when a queue shrinks after moving to a later page', async () => {
+    const people = largeQueue(120);
     await show(people);
-    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
-    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
-    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
-    expect(screen.getByText('Showing 101–150 of 1,025')).toBeInTheDocument();
-
-    api.adminWaitlist.mockResolvedValue({ waitlist: people.slice(0, 75) });
-    fireEvent.click(button('Refresh'));
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Last' }));
+    expect(screen.getByText('Showing 101–120 of 120')).toBeInTheDocument();
+    serve(people.slice(0, 75));
+    await click(button('Refresh'));
     await screen.findByText('Showing 51–75 of 75');
-    expect(row(people[50].email)).toBeInTheDocument();
     expect(row(people[74].email)).toBeInTheDocument();
-    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(26);
-    expect(within(pages).getByRole('button', { name: 'Next' })).toBeDisabled();
-
-    api.adminWaitlist.mockResolvedValue({ waitlist: people });
-    fireEvent.click(button('Refresh'));
-    await screen.findByText('Showing 51–100 of 1,025');
-    expect(row(people[50].email)).toBeInTheDocument();
-    expect(row(people[99].email)).toBeInTheDocument();
-    expect(screen.queryByText(people[100].email)).not.toBeInTheDocument();
-    expect(within(pages).getByRole('button', { name: 'Next' })).toBeEnabled();
-    expect(api.adminWaitlist).toHaveBeenCalledTimes(3);
-    expect(api.adminInvite).not.toHaveBeenCalled();
+    expect(api.adminWaitlist).toHaveBeenLastCalledWith({ page: 1, pageSize: 50, q: '', filter: 'all' });
   });
 
-  it('preserves selections across pages and views and sends every selected recipient exactly once', async () => {
-    const people = largeQueue();
-    people[50] = { ...people[50], invitation: pending };
+  it('keeps selected snapshots across pages and search, then reviews and sends only those recipients', async () => {
+    const people = largeQueue(1100);
     await show(people);
     select(people[0].email);
-    const pages = screen.getByRole('navigation', { name: 'Waitlist pages' });
-    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
     select(people[50].email);
-    fireEvent.click(within(pages).getByRole('button', { name: 'Previous' }));
-    expect(within(row(people[0].email)).getByRole('checkbox')).toBeChecked();
-    fireEvent.click(button('Invited'));
-    expect(within(row(people[50].email)).getByRole('checkbox')).toBeChecked();
-    fireEvent.click(button('Ready to invite'));
-    expect(within(row(people[0].email)).getByRole('checkbox')).toBeChecked();
-    fireEvent.change(screen.getByRole('searchbox'), { target: { value: people[1000].email } });
+    await searchFor(people[1000].email);
     select(people[1000].email);
     expect(screen.getByText('3 selected')).toBeInTheDocument();
-
-    fireEvent.click(button('Review invitations'));
+    await click(button('Review invitations'));
     const review = screen.getByRole('region', { name: 'Review this invitation batch' });
-    const recipients = [people[0], people[50], people[1000]];
-    for (const person of recipients) expect(within(review).getByText(person.email)).toBeInTheDocument();
-    expect(within(review).getAllByRole('listitem')).toHaveLength(3);
+    for (const person of [people[0], people[50], people[1000]]) expect(within(review).getByText(person.email)).toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
-    fireEvent.click(within(review).getByRole('button', { name: 'Send 3 invitations' }));
-    await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
-    expect(api.adminInvite.mock.calls).toEqual(recipients.map((person) => [person.id]));
-    await waitFor(() => expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument());
-    expect(within(row(people[1000].email)).getByRole('checkbox')).not.toBeChecked();
+    await click(within(review).getByRole('button', { name: 'Send 3 invitations' }));
+    await waitFor(() => expect(api.adminInvite.mock.calls).toEqual([people[0], people[50], people[1000]].map((person) => [person.id])));
+    expect(screen.queryByText('3 selected')).not.toBeInTheDocument();
   });
 
-  it('paginates a large recipient review while sending the complete selected batch', async () => {
-    const people = largeQueue();
+  it('selects only the current page and caps the cross-page batch at 100', async () => {
+    const people = largeQueue(500);
     await show(people);
-    const checkboxes = within(screen.getByRole('table')).getAllByRole('checkbox');
-    act(() => { for (const checkbox of checkboxes) fireEvent.click(checkbox); });
-    fireEvent.click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
-    select(people[50].email);
-    fireEvent.click(button('Review invitations'));
-
+    await click(button('Select this page'));
+    expect(screen.getByText('50 selected')).toBeInTheDocument();
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    await click(button('Select this page'));
+    expect(screen.getByText('100 selected')).toBeInTheDocument();
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    expect(button('Select this page')).toBeDisabled();
+    expect(within(row(people[100].email)).getByRole('checkbox')).toBeDisabled();
+    await click(button('Review invitations'));
     const review = screen.getByRole('region', { name: 'Review this invitation batch' });
-    const recipients = within(review).getByRole('list', { name: 'Invitation recipients' });
-    const pages = within(review).getByRole('navigation', { name: 'Invitation review pages' });
-    expect(within(recipients).getAllByRole('listitem')).toHaveLength(50);
-    expect(within(recipients).getByText(people[0].email)).toBeInTheDocument();
-    expect(within(recipients).getByText(people[49].email)).toBeInTheDocument();
-    expect(within(recipients).queryByText(people[50].email)).not.toBeInTheDocument();
-    expect(within(pages).getByRole('button', { name: 'Previous' })).toBeDisabled();
-    fireEvent.click(within(pages).getByRole('button', { name: 'Next' }));
-    expect(within(recipients).getAllByRole('listitem')).toHaveLength(1);
-    expect(within(recipients).getByText(people[50].email)).toBeInTheDocument();
-    expect(within(recipients).queryByText(people[0].email)).not.toBeInTheDocument();
-    expect(within(pages).getByRole('button', { name: 'Next' })).toBeDisabled();
-    expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(51);
+    expect(within(review).getAllByRole('listitem')).toHaveLength(50);
+    expect(within(review).getByRole('button', { name: 'Send 100 invitations' })).toBeEnabled();
+    await click(within(within(review).getByRole('navigation', { name: 'Invitation review pages' })).getByRole('button', { name: 'Next' }));
+    expect(within(review).getByText(people[99].email)).toBeInTheDocument();
+    expect(within(review).queryByText(people[100].email)).not.toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
+  });
 
-    fireEvent.click(within(review).getByRole('button', { name: 'Send 51 invitations' }));
-    await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
-    expect(api.adminInvite.mock.calls).toEqual(people.slice(0, 51).map((person) => [person.id]));
-    await waitFor(() => expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument());
+  it('refreshes selected visible rows without discarding selected rows on another page', async () => {
+    const people = largeQueue(110);
+    await show(people);
+    select(people[0].email);
+    await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
+    select(people[50].email);
+    people[50] = { ...people[50], admitted: true };
+    await click(button('Refresh'));
+    expect(screen.getByText('1 selected')).toBeInTheDocument();
+    await click(button('Review invitations'));
+    const review = screen.getByRole('region', { name: 'Review this invitation batch' });
+    expect(within(review).getByText(people[0].email)).toBeInTheDocument();
+    expect(within(review).queryByText(people[50].email)).not.toBeInTheDocument();
   });
 });

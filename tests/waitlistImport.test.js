@@ -97,17 +97,17 @@ describe('contact spreadsheet parsing', () => {
     expect(() => parseImportBuffer(utf8('Name,Email'), 'contacts.txt')).toThrow(/CSV, XLS, or XLSX/);
     expect(() => checkFile({ name: 'contacts.xlsm', size: 100 })).toThrow(/CSV, XLS, or XLSX/);
     expect(() => checkFile({ name: 'contacts.csv', size: 0 })).toThrow(/empty/i);
-    expect(() => checkFile({ name: 'contacts.csv', size: FILE_LIMIT + 1 })).toThrow(/smaller than 5 MB/i);
-    expect(() => parseImportBuffer(new ArrayBuffer(FILE_LIMIT + 1), 'contacts.csv')).toThrow(/smaller than 5 MB/i);
+    expect(() => checkFile({ name: 'contacts.csv', size: FILE_LIMIT + 1 })).toThrow(/250 MB/i);
+    expect(() => parseImportBuffer(new ArrayBuffer(FILE_LIMIT + 1), 'contacts.csv')).toThrow(/250 MB/i);
   });
 
-  it('accepts 1,000 contacts and rejects excess rows and columns', () => {
+  it('accepts lists above the former 1,000 contact limit and rejects excess columns', () => {
     const contacts = Array.from({ length: 1000 }, (_, i) => `Person ${i},person${i}@example.com`);
     expect(mapped(['Name,Email', ...contacts].join('\n'))).toHaveLength(1000);
-    expect(() => parseCsv(['Name,Email', ...contacts, 'Overflow,overflow@example.com'].join('\n'))).toThrow(/1,000 contacts/i);
+    expect(mapped(['Name,Email', ...contacts, 'More,more@example.com'].join('\n'))).toHaveLength(1001);
     expect(() => parseCsv(Array.from({ length: 101 }, (_, i) => `Column${i}`).join(','))).toThrow(/100 columns/i);
     const headerless = parseCsv([...contacts, 'Overflow,overflow@example.com'].join('\n'));
-    expect(() => mapImportRows(headerless, guessMapping(headerless.rows[0].cells, false), false)).toThrow(/1,000 people/i);
+    expect(mapImportRows(headerless, guessMapping(headerless.rows[0].cells, false), false)).toHaveLength(1001);
   });
 
   it('ignores oversized quoted export columns while retaining CSV boundaries and later contacts', () => {
@@ -143,7 +143,7 @@ describe('contact spreadsheet parsing', () => {
 
   it('enforces the same row and column limits on Excel worksheets', () => {
     const rows = [['Name', 'Email'], ...Array.from({ length: 1001 }, (_, i) => [`Person ${i}`, `person${i}@example.com`])];
-    expect(() => parseImportBuffer(workbook({ Contacts: rows }), 'contacts.xlsx')).toThrow(/1,000 contacts/i);
+    expect(parseImportBuffer(workbook({ Contacts: rows }), 'contacts.xlsx').rows).toHaveLength(1002);
     expect(() => parseImportBuffer(workbook({ Contacts: [Array.from({ length: 101 }, (_, i) => String(i))] }), 'contacts.xlsx')).toThrow(/100 columns/i);
   });
 });

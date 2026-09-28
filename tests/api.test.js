@@ -1,10 +1,21 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ApiError, accountAccess, acceptInvitation, accountWaitlist, signup, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
+import { ApiError, accountAccess, acceptInvitation, accountWaitlist, adminWaitlist, signup, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
 import { ALPHA_OFFER } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
 
 describe('account admission contract', () => {
+  it('requests bounded server pages and encodes the complete search and filter', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => new Response('{"waitlist":[]}'));
+    vi.stubGlobal('fetch', fetchMock);
+    await adminWaitlist();
+    await adminWaitlist({ page: 9999, pageSize: 50, q: 'Morgan & Partners', filter: 'unverified' });
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      '/api/admin/waitlist?page=0&pageSize=50&q=&filter=all',
+      '/api/admin/waitlist?page=9999&pageSize=50&q=Morgan+%26+Partners&filter=unverified',
+    ]);
+    expect(fetchMock.mock.calls.every(([, options]) => options.credentials === 'include')).toBe(true);
+  });
   it('creates a waitlist account with consent versions and without payment data', async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response('{"ok":true}'));
     vi.stubGlobal('fetch', fetchMock);

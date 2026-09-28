@@ -77,7 +77,10 @@ export const accountWaitlist = (details = {}) => request('/api/account/waitlist'
 export const acceptInvitation = (token) => request('/api/account/invitation/accept', {
   method: 'POST', body: token ? { token } : {},
 });
-export const adminWaitlist = () => request('/api/admin/waitlist');
+export const adminWaitlist = ({ page = 0, pageSize = 50, q = '', filter = 'all' } = {}) => {
+  const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize), q, filter });
+  return request(`/api/admin/waitlist?${query}`);
+};
 export const adminPreviewWaitlistImport = (rows) => request('/api/admin/waitlist/import/preview', { method: 'POST', body: { rows } });
 export const adminImportWaitlist = (batch) => request('/api/admin/waitlist/import', { method: 'POST', body: batch });
 export const adminInvite = (id) => request(`/api/admin/waitlist/${encodeURIComponent(id)}/invite`, { method: 'POST' });
