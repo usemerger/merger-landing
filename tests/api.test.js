@@ -20,7 +20,7 @@ describe('account admission contract', () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response('{"ok":true}'));
     vi.stubGlobal('fetch', fetchMock);
     await signup('person@example.com', 'fixture-password', 'Morgan', { ref: 'source123' });
-    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'person@example.com', password: 'fixture-password', displayName: 'Morgan', waitlist: { ref: 'source123' }, termsVersion: '2026-09-21', privacyVersion: '2026-09-21' });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'person@example.com', password: 'fixture-password', displayName: 'Morgan', waitlist: { ref: 'source123' }, termsVersion: '2026-09-21', privacyVersion: '2026-09-27' });
   });
   it('uses authenticated account endpoints and sends private tokens only in acceptance bodies', async () => {
     const fetchMock = vi.fn().mockImplementation(async () => new Response('{"ok":true}'));
