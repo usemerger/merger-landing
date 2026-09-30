@@ -8,7 +8,7 @@ const films = [
     id: 'channels', label: 'One inbox', title: 'Every channel. One workspace.', duration: '16 seconds',
     description: 'See connected channels come together, reply to a conversation, and keep its deal context beside it.',
     steps: ['Connect your messaging accounts.', 'Read and reply from one workspace.', 'Keep the conversation linked to its deal.'],
-    note: 'Available networks and messaging actions vary by service during alpha.',
+    note: 'Available networks and messaging actions vary by service.',
   },
   {
     id: 'deals', label: 'AI deal detection', title: 'Turn a conversation into a next step.', duration: '18 seconds',

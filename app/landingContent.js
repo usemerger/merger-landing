@@ -3,7 +3,7 @@ export const features = [
     number: '01', icon: 'messages', label: 'Connected conversations',
     title: 'Stay in the conversation.',
     description: 'Read and reply to connected messages from one desktop workspace. Keep the conversation close when it becomes part of a deal.',
-    note: 'Available networks and messaging actions vary by service during alpha.',
+    note: 'Available networks and messaging actions vary by service.',
   },
   {
     number: '02', icon: 'review', label: 'Claude + your judgment',
@@ -34,10 +34,10 @@ export const workflowSteps = [
 
 export const faqs = [
   { question: 'How do I get in?', answer: 'Merger opens to a small group at a time. Join the waitlist and you get a place in the queue and your own referral link; when a seat comes free we email you an invitation that opens checkout. Referring other dealmakers moves you up the list. Nothing is charged while you are waiting, and you only pay if you accept an invitation.' },
-  { question: 'What is available in this alpha?', answer: 'The current release is the Merger desktop app for Windows: connected messaging, the Deal Desk, Rolodex, and in-app DocuSign. It is an early release, and network availability and individual messaging actions can vary. Other platforms and team plans are not included in this launch.' },
+  { question: 'What’s available today?', answer: 'The current release is the Merger desktop app for Windows: connected messaging, the Deal Desk, Rolodex, and in-app DocuSign. It is an early release, and network availability and individual messaging actions can vary. Other platforms and team plans are not included in this launch.' },
   { question: 'Do I need a Claude subscription?', answer: 'Claude features require your own Anthropic API key. Anthropic API usage is billed separately from your Merger subscription; a Claude chat subscription is not an API key. You can use messaging and organize deals manually without enabling Claude features.' },
   { question: 'Does Merger file deals or send documents automatically?', answer: 'You review detected deal suggestions before filing them. In DocuSign, you choose a field before inserting a value, or copy and paste it yourself. You control sending and signing inside your own DocuSign account.' },
-  { question: 'Which messaging accounts can I connect?', answer: 'Use the connection options available in the Windows app. The supported accounts, history coverage, and messaging actions vary by service during alpha. Contact support if a particular network is essential to your workflow.', link: { href: '/support', label: 'Ask about your workflow' } },
+  { question: 'Which messaging accounts can I connect?', answer: 'Use the connection options available in the Windows app. The supported accounts, history coverage, and messaging actions vary by service. Contact support if a particular network is essential to your workflow.', link: { href: '/support', label: 'Ask about your workflow' } },
   { question: 'Can I use my existing DocuSign account and templates?', answer: 'Yes. Sign in to your own DocuSign account in the embedded browser. Your Rolodex is beside it for recipient names, emails, and other available details. Copy and paste works as a fallback for fields that do not accept Insert. DocuSign access and any charges are separate from Merger.' },
-  { question: 'What does the alpha cost?', offer: true },
+  { question: 'What does Merger cost?', offer: true },
 ];

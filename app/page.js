@@ -29,7 +29,7 @@ export default function LandingPage() {
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
             <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
-            <p className="sf-hero-note">Windows alpha · Early access by invitation · No card to join</p>
+            <p className="sf-hero-note">Windows · Early access by invitation · No card to join</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
         </div>
@@ -38,7 +38,7 @@ export default function LandingPage() {
       <section id="workflow" className="sf-section sf-channels mk-wrap" aria-labelledby="channels-title">
         <div className="sf-section-heading"><div><SectionLabel number="01">Connected messaging</SectionLabel><h2 id="channels-title">Your network is everywhere.<br /><span>Your workspace isn’t.</span></h2></div><p>Bring your messaging accounts together. Read and reply across connected channels without losing the thread.</p></div>
         <ChannelOrbit />
-        <div className="sf-section-foot"><p>Connections, history, and actions vary by service during alpha. SMS and iMessage are not included.</p></div>
+        <div className="sf-section-foot"><p>Connections, history, and actions vary by service. SMS and iMessage are not included.</p></div>
       </section>
 
       <section id="deal-desk" className="sf-section sf-deal-section" aria-labelledby="deal-title"><div className="mk-wrap">
@@ -54,7 +54,7 @@ export default function LandingPage() {
       </section>
 
       <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
-        <div className="sf-access-copy"><SectionLabel number="04">Early access</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>We’re opening the Windows alpha in small groups. Join the waitlist and help shape the workspace around the way you work.</p><div className="sf-price"><strong>{ALPHA_OFFER.priceLabel}</strong><span>/ month<small>After your invitation and 14-day free trial.</small></span></div><p className="sf-rate">Keep the alpha rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during alpha</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
+        <div className="sf-access-copy"><SectionLabel number="04">Early access</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>We’re opening early access in small groups. Join the waitlist and help shape the workspace around the way you work.</p><div className="sf-price"><strong>{ALPHA_OFFER.priceLabel}</strong><span>/ month<small>After your invitation and 14-day free trial.</small></span></div><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
         <div id="waitlist" className="sf-waitlist-card"><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Join the waitlist</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Create your Merger account. We’ll let you know when your invitation is ready.</p><WaitlistForm /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Get invited</span><i /><span>Get started</span></div></div>
       </div></section>
 
@@ -62,6 +62,6 @@ export default function LandingPage() {
 
       <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="#waitlist">Join the waitlist</SingularityButton></div></section>
     </main>
-    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows alpha · In development</span></div></div></footer>
+    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows · In development</span></div></div></footer>
   </div>;
 }
