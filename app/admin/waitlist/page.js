@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../../components/Shell';
-import { accountAccess, adminInvite, adminRevoke, adminWaitlist, errorMessage, formatDate } from '../../lib/api';
+import { ApiError, accountAccess, adminInvite, adminRevoke, adminWaitlist, errorMessage, formatDate } from '../../lib/api';
 import { waitlistPermissions } from '../../lib/waitlistPermissions';
 import './waitlist-admin.css';
 import WaitlistImport from './WaitlistImport';
@@ -85,10 +85,19 @@ export default function AdminWaitlistPage() {
       if (!nextPermissions.canViewWaitlist) { setRows([]); setSelected([]); setImportOpen(false); setPhase('forbidden'); return; }
       const result = await adminWaitlist({ ...view, pageSize: PAGE_SIZE });
       if (id !== request.current) return;
-      const next = result.waitlist || [];
-      const total = result.totalCount ?? next.length;
-      const matching = result.filteredCount ?? next.length;
-      const resolvedPage = result.page ?? Math.min(view.page, Math.max(0, Math.ceil(matching / PAGE_SIZE) - 1));
+      // Never render an unbounded legacy API response, even during a deployment.
+      // Stale pages remain read-only until a valid page is available again.
+      if (!Array.isArray(result.waitlist) || result.waitlist.length > PAGE_SIZE
+        || result.pageSize !== PAGE_SIZE
+        || ![result.totalCount, result.filteredCount, result.page].every((value) => Number.isSafeInteger(value) && value >= 0)
+        || result.filteredCount > result.totalCount
+        || result.page > Math.max(0, Math.ceil(result.filteredCount / PAGE_SIZE) - 1)) {
+        throw new ApiError(0, 'invalid_waitlist_page');
+      }
+      const next = result.waitlist;
+      const total = result.totalCount;
+      const matching = result.filteredCount;
+      const resolvedPage = result.page;
       if (resolvedPage !== view.page) { setView((current) => ({ ...current, page: resolvedPage })); return; }
       setRows(next); setTotalCount(total); setFilteredCount(matching); setDisplayPage(resolvedPage);
       setCounts({ ...EMPTY_COUNTS, ...result.counts, all: total });
@@ -200,7 +209,7 @@ export default function AdminWaitlistPage() {
     setSelected((current) => [...current, ...entries.filter(({ row, selectable }) => selectable && !current.some((item) => item.id === row.id)).map(({ row }) => row)].slice(0, SELECTION_LIMIT));
   }
 
-  return <Shell authed><main className="wa-main">
+  return <Shell authed capabilities={permissions}><main className="wa-main">
     <header className="wa-heading"><div><p className="eyebrow">Staff workspace</p><h1>Waitlist</h1><p className="wa-lede">{canManageWaitlistInvitations ? 'Meet the people waiting for Merger. Invite them when you’re ready.' : canImportWaitlist ? 'Review the waitlist and add contacts from your spreadsheets.' : 'Review the people waiting for Merger and their access status.'}</p></div>{phase === 'ready' && <div className="wa-actions">{canImportWaitlist && <button type="button" className="btn btn-primary" disabled={locked || importOpen} onClick={() => { if (!canImportWaitlist || locked) return; setImportOpen(true); setReview(false); }}>Import contacts</button>}<button type="button" className="btn btn-ghost wa-refresh" disabled={locked} onClick={load}><Icon name="refresh" className={refreshing ? 'wa-spinning' : undefined} />{refreshing ? 'Refreshing…' : 'Refresh'}</button></div>}</header>
     {phase === 'loading' && <section className="wa-empty wa-loading" role="status"><span className="wa-loader" /><h2>Loading waitlist…</h2><p>Getting the latest signups and invitation status.</p></section>}
     {phase === 'forbidden' && <section className="wa-empty"><Icon name="people" /><h2>Staff access required</h2><p>This account does not have permission to view the waitlist. Sign in with a verified staff account to continue.</p><Link className="btn btn-ghost" href="/dashboard">Your account</Link></section>}
@@ -215,7 +224,15 @@ export default function AdminWaitlistPage() {
         ['eligible', 'Ready to invite', 'Verified, without an active invite'],
         ['invited', 'Invited', 'Waiting to accept'],
         ['admitted', 'Admitted', 'Invitation accepted or access granted'],
-      ].map(([value, label, description]) => <button key={value} type="button" className={`wa-stat${filter === value ? ' is-active' : ''}`} aria-label={label} aria-pressed={filter === value} disabled={busy} onClick={() => changeView({ ...view, page: 0, filter: value })}><span className="wa-stat-label">{label}</span><strong>{counts[value]}</strong><span className="wa-stat-description">{description}</span></button>)}</section>
+      ].map(([value, label, description]) => <button key={value} type="button" className={`wa-stat${filter === value ? ' is-active' : ''}`} aria-label={label} aria-pressed={filter === value} disabled={busy} onClick={() => changeView({ ...view, page: 0, filter: value })}><span className="wa-stat-label">{label}</span><strong>{counts[value].toLocaleString()}</strong><span className="wa-stat-description">{description}</span></button>)}</section>
+
+      <section className="wa-export" aria-label="Export waitlist">
+        <div><h2>Your complete waitlist, in one file</h2><p>Download all {totalCount.toLocaleString()} contacts, including unverified signups. The CSV opens in Excel and other spreadsheet apps.</p></div>
+        <div className="wa-actions">
+          <a className="btn btn-ghost" href="/api/admin/waitlist?format=csv" download target="_blank" rel="noopener">Export all (CSV)</a>
+          {(view.q || view.filter !== 'all') && !searching && !refreshing && queueFresh && <a className="wa-text-button" href={`/api/admin/waitlist?${new URLSearchParams({ format: 'csv', q: view.q, filter: view.filter })}`} download target="_blank" rel="noopener">Export {filteredCount.toLocaleString()} matching {filteredCount === 1 ? 'contact' : 'contacts'}</a>}
+        </div>
+      </section>
 
       <section className="wa-queue" aria-label="Waitlist signups" aria-busy={refreshing || searching}>
         <div className="wa-toolbar"><div className="wa-search"><Icon name="search" /><label className="wa-sr-only" htmlFor="queue-search">Find name, email, firm, or role</label><input id="queue-search" type="search" placeholder="Search name, email, firm, or role…" value={query} disabled={busy} onChange={(event) => changeQuery(event.target.value)} /></div><p>{filteredCount.toLocaleString()} {filteredCount === 1 ? 'person matches' : 'people match'} <span>· {totalCount.toLocaleString()} total</span></p></div>

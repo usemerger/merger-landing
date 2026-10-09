@@ -288,6 +288,8 @@ export function errorMessage(err) {
       return 'Could not reach the server. Check your connection and try again.';
     case 'request_timeout':
       return 'This is taking longer than expected. Please try again.';
+    case 'invalid_waitlist_page':
+      return 'The waitlist could not load a safe-sized page. Please refresh and try again.';
     case 'invalid_response':
       return 'The server returned an unexpected response. Please try again.';
     default: {

@@ -36,7 +36,7 @@ export default function ProfilePage() {
     if (!name.trim()) { setError('Enter your name.'); return; }
     run('profile', () => updateProfile(name.trim()), 'Your profile has been saved.');
   }
-  return <Shell authed><main className="dash-main">
+  return <Shell authed capabilities={access?.capabilities}><main className="dash-main">
     <p className="eyebrow">Profile & security</p><h1 className="dash-title">Make yourself at home.</h1>
     {loading && <p className="spinner-note" role="status">Loading your profile…</p>}
     {error && <p className="alert alert-error" role="alert">{error}</p>}
@@ -47,6 +47,7 @@ export default function ProfilePage() {
       <section className="panel"><h2>Security</h2><p className="muted mt-16">Use a secure email link to choose a new password. If you’ve used a shared computer, sign out of all sessions, including this one.</p><div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" disabled={Boolean(busy)} onClick={() => run('password', () => forgotPassword(access.user.email), 'If this account can receive email, a password reset link is on its way. Check your inbox.')}>{busy === 'password' ? 'Sending…' : 'Send password reset email'}</button><button className="btn btn-ghost btn-sm" type="button" disabled={Boolean(busy)} onClick={() => run('sessions', async () => { await logoutAll(); clearSessionHint(); router.replace('/login?signedOut=1'); router.refresh(); }, '')}>{busy === 'sessions' ? 'Signing out…' : 'Sign out of all sessions'}</button></div></section>
       <section className="panel"><h2>Need a hand?</h2><p className="muted mt-16">For account changes, data requests, or help getting started, contact the Merger team.</p><div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/support">Get support</Link></div></section>
       {waitlistPermissions(access.capabilities).canViewWaitlist && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">{waitlistPermissions(access.capabilities).canManageWaitlistInvitations ? 'Manage rollout' : 'View waitlist'}</Link></div>}
+      {access.capabilities?.isAdmin === true && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/users">Users & access</Link></div>}
     </>}
   </main></Shell>;
 }

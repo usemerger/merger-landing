@@ -22,6 +22,28 @@ beforeEach(() => {
 });
 
 describe('server-authorized account states', () => {
+  it.each([null, '2027-01-08T12:00:00Z'])('shows complimentary partner access with expiry %s without contacting billing', async (expiresAt) => {
+    api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, canUseApp: true, canDownload: true }, billing: { entitlementStatus: 'active', entitled: true, subscriptionStatus: 'none', accessSource: 'complimentary', complimentary: { status: 'active', expiresAt } } });
+    render(<AccountDashboard />);
+    await screen.findByRole('heading', { name: 'Complimentary partner access' });
+    expect(screen.getByText(expiresAt ? /Available until/ : /No expiry date/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Go to downloads' })).toBeInTheDocument();
+    expect(api.billingStatus).not.toHaveBeenCalled();
+    expect(screen.queryByRole('button', { name: 'Manage billing' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Subscription' })).not.toBeInTheDocument();
+    expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
+    expect(screen.queryByText(/Founding account/)).not.toBeInTheDocument();
+  });
+  it('keeps a paid subscription visible separately when free access also exists', async () => {
+    const paid = { entitlementStatus: 'active', entitled: true, subscriptionStatus: 'active', accessSource: 'complimentary', plan: 'operator', complimentary: { status: 'active', expiresAt: null } };
+    api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, canUseApp: true }, billing: paid });
+    api.billingStatus.mockResolvedValue(paid); render(<AccountDashboard />);
+    await screen.findByRole('heading', { name: 'Complimentary partner access' });
+    expect(screen.getByText(/existing paid subscription is separate/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Subscription' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Manage billing' })).toBeInTheDocument();
+    expect(api.billingStatus).toHaveBeenCalledTimes(1);
+  });
   it('keeps staging referral codes on the authoritative preview origin', async () => {
     api.accountAccess.mockResolvedValue({ ...waiting, waitlist: { ...waiting.waitlist, referralUrl: 'https://merger-orbit-preview.vercel.app/?ref=public123' } });
     render(<AccountDashboard />);
@@ -119,10 +141,13 @@ describe('profile and staff rollout', () => {
     api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, isAdmin: true } });
     render(<AccountDashboard />);
     expect(await screen.findByRole('link', { name: 'Manage waitlist' })).toHaveAttribute('href', '/admin/waitlist');
+    expect(screen.getByRole('link', { name: 'Users & access' })).toHaveAttribute('href', '/admin/users');
   });
   it.each([['dashboard', AccountDashboard], ['profile', ProfilePage]])('links a limited waitlist importer from their %s', async (_page, Page) => {
     api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, canViewWaitlist: true, canImportWaitlist: true, canManageWaitlistInvitations: false } });
     render(<Page />);
+    await screen.findByRole('link', { name: 'View waitlist' });
+    expect(screen.queryByRole('link', { name: 'Users & access' })).not.toBeInTheDocument();
     expect(await screen.findByRole('link', { name: 'View waitlist' })).toHaveAttribute('href', '/admin/waitlist');
     expect(screen.queryByRole('link', { name: /Manage waitlist|Manage rollout/ })).not.toBeInTheDocument();
   });
@@ -148,7 +173,7 @@ describe('profile and staff rollout', () => {
   });
   it('requires reviewing a batch before sending invitations', async () => {
     api.accountAccess.mockResolvedValue({ ...waiting, capabilities: { ...waiting.capabilities, isAdmin: true } });
-    api.adminWaitlist.mockResolvedValue({ waitlist: [{ id: 3, email: 'test@example.com', accountLinked: true, emailVerified: true, admitted: false }] });
+    api.adminWaitlist.mockResolvedValue({ waitlist: [{ id: 3, email: 'test@example.com', accountLinked: true, emailVerified: true, admitted: false }], totalCount: 1, filteredCount: 1, page: 0, pageSize: 50, hasMore: false });
     api.adminInvite.mockResolvedValue({ ok: true, emailed: true });
     render(<AdminWaitlistPage />);
     fireEvent.click(await screen.findByRole('checkbox', { name: 'Select for invitation for test@example.com' }));

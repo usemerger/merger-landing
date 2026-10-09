@@ -7,7 +7,7 @@ import { errorMessage, logout } from '../lib/api';
 import { clearSessionHint } from '../lib/useSession';
 import MarketingMark from './MarketingMark';
 
-export default function Shell({ children, authed = false }) {
+export default function Shell({ children, authed = false, capabilities }) {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -41,7 +41,7 @@ export default function Shell({ children, authed = false }) {
           <Link className="brand" href="/" aria-label="Merger home"><MarketingMark size={28} />merger</Link>
           <button className="account-menu" type="button" aria-expanded={open} aria-controls="account-navigation" onClick={() => setOpen(!open)}>{open ? 'Close menu' : 'Menu'}</button>
           <nav className={`app-nav-links${open ? ' is-open' : ''}`} id="account-navigation" aria-label="Account navigation">
-            {authed ? <>{navLink('/dashboard', 'Account')}{navLink('/billing', 'Billing')}{navLink('/download', 'Download')}{navLink('/profile', 'Profile')}<button type="button" className="linklike" disabled={busy} onClick={onSignOut}>{busy ? 'Signing out…' : 'Sign out'}</button></> : <>{navLink('/#pricing', 'Pricing')}{navLink('/login', 'Sign in')}<Link className="nav-cta" href="/#waitlist">Join the waitlist</Link></>}
+            {authed ? <>{navLink('/dashboard', 'Account')}{navLink('/billing', 'Billing')}{navLink('/download', 'Download')}{navLink('/profile', 'Profile')}{capabilities?.isAdmin === true && navLink('/admin/users', 'Users & access')}<button type="button" className="linklike" disabled={busy} onClick={onSignOut}>{busy ? 'Signing out…' : 'Sign out'}</button></> : <>{navLink('/#pricing', 'Pricing')}{navLink('/login', 'Sign in')}<Link className="nav-cta" href="/#waitlist">Join the waitlist</Link></>}
           </nav>
         </div>
         {error && <div className="nav-error" role="alert">Sign out failed. {error} <button className="linklike" onClick={onSignOut}>Try again</button></div>}

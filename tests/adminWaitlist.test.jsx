@@ -175,10 +175,10 @@ describe('waitlist administration', () => {
   it('keeps failed deliveries selected for an explicit retry and removes successful recipients', async () => {
     api.adminInvite.mockImplementation(async (id) => ({ ok: true, emailed: id === ready.id }));
     await show([ready, second]);
-    api.adminWaitlist.mockResolvedValue({ waitlist: [
+    api.adminWaitlist.mockResolvedValue(pageResponse([
       { ...ready, invitation: pending },
       { ...second, invitation: { ...pending, deliveryStatus: 'failed' } },
-    ] });
+    ]));
     select(ready.email); select(second.email);
     await click(button('Review invitations'));
     await click(button('Send 2 invitations'));
@@ -206,7 +206,7 @@ describe('waitlist administration', () => {
   it('drops selections that disappear or become admitted after a refresh', async () => {
     await show([ready, second]);
     select(ready.email); select(second.email);
-    api.adminWaitlist.mockResolvedValue({ waitlist: [{ ...ready, admitted: true }] });
+    api.adminWaitlist.mockResolvedValue(pageResponse([{ ...ready, admitted: true }]));
     await click(button(/Refresh/i));
     await waitFor(() => expect(api.adminWaitlist).toHaveBeenCalledTimes(2));
     await waitFor(() => expect(screen.queryByText(second.email)).not.toBeInTheDocument());
@@ -228,7 +228,7 @@ describe('waitlist administration', () => {
     }
     expect(screen.queryByRole('region', { name: 'Review this invitation batch' })).not.toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
-    api.adminWaitlist.mockResolvedValue({ waitlist: [ready] });
+    api.adminWaitlist.mockResolvedValue(pageResponse([ready]));
     await click(button('Try again'));
     await waitFor(() => expect(button('Review invitations')).toBeEnabled());
     await click(button('Review invitations'));
@@ -428,6 +428,39 @@ describe('limited waitlist access', () => {
 
 
 describe('server-paged waitlist', () => {
+  it('refuses a legacy unbounded response before creating contact rows', async () => {
+    api.adminWaitlist.mockResolvedValue({ waitlist: largeQueue(20000), count: 20000 });
+    render(<AdminWaitlistPage />);
+    expect(await screen.findByRole('alert')).toHaveTextContent('safe-sized page');
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    expect(screen.queryByText('person-0@example.test')).not.toBeInTheDocument();
+    expect(api.adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('keeps a previously loaded page read-only if a refresh returns too many rows', async () => {
+    await show([ready]);
+    select(ready.email);
+    api.adminWaitlist.mockResolvedValue({ ...pageResponse([ready]), waitlist: largeQueue(51) });
+    await click(button('Refresh'));
+    expect(screen.getByRole('alert')).toHaveTextContent('safe-sized page');
+    expect(row(ready.email)).toBeInTheDocument();
+    expect(button('Review invitations')).toBeDisabled();
+    expect(screen.queryByText('person-0@example.test')).not.toBeInTheDocument();
+  });
+
+  it('downloads all contacts directly, independently of the displayed page or filter', async () => {
+    api.accountAccess.mockResolvedValue(importer);
+    await show([ready, unverified, second]);
+    const all = screen.getByRole('link', { name: 'Export all (CSV)' });
+    expect(all).toHaveAttribute('href', '/api/admin/waitlist?format=csv');
+    expect(all).toHaveAttribute('download');
+    await click(button('Needs verification'));
+    expect(all).toHaveAttribute('href', '/api/admin/waitlist?format=csv');
+    const filtered = screen.getByRole('link', { name: 'Export 1 matching contact' });
+    expect(filtered).toHaveAttribute('href', '/api/admin/waitlist?format=csv&q=&filter=unverified');
+    expect(api.adminInvite).not.toHaveBeenCalled();
+  });
+
   it('requests only 50 rows and reaches the final contacts of a 500,000-person queue', async () => {
     api.adminWaitlist.mockImplementation(async ({ page, pageSize, q, filter }) => ({
       waitlist: Array.from({ length: 50 }, (_, offset) => signup(page * 50 + offset, `person-${page * 50 + offset}@example.test`)),
@@ -444,7 +477,7 @@ describe('server-paged waitlist', () => {
     expect(screen.getByText('Showing 499,951–500,000 of 500,000')).toBeInTheDocument();
     expect(screen.queryByText('person-0@example.test')).not.toBeInTheDocument();
     expect(within(screen.getByRole('table')).getAllByRole('row')).toHaveLength(51);
-    expect(within(button('All signups')).getByText('500000')).toBeInTheDocument();
+    expect(within(button('All signups')).getByText('500,000')).toBeInTheDocument();
     expect(api.adminInvite).not.toHaveBeenCalled();
   });
 
@@ -456,7 +489,7 @@ describe('server-paged waitlist', () => {
     await searchFor('DISTANT PROSPECT');
     expect(row(people[1000].email)).toBeInTheDocument();
     expect(screen.getByText('Showing 1–1 of 1')).toBeInTheDocument();
-    expect(within(button('All signups')).getByText('1100')).toBeInTheDocument();
+    expect(within(button('All signups')).getByText('1,100')).toBeInTheDocument();
     await searchFor('');
     await click(within(screen.getByRole('navigation', { name: 'Waitlist pages' })).getByRole('button', { name: 'Next' }));
     await click(button('Needs verification'));

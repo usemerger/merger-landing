@@ -13,6 +13,7 @@ import { pollEntitlement, safeReturnPath, stripeRedirectURL, validHandle } from 
 import { ALPHA_OFFER } from '../lib/billingOffer';
 import useHandleClaim from '../lib/useHandleClaim';
 import { waitlistPermissions } from '../lib/waitlistPermissions';
+import { activeComplimentary, hasPaidSubscription } from '../lib/adminAccounts';
 
 function StatusPill({ status, grandfathered }) {
   if (grandfathered) return <span className="pill good">Complimentary</span>;
@@ -75,8 +76,10 @@ export default function AccountDashboard() {
       // backend's capabilities; detailed prices and invoices load separately.
       setStatus({ ...permissions.billing, entitled: permissions.capabilities?.canUseApp === true });
       setBillingError('');
-      billingStatus().then((billing) => {
-        if (current === request.current) setStatus(billing);
+      const freePartner = activeComplimentary(permissions);
+      const paid = hasPaidSubscription(permissions.billing?.subscriptionStatus);
+      if (!freePartner || paid) billingStatus().then((billing) => {
+        if (current === request.current) setStatus({ ...permissions.billing, ...billing, entitled: permissions.capabilities?.canUseApp === true || billing.entitled === true });
       }).catch((err) => {
         if (current !== request.current) return;
         if (err?.status === 401) { router.replace(loginPath); return; }
@@ -181,11 +184,13 @@ export default function AccountDashboard() {
   </main></Shell>;
 
   const s = status;
+  const complimentary = activeComplimentary(access);
   const grandfathered = s.grandfathered === true;
   const entitled = s.entitled === true;
   const pendingPayment = justCheckedOut && !entitled;
-  const hasSubscription = !['none', 'canceled', 'incomplete_expired'].includes(s.entitlementStatus);
-  const canSubscribe = access.capabilities?.canCheckout === true && !grandfathered && !entitled && !pendingPayment && !hasSubscription && Boolean(user.handle);
+  const subscriptionStatus = s.subscriptionStatus || (complimentary ? 'none' : s.entitlementStatus);
+  const hasSubscription = hasPaidSubscription(subscriptionStatus);
+  const canSubscribe = access.capabilities?.canCheckout === true && !complimentary && !grandfathered && !entitled && !pendingPayment && !hasSubscription && Boolean(user.handle);
   const renewalDate = formatDate(s.currentPeriodEnd);
   const trialDate = formatDate(s.trialEndsAt);
   const cancellationAt = s.cancelAt || (s.cancelAtPeriodEnd === true ? s.currentPeriodEnd || s.trialEndsAt : null);
@@ -199,21 +204,23 @@ export default function AccountDashboard() {
   const billingPage = pathname === '/billing';
   const planName = s.offer === 'alpha' ? ALPHA_OFFER.name : s.plan === 'operator' ? 'Operator' : s.plan === 'desk' ? 'Desk' : '—';
   const price = priceLabel(s.pricing);
-  const trialing = s.entitlementStatus === 'trialing' && entitled;
+  const trialing = subscriptionStatus === 'trialing' && entitled;
 
-  return <Shell authed><main className="dash-main">
+  return <Shell authed capabilities={access.capabilities}><main className="dash-main">
     <p className="eyebrow">{billingPage ? 'Subscription & billing' : 'Your workspace'}</p>
     <h1 className="dash-title">{billingPage ? 'Your membership.' : user.displayName ? `Welcome, ${user.displayName.split(' ')[0]}.` : 'Your Merger account.'}</h1>
     <p className="dash-handle">{user.email}</p>
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
     <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to finish joining the waitlist.' : admitted ? 'Your invitation is accepted. Finish activation when you’re ready.' : 'Your account is ready. We’ll keep your access progress here.'}</p>
     {waitlistPermissions(access.capabilities).canViewWaitlist && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">{waitlistPermissions(access.capabilities).canManageWaitlistInvitations ? 'Manage waitlist' : 'View waitlist'}</Link></div>}
+    {access.capabilities?.isAdmin === true && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/users">Users & access</Link></div>}
+    {complimentary && <section className="panel mt-24" aria-label="Complimentary partner access"><div className="panel-head"><h2>Complimentary partner access</h2><span className="pill good">Free access</span></div><p className="muted mt-16">Your partner access is complimentary. {access.billing.complimentary.expiresAt ? `Available until ${formatDate(access.billing.complimentary.expiresAt)}.` : 'No expiry date.'}</p><p className="field-hint mt-16">{hasSubscription ? 'Your existing paid subscription is separate and has not been changed.' : 'No paid subscription is required for this access.'}</p></section>}
     {actionError && <div className="alert alert-error" role="alert">{actionError}</div>}
     {billingError && <div className="alert alert-warn" role="status">Billing details are temporarily unavailable. Your account and waitlist are still available. <button className="linklike" type="button" onClick={load}>Retry billing</button></div>}
     {!verified && <VerificationPanel email={user.email} onCheck={load} />}
     {verified && !entitled && <AccountWaitlist access={access} onChange={setAccess} />}
-    {s.configured === false && <div className="alert alert-warn">Billing is temporarily unavailable. Your account is saved; please check again later.</div>}
-    {s.billingDetailsUnavailable && <div className="alert alert-warn">Current billing details could not be retrieved. <button type="button" className="linklike" onClick={load}>Try again</button></div>}
+    {(!complimentary || hasSubscription) && s.configured === false && <div className="alert alert-warn">Billing is temporarily unavailable. Your account is saved; please check again later.</div>}
+    {(!complimentary || hasSubscription) && s.billingDetailsUnavailable && <div className="alert alert-warn">Current billing details could not be retrieved. <button type="button" className="linklike" onClick={load}>Try again</button></div>}
     {/* CANCELLED IS NOT AN ERROR. They closed a Stripe tab; nothing failed,
         nothing was charged, and the offer is still right there below. */}
     {canceledCheckout && !entitled && <div className="alert alert-info" role="status">Checkout was not completed and nothing was charged. Your account is saved — you can resume activation from your account.</div>}
@@ -227,7 +234,7 @@ export default function AccountDashboard() {
         <button type="button" className="linklike" onClick={() => setPollCycle((value) => value + 1)}>Check subscription again</button>
       </>}
     </div>}
-    {!grandfathered && s.entitlementStatus === 'past_due' && <div className="alert alert-warn">
+    {!grandfathered && subscriptionStatus === 'past_due' && <div className="alert alert-warn">
       <strong>Your payment did not go through.</strong>{entitled && graceDate ? ` Access continues until ${graceDate}.` : ' Update your payment method to restore access.'}{' '}
       <button type="button" className="linklike" disabled={portalBusy} onClick={openPortal}>Update payment method</button>
     </div>}
@@ -250,27 +257,27 @@ export default function AccountDashboard() {
       <button type="submit" className="btn btn-primary" disabled={handleBusy}>{handleBusy ? 'Reserving…' : 'Reserve handle'}</button>
     </form>}
 
-    <div className="panel mt-24">
-      <div className="panel-head"><h2>Subscription</h2><StatusPill status={s.entitlementStatus} grandfathered={grandfathered} /></div>
-      {!entitled && !hasSubscription && <p className="muted mt-16">{s.entitlementStatus === 'canceled' ? 'Your previous membership has ended. ' : 'No subscription has started. '}{admitted ? access.rollout?.trialEligible === true ? 'Your trial starts only after you complete checkout.' : 'Your membership begins after you complete checkout. Review the current terms below.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
+    {(!complimentary || hasSubscription) && <div className="panel mt-24">
+      <div className="panel-head"><h2>Subscription</h2><StatusPill status={subscriptionStatus} grandfathered={grandfathered} /></div>
+      {!entitled && !hasSubscription && <p className="muted mt-16">{subscriptionStatus === 'canceled' ? 'Your previous membership has ended. ' : 'No subscription has started. '}{admitted ? access.rollout?.trialEligible === true ? 'Your trial starts only after you complete checkout.' : 'Your membership begins after you complete checkout. Review the current terms below.' : 'There is nothing to pay while you wait for an invitation.'}</p>}
       {grandfathered ? <p className="muted mt-16">Founding account — complimentary. You have access to Merger with no subscription and nothing to pay.</p> : <>
         <div className="stat-grid">
           <div className="stat"><div className="k">Plan</div><div className="v">{planName}</div></div>
           {price && <div className="stat"><div className="k">Subscription price</div><div className="v">{price}</div></div>}
           {s.seats > 1 && <div className="stat"><div className="k">Seats</div><div className="v">{s.seats}</div></div>}
-          {s.entitlementStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
-          {s.entitlementStatus !== 'trialing' && (renewalDate || cancellationDate) && <div className="stat"><div className="k">{cancellationScheduled ? 'Access until' : s.entitlementStatus === 'canceled' ? 'Last billing period ended' : 'Current period ends'}</div><div className="v">{cancellationScheduled ? cancellationDate || renewalDate : renewalDate}</div></div>}
+          {subscriptionStatus === 'trialing' && trialDate && <div className="stat"><div className="k">Trial ends</div><div className="v">{trialDate}</div></div>}
+          {subscriptionStatus !== 'trialing' && (renewalDate || cancellationDate) && <div className="stat"><div className="k">{cancellationScheduled ? 'Access until' : subscriptionStatus === 'canceled' ? 'Last billing period ended' : 'Current period ends'}</div><div className="v">{cancellationScheduled ? cancellationDate || renewalDate : renewalDate}</div></div>}
           {typeof s.hasPaymentMethod === 'boolean' && <div className="stat"><div className="k">Payment method</div><div className="v">{s.hasPaymentMethod ? 'On file' : 'None on file'}</div></div>}
         </div>
         {price && <p className="field-hint mt-16">Recurring subtotal before tax, credits, or invoice adjustments. View invoices in Manage billing for final amounts.</p>}
         {s.alphaPriceLocked && <p className="field-hint mt-16">{ALPHA_OFFER.rateNotice}</p>}
-        {(hasSubscription || s.hasPaymentMethod || s.entitlementStatus === 'canceled') && <>
+        {(hasSubscription || s.hasPaymentMethod || subscriptionStatus === 'canceled') && <>
           <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={openPortal} disabled={portalBusy}>{portalBusy ? 'Opening…' : 'Manage billing'}</button></div>
           <p className="field-hint mt-16">Manage your payment method, cancellation and invoices on Stripe.</p>
         </>}
       </>}
-    </div>
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} heading={s.entitlementStatus === 'canceled' ? 'Join again' : 'Join the alpha'} note={s.entitlementStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
+    </div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Join the alpha'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Desktop app</h2></div>
       <p className="muted mt-16">{entitled ? 'Check the available installers for your computer.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
