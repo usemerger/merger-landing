@@ -74,6 +74,67 @@ export const ALPHA_OFFER = Object.freeze({
 });
 
 /**
+ * ANNUAL BILLING — the same membership, paid once a year, for 20% less.
+ *
+ *   · $480 a year, which is $40 a month: 20% under twelve months at $50 ($600).
+ *   · The trial is the same: first two weeks free, card required, $0 today,
+ *     then $480 is charged once when the 14-day trial ends.
+ *   · The alpha rate promise is the same: $480/year for as long as the
+ *     membership stays active.
+ *
+ * Every number is derived from the monthly price and the discount, so the two
+ * intervals cannot drift apart.
+ *
+ * BACKEND DEPENDENCY. Checkout asks for this with `interval: 'year'` beside
+ * the usual `{plan:'operator', alpha:true}` (see lib/api `checkout`). The
+ * deployed backend has to accept that field and map it to a $480/year Stripe
+ * price before this ships: see docs/alpha-checkout-contract.md.
+ */
+export const ANNUAL_DISCOUNT_PERCENT = 20;
+
+const monthlyAmount = Number(ALPHA_OFFER.priceLabel.replace(/[^0-9.]/g, ''));
+const annualMonthlyAmount = monthlyAmount * (100 - ANNUAL_DISCOUNT_PERCENT) / 100;
+const annualAmount = annualMonthlyAmount * 12;
+const usd = (amount) => `$${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
+const annualPrice = usd(annualAmount);
+
+export const ANNUAL_OFFER = Object.freeze({
+  interval: 'year',
+  priceLabel: annualPrice,
+  intervalLabel: '/ year',
+  /** What a year costs spread over twelve months, for the comparison. */
+  monthlyEquivalentLabel: usd(annualMonthlyAmount),
+  /** Twelve months at the monthly price, for the comparison. */
+  monthlyTotalLabel: usd(monthlyAmount * 12),
+  savingsLabel: `Save ${ANNUAL_DISCOUNT_PERCENT}%`,
+
+  summary: `${annualPrice}/year · first 2 weeks free · card required, ${ALPHA_OFFER.todayLabel} today`,
+
+  billingNotice:
+    `${annualPrice} USD/year, and your first 2 weeks are free. A card is required to start `
+    + `the trial and ${ALPHA_OFFER.todayLabel} is charged today; ${annualPrice} is billed once when the 14-day trial ends, `
+    + 'then once a year. Cancel any time before then and you are never charged. Applicable tax may be added.',
+
+  rateNotice:
+    `Alpha members on annual billing keep ${annualPrice}/year for life. When Merger leaves alpha and the price `
+    + `rises, your rate stays at ${annualPrice}/year for as long as your membership stays active.`,
+});
+
+/** The price terms for a billing interval. Anything but 'year' is monthly. */
+export function offerTerms(interval) {
+  if (interval === 'year') return { ...ANNUAL_OFFER, perLabel: '/year' };
+  return {
+    interval: 'month',
+    priceLabel: ALPHA_OFFER.priceLabel,
+    intervalLabel: ALPHA_OFFER.intervalLabel,
+    summary: ALPHA_OFFER.summary,
+    billingNotice: ALPHA_OFFER.billingNotice,
+    rateNotice: ALPHA_OFFER.rateNotice,
+    perLabel: '/month',
+  };
+}
+
+/**
  * The waitlist, in one place, for the same reason the offer is.
  *
  * The price strings here are DERIVED from ALPHA_OFFER rather than retyped.

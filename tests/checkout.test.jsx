@@ -56,6 +56,35 @@ describe('joining the alpha', () => {
     expect(screen.queryByText(/first 2 weeks are free|trial starts when|\$0/i)).not.toBeInTheDocument();
   });
 
+  it('defaults to monthly and sends the chosen interval to checkout', async () => {
+    checkout.mockReturnValue(new Promise(() => {}));
+    render(<TestCheckout />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$0due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('First 2 weeks free, then $480/ year');
+    expect(screen.getByText(/\$480 USD\/year, and your first 2 weeks are free/)).toHaveTextContent('$0 is charged today');
+    expect(screen.getByText(/keep \$480\/year for life/)).toBeInTheDocument();
+    expect(screen.queryByText(/\$50 USD\/month/)).not.toBeInTheDocument();
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year'));
+  });
+
+  it('sends monthly when the choice is left alone', async () => {
+    checkout.mockReturnValue(new Promise(() => {}));
+    render(<TestCheckout />);
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('month'));
+  });
+
+  it('quotes the full annual price up front for a returning member', () => {
+    render(<TestCheckout trialEligible={false} />);
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$480due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('Renews at $480/ year');
+    expect(screen.getByRole('button', { name: 'Restart membership — $480/year' })).toBeEnabled();
+  });
+
   it('does not offer checkout until trial eligibility is confirmed', () => {
     const ctl = { phase: 'idle', busy: false, start: vi.fn() };
     render(<PlanStep ctl={ctl} />);

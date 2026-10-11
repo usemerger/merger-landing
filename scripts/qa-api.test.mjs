@@ -78,6 +78,8 @@ test('error and unavailable modes can be reset through the local control page', 
   // Checkout speaks the real contract. Signup is open, so there is no invite
   // refusal left to model — what remains is a closed window and a bad plan.
   assert.equal((await call('/api/billing/checkout', { plan: 'desk', alpha: true })).data.error, 'alpha_is_operator_only');
+  assert.equal((await call('/api/billing/checkout', { plan: 'operator', alpha: true, interval: 'decade' })).data.error, 'invalid_billing_interval');
+  assert.notEqual((await call('/api/billing/checkout', { plan: 'operator', alpha: true, interval: 'year' })).data.error, 'invalid_billing_interval');
   await call('/qa/scenario', { scenario: 'alphaclosed' });
   const shut = await call('/api/billing/checkout', { plan: 'operator', alpha: true });
   assert.equal(shut.response.status, 403);

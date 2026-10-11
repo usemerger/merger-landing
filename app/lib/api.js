@@ -142,11 +142,19 @@ export const billingStatus = () => request('/api/billing/status');
  * plan the alpha accepts: any other plan with `alpha:true` is refused with
  * 400 alpha_is_operator_only, so sending one would be asking for an error we
  * already know the answer to.
+ *
+ * `interval: 'year'` asks for annual billing (lib/billingOffer ANNUAL_OFFER).
+ * It is sent only when the member chose annual, so the monthly request is
+ * unchanged. The backend must accept it before the annual option ships.
  */
-export const checkout = () =>
+export const checkout = (interval) =>
   request('/api/billing/checkout', {
     method: 'POST',
-    body: { plan: 'operator', alpha: true },
+    // Monthly sends the body it always has, byte for byte. Annual adds one
+    // field. Nothing else a caller passes can change the plan.
+    body: interval === 'year'
+      ? { plan: 'operator', alpha: true, interval: 'year' }
+      : { plan: 'operator', alpha: true },
   });
 
 /** Returns the hosted Stripe Customer Portal URL. */
