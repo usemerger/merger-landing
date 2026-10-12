@@ -4,9 +4,9 @@ const nav = vi.hoisted(() => ({ replace: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => nav }));
 vi.mock('next/link', () => ({ default: ({ children, ...props }) => <a {...props}>{children}</a> }));
 vi.mock('../app/components/Shell', () => ({ default: ({ children }) => <>{children}</> }));
-vi.mock('../app/lib/api', async (original) => ({ ...await original(), accountAccess: vi.fn() }));
+vi.mock('../app/lib/api', async (original) => ({ ...await original(), accountAccess: vi.fn(), adminWaitlist: vi.fn(), adminInvite: vi.fn() }));
 vi.mock('../app/lib/adminAccounts', async (original) => ({ ...await original(), adminAccounts: vi.fn(), adminAccount: vi.fn(), adminAccountRole: vi.fn(), adminAccountGrant: vi.fn(), adminAccountRevoke: vi.fn() }));
-import { accountAccess, ApiError } from '../app/lib/api';
+import { accountAccess, adminInvite, adminWaitlist, ApiError } from '../app/lib/api';
 import * as api from '../app/lib/adminAccounts';
 import AdminUsersPage from '../app/admin/users/page';
 
@@ -20,6 +20,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   accountAccess.mockResolvedValue({ user: { id: 'owner' }, capabilities: { isAdmin: true } });
   api.adminAccounts.mockResolvedValue(page());
+  adminWaitlist.mockResolvedValue({ waitlist: [], page: 0, pageSize: 50, totalCount: 0, filteredCount: 0, counts: {} });
   api.adminAccount.mockImplementation(async (id) => detail(id === first.id ? first : second));
   api.adminAccountGrant.mockResolvedValue(detail({ ...first, revision: 8, canUseApp: true, accessSource: 'complimentary', complimentary: { status: 'active', grantedAt: '2026-10-09T12:00:00Z', expiresAt: null } }));
 });
@@ -167,5 +168,73 @@ describe('reviewed, revision-protected access changes', () => {
     await screen.findByText('Complimentary access revoked. Other access is unchanged.');
     expect(api.adminAccountRevoke).toHaveBeenCalledExactlyOnceWith('first', { reason: 'Pilot complete', expectedRevision: 7 });
     expect(screen.getByText('Enabled')).toBeInTheDocument();
+  });
+});
+
+describe('inviting from an account', () => {
+  const entry = (extra = {}) => ({ id: 'wl-first', email: 'First@Example.com', accountLinked: true, emailVerified: true, admitted: false, invitation: null, ...extra });
+  const waitlist = (rows) => ({ waitlist: rows, page: 0, pageSize: 50, totalCount: rows.length, filteredCount: rows.length, counts: {} });
+  async function open() { fireEvent.click(await screen.findByRole('button', { name: /first@example.com/ })); return screen.findByRole('region', { name: 'Invitation' }); }
+
+  it('finds the waitlist entry by exact email and sends one invitation after confirmation', async () => {
+    adminWaitlist.mockResolvedValue(waitlist([entry({ id: 'other', email: 'first@example.com.au' }), entry()]));
+    adminInvite.mockResolvedValue({ emailed: true });
+    render(<AdminUsersPage />);
+    const section = await open();
+    await within(section).findByText('Ready to invite');
+    expect(adminWaitlist).toHaveBeenCalledWith(expect.objectContaining({ q: 'first@example.com', filter: 'all' }));
+    fireEvent.click(within(section).getByRole('button', { name: 'Send invitation' }));
+    expect(adminInvite).not.toHaveBeenCalled();
+    adminWaitlist.mockResolvedValue(waitlist([entry({ invitation: { status: 'pending', expiresAt: '2099-01-01T00:00:00Z' } })]));
+    const confirm = within(section).getAllByRole('button', { name: 'Send invitation' }).at(-1);
+    fireEvent.click(confirm); fireEvent.click(confirm);
+    expect(await within(section).findByText('Invitation sent to first@example.com.')).toBeInTheDocument();
+    expect(adminInvite).toHaveBeenCalledTimes(1);
+    expect(adminInvite).toHaveBeenCalledWith('wl-first');
+    expect(await within(section).findByText('Invited')).toBeInTheDocument();
+    expect(within(section).getByRole('button', { name: 'Resend invitation' })).toBeEnabled();
+  });
+
+  it('warns that resending replaces the previous link', async () => {
+    adminWaitlist.mockResolvedValue(waitlist([entry({ invitation: { status: 'pending', expiresAt: '2099-01-01T00:00:00Z' } })]));
+    render(<AdminUsersPage />);
+    const section = await open();
+    fireEvent.click(await within(section).findByRole('button', { name: 'Resend invitation' }));
+    expect(within(section).getByText(/previous invitation link stops working/)).toBeInTheDocument();
+  });
+
+  it.each([
+    [{ admitted: true }, /already been admitted/],
+    [{ emailVerified: false }, /Email verification is required/],
+    [{ accountLinked: false }, /not linked to a Merger account/],
+  ])('does not offer an invitation for %j', async (extra, message) => {
+    adminWaitlist.mockResolvedValue(waitlist([entry(extra)]));
+    render(<AdminUsersPage />);
+    const section = await open();
+    expect(await within(section).findByText(message)).toBeInTheDocument();
+    expect(within(section).queryByRole('button', { name: /invitation/i })).toBeNull();
+    expect(adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('says so when no waitlist entry matches the account', async () => {
+    adminWaitlist.mockResolvedValue(waitlist([entry({ email: 'someone-else@example.com' })]));
+    render(<AdminUsersPage />);
+    const section = await open();
+    expect(await within(section).findByText(/No waitlist entry uses this email/)).toBeInTheDocument();
+    expect(within(section).queryByRole('button', { name: /invitation/i })).toBeNull();
+  });
+
+  it('reports an unconfirmed email and a failed send without claiming success', async () => {
+    adminWaitlist.mockResolvedValue(waitlist([entry()]));
+    adminInvite.mockResolvedValueOnce({ emailed: false }).mockRejectedValueOnce(new ApiError(503, 'email_unavailable'));
+    render(<AdminUsersPage />);
+    const section = await open();
+    fireEvent.click(await within(section).findByRole('button', { name: 'Send invitation' }));
+    fireEvent.click(within(section).getAllByRole('button', { name: 'Send invitation' }).at(-1));
+    expect(await within(section).findByText(/email was not confirmed as sent/)).toBeInTheDocument();
+    fireEvent.click(await within(section).findByRole('button', { name: 'Send invitation' }));
+    fireEvent.click(within(section).getAllByRole('button', { name: 'Send invitation' }).at(-1));
+    expect(await within(section).findByRole('alert')).toBeInTheDocument();
+    expect(within(section).queryByText(/Invitation sent to/)).toBeNull();
   });
 });

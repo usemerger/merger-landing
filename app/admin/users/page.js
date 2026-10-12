@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../../components/Shell';
-import { accountAccess } from '../../lib/api';
+import { accountAccess, adminInvite, adminWaitlist, errorMessage } from '../../lib/api';
+import { canSelect, inviteStatus, rowStatus } from '../../lib/waitlistInvites';
 import { ACCOUNT_ROLES, accountAdminError, adminAccount, adminAccountGrant, adminAccountRevoke, adminAccountRole, adminAccounts, canManageUsers, roleLabel } from '../../lib/adminAccounts';
 import './users-admin.css';
 
@@ -156,6 +157,7 @@ function AccountDetail({ id, actorId, onClose, onUpdated, onBusy, onUnauthorized
         <section className="au-section"><div className="au-section-title"><h3>Team permissions</h3><span className="au-badge">{roleLabel(user.role)}</span></div><p>{user.role === 'admin' ? 'Can manage users, access, and waitlist rollout.' : user.role === 'waitlist_importer' ? 'Can view the waitlist and import contacts.' : user.role === 'waitlist_viewer' ? 'Can view the waitlist without changing it.' : 'Standard account. No administration permissions.'}</p>
           {protectedRole ? <p className="au-caption">{user.protectedAdmin ? 'Protected administrator. This role is managed outside this dashboard.' : 'You cannot change your own administrator role.'}</p> : <button type="button" className="btn btn-ghost btn-sm" onClick={() => begin('role')} disabled={busy || needsRefresh}>Change role</button>}
         </section>
+        <InvitationSection key={user.email} email={user.email} emailVerified={user.emailVerified} locked={busy || needsRefresh} onBusy={onBusy} onUnauthorized={onUnauthorized} />
         <section className="au-section"><div className="au-section-title"><h3>App access</h3><span className={`au-badge${user.canUseApp ? ' is-active' : ''}`}>{user.canUseApp ? 'Enabled' : 'Not active'}</span></div><dl className="au-facts"><div><dt>Complimentary</dt><dd>{active ? 'Partner access' : user.complimentary?.status === 'expired' ? 'Expired' : user.complimentary?.status === 'revoked' ? 'Revoked' : 'None'}</dd></div>{user.complimentary?.grantedAt && <div><dt>{active ? 'Expires' : 'Expiry'}</dt><dd>{user.complimentary.expiresAt ? when(user.complimentary.expiresAt) : 'No expiry'}</dd></div>}<div><dt>Paid subscription</dt><dd>{user.accessSource === 'legacy' || user.subscriptionStatus === 'none' || !user.subscriptionStatus ? 'None' : user.subscriptionStatus.replaceAll('_', ' ')}</dd></div>{user.accessSource === 'legacy' && <div><dt>Founding access</dt><dd>Active</dd></div>}</dl>
           <p>Complimentary access is free. It does not create, cancel, or change a paid subscription.</p>
           <div className="au-actions"><button type="button" className="btn btn-primary btn-sm" disabled={busy || needsRefresh || !user.emailVerified} onClick={() => begin('grant')}>{active ? 'Update free access' : 'Grant free access'}</button>{active && <button type="button" className="btn btn-ghost btn-sm" disabled={busy || needsRefresh} onClick={() => begin('revoke')}>Revoke free access</button>}</div>
@@ -173,4 +175,84 @@ function AccountDetail({ id, actorId, onClose, onUpdated, onBusy, onUnauthorized
       </>}
     </>}
   </aside>;
+}
+
+/**
+ * Send this person the same access invitation the waitlist dashboard sends.
+ *
+ * Invitations belong to waitlist entries, not accounts (the backend route is
+ * POST /api/admin/waitlist/{row_id}/invite), so this finds the waitlist entry
+ * with exactly this account's email and invites that. Eligibility is the
+ * waitlist dashboard's own rule: a linked, verified account that is not yet
+ * admitted. The backend checks it again when the invitation is sent.
+ */
+function InvitationSection({ email, emailVerified, locked, onBusy, onUnauthorized }) {
+  const [phase, setPhase] = useState('loading');
+  const [row, setRow] = useState(null);
+  const [confirming, setConfirming] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const sequence = useRef(0);
+  const pending = useRef(false);
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; sequence.current += 1; }; }, []);
+  // After a send, keep its outcome on screen while the status refreshes.
+  const lookup = useCallback(async ({ keepFeedback = false } = {}) => {
+    const id = ++sequence.current;
+    setPhase('loading'); setConfirming(false);
+    if (!keepFeedback) { setError(''); setNotice(''); }
+    try {
+      const result = await adminWaitlist({ q: email, filter: 'all', page: 0, pageSize: 50 });
+      if (!mounted.current || id !== sequence.current) return;
+      const target = email.trim().toLowerCase();
+      const match = (Array.isArray(result?.waitlist) ? result.waitlist : [])
+        .find((entry) => typeof entry?.email === 'string' && typeof entry?.id === 'string' && entry.email.trim().toLowerCase() === target) || null;
+      setRow(match); setPhase('ready');
+    } catch (err) {
+      if (!mounted.current || id !== sequence.current || onUnauthorized(err)) return;
+      setRow(null); setError(`Invitation status could not be loaded. ${errorMessage(err)}`); setPhase('error');
+    }
+  }, [email, onUnauthorized]);
+  useEffect(() => { lookup(); }, [lookup]);
+
+  async function send() {
+    if (!row || pending.current || locked || !canSelect(row)) return;
+    pending.current = true; setSending(true); onBusy(true); setError(''); setNotice('');
+    try {
+      const result = await adminInvite(row.id);
+      if (!mounted.current) return;
+      setConfirming(false);
+      setNotice(result?.emailed ? `Invitation sent to ${email}.` : 'The invitation was created, but the email was not confirmed as sent. Check its delivery status before resending.');
+      await lookup({ keepFeedback: true });
+    } catch (err) {
+      if (!mounted.current || onUnauthorized(err)) return;
+      setConfirming(false);
+      setError(errorMessage(err));
+      await lookup({ keepFeedback: true });
+    } finally { pending.current = false; if (mounted.current) setSending(false); onBusy(false); }
+  }
+
+  const status = row ? inviteStatus(row) : undefined;
+  const label = row ? rowStatus(row, status) : null;
+  const eligible = Boolean(row && canSelect(row, status));
+  const reissue = Boolean(row?.invitation) && status !== 'revoked' && status !== 'expired';
+  const action = !row?.invitation ? 'Send invitation' : 'Resend invitation';
+  const reason = !row ? '' : row.admitted || status === 'accepted' ? 'This person has already been admitted. No invitation is needed.'
+    : !row.accountLinked ? 'This waitlist entry is not linked to a Merger account yet.'
+    : !row.emailVerified || !emailVerified ? 'Email verification is required before an invitation can be sent.' : '';
+
+  return <section className="au-section" aria-label="Invitation">
+    <div className="au-section-title"><h3>Invitation</h3>{label && <span className={`au-badge${label.tone === 'good' ? ' is-active' : ''}`}>{label.label}</span>}</div>
+    {error && <div className="au-feedback is-error" role="alert">{error}</div>}{notice && <div className="au-feedback" role="status">{notice}</div>}
+    {phase === 'loading' && <p role="status">Checking invitation status…</p>}
+    {phase === 'error' && <div className="au-actions"><button type="button" className="btn btn-ghost btn-sm" onClick={() => lookup()} disabled={sending}>Check again</button></div>}
+    {phase === 'ready' && !row && <p>No waitlist entry uses this email, so an invitation cannot be sent from here.</p>}
+    {phase === 'ready' && row && <>
+      <p>Emails an access invitation. From it, they choose a platform and download Merger. An invitation does not start a subscription or a trial.</p>
+      {row.invitation && <dl className="au-facts"><div><dt>Last invited</dt><dd>{when(row.invitedAt || row.invitation.createdAt)}</dd></div>{row.invitation.expiresAt && <div><dt>{status === 'expired' ? 'Expired' : 'Expires'}</dt><dd>{when(row.invitation.expiresAt)}</dd></div>}{row.invitation.deliveryStatus === 'failed' && <div><dt>Email delivery</dt><dd>Send failed</dd></div>}</dl>}
+      {reason ? <p className="au-caption">{reason}</p> : confirming ? <div className="au-review"><strong>{email}</strong><p>{reissue ? 'Send a new invitation? The previous invitation link stops working, even if this email cannot be delivered.' : 'Send this person an access invitation by email?'}</p><div className="au-actions"><button type="button" className="btn btn-ghost btn-sm" disabled={sending} onClick={() => setConfirming(false)}>Cancel</button><button type="button" className="btn btn-primary btn-sm" disabled={sending || locked} onClick={send}>{sending ? 'Sending…' : action}</button></div></div>
+        : <div className="au-actions"><button type="button" className="btn btn-primary btn-sm" disabled={!eligible || locked || sending} onClick={() => { setNotice(''); setError(''); setConfirming(true); }}>{action}</button></div>}
+    </>}
+  </section>;
 }

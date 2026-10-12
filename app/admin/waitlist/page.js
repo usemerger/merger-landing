@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Shell from '../../components/Shell';
 import { ApiError, accountAccess, adminInvite, adminRevoke, adminWaitlist, errorMessage, formatDate } from '../../lib/api';
 import { waitlistPermissions } from '../../lib/waitlistPermissions';
+import { canSelect, inviteStatus, rowStatus } from '../../lib/waitlistInvites';
 import './waitlist-admin.css';
 import WaitlistImport from './WaitlistImport';
 
@@ -12,20 +13,6 @@ const PAGE_SIZE = 50;
 const SELECTION_LIMIT = 100;
 const EMPTY_COUNTS = { all: 0, unverified: 0, eligible: 0, invited: 0, admitted: 0 };
 
-function inviteStatus(row, now = Date.now()) {
-  if (row.invitation?.status === 'pending' && row.invitation.expiresAt && new Date(row.invitation.expiresAt).getTime() <= now) return 'expired';
-  return row.invitation?.status;
-}
-function canSelect(row, status = inviteStatus(row)) { return row.accountLinked && row.emailVerified && !row.admitted && status !== 'accepted'; }
-function isReady(row, status = inviteStatus(row)) { return canSelect(row, status) && status !== 'pending'; }
-function rowStatus(row, status = inviteStatus(row)) {
-  if (row.admitted || status === 'accepted') return { label: 'Admitted', tone: 'good' };
-  if (status === 'pending') return { label: 'Invited', tone: 'gold' };
-  if (status === 'expired') return { label: 'Expired', tone: 'muted' };
-  if (status === 'revoked') return { label: 'Revoked', tone: 'muted' };
-  if (isReady(row, status)) return { label: 'Ready to invite', tone: 'ready' };
-  return { label: 'Waiting', tone: 'muted' };
-}
 function verificationLabel(row) { return row.verificationPending ? 'Needs verification' : !row.accountLinked ? 'Account not linked' : row.emailVerified ? 'Verified' : 'Needs verification'; }
 function deliveryLabel(value) { return ({ sent: 'Sent to email provider', failed: 'Email send failed', pending: 'Send pending', queued: 'Email queued' })[value] || 'Delivery not confirmed'; }
 function Icon({ name, ...props }) {
