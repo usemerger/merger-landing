@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, accountAccess, acceptInvitation, accountWaitlist, adminWaitlist, signup, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
-import { ALPHA_OFFER } from '../app/lib/billingOffer';
+import { ALPHA_OFFER, ANNUAL_OFFER, offerTerms } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -42,6 +42,27 @@ describe('the alpha checkout contract', () => {
     expect(fetchMock).toHaveBeenCalledWith('/api/billing/checkout', expect.objectContaining({
       credentials: 'include', method: 'POST', body: '{"plan":"operator","alpha":true}',
     }));
+  });
+
+  it('asks for annual billing with one extra field, and only when annual was chosen', async () => {
+    const fetchMock = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ url: 'https://checkout.stripe.com/c/pay/cs_test' })));
+    vi.stubGlobal('fetch', fetchMock);
+    await checkout('year');
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ plan: 'operator', alpha: true, interval: 'year' });
+    await checkout('month');
+    await checkout();
+    for (const call of fetchMock.mock.calls.slice(1)) expect(JSON.parse(call[1].body)).toEqual({ plan: 'operator', alpha: true });
+  });
+
+  it('prices annual at 20% under twelve monthly payments', () => {
+    expect(ANNUAL_OFFER.priceLabel).toBe('$480');
+    expect(ANNUAL_OFFER.monthlyEquivalentLabel).toBe('$40');
+    expect(ANNUAL_OFFER.monthlyTotalLabel).toBe('$600');
+    expect(ANNUAL_OFFER.savingsLabel).toBe('Save 20%');
+    expect(ANNUAL_OFFER.billingNotice).toContain('$0 is charged today');
+    expect(ANNUAL_OFFER.rateNotice).toContain('$480/year for life');
+    expect(offerTerms('year').priceLabel).toBe('$480');
+    expect(offerTerms('anything-else').priceLabel).toBe(ALPHA_OFFER.priceLabel);
   });
 
   it('returns the hosted checkout URL and nothing is read but that', async () => {

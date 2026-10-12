@@ -115,3 +115,31 @@ them come back.
 
 No `offer` field exists. The client sends `{plan:'operator', alpha:true}` and
 nothing else.
+
+## Annual billing (proposed — needs a backend change before it ships)
+
+The website now offers annual billing at checkout: **$480 USD/year**, which is
+20% under twelve months at $50. Same 14-day trial, same card-required/$0-today
+start, same alpha rate promise ($480/year while the membership stays active).
+
+When a member picks annual the client sends one extra field:
+
+```json
+{ "plan": "operator", "alpha": true, "interval": "year" }
+```
+
+Monthly sends exactly `{ "plan": "operator", "alpha": true }`, as before.
+
+The backend needs to, before this is merged:
+
+1. Create a $480/year recurring Stripe price for the alpha operator plan.
+2. Accept an optional `interval` (`"month"` | `"year"`, default `"month"`) on
+   `POST /api/billing/checkout` and select that price, with the same 14-day
+   trial and returning-member (no trial) rules.
+3. Reject unknown values with a 400 rather than falling back to monthly, so a
+   member who chose annual is never silently put on monthly.
+4. Report the real price through `GET /api/billing/status` `pricing`
+   (`interval: "year"`, `amount: 48000`); the dashboard already renders it.
+
+If the backend prefers a different field name, change it in `checkout()` in
+`app/lib/api.js` and the QA fixture — those are the only two places.

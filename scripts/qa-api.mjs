@@ -151,6 +151,9 @@ export function createQaApi({ webOrigin = 'http://127.0.0.1:3012' } = {}) {
         // The contract, enforced here so a wrong body fails locally rather than
         // in production: operator + alpha, nothing else.
         if (sent?.alpha === true && sent?.plan !== 'operator') { json(response, 400, { error: 'alpha_is_operator_only' }); return; }
+        // Annual billing: `interval` is optional, and only 'month' or 'year'.
+        // PROPOSED — the real backend has to adopt the same field.
+        if (sent?.interval !== undefined && !['month', 'year'].includes(sent.interval)) { json(response, 400, { error: 'invalid_billing_interval', synthetic: true }); return; }
         if (state.scenario === 'alphaclosed') { json(response, 403, { error: 'alpha_closed', synthetic: true }); return; }
         if (state.scenario === 'billingerror') { json(response, 502, { error: 'billing_provider_error', synthetic: true }); return; }
         // SIGNUP IS OPEN, so on the real backend this is a 200 with a hosted

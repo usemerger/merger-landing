@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faqs } from './landingContent';
-import { ALPHA_OFFER, WAITLIST } from './lib/billingOffer';
+import { ALPHA_OFFER, ANNUAL_OFFER, WAITLIST } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
 import { DealFilm, DocumentFilm } from './components/FeatureFilms';
@@ -8,9 +8,10 @@ import MergeHero from './components/MergeHero';
 import WaitlistForm from './components/WaitlistForm';
 import SingularityButton from './components/SingularityButton';
 import ChannelOrbit from './components/ChannelOrbit';
+import PricePreview from './components/PricePreview';
 import './singularity-funnel.css';
 
-const invitationTerms = 'Joining the waitlist is free. When you receive and accept an invitation, you can start a 14-day free trial with a card. After the trial, Merger is $50 USD/month plus applicable tax. Cancel before the trial ends to avoid a charge.';
+const invitationTerms = `Joining the waitlist is free. When you receive and accept an invitation, you can start a 14-day free trial with a card. After the trial, Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax. Cancel before the trial ends to avoid a charge.`;
 
 function SectionLabel({ number, children }) {
   return <p className="sf-label"><span>{number}</span>{children}</p>;
@@ -54,7 +55,7 @@ export default function LandingPage() {
       </section>
 
       <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
-        <div className="sf-access-copy"><SectionLabel number="04">Early access</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>We’re opening early access in small groups. Join the waitlist and help shape the workspace around the way you work.</p><div className="sf-price"><strong>{ALPHA_OFFER.priceLabel}</strong><span>/ month<small>After your invitation and 14-day free trial.</small></span></div><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
+        <div className="sf-access-copy"><SectionLabel number="04">Early access</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>We’re opening early access in small groups. Join the waitlist and help shape the workspace around the way you work.</p><PricePreview /><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
         <div id="waitlist" className="sf-waitlist-card"><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Join the waitlist</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Create your Merger account. We’ll let you know when your invitation is ready.</p><WaitlistForm /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Get invited</span><i /><span>Get started</span></div></div>
       </div></section>
 
