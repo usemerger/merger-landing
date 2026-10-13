@@ -139,8 +139,11 @@ export default function ChannelOrbit({ paused = false }) {
         gathering = point.gathering;
         const node = nodes.current[i];
         if (node) {
-          node.style.left = `${coordinate(point.x / 6.8)}%`;
-          node.style.top = `${coordinate(point.y / 5.2)}%`;
+          // Moved with a transform, not left/top: left/top re-run layout and
+          // snap to whole pixels, so a slow orbit visibly ticked from pixel to
+          // pixel. A transform moves in sub-pixel steps on the compositor.
+          node.style.setProperty('--tx', `${coordinate(point.x / 6.8)}cqw`);
+          node.style.setProperty('--ty', `${coordinate(point.y / 5.2)}cqh`);
           node.style.zIndex = `${3 + Math.round(point.depth * 5)}`;
           node.style.setProperty('--node-depth', `${.93 + point.depth * .08}`);
         }
@@ -155,7 +158,10 @@ export default function ChannelOrbit({ paused = false }) {
         }
       });
       if (core.current) { core.current.setAttribute('transform', `rotate(${time * 5} 340 252)`); core.current.style.opacity = `${.3 + gathering * .55}`; }
-      if (phaseLabel.current) phaseLabel.current.textContent = gathering > .75 ? 'Different channels. One center of gravity.' : gathering > .2 ? 'Everything finds its way together.' : 'Your conversations, in one orbit.';
+      // Only touch the caption when its words change: rewriting identical
+      // text every frame still forces a layout pass on the whole page.
+      const caption = gathering > .75 ? 'Different channels. One center of gravity.' : gathering > .2 ? 'Everything finds its way together.' : 'Your conversations, in one orbit.';
+      if (phaseLabel.current && phaseLabel.current.textContent !== caption) phaseLabel.current.textContent = caption;
     };
     const tick = (stamp) => {
       const running = visible && !document.hidden && !preference.matches && !paused && !userPaused && !hovered.current && !focused.current;
@@ -196,7 +202,7 @@ export default function ChannelOrbit({ paused = false }) {
             <g ref={core} fill="none" stroke="#e2be70" strokeWidth=".65" opacity=".4"><ellipse cx="340" cy="252" rx="94" ry="28" transform="rotate(-28 340 252)" /><ellipse cx="340" cy="252" rx="84" ry="35" transform="rotate(42 340 252)" /><circle cx="340" cy="252" r="54" strokeDasharray="1 7" /></g>
           </svg>
           <button className={`co-center${selected === 'all' ? ' is-selected' : ''}`} type="button" onClick={() => setSelected('all')} aria-label="Show all channels in Merger" aria-pressed={selected === 'all'}><span className="co-center-glow" /><ChannelIcon channel="merger" size={93} /><strong>merger</strong><span>All channels</span></button>
-          {CHANNELS.map((channel, i) => { const point = geometry(0, i); return <button type="button" key={channel.id} className={`co-channel${selected === channel.id ? ' is-selected' : ''}`} ref={(el) => { nodes.current[i] = el; }} style={{ left: `${coordinate(point.x / 6.8)}%`, top: `${coordinate(point.y / 5.2)}%`, '--channel-color': channel.color }} aria-label={`Preview ${channel.name} in Merger`} aria-pressed={selected === channel.id} onClick={() => setSelected(channel.id)}><span className="co-channel-symbol"><ChannelIcon channel={channel.id} size={24} /></span><span className="co-channel-name">{channel.name}</span></button>; })}
+          {CHANNELS.map((channel, i) => { const point = geometry(0, i); return <button type="button" key={channel.id} className={`co-channel${selected === channel.id ? ' is-selected' : ''}`} ref={(el) => { nodes.current[i] = el; }} style={{ '--tx': `${coordinate(point.x / 6.8)}cqw`, '--ty': `${coordinate(point.y / 5.2)}cqh`, '--channel-color': channel.color }} aria-label={`Preview ${channel.name} in Merger`} aria-pressed={selected === channel.id} onClick={() => setSelected(channel.id)}><span className="co-channel-symbol"><ChannelIcon channel={channel.id} size={24} /></span><span className="co-channel-name">{channel.name}</span></button>; })}
           <span className="co-axis-label co-axis-label-top">INDEPENDENT CHANNELS</span><span className="co-axis-label co-axis-label-bottom">SHARED MOMENTUM</span>
         </div>
         <div className="co-system-caption"><span ref={phaseLabel}>Your conversations, in one orbit.</span><p>Choose a channel to see it in Merger.</p></div>
