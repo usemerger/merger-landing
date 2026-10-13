@@ -206,7 +206,6 @@ describe('inviting from an account', () => {
   it.each([
     [{ admitted: true }, /already been admitted/],
     [{ emailVerified: false }, /Email verification is required/],
-    [{ accountLinked: false }, /not linked to a Merger account/],
   ])('does not offer an invitation for %j', async (extra, message) => {
     adminWaitlist.mockResolvedValue(waitlist([entry(extra)]));
     render(<AdminUsersPage />);
@@ -214,6 +213,13 @@ describe('inviting from an account', () => {
     expect(await within(section).findByText(message)).toBeInTheDocument();
     expect(within(section).queryByRole('button', { name: /invitation/i })).toBeNull();
     expect(adminInvite).not.toHaveBeenCalled();
+  });
+
+  it('offers an invitation for an imported entry not yet linked to the account', async () => {
+    adminWaitlist.mockResolvedValue(waitlist([entry({ accountLinked: false, emailVerified: false })]));
+    render(<AdminUsersPage />);
+    const section = await open();
+    expect(await within(section).findByRole('button', { name: 'Send invitation' })).toBeEnabled();
   });
 
   it('says so when no waitlist entry matches the account', async () => {

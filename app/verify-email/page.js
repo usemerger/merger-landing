@@ -6,11 +6,14 @@ import Shell from '../components/Shell';
 import VerificationPanel from '../components/VerificationPanel';
 import { accountAccess, errorMessage } from '../lib/api';
 import { safeReturnPath } from '../lib/authFlow';
+import { inviteReturnPath, loadPendingInvite } from '../lib/pendingInvite';
 
 function Verification() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = safeReturnPath(params.get('next'));
+  // The emailed verification link carries no return path. If this browser is
+  // part-way through an invitation, finish that instead of the dashboard.
+  const next = safeReturnPath(params.get('next') || inviteReturnPath(loadPendingInvite()));
   const [access, setAccess] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);

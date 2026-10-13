@@ -68,7 +68,7 @@ export default function AdminUsersPage() {
   }
   const allowed = canManageUsers(access?.capabilities);
   return <Shell authed capabilities={access?.capabilities}><main className="au-main">
-    <header className="au-heading"><div><p className="eyebrow">Administration</p><h1>Users & access</h1><p>Manage registered accounts, team permissions, and complimentary partner access.</p></div>{allowed && <Link className="btn btn-ghost btn-sm" href="/admin/waitlist">Waitlist</Link>}</header>
+    <header className="au-heading"><div><p className="eyebrow">Administration</p><h1>Users & access</h1><p>Manage registered accounts, team permissions, and complimentary partner access.</p></div>{allowed && <div className="au-actions"><Link className="btn btn-ghost btn-sm" href="/admin/campaigns">Campaigns</Link><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">Waitlist</Link></div>}</header>
     {phase === 'forbidden' ? <section className="au-empty"><h2>Administrator access required</h2><p>Only full administrators can view accounts or change access.</p><Link className="btn btn-ghost btn-sm" href="/dashboard">Back to account</Link></section> : <>
       <div className="au-toolbar"><label htmlFor="user-search">Find a registered user<input id="user-search" type="search" placeholder="Search name or email" value={input} maxLength={120} disabled={saving || !allowed} onChange={(event) => { request.current += 1; setInput(event.target.value); setResult(null); setPhase('loading'); }} /></label><p>{result ? `${result.filteredCount.toLocaleString()} ${query.q ? 'matching' : 'registered'} users` : 'Accounts load 50 at a time'}</p></div>
       <div className={`au-workspace${selected && allowed ? ' has-detail' : ''}`}>
@@ -239,8 +239,7 @@ function InvitationSection({ email, emailVerified, locked, onBusy, onUnauthorize
   const reissue = Boolean(row?.invitation) && status !== 'revoked' && status !== 'expired';
   const action = !row?.invitation ? 'Send invitation' : 'Resend invitation';
   const reason = !row ? '' : row.admitted || status === 'accepted' ? 'This person has already been admitted. No invitation is needed.'
-    : !row.accountLinked ? 'This waitlist entry is not linked to a Merger account yet.'
-    : !row.emailVerified || !emailVerified ? 'Email verification is required before an invitation can be sent.' : '';
+    : row.accountLinked && (!row.emailVerified || !emailVerified) ? 'Email verification is required before an invitation can be sent.' : '';
 
   return <section className="au-section" aria-label="Invitation">
     <div className="au-section-title"><h3>Invitation</h3>{label && <span className={`au-badge${label.tone === 'good' ? ' is-active' : ''}`}>{label.label}</span>}</div>

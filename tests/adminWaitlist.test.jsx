@@ -72,10 +72,12 @@ describe('waitlist administration', () => {
     for (const person of [ready, unverified, unlinked, invited, admitted]) {
       expect(row(person.email)).toBeInTheDocument();
     }
-    for (const person of [unverified, unlinked, admitted]) {
+    for (const person of [unverified, admitted]) {
       const checkbox = within(row(person.email)).queryByRole('checkbox');
       if (checkbox) expect(checkbox).toBeDisabled();
     }
+    // Imported contacts without an account can be invited: they sign up from the link.
+    expect(within(row(unlinked.email)).getByRole('checkbox')).toBeEnabled();
     expect(api.adminInvite).not.toHaveBeenCalled();
   });
 
@@ -275,7 +277,7 @@ describe('waitlist administration', () => {
     expect(screen.queryByRole('button', { name: 'Import contacts' })).not.toBeInTheDocument();
   });
 
-  it('includes unlinked imported contacts in Needs verification while keeping invitations disabled', async () => {
+  it('includes unlinked imported contacts in Needs verification and lets them be invited', async () => {
     const imported = signup('imported', 'imported@example.test', { name: 'Morgan Ellis', source: 'admin_import', accountLinked: false, emailVerified: false });
     await show([ready, unverified, imported]);
     await click(button('Needs verification'));
@@ -284,7 +286,8 @@ describe('waitlist administration', () => {
     expect(screen.queryByText(ready.email)).not.toBeInTheDocument();
     expect(row(unverified.email)).toBeInTheDocument();
     expect(within(row(imported.email)).getByText('Account not linked')).toBeInTheDocument();
-    expect(within(row(imported.email)).getByRole('checkbox')).toBeDisabled();
+    expect(within(row(imported.email)).getByRole('checkbox')).toBeEnabled();
+    expect(within(row(unverified.email)).getByRole('checkbox')).toBeDisabled();
     expect(api.adminInvite).not.toHaveBeenCalled();
   });
 

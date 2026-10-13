@@ -6,7 +6,10 @@ export function inviteStatus(row, now = Date.now()) {
   if (row.invitation?.status === 'pending' && row.invitation.expiresAt && new Date(row.invitation.expiresAt).getTime() <= now) return 'expired';
   return row.invitation?.status;
 }
-export function canSelect(row, status = inviteStatus(row)) { return row.accountLinked && row.emailVerified && !row.admitted && status !== 'accepted'; }
+// Imported contacts can be invited before they have an account: the invitation
+// is tied to their email, and they create and verify the account from the link.
+// A linked account that has not verified its email waits until it does.
+export function canSelect(row, status = inviteStatus(row)) { return (!row.accountLinked || row.emailVerified) && !row.admitted && status !== 'accepted'; }
 export function isReady(row, status = inviteStatus(row)) { return canSelect(row, status) && status !== 'pending'; }
 export function rowStatus(row, status = inviteStatus(row)) {
   if (row.admitted || status === 'accepted') return { label: 'Admitted', tone: 'good' };
