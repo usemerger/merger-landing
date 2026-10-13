@@ -30,7 +30,7 @@ export default function LandingPage() {
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
             <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
-            <p className="sf-hero-note">Windows · Early access by invitation · No card to join</p>
+            <p className="sf-hero-note">Windows · Early access by invitation · $0 to start</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
         </div>
