@@ -2,6 +2,7 @@ import './landing.css';
 import './app.css';
 import './preview-notice.css';
 import { Geist, Geist_Mono } from 'next/font/google';
+import FirstTouch from './components/FirstTouch';
 
 /**
  * ONE SANS, EVERYWHERE. §3 drops the editorial-serif direction entirely: the
@@ -47,7 +48,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
-      <body>{children}{process.env.NEXT_PUBLIC_ACCOUNT_PREVIEW === '1' && <aside className="account-preview-notice" aria-label="Preview environment">Preview · Test accounts and payments. Emails stay in the test inbox.</aside>}</body>
+      <body><FirstTouch />{children}{process.env.NEXT_PUBLIC_ACCOUNT_PREVIEW === '1' && <aside className="account-preview-notice" aria-label="Preview environment">Preview · Test accounts and payments. Emails stay in the test inbox.</aside>}</body>
     </html>
   );
 }

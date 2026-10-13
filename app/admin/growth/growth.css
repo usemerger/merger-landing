@@ -1,0 +1,36 @@
+.gr-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gr-tiles .wa-stat strong { font-size: 28px; }
+.gr-strip .cp-ramp-grid { margin-top: 0; }
+.gr-neg { color: #e7a3a3 !important; }
+.gr-movement { margin-top: 14px !important; color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+.gr-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
+.gr-panel-head p { color: var(--faint); font-size: 12px; }
+.gr-hint { margin-top: 10px !important; color: var(--faint); font-size: 12px; }
+.gr-chart { margin-top: 18px; }
+.gr-bars { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2px; align-items: end; height: 180px; border-bottom: 1px solid var(--line); }
+.gr-bar-col { position: relative; display: flex; align-items: flex-end; justify-content: center; height: 100%; padding: 0 18%; outline: none; cursor: default; }
+.gr-bar-col:focus-visible { box-shadow: inset 0 0 0 1px var(--gold, #c9a052); border-radius: 4px; }
+.gr-bar { display: block; width: 100%; max-width: 34px; border-radius: 4px 4px 0 0; background: var(--gold, #c9a052); opacity: .85; transition: opacity 120ms ease; }
+.gr-bar-col.is-active .gr-bar { opacity: 1; }
+.gr-bars:hover .gr-bar-col:not(.is-active) .gr-bar { opacity: .45; }
+.gr-tip { position: absolute; top: 0; left: 50%; z-index: 2; display: flex; flex-direction: column; gap: 2px; min-width: 150px; padding: 9px 11px; transform: translateX(-50%); border: 1px solid #ffffff17; border-radius: 9px; background: #18181b; box-shadow: 0 8px 24px #0008; color: var(--faint); font-size: 11px; white-space: nowrap; pointer-events: none; }
+.gr-tip.is-left { left: auto; right: 0; transform: none; }
+.gr-tip strong { color: var(--bone); font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.gr-axis { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 2px; margin-top: 8px; color: var(--faint); font-size: 10px; text-align: center; }
+.gr-segmented { display: inline-flex; padding: 3px; border: 1px solid #303035; border-radius: 10px; background: #09090b; }
+.gr-segmented button { padding: 7px 13px; border: 0; border-radius: 7px; background: transparent; color: #a5a5af; font: 500 12px var(--body, inherit); cursor: pointer; }
+.gr-segmented button.is-active { background: #ffffff10; color: var(--bone); }
+.gr-segmented button:focus-visible { outline: 1px solid var(--gold, #c9a052); }
+.gr-rev { position: relative; min-width: 110px; }
+.gr-rev span:last-child { position: relative; }
+.gr-rev-bar { position: absolute; right: 12px; top: 50%; height: 4px; max-width: calc(100% - 24px); margin-top: 9px; border-radius: 2px; background: #c9a05255; }
+.gr-defs summary { cursor: pointer; color: #c1c1c8; font-size: 13px; }
+.gr-defs ul { margin: 14px 0 0; padding-left: 18px; color: var(--faint); font-size: 12px; line-height: 1.7; }
+.gr-defs strong { color: #c1c1c8; font-weight: 500; }
+@media (max-width: 900px) { .gr-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) {
+  .gr-tiles .wa-stat strong { font-size: 22px; }
+  .gr-bars { height: 140px; }
+  .gr-segmented { width: 100%; }
+  .gr-segmented button { flex: 1; padding: 7px 4px; }
+}
