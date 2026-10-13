@@ -77,7 +77,7 @@ export default function AdminCampaignsPage() {
 
   return <Shell authed capabilities={permissions}><main className="wa-main">
     <header className="wa-heading"><div><p className="eyebrow">Staff workspace</p><h1>Campaigns</h1><p className="wa-lede">Who was invited, who opened the door, and who became a member. Counted once per person, on the day they were first invited.</p></div>
-      {phase === 'ready' && <div className="wa-actions"><Link className="btn btn-ghost" href="/admin/waitlist">Waitlist</Link><button type="button" className="btn btn-ghost wa-refresh" disabled={refreshing} onClick={load}>{refreshing ? 'Refreshing…' : 'Refresh'}</button></div>}</header>
+      {phase === 'ready' && <div className="wa-actions"><Link className="btn btn-ghost" href="/admin/growth">Growth</Link><Link className="btn btn-ghost" href="/admin/waitlist">Waitlist</Link><button type="button" className="btn btn-ghost wa-refresh" disabled={refreshing} onClick={load}>{refreshing ? 'Refreshing…' : 'Refresh'}</button></div>}</header>
     {phase === 'loading' && <section className="wa-empty wa-loading" role="status"><span className="wa-loader" /><h2>Loading campaigns…</h2></section>}
     {phase === 'forbidden' && <section className="wa-empty"><h2>Staff access required</h2><p>Sign in with a verified staff account to see campaign results.</p><Link className="btn btn-ghost" href="/dashboard">Your account</Link></section>}
     {error && <div className="wa-notice wa-notice-error" role="alert"><p>{error}</p><button type="button" className="btn btn-ghost" onClick={load}>Try again</button></div>}

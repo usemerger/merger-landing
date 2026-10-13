@@ -1,3 +1,4 @@
+import { captureFirstTouch, readFirstTouch } from './attribution';
 // The alpha waitlist: two calls, one stored code, one stored referral.
 //
 // SEPARATE FROM lib/api ON PURPOSE. This module is imported by the landing
@@ -90,6 +91,8 @@ async function request(path, { method = 'GET', body } = {}) {
  * sent only when present rather than as an empty string the backend would then
  * store. Same for `firm` and `ref`.
  */
+function attribution() { captureFirstTouch(); return readFirstTouch(); }
+
 export function joinWaitlist({ email, role, firm, ref }) {
   return request('/api/waitlist/join', {
     method: 'POST',
@@ -98,6 +101,7 @@ export function joinWaitlist({ email, role, firm, ref }) {
       ...(role ? { role } : {}),
       ...(firm ? { firm } : {}),
       ...(ref ? { ref } : {}),
+      ...(attribution() ? { attribution: attribution() } : {}),
     },
   });
 }

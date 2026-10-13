@@ -1,3 +1,4 @@
+import { captureFirstTouch, readFirstTouch } from './attribution';
 // Same-origin API client (Â§1).
 //
 // Every call here uses a RELATIVE /api/... path. next.config.js rewrites those to
@@ -58,10 +59,11 @@ async function request(path, { method = 'GET', body } = {}) {
 
 /* ---------------- auth ---------------- */
 
+function firstTouch() { return typeof window === 'undefined' ? null : (captureFirstTouch(), readFirstTouch()); }
 export const signup = (email, password, displayName, waitlist) =>
   request('/api/auth/signup', {
     method: 'POST',
-    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-09-27' } : {}) },
+    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-09-27' } : {}), ...(firstTouch() ? { attribution: firstTouch() } : {}) },
   });
 
 export const login = (email, password) =>
@@ -78,6 +80,7 @@ export const invitationPreview = (token) => request(`/api/account/invitation/pre
 export const acceptInvitation = (token) => request('/api/account/invitation/accept', {
   method: 'POST', body: token ? { token } : {},
 });
+export const adminMetrics = () => request('/api/admin/metrics');
 export const adminCampaigns = ({ cohort = '', days = 30 } = {}) => request(`/api/admin/campaigns?${new URLSearchParams({ cohort, days: String(days) })}`);
 export const adminWaitlist = ({ page = 0, pageSize = 50, q = '', filter = 'all' } = {}) => {
   const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize), q, filter });
