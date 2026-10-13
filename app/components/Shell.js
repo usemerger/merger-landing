@@ -38,7 +38,7 @@ export default function Shell({ children, authed = false, capabilities }) {
       <a className="skip-link" href="#account-content">Skip to content</a>
       <header className="app-nav">
         <div className="app-nav-inner">
-          <Link className="brand" href="/" aria-label="Merger home"><MarketingMark size={28} />merger</Link>
+          <Link className="brand" href="/" aria-label="Merger home"><MarketingMark size={28} /><span>merger</span></Link>
           <button className="account-menu" type="button" aria-expanded={open} aria-controls="account-navigation" onClick={() => setOpen(!open)}>{open ? 'Close menu' : 'Menu'}</button>
           <nav className={`app-nav-links${open ? ' is-open' : ''}`} id="account-navigation" aria-label="Account navigation">
             {authed ? <>{navLink('/dashboard', 'Account')}{navLink('/billing', 'Billing')}{navLink('/download', 'Download')}{navLink('/profile', 'Profile')}{capabilities?.isAdmin === true && navLink('/admin/users', 'Users & access')}<button type="button" className="linklike" disabled={busy} onClick={onSignOut}>{busy ? 'Signing out…' : 'Sign out'}</button></> : <>{navLink('/#pricing', 'Pricing')}{navLink('/login', 'Sign in')}<Link className="nav-cta" href="/#waitlist">Join the waitlist</Link></>}

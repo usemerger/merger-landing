@@ -469,6 +469,12 @@
 .app-shell button:disabled { cursor: not-allowed; opacity: .6; }
 .app-nav-inner { min-height: 76px; height: auto; padding-block: 16px; gap: 24px; }
 .app-nav .brand { color: var(--bone); text-decoration: none; flex-shrink: 0; font: 600 26px var(--display, sans-serif); letter-spacing: -.04em; }
+/* Same spaced capital wordmark as the homepage: MERGER in warm white beside
+   the gold diamond. The trailing letter-space is pulled back so the word
+   stays visually centred. */
+.app-nav .brand { gap: 14px; }
+.app-nav .brand span { font-size: 19px; font-weight: 600; text-transform: uppercase; letter-spacing: .42em; margin-right: -.42em; color: #EFEBE2; line-height: 1; }
+.app-nav .brand:hover span { color: #FFFFFF; }
 .app-nav .brand svg { color: var(--brass); }
 .app-nav-links a { text-decoration: none; }
 .app-nav-links [aria-current='page'] { color: var(--bone); }
