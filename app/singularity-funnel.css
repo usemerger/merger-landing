@@ -12,7 +12,12 @@
 /* Navigation stays light; the two account actions are quiet, stable pills. */
 .sf-page .mk-nav { background: #09090beb; backdrop-filter: blur(20px); }
 .sf-page .mk-nav-inner { min-height: 76px; }
-.sf-page .mk-brand span { font-size: 24px; letter-spacing: -.065em; }
+/* Spaced capital wordmark: MERGER, wide tracking, warm white. The trailing
+   letter-space is pulled back so the word stays centred on its own box. */
+.sf-page .mk-brand { gap: 14px; }
+.sf-page .mk-brand span { font-size: 19px; font-weight: 600; text-transform: uppercase; letter-spacing: .42em; margin-right: -.42em; color: #EFEBE2; }
+.sf-page .mk-brand:hover span { color: #FFFFFF; }
+.sf-page .mk-footer .mk-brand span { font-size: 16px; }
 .sf-page .mk-nav-links { font-size: 13px; gap: 27px; color: #a6a6af; }
 .sf-page .mk-nav-auth { min-width: 266px; gap: 9px; }
 .sf-page .sf-nav-cta { min-height: 38px; padding: 9px 17px; font-size: 12px; }
