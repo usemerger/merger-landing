@@ -74,9 +74,11 @@ export const logoutAll = () => request('/api/auth/logout-all', { method: 'POST' 
 /* Account admission is separate from billing. Only the server grants capabilities. */
 export const accountAccess = () => request('/api/account/access');
 export const accountWaitlist = (details = {}) => request('/api/account/waitlist', { method: 'POST', body: details });
+export const invitationPreview = (token) => request(`/api/account/invitation/preview?token=${encodeURIComponent(token)}`);
 export const acceptInvitation = (token) => request('/api/account/invitation/accept', {
   method: 'POST', body: token ? { token } : {},
 });
+export const adminCampaigns = ({ cohort = '', days = 30 } = {}) => request(`/api/admin/campaigns?${new URLSearchParams({ cohort, days: String(days) })}`);
 export const adminWaitlist = ({ page = 0, pageSize = 50, q = '', filter = 'all' } = {}) => {
   const query = new URLSearchParams({ page: String(page), pageSize: String(pageSize), q, filter });
   return request(`/api/admin/waitlist?${query}`);

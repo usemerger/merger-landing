@@ -5,7 +5,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => nav.router, useSearchParams
 vi.mock('next/link', () => ({ default: ({ children, replace, ...props }) => <a {...props}>{children}</a> }));
 vi.mock('../app/components/Shell', () => ({ default: ({ children }) => <>{children}</> }));
 vi.mock('../app/components/PlanStep', () => ({ default: () => <div data-testid="checkout">Paid activation</div>, useStartCheckout: () => ({ start: vi.fn(), busy: false }) }));
-vi.mock('../app/lib/api', async (original) => ({ ...await original(), accountAccess: vi.fn(), accountWaitlist: vi.fn(), acceptInvitation: vi.fn(), meOrNull: vi.fn(), billingStatus: vi.fn(), resendVerification: vi.fn(), adminWaitlist: vi.fn(), adminInvite: vi.fn(), adminRevoke: vi.fn(), updateProfile: vi.fn(), logoutAll: vi.fn(), forgotPassword: vi.fn() }));
+vi.mock('../app/lib/api', async (original) => ({ ...await original(), accountAccess: vi.fn(), accountWaitlist: vi.fn(), acceptInvitation: vi.fn(), invitationPreview: vi.fn(() => Promise.reject(new Error('none'))), meOrNull: vi.fn(), billingStatus: vi.fn(), resendVerification: vi.fn(), adminWaitlist: vi.fn(), adminInvite: vi.fn(), adminRevoke: vi.fn(), updateProfile: vi.fn(), logoutAll: vi.fn(), forgotPassword: vi.fn() }));
 import * as api from '../app/lib/api';
 import AccountDashboard from '../app/components/AccountDashboard';
 import InvitePage from '../app/invite/page';
@@ -95,10 +95,14 @@ describe('server-authorized account states', () => {
 });
 
 describe('invitation lifecycle', () => {
-  it('preserves the private invitation through sign-in', async () => {
+  it('preserves the private invitation through sign-up and sign-in', async () => {
     nav.query = 'token=secret-token'; api.accountAccess.mockRejectedValue(new api.ApiError(401));
+    api.invitationPreview.mockResolvedValueOnce({ email: 'invited@example.test', expiresAt: '2026-10-20T00:00:00Z' });
     render(<InvitePage />);
-    expect(await screen.findByRole('link', { name: 'Sign in to continue' })).toHaveAttribute('href', '/login?next=%2Finvite%3Ftoken%3Dsecret-token');
+    expect(await screen.findByRole('link', { name: 'Create your account' })).toHaveAttribute('href', '/signup?next=%2Finvite%3Ftoken%3Dsecret-token');
+    expect(screen.getByRole('link', { name: 'I already have an account' })).toHaveAttribute('href', '/login?next=%2Finvite%3Ftoken%3Dsecret-token');
+    expect(await screen.findByText('invited@example.test')).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('merger_pending_invite'))).toMatchObject({ token: 'secret-token', email: 'invited@example.test' });
     expect(api.acceptInvitation).not.toHaveBeenCalled();
   });
   it('ignores a public referral code as admission proof', async () => {
@@ -110,21 +114,29 @@ describe('invitation lifecycle', () => {
   it('does not promise another trial in a returning-member invitation', async () => {
     nav.query = 'token=private-token';
     api.accountAccess.mockResolvedValue({ ...waiting, rollout: { trialEligible: false } });
+    api.acceptInvitation.mockRejectedValue(new api.ApiError(410, 'invite_expired'));
     render(<InvitePage />);
     await screen.findByRole('button', { name: 'Accept invitation' });
     expect(screen.getByText(/As a returning member, \$50 plus applicable tax is due at checkout/)).toBeInTheDocument();
     expect(screen.queryByText(/Your first 14 days are free/)).not.toBeInTheDocument();
   });
-  it('accepts only explicitly and updates from the server response', async () => {
+  it('accepts a verified member arriving from their invite link once, then points to the trial', async () => {
     nav.query = 'token=private-token';
+    localStorage.setItem('merger_pending_invite', JSON.stringify({ token: 'private-token', email: '', at: Date.now() }));
     api.acceptInvitation.mockResolvedValue({ ...waiting, admission: { status: 'accepted' }, capabilities: { ...waiting.capabilities, canCheckout: true } });
     render(<InvitePage />);
-    const accept = await screen.findByRole('button', { name: 'Accept invitation' });
-    expect(api.acceptInvitation).not.toHaveBeenCalled();
-    fireEvent.click(accept); fireEvent.click(accept);
     await screen.findByRole('heading', { name: 'Your invitation is accepted.' });
     expect(api.acceptInvitation).toHaveBeenCalledExactlyOnceWith('private-token');
-    expect(screen.getByRole('link', { name: 'Continue to activation' })).toHaveAttribute('href', '/dashboard');
+    expect(screen.getByRole('link', { name: 'Start your 14-day free trial' })).toHaveAttribute('href', '/billing');
+    expect(localStorage.getItem('merger_pending_invite')).toBeNull();
+  });
+  it('does not accept without a personal token', async () => {
+    nav.query = '';
+    api.accountAccess.mockResolvedValue({ ...waiting, admission: { ...waiting.admission, status: 'invited' } });
+    render(<InvitePage />);
+    await screen.findByRole('button', { name: 'Accept invitation' });
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(api.acceptInvitation).not.toHaveBeenCalled();
   });
   it.each(['invite_wrong_account', 'invite_expired', 'invite_revoked'])('keeps %s recoverable without granting access', async (code) => {
     nav.query = 'token=private-token'; api.acceptInvitation.mockRejectedValue(new api.ApiError(410, code));
