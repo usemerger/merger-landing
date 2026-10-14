@@ -7,7 +7,7 @@ import SingularityButton from './SingularityButton';
 import useSession, { clearSessionHint } from '../lib/useSession';
 import { logout } from '../lib/api';
 
-export default function MarketingNav({ signupHref, checkoutLabel, singularity = false }) {
+export default function MarketingNav({ signupHref, checkoutLabel, singularity = false, sectionPrefix = '' }) {
   const [open, setOpen] = useState(false);
   const toggle = useRef(null);
   const session = useSession();
@@ -86,7 +86,7 @@ export default function MarketingNav({ signupHref, checkoutLabel, singularity = 
         <span>{open ? 'Close' : 'Menu'}</span><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d={open ? 'm4 4 10 10M14 4 4 14' : 'M2 5h14M2 9h14M2 13h14'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
       </button>
       <nav id="marketing-navigation" aria-label="Main navigation" className={`mk-nav-links${open ? ' is-open' : ''}`} onClick={event => { if (event.target.closest('a')) setOpen(false); }}>
-        <a href="#workflow">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+        <a href={`${sectionPrefix}#workflow`}>How it works</a><a href={`${sectionPrefix}#pricing`}>Pricing</a><a href={`${sectionPrefix}#faq`}>FAQ</a><Link href="/developers">API</Link>
         <span className="mk-nav-auth">{auth}</span>
       </nav>
     </div>
