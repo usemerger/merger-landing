@@ -71,6 +71,7 @@ export const login = (email, password) =>
 export const googleSigninStatus = () => request('/api/auth/google/status');
 export const googleSigninStart = (body) => request('/api/auth/google/start',{method:'POST',body});
 export const googleSigninComplete = (ticket) => request('/api/auth/google/complete',{method:'POST',body:{ticket}});
+export const googleSigninLink = (ticket, password) => request('/api/auth/google/link',{method:'POST',body:{ticket,password}});
 export const desktopApprove = (requestId) => request('/api/auth/desktop/approve',{method:'POST',body:{requestId}});
 
 export const logout = () => request('/api/auth/logout', { method: 'POST' });
