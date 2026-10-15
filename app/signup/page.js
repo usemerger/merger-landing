@@ -4,6 +4,8 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import AccountAuthLayout from '../components/AccountAuthLayout';
+import GoogleAccountButton from '../components/GoogleAccountButton';
 import PasswordField from '../components/PasswordField';
 import { errorMessage, meOrNull, signup } from '../lib/api';
 import { MIN_PASSWORD_LENGTH, normalizeEmail, safeReturnPath, validEmail } from '../lib/authFlow';
@@ -86,13 +88,14 @@ function SignupForm() {
       router.refresh();
     } catch (err) { setError(errorMessage(err)); pending.current = false; setBusy(false); }
   }
-  return <Shell><main className="auth-main"><div className="auth-card">
+  return <AccountAuthLayout><div className="auth-card">
     {session === 'loading' ? <p className="spinner-note" role="status">Checking your account…</p> : session === 'error' ? <>
       <h1>Could not check your account.</h1><div className="alert alert-error" role="alert">{error}</div>
       <button type="button" className="btn btn-ghost" onClick={checkSession}>Try again</button>
     </> : <>
       <p className="eyebrow">{invited ? 'You’re invited' : 'Early access'}</p><h1>{invited ? 'Create your Merger account.' : 'Your account. Your place in line.'}</h1>
-      <p className="lede">{invited ? 'Use the email your invitation was sent to. After you verify it, you’ll go straight to your free trial.' : 'Create the account you’ll use on the website and in Merger. Verify your email to join the waitlist.'}</p>
+      <p className="lede">{invited ? 'Use the email your invitation was sent to. Verify it, accept your invitation, then review your plan before activation.' : 'Create the account you’ll use on the website and in Merger. Verify your email to join the waitlist.'}</p>
+      <GoogleAccountButton mode="signup" next={next} referral={referral.current}/>
       <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
         <div className="field"><label htmlFor="name">Name</label><input type="text" id="name" name="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} maxLength={100} required disabled={busy} /></div>
         <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="you@firm.com" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} /></div>
@@ -106,6 +109,6 @@ function SignupForm() {
       <p className="form-foot">Already have an account? <Link href={`/login?next=${encodeURIComponent(next)}`}>Sign in</Link></p>
       <p className="field-hint center">Already on the waitlist? Use the same email to keep your place and referrals.</p>
     </>}
-  </div></main></Shell>;
+  </div></AccountAuthLayout>;
 }
 export default function SignupPage() { return <Suspense fallback={<Shell><main className="auth-main"><p className="spinner-note" role="status">Loading…</p></main></Shell>}><SignupForm /></Suspense>; }

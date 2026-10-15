@@ -20,8 +20,8 @@ class GraphicsBoundary extends Component {
   render() { return this.state.failed ? null : this.props.children; }
 }
 
-function Relic({ motion, compact, reduced, onReady, onPhase }) {
-  const { scene } = useGLTF(MODEL_URL);
+function Relic({ motion, compact, reduced, onReady, onPhase, modelUrl }) {
+  const { scene } = useGLTF(modelUrl);
   const size = useThree(state=>state.size);
   const root = useRef();
   const shardRefs = useRef([]);
@@ -208,7 +208,7 @@ function GraphicsHealth({ onFailure }) {
   return null;
 }
 
-function Scene({ motion, compact, reduced, onReady, onFailure, onPhase }) {
+function Scene({ motion, compact, reduced, onReady, onFailure, onPhase, modelUrl }) {
   return <>
     <GraphicsHealth onFailure={onFailure}/>
     <ambientLight intensity={.24}/>
@@ -221,11 +221,11 @@ function Scene({ motion, compact, reduced, onReady, onFailure, onPhase }) {
       <Lightformer form="rect" intensity={3} color="#f0bc66" position={[0,-4,1]} rotation={[Math.PI/3,0,0]} scale={[5,.8,1]}/>
       <Lightformer form="ring" intensity={1} color="#ecc78a" position={[0,1,-4]} scale={4}/>
     </Environment>
-    <Relic motion={motion} compact={compact} reduced={reduced} onReady={onReady} onPhase={onPhase}/>
+    <Relic motion={motion} compact={compact} reduced={reduced} onReady={onReady} onPhase={onPhase} modelUrl={modelUrl}/>
   </>;
 }
 
-export default function Singularity({ className = '', paused = false, forceFallback = false }) {
+export default function Singularity({ className = '', paused = false, forceFallback = false, modelUrl = MODEL_URL }) {
   const host = useRef();
   const pointer = useRef(null);
   const motion = useRef({ yaw:0, pitch:0, pointerX:0, pointerY:0, release:0 });
@@ -344,7 +344,7 @@ export default function Singularity({ className = '', paused = false, forceFallb
           <GraphicsBoundary onFailure={onFailure}>
             <Canvas camera={{position:[0,0,9.8],fov:36,near:.1,far:40}} dpr={compact ? 1 : [1,1.5]} frameloop={!live ? 'never' : quiet ? 'demand' : 'always'}
               gl={{antialias:!compact,alpha:true,powerPreference:'default'}} onCreated={({gl}) => { gl.setClearColor('#08090d',0); gl.toneMapping=THREE.ACESFilmicToneMapping; gl.toneMappingExposure=1.1; }}>
-              <Suspense fallback={null}><Scene motion={motion} compact={compact} reduced={quiet} onReady={onReady} onFailure={onFailure} onPhase={onPhase}/></Suspense>
+              <Suspense fallback={null}><Scene motion={motion} compact={compact} reduced={quiet} onReady={onReady} onFailure={onFailure} onPhase={onPhase} modelUrl={modelUrl}/></Suspense>
             </Canvas>
           </GraphicsBoundary>
         </div>}

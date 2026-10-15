@@ -145,7 +145,7 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
             has to write themselves and becomes the same queue everyone else
             joins — with a position and a referral link at the end of it. */}
         <p className="field-hint mt-16">
-          <Link href="/#waitlist">Join the waitlist</Link>
+          <Link href="/signup">Join the waitlist</Link>
           {' · '}<Link href="/support">Contact support</Link>
         </p>
       </div>}

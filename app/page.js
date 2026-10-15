@@ -29,7 +29,7 @@ export default function LandingPage() {
             <p className="sf-eyebrow"><span className="sf-live-dot" /> Built for the way deals happen</p>
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
-            <div className="sf-hero-actions"><SingularityButton href="#waitlist">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
+            <div className="sf-hero-actions"><SingularityButton href="/signup">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
             <p className="sf-hero-note">Windows · Early access by invitation · $0 to start</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
@@ -61,7 +61,7 @@ export default function LandingPage() {
 
       <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
 
-      <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="#waitlist">Join the waitlist</SingularityButton></div></section>
+      <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="/signup">Join the waitlist</SingularityButton></div></section>
     </main>
     <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows · In development</span></div></div></footer>
   </div>;

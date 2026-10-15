@@ -147,7 +147,7 @@ export const WAITLIST = Object.freeze({
   cta: 'Join the alpha waitlist',
   ctaShort: 'Join the waitlist',
   /** The anchor the nav and the lower CTAs scroll to. */
-  href: '#waitlist',
+  href: '/signup',
 
   eyebrow: 'Windows alpha · joining in groups',
   heading: 'Get in line for the alpha.',

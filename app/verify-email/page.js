@@ -3,6 +3,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import AccountAuthLayout from '../components/AccountAuthLayout';
 import VerificationPanel from '../components/VerificationPanel';
 import { accountAccess, errorMessage } from '../lib/api';
 import { safeReturnPath } from '../lib/authFlow';
@@ -35,13 +36,13 @@ function Verification() {
     check(); window.addEventListener('focus', check);
     return () => { current.current += 1; window.removeEventListener('focus', check); };
   }, [check]);
-  return <Shell authed><main className="auth-main"><div className="auth-card">
+  return <AccountAuthLayout><main className="auth-main"><div className="auth-card">
     <p className="eyebrow">Your Merger account</p><h1>Check your inbox.</h1>
     {params.get('verify_error') && <p className="alert alert-warn">That verification link has expired or was already used. Check your status or request a fresh email below.</p>}
     {loading && <p role="status" className="spinner-note">Checking verification…</p>}
     {error && <><p className="alert alert-error" role="alert">{error}</p><button className="btn btn-ghost" type="button" onClick={check}>Try again</button></>}
     {access && <VerificationPanel email={access.user.email} onCheck={check} />}
     <p className="form-foot"><Link href="/dashboard">Go to your account</Link></p>
-  </div></main></Shell>;
+  </div></main></AccountAuthLayout>;
 }
-export default function VerifyEmailPage() { return <Suspense fallback={<Shell><main className="auth-main"><p role="status">Loading…</p></main></Shell>}><Verification /></Suspense>; }
+export default function VerifyEmailPage() { return <Suspense fallback={<AccountAuthLayout><main className="auth-main"><p role="status">Loading…</p></main></AccountAuthLayout>}><Verification /></Suspense>; }

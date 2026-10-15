@@ -63,11 +63,15 @@ function firstTouch() { return typeof window === 'undefined' ? null : (captureFi
 export const signup = (email, password, displayName, waitlist) =>
   request('/api/auth/signup', {
     method: 'POST',
-    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-09-27' } : {}), ...(firstTouch() ? { attribution: firstTouch() } : {}) },
+    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-10-15' } : {}), ...(firstTouch() ? { attribution: firstTouch() } : {}) },
   });
 
 export const login = (email, password) =>
   request('/api/auth/login', { method: 'POST', body: { email, password } });
+export const googleSigninStatus = () => request('/api/auth/google/status');
+export const googleSigninStart = (body) => request('/api/auth/google/start',{method:'POST',body});
+export const googleSigninComplete = (ticket) => request('/api/auth/google/complete',{method:'POST',body:{ticket}});
+export const desktopApprove = (requestId) => request('/api/auth/desktop/approve',{method:'POST',body:{requestId}});
 
 export const logout = () => request('/api/auth/logout', { method: 'POST' });
 
@@ -220,6 +224,13 @@ export function formatDate(iso) {
 export function errorMessage(err) {
   const code = err && err.code;
   switch (code) {
+    case 'account_exists_link_google':
+      return 'An account already uses this email. Sign in with your Merger password, then connect Google from Profile to keep your membership and data together.';
+    case 'google_already_linked':
+      return 'This Google account is already connected to a Merger account. Sign in to that account or choose another Google account.';
+    case 'google_signin_expired':
+    case 'desktop_signin_expired':
+      return 'This sign-in request has expired. Start again from Merger.';
     case 'invitation_required':
     case 'invite_required':
       return 'An invitation is required to activate Merger. Check your account for your waitlist status.';

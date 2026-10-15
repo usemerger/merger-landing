@@ -9,29 +9,22 @@ import { WAITLIST } from '../app/lib/billingOffer';
 beforeEach(() => { vi.restoreAllMocks(); nav.push.mockReset(); localStorage.clear(); sessionStorage.clear(); window.history.replaceState({}, '', '/'); });
 
 describe('account-backed waitlist entry', () => {
-  it('validates email before moving to signup and never anonymously enrolls', () => {
+  it('goes straight to account creation without an extra email collection or anonymous enrollment', () => {
     const request = vi.spyOn(window, 'fetch');
     render(<WaitlistForm />);
-    fireEvent.click(screen.getByRole('button', { name: WAITLIST.cta }));
-    expect(screen.getByRole('alert')).toHaveTextContent('Enter a valid email');
-    expect(nav.push).not.toHaveBeenCalled();
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'person@example.com' } });
-    fireEvent.click(screen.getByRole('button', { name: WAITLIST.cta }));
-    expect(nav.push).toHaveBeenCalledWith('/signup');
-    expect(JSON.parse(sessionStorage.getItem('merger_waitlist_draft')).email).toBe('person@example.com');
+    expect(screen.getByRole('link', {name:'Create your account'})).toHaveAttribute('href','/signup');
+    expect(screen.queryByLabelText('Email')).not.toBeInTheDocument();
     expect(request).not.toHaveBeenCalled();
+    expect(screen.getByText(/No card required/)).toBeVisible();
   });
   it('keeps referral attribution through signup navigation', () => {
     window.history.replaceState({}, '', '/?ref=source123');
     render(<WaitlistForm />);
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'person@example.com' } });
-    fireEvent.click(screen.getByRole('button', { name: WAITLIST.cta }));
-    expect(nav.push).toHaveBeenCalledWith('/signup?ref=source123');
+    expect(screen.getByRole('link', {name:'Create your account'})).toHaveAttribute('href','/signup?ref=source123');
   });
   it('does not treat a public code in storage as ownership', () => {
     localStorage.setItem('merger_waitlist', JSON.stringify({ code: 'public123' }));
     render(<WaitlistForm />);
-    expect(screen.getByLabelText('Email')).toBeVisible();
     expect(screen.queryByText(/your place in line/i)).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/login');
   });
@@ -39,9 +32,7 @@ describe('account-backed waitlist entry', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw Error('blocked'); });
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw Error('blocked'); });
     render(<WaitlistForm />);
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'person@example.com' } });
-    fireEvent.click(screen.getByRole('button', { name: WAITLIST.cta }));
-    expect(nav.push).toHaveBeenCalledWith('/signup');
+    expect(screen.getByRole('link', {name:'Create your account'})).toHaveAttribute('href','/signup');
   });
 });
 

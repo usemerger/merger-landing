@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Shell from '../components/Shell';
+import AccountAuthLayout from '../components/AccountAuthLayout';
 import { errorMessage, forgotPassword } from '../lib/api';
 import { normalizeEmail, validEmail } from '../lib/authFlow';
 
@@ -40,7 +41,7 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <Shell>
+      <AccountAuthLayout>
         <main className="auth-main">
           <div className="auth-card narrow">
             <p className="eyebrow">Check your inbox</p>
@@ -72,12 +73,12 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
         </main>
-      </Shell>
+      </AccountAuthLayout>
     );
   }
 
   return (
-    <Shell>
+    <AccountAuthLayout>
       <main className="auth-main">
         <div className="auth-card narrow">
           <p className="eyebrow">Password reset</p>
@@ -120,6 +121,6 @@ export default function ForgotPasswordPage() {
           </p>
         </div>
       </main>
-    </Shell>
+    </AccountAuthLayout>
   );
 }
