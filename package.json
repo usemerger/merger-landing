@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "vitest run && node --test scripts/qa-api.test.mjs",
     "test:watch": "vitest",
-    "qa:api": "node scripts/qa-api.mjs"
+    "qa:api": "node scripts/qa-api.mjs",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-three/drei": "^10.7.8",
@@ -24,6 +25,9 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
+    "eslint": "9.39.1",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "globals": "16.5.0",
     "jsdom": "^30.0.1",
     "vitest": "^5.0.0"
   },
