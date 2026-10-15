@@ -117,7 +117,7 @@ describe('joining the alpha', () => {
       // queue everyone else joins — with a position and a referral link at the
       // end of it — rather than a mailto the person has to compose themselves.
       expect(screen.getByRole('link', { name: 'Join the waitlist' }))
-        .toHaveAttribute('href', '/#waitlist');
+        .toHaveAttribute('href', '/signup');
       unmount();
     }
   });

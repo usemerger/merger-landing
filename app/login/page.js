@@ -4,6 +4,8 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import AccountAuthLayout from '../components/AccountAuthLayout';
+import GoogleAccountButton from '../components/GoogleAccountButton';
 import PasswordField from '../components/PasswordField';
 import { errorMessage, login, meOrNull } from '../lib/api';
 import { normalizeEmail, safeReturnPath, validEmail } from '../lib/authFlow';
@@ -54,6 +56,9 @@ function LoginForm() {
         <h1>Sign in to Merger.</h1>
         <p className="lede">Your waitlist, membership, and desktop app. One account.</p>
         {params.get('signedOut') === '1' && <p className="alert alert-info" role="status">You’re signed out.</p>}
+        {params.get('authError') && <p className="alert alert-error" role="alert">{params.get('authError')==='account_exists_link_google'?'An account already uses this email. Sign in with your Merger password, then connect Google from Profile to keep your membership and data together.':'Google sign-in was not completed. Try again or use your email.'}</p>}
+        <GoogleAccountButton next={next}/>
+        <p className="field-hint">By continuing with Google, you agree to our <Link href="/terms">Terms</Link> and acknowledge our <Link href="/privacy">Privacy Policy</Link>. Signing in does not start a subscription.</p>
 
         <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
           <div className="field">
@@ -107,7 +112,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Shell>
+    <AccountAuthLayout>
       <Suspense
         fallback={
           <main className="auth-main">
@@ -119,6 +124,6 @@ export default function LoginPage() {
       >
         <LoginForm />
       </Suspense>
-    </Shell>
+    </AccountAuthLayout>
   );
 }

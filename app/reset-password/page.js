@@ -8,6 +8,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Shell from '../components/Shell';
+import AccountAuthLayout from '../components/AccountAuthLayout';
 import PasswordField from '../components/PasswordField';
 import { errorMessage, resetPassword } from '../lib/api';
 import { MIN_PASSWORD_LENGTH } from '../lib/authFlow';
@@ -168,7 +169,7 @@ function ResetTokenForm({ token }) {
 
 export default function ResetPasswordPage() {
   return (
-    <Shell>
+    <AccountAuthLayout>
       <Suspense
         fallback={
           <main className="auth-main">
@@ -180,6 +181,6 @@ export default function ResetPasswordPage() {
       >
         <ResetForm />
       </Suspense>
-    </Shell>
+    </AccountAuthLayout>
   );
 }
