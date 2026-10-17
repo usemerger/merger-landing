@@ -17,6 +17,8 @@
 //
 // Inline markup inside strings: **bold** and [text](href). Nothing else.
 
+import { batch2 } from './batch2';
+
 export const TYPES = Object.freeze({
   useCase: 'Use case',
   guide: 'Guide',
@@ -28,7 +30,7 @@ export const ILLUSTRATIVE_NOTE =
   'This walkthrough is an illustrative composite built from common dealmaker workflows. '
   + 'Names, firms and figures are invented. It is not a customer story.';
 
-export const articles = [
+const batch1 = [
   {
     slug: 'secondaries-broker-counterparties-across-messaging-apps',
     type: TYPES.useCase,
@@ -416,6 +418,8 @@ export const articles = [
     ],
   },
 ];
+
+export const articles = [...batch1, ...batch2];
 
 export function formatDate(iso) {
   return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
