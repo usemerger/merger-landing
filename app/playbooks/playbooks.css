@@ -1,0 +1,111 @@
+/* Playbooks — the content hub and its articles.
+   Same ink, same single sans, same one accent as the funnel. Reading pages want
+   a narrower measure and a larger body size than the marketing sections, so
+   the article column is ~680px and body copy is 17px. Gold appears only on the
+   primary CTA and the live dot, as everywhere else. */
+
+.pb-page { background: var(--ink); color: var(--bone); min-height: 100vh; }
+.pb-page .mk-nav-links > a[href='/playbooks'] { color: var(--bone); }
+.pb-main { max-width: 1220px; margin: 0 auto; padding: 0 34px 40px; }
+.pb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── Hub ─────────────────────────────────────────────────────────────── */
+.pb-hero { padding: 84px 0 48px; border-bottom: 1px solid var(--line); }
+.pb-eyebrow { display: flex; align-items: center; gap: 10px; font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--slate); }
+.pb-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px #c9a96a80; }
+.pb-hero h1 { font-size: clamp(38px, 5vw, 64px); line-height: 1.08; letter-spacing: -.05em; font-weight: 500; margin: 26px 0 20px; }
+.pb-hero h1 span { color: #8e8e96; }
+.pb-hero > p:last-child { max-width: 620px; color: var(--slate); font-size: 16px; line-height: 1.75; }
+
+.pb-lead { padding: 40px 0 8px; }
+.pb-group { padding: 48px 0 8px; }
+.pb-group-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+.pb-group-head h2 { font-size: 24px; font-weight: 500; letter-spacing: -.03em; }
+.pb-group-head p { color: var(--faint); font-size: 13px; }
+.pb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+
+.pb-card { display: flex; flex-direction: column; gap: 14px; padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(160deg, #ffffff05, transparent 60%); color: var(--bone); transition: border-color var(--dur-micro) var(--ease), transform var(--dur-move) var(--ease); min-width: 0; }
+.pb-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.pb-card h2, .pb-card h3 { font-weight: 500; letter-spacing: -.025em; line-height: 1.3; }
+.pb-card h3 { font-size: 18px; }
+.pb-card p { color: var(--slate); font-size: 14px; line-height: 1.65; }
+.pb-card-lead { padding: 36px; }
+.pb-card-lead h2 { font-size: clamp(24px, 3vw, 34px); max-width: 860px; }
+.pb-card-lead p { font-size: 16px; max-width: 720px; }
+.pb-card-meta { display: flex; flex-wrap: wrap; gap: 8px; font: 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+.pb-card-meta > span + span::before { content: '·'; margin-right: 8px; }
+.pb-card-foot { margin-top: auto; font-size: 12px; color: var(--slate); }
+
+.pb-disclosure { margin: 40px 0 0 !important; color: var(--faint); font-size: 12px; line-height: 1.7; max-width: 720px; }
+
+/* ── Join panel ──────────────────────────────────────────────────────── */
+.pb-join { display: grid; grid-template-columns: minmax(0, 1.4fr) auto; align-items: center; gap: 32px; margin: 40px 0; padding: 36px; border: 1px solid var(--line-strong); border-radius: 20px; background: radial-gradient(120% 140% at 0% 0%, #c9a96a14, transparent 55%), var(--panel); }
+.pb-kicker { font: 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px !important; }
+.pb-join h2 { font-size: 26px; font-weight: 500; letter-spacing: -.035em; margin-bottom: 10px !important; }
+.pb-join p:not(.pb-kicker) { color: var(--slate); font-size: 14px; line-height: 1.7; max-width: 620px; }
+.pb-join-actions { display: flex; flex-direction: column; gap: 10px; }
+.pb-button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 12px 22px; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--bone); font-size: 13px; white-space: nowrap; transition: background var(--dur-micro) var(--ease); }
+.pb-button:hover { background: #ffffff0c; }
+.pb-button-primary { background: var(--gold-grad); border-color: transparent; color: #171511; font-weight: 600; }
+.pb-button-primary:hover { background: var(--gold-lit); }
+
+/* ── Article ─────────────────────────────────────────────────────────── */
+.pb-article { max-width: 720px; margin: 0 auto; padding: 56px 0 8px; }
+.pb-crumbs { display: flex; gap: 10px; font-size: 12px; color: var(--faint); margin-bottom: 34px !important; }
+.pb-crumbs a { color: var(--slate); }
+.pb-crumbs a:hover { color: var(--bone); }
+.pb-article-head { padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.pb-article-head h1 { font-size: clamp(32px, 4.4vw, 48px); line-height: 1.12; letter-spacing: -.045em; font-weight: 500; margin: 18px 0 18px; }
+.pb-dek { font-size: 19px; line-height: 1.6; color: #c9c9d0; }
+.pb-byline { margin-top: 22px !important; font-size: 13px; color: var(--faint); }
+.pb-illustrative { margin-top: 20px !important; padding: 12px 16px; border-left: 2px solid var(--line-strong); color: var(--slate); font-size: 13px; line-height: 1.65; background: #ffffff04; border-radius: 0 10px 10px 0; }
+
+.pb-body section { padding-top: 38px; }
+.pb-body h2 { font-size: 25px; font-weight: 500; letter-spacing: -.03em; line-height: 1.25; margin-bottom: 16px !important; }
+.pb-body p, .pb-body li { font-size: 17px; line-height: 1.75; color: #c4c4cc; }
+.pb-body p + p, .pb-body p + ul, .pb-body ul + p, .pb-body ol + p, .pb-body p + ol, .pb-body p + aside, .pb-body p + .pb-table, .pb-body .pb-table + p { margin-top: 18px !important; }
+.pb-body strong { color: var(--bone); font-weight: 600; }
+.pb-body a { color: var(--bone); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #5f5f66; }
+.pb-body a:hover { text-decoration-color: var(--gold); }
+
+.pb-list { padding-left: 20px; }
+.pb-list li { padding-left: 6px; }
+.pb-list li + li { margin-top: 12px; }
+
+.pb-steps { list-style: none; padding: 0; counter-reset: step; display: grid; gap: 4px; }
+.pb-steps li { counter-increment: step; position: relative; padding: 20px 0 20px 56px; border-top: 1px solid var(--line); }
+.pb-steps li:first-child { border-top: 0; }
+.pb-steps li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 22px; font: 12px var(--mono); color: var(--gold); letter-spacing: .06em; }
+.pb-steps h3 { font-size: 17px; font-weight: 600; letter-spacing: -.015em; color: var(--bone); margin-bottom: 6px !important; }
+.pb-steps p { font-size: 16px !important; }
+
+.pb-callout { margin-top: 24px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; background: #ffffff04; }
+.pb-callout strong { font-size: 13px; }
+.pb-callout p { font-size: 14px !important; line-height: 1.7 !important; color: var(--slate) !important; margin-top: 6px !important; }
+
+.pb-table { margin-top: 24px; overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+.pb-table table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; line-height: 1.6; text-align: left; }
+.pb-table th, .pb-table td { padding: 14px 16px; vertical-align: top; border-top: 1px solid var(--line); }
+.pb-table thead th { border-top: 0; background: #ffffff05; color: #d4d4da; font-weight: 500; font-size: 12px; }
+.pb-table tbody th { color: var(--bone); font-weight: 500; }
+.pb-table td { color: var(--slate); }
+.pb-table tbody tr:last-child { background: #c9a96a0a; }
+
+.pb-sources ul { padding-left: 18px; }
+.pb-sources li { font-size: 14px !important; }
+.pb-sources span { color: var(--faint); }
+
+.pb-related { padding-bottom: 32px; }
+
+.pb-page :is(a, [tabindex]):focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
+
+@media (max-width: 860px) {
+  .pb-main { padding: 0 21px 28px; }
+  .pb-hero { padding: 52px 0 36px; }
+  .pb-join { grid-template-columns: 1fr; padding: 26px; }
+  .pb-join-actions { flex-direction: row; flex-wrap: wrap; }
+  .pb-card-lead { padding: 26px; }
+  .pb-article { padding-top: 36px; }
+  .pb-body p, .pb-body li { font-size: 16px; }
+  .pb-steps li { padding-left: 44px; }
+}
