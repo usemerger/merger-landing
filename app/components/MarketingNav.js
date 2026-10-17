@@ -86,7 +86,7 @@ export default function MarketingNav({ signupHref, checkoutLabel, singularity = 
         <span>{open ? 'Close' : 'Menu'}</span><svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d={open ? 'm4 4 10 10M14 4 4 14' : 'M2 5h14M2 9h14M2 13h14'} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
       </button>
       <nav id="marketing-navigation" aria-label="Main navigation" className={`mk-nav-links${open ? ' is-open' : ''}`} onClick={event => { if (event.target.closest('a')) setOpen(false); }}>
-        <a href={`${sectionPrefix}#workflow`}>How it works</a><a href={`${sectionPrefix}#pricing`}>Pricing</a><a href={`${sectionPrefix}#faq`}>FAQ</a><Link href="/developers">API</Link>
+        <a href={`${sectionPrefix}#workflow`}>How it works</a><a href={`${sectionPrefix}#pricing`}>Pricing</a><a href={`${sectionPrefix}#faq`}>FAQ</a><Link href="/playbooks">Playbooks</Link><Link href="/developers">API</Link>
         <span className="mk-nav-auth">{auth}</span>
       </nav>
     </div>
