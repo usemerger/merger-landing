@@ -1,0 +1,23 @@
+/* /book — the founder's setup call. Copy on the left, the calendar on the right. */
+.bk-wrap { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 48px; align-items: start; padding: 72px 0 64px; }
+.bk-copy h1 { font-size: clamp(34px, 4.4vw, 52px); line-height: 1.08; letter-spacing: -.045em; font-weight: 500; margin: 22px 0 18px !important; }
+.bk-lead { font-size: 17px; line-height: 1.7; color: #c9c9d0; max-width: 520px; }
+.bk-steps { list-style: none; padding: 0; margin: 28px 0 8px !important; counter-reset: bk; display: grid; gap: 14px; }
+.bk-steps li { counter-increment: bk; position: relative; padding-left: 44px; color: var(--slate); font-size: 15px; line-height: 1.65; }
+.bk-steps li::before { content: counter(bk, decimal-leading-zero); position: absolute; left: 0; top: 2px; font: 12px var(--mono); color: var(--gold); }
+.bk-steps strong { color: var(--bone); font-weight: 600; }
+.bk-note { margin-top: 18px !important; font-size: 13px; line-height: 1.7; color: var(--faint); }
+.bk-note a { color: var(--slate); text-decoration: underline; text-underline-offset: 3px; }
+.bk-note a:hover { color: var(--bone); }
+.bk-panel { border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel); overflow: hidden; }
+/* Google's booking page is white; frame it inside the panel rather than fighting it. */
+.bk-frame { display: block; width: 100%; height: 680px; border: 0; background: #fff; }
+.bk-fallback { padding: 12px 18px; font-size: 12px; color: var(--faint); border-top: 1px solid var(--line); }
+.bk-fallback a { color: var(--slate); text-decoration: underline; }
+.bk-cta { padding: 40px; display: grid; gap: 18px; justify-items: start; }
+.bk-cta p { color: var(--slate); font-size: 15px; line-height: 1.7; max-width: 440px; }
+@media (max-width: 900px) {
+  .bk-wrap { grid-template-columns: 1fr; gap: 28px; padding: 44px 0 40px; }
+  .bk-frame { height: 760px; }
+  .bk-cta { padding: 26px; }
+}
