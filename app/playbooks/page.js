@@ -18,7 +18,9 @@ export const metadata = {
 
 const GROUPS = [
   { types: [TYPES.useCase], id: 'use-cases', title: 'Use cases', blurb: 'One deal, start to finish, by the kind of dealmaker running it.' },
-  { types: [TYPES.guide, TYPES.list, TYPES.comparison], id: 'guides', title: 'Guides and comparisons', blurb: 'Why messaging-first deals need a different workspace, and how Merger fits.' },
+  { types: [TYPES.guide], id: 'guides', title: 'Guides', blurb: 'Practical methods for deals that live in messaging apps.' },
+  { types: [TYPES.list], id: 'lists', title: 'Lists', blurb: 'Quick, practical fixes you can use today.' },
+  { types: [TYPES.comparison], id: 'comparisons', title: 'Comparisons', blurb: 'How Merger sits next to the tools you already know.' },
 ];
 
 function Card({ article }) {
