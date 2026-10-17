@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../components/Shell';
+import PlatformIcon, { IOS_APP_URL } from '../components/PlatformIcon';
 import { download, errorMessage, meOrNull, statusLabel } from '../lib/api';
 import { normalizeInstallers } from '../lib/authFlow';
 
@@ -65,23 +66,24 @@ export default function DownloadPage() {
   const anyReady = Boolean(windows || macos);
   return <Shell authed><main className="dash-main">
     <p className="eyebrow">Downloads</p>
-    <h1 className="dash-title">Get Merger for desktop.</h1>
-    <p className="dash-sub">Your account has download access. Install Merger, sign in and connect your messaging accounts.</p>
+    <h1 className="dash-title">Get Merger for Windows and iPhone.</h1>
+    <p className="dash-sub">Your account has download access. Install Merger on your computer, your phone or both, sign in and connect your messaging accounts.</p>
     <div className="panel mt-24">
+      <div className="panel-head"><h2>Desktop</h2>{anyReady && state.version && <span className="pill neutral">Version {state.version}</span>}</div>
       {anyReady ? <>
-        <div className="panel-head"><h2>Installers</h2>{state.version && <span className="pill neutral">Version {state.version}</span>}</div>
         <div className="dl-row">
-          {windows && <a className="btn btn-primary btn-sm" href={windows} download>Download for Windows{state.version ? ` (v${state.version})` : ''}</a>}
-          {macos && <a className="btn btn-ghost btn-sm" href={macos} download>Download for macOS{state.version ? ` (v${state.version})` : ''}</a>}
+          {windows && <a className="btn btn-primary btn-sm btn-platform" href={windows} download><PlatformIcon platform="windows" />Download for Windows{state.version ? ` (v${state.version})` : ''}</a>}
+          {macos && <a className="btn btn-ghost btn-sm btn-platform" href={macos} download><PlatformIcon platform="apple" />Download for macOS{state.version ? ` (v${state.version})` : ''}</a>}
         </div>
-        {!macos && <p className="field-hint mt-16">A macOS installer is not currently available.</p>}
         {!windows && <p className="field-hint mt-16">A Windows installer is not currently available.</p>}
         <p className="field-hint mt-16">If your download does not start, try the link again or refresh the installer list below.</p>
-      </> : <>
-        <h2>Download temporarily unavailable</h2>
-        <p className="muted mt-16">Your account has access, but no installer is currently available. Please check again shortly.</p>
-      </>}
+      </> : <p className="muted mt-16">No desktop installer is available right now. Please check again shortly.</p>}
       <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={load}>{anyReady ? 'Refresh installers' : 'Check again'}</button></div>
+    </div>
+    <div className="panel mt-16">
+      <div className="panel-head"><h2>iPhone</h2></div>
+      <p className="muted mt-16">Get Merger on your iPhone from the App Store and sign in with the same account.</p>
+      <div className="dl-row"><a className="btn btn-primary btn-sm btn-platform" href={IOS_APP_URL} target="_blank" rel="noopener noreferrer"><PlatformIcon platform="apple" />Download for iPhone</a></div>
     </div>
     <p className="field-hint mt-16">Use the same email and password in the app as on this site.</p>
     <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/dashboard">Your account</Link></div>
