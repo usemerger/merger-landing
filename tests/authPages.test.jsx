@@ -205,5 +205,9 @@ describe('recovery and downloads', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
     const installer = await screen.findByRole('link', { name: 'Download for Windows (vtest)' });
     expect(installer).toHaveAttribute('href', 'https://releases.buildmerger.com/fixture.exe');
+    expect(installer.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    const ios = screen.getByRole('link', { name: 'Download for iPhone' });
+    expect(ios).toHaveAttribute('href', 'https://apps.apple.com/us/app/merger-inbox-for-dealmakers/id6817136478');
+    expect(screen.queryByText(/macOS installer is not currently available/)).toBeNull();
   });
 });

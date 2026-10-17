@@ -582,3 +582,7 @@
 .billing-interval-note { font-size: 12px; color: var(--slate); }
 .billing-interval:disabled label { cursor: default; opacity: .6; }
 @media (max-width: 420px) { .billing-interval { grid-template-columns: 1fr; } }
+
+/* Download buttons with a platform mark */
+.btn-platform { display: inline-flex; align-items: center; gap: 10px; }
+.btn-platform .platform-icon { flex-shrink: 0; }
