@@ -63,7 +63,7 @@ function firstTouch() { return typeof window === 'undefined' ? null : (captureFi
 export const signup = (email, password, displayName, waitlist) =>
   request('/api/auth/signup', {
     method: 'POST',
-    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-10-15' } : {}), ...(firstTouch() ? { attribution: firstTouch() } : {}) },
+    body: { email, password, ...(displayName ? { displayName } : {}), ...(waitlist ? { waitlist, termsVersion: '2026-09-21', privacyVersion: '2026-10-18' } : {}), ...(firstTouch() ? { attribution: firstTouch() } : {}) },
   });
 
 export const login = (email, password) =>
