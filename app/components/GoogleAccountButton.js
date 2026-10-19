@@ -59,7 +59,7 @@ export default function GoogleAccountButton({
         next,
         ref: referral || null,
         termsVersion: "2026-09-21",
-        privacyVersion: "2026-10-15",
+        privacyVersion: "2026-10-18",
       });
       const url = new URL(result.url);
       if (
