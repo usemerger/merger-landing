@@ -33,7 +33,7 @@ export const workflowSteps = [
 ];
 
 export const faqs = [
-  { question: 'How do I get in?', answer: 'Merger opens to a small group at a time. Join the waitlist and you get a place in the queue and your own referral link; when a seat comes free we email you an invitation that opens checkout. Referring other dealmakers moves you up the list. Nothing is charged while you are waiting, and you only pay if you accept an invitation.' },
+  { question: 'How do I get started?', answer: 'Click Download, create your Merger account and verify your email. From your account, start the 14-day free trial (a card is required, nothing is charged today), then download Merger for Windows or get it on the App Store for iPhone. Cancel before the trial ends and you are never charged.' },
   { question: 'What’s available today?', answer: 'The current release is the Merger desktop app for Windows: connected messaging, the Deal Desk, Rolodex, and in-app DocuSign. It is an early release, and network availability and individual messaging actions can vary. Other platforms and team plans are not included in this launch.' },
   { question: 'Do I need a Claude subscription?', answer: 'Claude features require your own Anthropic API key. Anthropic API usage is billed separately from your Merger subscription; a Claude chat subscription is not an API key. You can use messaging and organize deals manually without enabling Claude features.' },
   { question: 'Does Merger file deals or send documents automatically?', answer: 'You review detected deal suggestions before filing them. In DocuSign, you choose a field before inserting a value, or copy and paste it yourself. You control sending and signing inside your own DocuSign account.' },

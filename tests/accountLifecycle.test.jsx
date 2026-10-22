@@ -85,6 +85,13 @@ describe('server-authorized account states', () => {
     await screen.findByRole('heading', { name: 'You’re on the waitlist.' });
     expect(api.accountWaitlist).toHaveBeenCalledTimes(1);
   });
+  it('skips the waitlist when access is open and points to the trial and downloads', async () => {
+    api.accountAccess.mockResolvedValue({ ...waiting, admission: { status: 'not_joined' }, waitlist: null, rollout: { inviteRequired: false, trialEligible: true } });
+    render(<AccountDashboard />);
+    await screen.findByRole('heading', { name: 'Download Merger' });
+    expect(screen.queryByRole('button', { name: 'Join the waitlist' })).toBeNull();
+    expect(screen.getByText('Downloads unlock once your free trial starts.')).toBeInTheDocument();
+  });
   it('does not treat the verified query parameter as proof', async () => {
     nav.query = 'verified=1';
     api.accountAccess.mockResolvedValue({ ...waiting, user: { ...user, emailVerified: false } });

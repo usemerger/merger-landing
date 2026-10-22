@@ -250,3 +250,8 @@
 @media (prefers-reduced-motion: reduce) {
   .wl-field input, .wl-field select, .wl-copy { transition: none; }
 }
+
+/* ── the Download front door ───────────────────────────────────────────── */
+.wl-slot.dl-cta { min-height: 0; display: grid; gap: 14px; }
+.marketing-page .dl-cta-platforms { display: flex; gap: 18px; color: #c1c1c9; font-size: 13px; }
+.dl-cta-platforms span { display: inline-flex; align-items: center; gap: 7px; }

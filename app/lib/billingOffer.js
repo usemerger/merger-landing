@@ -47,7 +47,7 @@ export const ALPHA_OFFER = Object.freeze({
   trialLabel: 'First 2 weeks free',
   trialDaysLabel: '14-day free trial',
 
-  checkoutLabel: 'Join the alpha',
+  checkoutLabel: 'Start free trial',
   /**
    * Where the "join" button goes FROM AN INVITE. The public marketing page no
    * longer points anyone here — it points at the waitlist — but the invite
@@ -144,15 +144,15 @@ export function offerTerms(interval) {
  */
 export const WAITLIST = Object.freeze({
   /** The public CTA, everywhere it appears. */
-  cta: 'Join the alpha waitlist',
-  ctaShort: 'Join the waitlist',
+  cta: 'Download Merger',
+  ctaShort: 'Download',
   /** The anchor the nav and the lower CTAs scroll to. */
   href: '/signup',
 
-  eyebrow: 'Windows alpha · joining in groups',
-  heading: 'Get in line for the alpha.',
-  blurb: 'Merger is opening to a small group at a time. Join the waitlist and we will '
-    + 'email you an invite when a seat opens.',
+  eyebrow: 'Windows and iPhone · 14 days free',
+  heading: 'Download Merger.',
+  blurb: 'Create your account, start your 14-day free trial, and install Merger '
+    + 'on Windows, iPhone or both.',
 
   /**
    * The reason to join now rather than later — the same promise as the offer.
@@ -164,7 +164,7 @@ export const WAITLIST = Object.freeze({
    */
   hook: `Alpha members keep ${ALPHA_OFFER.priceLabel}/month while their membership stays active.`,
   hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month with the first two weeks free. `
-    + 'Nothing is charged while you are on the list, and you only pay if you accept an invite.',
+    + 'Nothing is charged today, and you can cancel before the trial ends.',
 
   /** What moving up actually takes. */
   referPrompt: 'Refer dealmakers to move up the list.',
