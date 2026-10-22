@@ -5,13 +5,13 @@ import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
 import { DealFilm, DocumentFilm } from './components/FeatureFilms';
 import MergeHero from './components/MergeHero';
-import WaitlistForm from './components/WaitlistForm';
+import DownloadCTA from './components/DownloadCTA';
 import SingularityButton from './components/SingularityButton';
 import ChannelOrbit from './components/ChannelOrbit';
 import PricePreview from './components/PricePreview';
 import './singularity-funnel.css';
 
-const invitationTerms = `Joining the waitlist is free. When you receive and accept an invitation, you can start a 14-day free trial with a card. After the trial, Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax. Cancel before the trial ends to avoid a charge.`;
+const invitationTerms = `Creating an account is free. Start a 14-day free trial with a card from your account, then download Merger for Windows or iPhone. After the trial, Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax. Cancel before the trial ends to avoid a charge.`;
 
 function SectionLabel({ number, children }) {
   return <p className="sf-label"><span>{number}</span>{children}</p>;
@@ -29,8 +29,8 @@ export default function LandingPage() {
             <p className="sf-eyebrow"><span className="sf-live-dot" /> Built for the way deals happen</p>
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
-            <div className="sf-hero-actions"><SingularityButton href="/signup">Join the waitlist</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
-            <p className="sf-hero-note">Windows · Early access by invitation · $0 to start</p>
+            <div className="sf-hero-actions"><SingularityButton href="/signup">Download Merger</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
+            <p className="sf-hero-note">Windows · iPhone · 14 days free · $0 to start</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
         </div>
@@ -55,13 +55,13 @@ export default function LandingPage() {
       </section>
 
       <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
-        <div className="sf-access-copy"><SectionLabel number="04">Early access</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>We’re opening early access in small groups. Join the waitlist and help shape the workspace around the way you work.</p><PricePreview /><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How invitations and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
-        <div id="waitlist" className="sf-waitlist-card"><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Join the waitlist</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Create your Merger account. We’ll let you know when your invitation is ready.</p><WaitlistForm /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Get invited</span><i /><span>Get started</span></div></div>
+        <div className="sf-access-copy"><SectionLabel number="04">Get started</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>Create your account, start your 14-day free trial, and install Merger on Windows, iPhone or both. Early members help shape the workspace around the way they work.</p><PricePreview /><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How the trial and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
+        <div id="download" className="sf-waitlist-card"><span id="waitlist" aria-hidden="true" /><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Download Merger</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Get Merger for Windows and iPhone. Create your account and start your free trial in a few minutes.</p><DownloadCTA /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Start free trial</span><i /><span>Download</span></div></div>
       </div></section>
 
       <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
 
-      <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="/signup">Join the waitlist</SingularityButton></div></section>
+      <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="/signup">Download Merger</SingularityButton></div></section>
     </main>
     <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/playbooks">Playbooks</Link><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows · In development</span></div></div></footer>
   </div>;

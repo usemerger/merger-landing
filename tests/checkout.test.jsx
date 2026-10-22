@@ -14,7 +14,7 @@ vi.mock('../app/lib/api', () => ({
 }));
 
 function TestCheckout({ trialEligible = true }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} />; }
-const join = () => screen.getByRole('button', { name: 'Join the alpha' });
+const join = () => screen.getByRole('button', { name: 'Start free trial' });
 
 beforeEach(() => { checkout.mockReset(); });
 
@@ -112,7 +112,7 @@ describe('joining the alpha', () => {
       // Calm, not an error: nothing on this panel is an alert.
       expect(screen.queryByRole('alert')).toBeNull();
       // And no second attempt — the button is gone, not merely disabled.
-      expect(screen.queryByRole('button', { name: 'Join the alpha' })).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Start free trial' })).toBeNull();
       // There is a real waitlist now, so the way out of this panel is the same
       // queue everyone else joins — with a position and a referral link at the
       // end of it — rather than a mailto the person has to compose themselves.
@@ -165,7 +165,7 @@ describe('joining the alpha', () => {
     fireEvent.click(join());
     await screen.findByRole('button', { name: 'Refresh account terms' });
     expect(screen.queryByText(/First 2 weeks free|\$0/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Join the alpha' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Start free trial' })).not.toBeInTheDocument();
     expect(checkout).toHaveBeenCalledTimes(1);
   });
 

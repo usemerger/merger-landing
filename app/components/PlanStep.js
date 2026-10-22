@@ -103,7 +103,7 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
 
       <div className="alpha-summary">
         <div>
-          <span className="eyebrow">Windows alpha · one person</span>
+          <span className="eyebrow">Windows and iPhone · one person</span>
           <h3>{ALPHA_OFFER.name}</h3>
         </div>
         <p className="alpha-amount">{today}<span>{ALPHA_OFFER.todayNote}</span></p>

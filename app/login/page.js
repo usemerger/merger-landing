@@ -54,7 +54,7 @@ function LoginForm() {
       <div className="auth-card narrow">
         <p className="eyebrow">Welcome back</p>
         <h1>Sign in to Merger.</h1>
-        <p className="lede">Your waitlist, membership, and desktop app. One account.</p>
+        <p className="lede">Your membership and the Merger apps. One account.</p>
         {params.get('signedOut') === '1' && <p className="alert alert-info" role="status">You’re signed out.</p>}
         {params.get('authError') && <p className="alert alert-error" role="alert">{params.get('authError')==='account_exists_link_google'?'An account already uses this email. Sign in with your Merger password, then connect Google from Profile to keep your membership and data together.':'Google sign-in was not completed. Try again or use your email.'}</p>}
         <GoogleAccountButton next={next}/>
