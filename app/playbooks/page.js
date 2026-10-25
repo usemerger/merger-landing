@@ -7,7 +7,10 @@ export const metadata = {
   title: 'Playbooks for dealmakers',
   description:
     'Workflows, guides and comparisons for brokers, syndicators, searchers and investors whose deals start in WhatsApp, Telegram, LinkedIn and Slack.',
-  alternates: { canonical: 'https://usemerger.com/playbooks' },
+  alternates: {
+    canonical: 'https://usemerger.com/playbooks',
+    types: { 'application/rss+xml': [{ url: 'https://usemerger.com/playbooks/rss.xml', title: 'Merger Playbooks' }] },
+  },
   openGraph: {
     title: 'Merger Playbooks',
     description: 'How dealmakers run deals that start in messaging apps.',

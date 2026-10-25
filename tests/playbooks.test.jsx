@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { articles, articleText, getArticle, relatedArticles, TYPES } from '../app/playbooks/content';
 import Inline from '../app/playbooks/Inline';
 import sitemap from '../app/sitemap';
+import { buildFeed, SHARE_NS } from '../app/playbooks/feed';
+import { GET as feedRoute } from '../app/playbooks/rss.xml/route';
 
 vi.mock('../app/lib/api', () => ({ meOrNull: vi.fn().mockResolvedValue(null), logout: vi.fn() }));
 
@@ -18,6 +20,14 @@ describe('playbook content', () => {
       expect(a.description.length).toBeLessThanOrEqual(200);
       expect(a.published).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(a.sections.length).toBeGreaterThan(0);
+      if (a.updated !== undefined) expect(a.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (a.image !== undefined) expect(a.image).toMatch(/^(\/|https:\/\/)/);
+      if (a.share !== undefined) {
+        for (const [key, value] of Object.entries(a.share)) {
+          expect(['hook', 'x', 'threads', 'linkedin'], `${a.slug} share.${key}`).toContain(key);
+          expect(typeof value).toBe('string');
+        }
+      }
     }
   });
 
@@ -84,5 +94,56 @@ describe('sitemap', () => {
     expect(urls).toContain('https://usemerger.com/playbooks');
     for (const a of articles) expect(urls).toContain(`https://usemerger.com/playbooks/${a.slug}`);
     expect(urls.some((u) => /admin|login|signup|invite|billing|dashboard/.test(u))).toBe(false);
+  });
+});
+
+describe('rss feed', () => {
+  const parse = (xml) => {
+    const doc = new DOMParser().parseFromString(xml, 'application/xml');
+    expect(doc.getElementsByTagName('parsererror')).toHaveLength(0);
+    return doc;
+  };
+
+  it('serves well-formed RSS 2.0 with one item per article and absolute links', async () => {
+    const res = feedRoute();
+    expect(res.headers.get('Content-Type')).toMatch(/^application\/rss\+xml/);
+    const doc = parse(await res.text());
+    expect(doc.documentElement.tagName).toBe('rss');
+    expect(doc.documentElement.getAttribute('version')).toBe('2.0');
+    const items = [...doc.getElementsByTagName('item')];
+    expect(items).toHaveLength(articles.length);
+    const links = items.map((item) => item.getElementsByTagName('link')[0].textContent);
+    expect(new Set(links)).toEqual(new Set(articles.map((a) => `https://usemerger.com/playbooks/${a.slug}`)));
+    for (const item of items) {
+      const link = item.getElementsByTagName('link')[0].textContent;
+      expect(item.getElementsByTagName('guid')[0].textContent).toBe(link);
+      expect(item.getElementsByTagName('title')[0].textContent.length).toBeGreaterThan(10);
+      expect(item.getElementsByTagName('description')[0].textContent.length).toBeGreaterThan(10);
+      expect(new Date(item.getElementsByTagName('pubDate')[0].textContent).toString()).not.toBe('Invalid Date');
+    }
+  });
+
+  it('escapes text, lists newest first, and carries image and share metadata when present', () => {
+    const base = articles[0];
+    const doc = parse(buildFeed([
+      { ...base, slug: 'older', published: '2026-01-01' },
+      {
+        ...base, slug: 'newer', published: '2026-02-01', title: 'Fish & <chips> "quoted"', image: '/playbooks/newer.png',
+        share: { hook: 'Hook & line', x: 'For X', threads: 'For Threads', linkedin: 'For <LinkedIn>' },
+      },
+    ]));
+    const items = [...doc.getElementsByTagName('item')];
+    expect(items.map((i) => i.getElementsByTagName('link')[0].textContent)).toEqual([
+      'https://usemerger.com/playbooks/newer', 'https://usemerger.com/playbooks/older',
+    ]);
+    const [newer, older] = items;
+    expect(newer.getElementsByTagName('title')[0].textContent).toBe('Fish & <chips> "quoted"');
+    expect(newer.getElementsByTagName('enclosure')[0].getAttribute('url')).toBe('https://usemerger.com/playbooks/newer.png');
+    expect(newer.getElementsByTagName('enclosure')[0].getAttribute('type')).toBe('image/png');
+    const share = newer.getElementsByTagNameNS(SHARE_NS, 'share')[0];
+    expect(share.getElementsByTagNameNS(SHARE_NS, 'hook')[0].textContent).toBe('Hook & line');
+    expect(share.getElementsByTagNameNS(SHARE_NS, 'linkedin')[0].textContent).toBe('For <LinkedIn>');
+    expect(older.getElementsByTagName('enclosure')).toHaveLength(0);
+    expect(older.getElementsByTagNameNS(SHARE_NS, 'share')).toHaveLength(0);
   });
 });

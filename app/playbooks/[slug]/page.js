@@ -3,9 +3,8 @@ import { notFound } from 'next/navigation';
 import PlaybooksChrome, { JoinPanel } from '../PlaybooksChrome';
 import Inline from '../Inline';
 import { articles, formatDate, getArticle, ILLUSTRATIVE_NOTE, relatedArticles } from '../content';
+import { absoluteUrl, FEED_PATH, SITE } from '../feed';
 import '../playbooks.css';
-
-const SITE = 'https://usemerger.com';
 
 // Every article is known at build time; anything else is a 404, not a render.
 export const dynamicParams = false;
@@ -19,12 +18,14 @@ export async function generateMetadata({ params }) {
   const article = getArticle(slug);
   if (!article) return {};
   const url = `${SITE}/playbooks/${article.slug}`;
+  // og:image only when the article has a real image; never a placeholder.
+  const images = article.image ? [{ url: absoluteUrl(article.image), alt: article.imageAlt || article.title }] : undefined;
   return {
     title: article.title,
     description: article.description,
-    alternates: { canonical: url },
-    openGraph: { title: article.title, description: article.description, url, type: 'article', publishedTime: article.published },
-    twitter: { card: 'summary', title: article.title, description: article.description },
+    alternates: { canonical: url, types: { 'application/rss+xml': [{ url: `${SITE}${FEED_PATH}`, title: 'Merger Playbooks' }] } },
+    openGraph: { title: article.title, description: article.description, url, type: 'article', publishedTime: article.published, ...(article.updated && { modifiedTime: article.updated }), ...(images && { images }) },
+    twitter: { card: images ? 'summary_large_image' : 'summary', title: article.title, description: article.description, ...(images && { images }) },
   };
 }
 
