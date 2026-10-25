@@ -16,6 +16,37 @@
 // tests/playbooks.test.js enforces the mechanical parts of this.
 //
 // Inline markup inside strings: **bold** and [text](href). Nothing else.
+//
+// ARTICLE SHAPE. To publish, append one object to the end of `batch2` in
+// batch2.js (or a new batch file spread into `articles` below). The hub, the
+// article page, the sitemap and /playbooks/rss.xml all read `articles`.
+//
+//   Required
+//     slug         'kebab-case-url-slug', unique → /playbooks/<slug>
+//     type         one of TYPES ('Use case' | 'Guide' | 'List' | 'Comparison')
+//     audience     short label on cards, e.g. 'Family offices'
+//     title        page <h1>, og:title and feed <title>
+//     description  meta + og:description, ≤ 200 chars (aim for ~155)
+//     dek          one-line standfirst under the title; feed <description>
+//     published    'YYYY-MM-DD'; byline, sitemap, feed <pubDate>
+//     readMinutes  number
+//     sections     [{ heading, blocks: [string | { type: 'list', items: [string] }
+//                    | { type: 'steps', items: [{ title, text }] }
+//                    | { type: 'callout', title, text }
+//                    | { type: 'table', head: [string], rows: [[string]] }] }]
+//   Optional
+//     updated      'YYYY-MM-DD'; dateModified and sitemap lastModified
+//     illustrative true on every use case (shows ILLUSTRATIVE_NOTE)
+//     sources      [{ label, href: 'https://…', accessed: 'YYYY-MM-DD' }];
+//                  required whenever another company is named
+//     image        '/playbooks/<slug>.png' (in public/) or an absolute https URL;
+//                  becomes og:image, twitter:image and the feed enclosure /
+//                  media:content. Omit rather than point at a placeholder.
+//     imageAlt     alt text for image (defaults to title)
+//     share        { hook, x, threads, linkedin } — strings, all optional.
+//                  Never rendered on the page. Published in the feed as
+//                  <merger:share> for the social scheduler. Same claim rules
+//                  as the article body.
 
 import { batch2 } from './batch2';
 
@@ -442,7 +473,7 @@ export function relatedArticles(slug, count = 3) {
 
 /** Every string in an article, for the claim checks in tests. */
 export function articleText(article) {
-  const parts = [article.title, article.description, article.dek];
+  const parts = [article.title, article.description, article.dek, ...Object.values(article.share || {})];
   for (const section of article.sections) {
     parts.push(section.heading);
     for (const block of section.blocks) {
