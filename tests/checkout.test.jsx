@@ -14,7 +14,7 @@ vi.mock('../app/lib/api', () => ({
 }));
 
 function TestCheckout({ trialEligible = true }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} />; }
-const join = () => screen.getByRole('button', { name: 'Start free trial' });
+const join = () => screen.getByRole('button', { name: 'Continue to checkout' });
 
 beforeEach(() => { checkout.mockReset(); });
 
@@ -36,12 +36,12 @@ describe('joining the alpha', () => {
     // line below it, before any of the small print.
     // Split across a <p> and its <span>, so match on the container's text
     // rather than a string Testing Library would have to span elements to find.
-    expect(document.querySelector('.alpha-amount').textContent).toBe('$0due today');
-    expect(document.querySelector('.alpha-then').textContent).toBe('First 2 weeks free, then $50/ month');
-    const terms = screen.getByText(/\$50 USD\/month, and your first 2 weeks are free/);
-    expect(terms).toHaveTextContent('A card is required');
-    expect(terms).toHaveTextContent('$0 is charged today');
-    expect(terms).toHaveTextContent('Cancel any time before then and you are never charged');
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$50due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $50/ month');
+    const terms = screen.getByText(/\$50 USD\/month, charged today/);
+    expect(terms).toHaveTextContent('30-day money-back guarantee');
+    expect(terms).toHaveTextContent('full refund');
+    expect(screen.queryByText(/weeks free|\$0/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Alpha members keep \$50\/month for life/)).toBeInTheDocument();
     expect(checkout).not.toHaveBeenCalled();
   });
@@ -49,8 +49,7 @@ describe('joining the alpha', () => {
   it('quotes immediate billing without a trial for a returning member', () => {
     render(<TestCheckout trialEligible={false} />);
     expect(document.querySelector('.alpha-amount').textContent).toBe('$50due today');
-    expect(document.querySelector('.alpha-then').textContent).toBe('Renews at $50/ month');
-    expect(screen.getByText(/another free trial does not apply/)).toBeInTheDocument();
+    expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $50/ month');
     expect(screen.getByText(/A previous alpha rate guarantee ends/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Restart membership — $50/month' })).toBeEnabled();
     expect(screen.queryByText(/first 2 weeks are free|trial starts when|\$0/i)).not.toBeInTheDocument();
@@ -61,9 +60,9 @@ describe('joining the alpha', () => {
     render(<TestCheckout />);
     expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
     fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
-    expect(document.querySelector('.alpha-amount').textContent).toBe('$0due today');
-    expect(document.querySelector('.alpha-then').textContent).toBe('First 2 weeks free, then $480/ year');
-    expect(screen.getByText(/\$480 USD\/year, and your first 2 weeks are free/)).toHaveTextContent('$0 is charged today');
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$480due today');
+    expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $480/ year');
+    expect(screen.getByText(/\$480 USD\/year, charged today/)).toHaveTextContent('30-day money-back guarantee');
     expect(screen.getByText(/keep \$480\/year for life/)).toBeInTheDocument();
     expect(screen.queryByText(/\$50 USD\/month/)).not.toBeInTheDocument();
     fireEvent.click(join());
@@ -81,7 +80,7 @@ describe('joining the alpha', () => {
     render(<TestCheckout trialEligible={false} />);
     fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
     expect(document.querySelector('.alpha-amount').textContent).toBe('$480due today');
-    expect(document.querySelector('.alpha-then').textContent).toBe('Renews at $480/ year');
+    expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $480/ year');
     expect(screen.getByRole('button', { name: 'Restart membership — $480/year' })).toBeEnabled();
   });
 
@@ -112,7 +111,7 @@ describe('joining the alpha', () => {
       // Calm, not an error: nothing on this panel is an alert.
       expect(screen.queryByRole('alert')).toBeNull();
       // And no second attempt — the button is gone, not merely disabled.
-      expect(screen.queryByRole('button', { name: 'Start free trial' })).toBeNull();
+      expect(screen.queryByRole('button', { name: 'Continue to checkout' })).toBeNull();
       // There is a real waitlist now, so the way out of this panel is the same
       // queue everyone else joins — with a position and a referral link at the
       // end of it — rather than a mailto the person has to compose themselves.
@@ -165,7 +164,7 @@ describe('joining the alpha', () => {
     fireEvent.click(join());
     await screen.findByRole('button', { name: 'Refresh account terms' });
     expect(screen.queryByText(/First 2 weeks free|\$0/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Start free trial' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Continue to checkout' })).not.toBeInTheDocument();
     expect(checkout).toHaveBeenCalledTimes(1);
   });
 

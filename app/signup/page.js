@@ -94,7 +94,7 @@ function SignupForm() {
       <button type="button" className="btn btn-ghost" onClick={checkSession}>Try again</button>
     </> : <>
       <p className="eyebrow">{invited ? 'You’re invited' : 'Download Merger'}</p><h1>Create your Merger account.</h1>
-      <p className="lede">{invited ? 'Use the email your invitation was sent to. Verify it, accept your invitation, then review your plan before activation.' : 'One account for the website and the apps. After you verify your email, start your 14-day free trial and download Merger for Windows or iPhone.'}</p>
+      <p className="lede">{invited ? 'Use the email your invitation was sent to. Verify it, accept your invitation, then review your plan before activation.' : 'One account for the website and the apps. After you verify your email, choose a plan and download Merger for Windows or iPhone.'}</p>
       <GoogleAccountButton mode="signup" next={next} referral={referral.current}/>
       <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
         <div className="field"><label htmlFor="name">Name</label><input type="text" id="name" name="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} maxLength={100} required disabled={busy} /></div>
@@ -103,7 +103,7 @@ function SignupForm() {
         <details className="mt-16"><summary>Tell us about your work <span className="muted">(optional)</span></summary><div className="field mt-16"><label htmlFor="role">What you do</label><select id="role" value={role} onChange={(event) => setRole(event.target.value)} disabled={busy}><option value="">Select…</option>{WAITLIST.roles.map((value) => <option key={value}>{value}</option>)}</select></div><div className="field"><label htmlFor="firm">Firm</label><input type="text" id="firm" value={firm} autoComplete="organization" maxLength={200} onChange={(event) => setFirm(event.target.value)} disabled={busy} /></div></details>
         {error && <div className="alert alert-error" role="alert">{error}</div>}
         <button className="btn btn-primary btn-block mt-24" type="submit" disabled={busy}>{busy ? 'Creating your account…' : 'Create account'}</button>
-        <p className="field-hint center mt-16">{invited ? 'Creating an account is free. Your 14-day trial starts only when you choose a plan.' : 'Creating an account is free. Your 14-day trial starts only when you choose a plan.'}</p>
+        <p className="field-hint center mt-16">{invited ? 'Creating an account is free. Nothing is charged until you choose a plan.' : 'Creating an account is free. Nothing is charged until you choose a plan.'}</p>
         <p className="field-hint center">By creating an account, you agree to the <Link href="/terms">Terms</Link> and acknowledge the <Link href="/privacy">Privacy Policy</Link>. We’ll email you about verification and access.</p>
       </form>
       <p className="form-foot">Already have an account? <Link href={`/login?next=${encodeURIComponent(next)}`}>Sign in</Link></p>

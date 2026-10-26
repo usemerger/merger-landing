@@ -19,7 +19,7 @@ export default function VerificationPanel({ email, onCheck }) {
     <p className="eyebrow">One more step</p>
     <h2 id="verification-heading">Verify your email.</h2>
     <p className="muted mt-16">Open the verification link sent to <strong>{email}</strong>. This protects your account and connects any existing waitlist place to you.</p>
-    <p className="field-hint mt-16">No card is required. Your trial has not started.</p>
+    <p className="field-hint mt-16">Nothing has been charged. You choose a plan after verifying.</p>
     {error && <p className="alert alert-error" role="alert">{error}</p>}
     {message && <p className="alert alert-info" role="status">{message}</p>}
     <div className="dl-row">

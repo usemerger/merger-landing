@@ -15,8 +15,8 @@ export default function PricePreview() {
     <div className="sf-price" aria-live="polite">
       <strong>{annual ? ANNUAL_OFFER.monthlyEquivalentLabel : ALPHA_OFFER.priceLabel}</strong>
       <span>/ month<small>{annual
-        ? `Billed annually at ${ANNUAL_OFFER.priceLabel}, after your 14-day free trial.`
-        : 'After your 14-day free trial.'}</small></span>
+        ? `Billed annually at ${ANNUAL_OFFER.priceLabel}, with a 30-day money-back guarantee.`
+        : '30-day money-back guarantee.'}</small></span>
     </div>
   </>;
 }

@@ -40,14 +40,14 @@ export const ALPHA_OFFER = Object.freeze({
   priceLabel: '$50',
   intervalLabel: '/ month',
 
-  /** What checkout collects today: a card, and nothing off it. */
-  todayLabel: '$0',
+  /** Paid up front: the first month is charged at checkout. */
   todayNote: 'due today',
 
-  trialLabel: 'First 2 weeks free',
-  trialDaysLabel: '14-day free trial',
+  /** The guarantee that replaced the free trial (Oct 2026). */
+  refundDays: 30,
+  guaranteeLabel: '30-day money-back guarantee',
 
-  checkoutLabel: 'Start free trial',
+  checkoutLabel: 'Continue to checkout',
   /**
    * Where the "join" button goes FROM AN INVITE. The public marketing page no
    * longer points anyone here — it points at the waitlist — but the invite
@@ -56,16 +56,16 @@ export const ALPHA_OFFER = Object.freeze({
   signupHref: '/signup?offer=alpha',
 
   /** One line, for the places with room for exactly one. */
-  summary: '$50/month · first 2 weeks free · card required, $0 today',
+  summary: '$50/month · 30-day money-back guarantee',
 
   /**
    * The full terms. Said wherever someone is about to hand over a card — the
    * hero, the Join panel, the confirmation, the terms page.
    */
   billingNotice:
-    '$50 USD/month, and your first 2 weeks are free. A card is required to start '
-    + 'the trial and $0 is charged today; billing begins when the 14-day trial ends. '
-    + 'Cancel any time before then and you are never charged. Applicable tax may be added.',
+    '$50 USD/month, charged today when you complete checkout and then each month until you cancel. '
+    + 'Every new membership has a 30-day money-back guarantee: email support@usemerger.com within 30 days '
+    + 'of your first payment for a full refund. Applicable tax may be added.',
 
   /** The reason to join now rather than later. */
   rateNotice:
@@ -77,8 +77,8 @@ export const ALPHA_OFFER = Object.freeze({
  * ANNUAL BILLING — the same membership, paid once a year, for 20% less.
  *
  *   · $480 a year, which is $40 a month: 20% under twelve months at $50 ($600).
- *   · The trial is the same: first two weeks free, card required, $0 today,
- *     then $480 is charged once when the 14-day trial ends.
+ *   · Paid up front: $480 is charged at checkout, with the same 30-day
+ *     money-back guarantee.
  *   · The alpha rate promise is the same: $480/year for as long as the
  *     membership stays active.
  *
@@ -108,12 +108,12 @@ export const ANNUAL_OFFER = Object.freeze({
   monthlyTotalLabel: usd(monthlyAmount * 12),
   savingsLabel: `Save ${ANNUAL_DISCOUNT_PERCENT}%`,
 
-  summary: `${annualPrice}/year · first 2 weeks free · card required, ${ALPHA_OFFER.todayLabel} today`,
+  summary: `${annualPrice}/year · 30-day money-back guarantee`,
 
   billingNotice:
-    `${annualPrice} USD/year, and your first 2 weeks are free. A card is required to start `
-    + `the trial and ${ALPHA_OFFER.todayLabel} is charged today; ${annualPrice} is billed once when the 14-day trial ends, `
-    + 'then once a year. Cancel any time before then and you are never charged. Applicable tax may be added.',
+    `${annualPrice} USD/year, charged today when you complete checkout and then once a year until you cancel. `
+    + 'Every new membership has a 30-day money-back guarantee: email support@usemerger.com within 30 days '
+    + 'of your first payment for a full refund. Applicable tax may be added.',
 
   rateNotice:
     `Alpha members on annual billing keep ${annualPrice}/year for life. When Merger leaves alpha and the price `
@@ -149,10 +149,10 @@ export const WAITLIST = Object.freeze({
   /** The anchor the nav and the lower CTAs scroll to. */
   href: '/signup',
 
-  eyebrow: 'Windows and iPhone · 14 days free',
+  eyebrow: 'Windows and iPhone · 30-day money-back guarantee',
   heading: 'Download Merger.',
-  blurb: 'Create your account, start your 14-day free trial, and install Merger '
-    + 'on Windows, iPhone or both.',
+  blurb: 'Create your account, choose monthly or annual, and install Merger '
+    + 'on Windows, iPhone or both. Every membership has a 30-day money-back guarantee.',
 
   /**
    * The reason to join now rather than later — the same promise as the offer.
@@ -163,8 +163,8 @@ export const WAITLIST = Object.freeze({
    * the number that must never be retyped — and say the period in words.
    */
   hook: `Alpha members keep ${ALPHA_OFFER.priceLabel}/month while their membership stays active.`,
-  hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month with the first two weeks free. `
-    + 'Nothing is charged today, and you can cancel before the trial ends.',
+  hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month, or ${annualPrice} a year. `
+    + 'Not for you? Get a full refund within 30 days.',
 
   /** What moving up actually takes. */
   referPrompt: 'Refer dealmakers to move up the list.',
