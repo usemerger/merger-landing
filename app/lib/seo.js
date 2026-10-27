@@ -109,12 +109,12 @@ export function homeJsonLd(faqItems) {
         offers: [
           {
             '@type': 'Offer', name: 'Monthly', price: amount(ALPHA_OFFER.priceLabel), priceCurrency: 'USD',
-            priceSpecification: { '@type': 'UnitPriceSpecification', price: amount(ALPHA_OFFER.priceLabel), priceCurrency: 'USD', unitCode: 'MON', referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'MON' } },
+            description: ALPHA_OFFER.billingNotice,
             url: `${SITE}/#pricing`, availability: 'https://schema.org/InStock',
           },
           {
             '@type': 'Offer', name: 'Annual', price: amount(ANNUAL_OFFER.priceLabel), priceCurrency: 'USD',
-            priceSpecification: { '@type': 'UnitPriceSpecification', price: amount(ANNUAL_OFFER.priceLabel), priceCurrency: 'USD', unitCode: 'ANN', referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'ANN' } },
+            description: ANNUAL_OFFER.billingNotice,
             url: `${SITE}/#pricing`, availability: 'https://schema.org/InStock',
           },
         ],
