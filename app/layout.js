@@ -3,6 +3,7 @@ import './app.css';
 import './preview-notice.css';
 import { Geist, Geist_Mono } from 'next/font/google';
 import FirstTouch from './components/FirstTouch';
+import { KEYWORDS, SHORT_DESCRIPTION, SITE, SITE_NAME } from './lib/seo';
 
 /**
  * ONE SANS, EVERYWHERE. §3 drops the editorial-serif direction entirely: the
@@ -22,9 +23,27 @@ const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-gei
 const geistMono = Geist_Mono({ subsets: ['latin'], display: 'swap', variable: '--font-geist-mono' });
 
 export const metadata = {
-  title: { default: 'Merger — A place for the work in your conversations', template: '%s · Merger' },
-  description:
-    'Bring connected messages, reviewed deal suggestions, contact details, and your own DocuSign account into one Windows desktop workspace. Explore the Merger alpha.',
+  metadataBase: new URL(SITE),
+  title: { default: 'Merger: one inbox and deal desk for dealmakers', template: '%s · Merger' },
+  description: SHORT_DESCRIPTION,
+  keywords: [...KEYWORDS],
+  authors: [{ name: SITE_NAME, url: SITE }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  // Every route inherits these. Pages with their own openGraph override the
+  // title/description; the share image comes from app/opengraph-image.js.
+  openGraph: {
+    type: 'website',
+    siteName: SITE_NAME,
+    locale: 'en_US',
+    title: 'Merger: one inbox and deal desk for dealmakers',
+    description: SHORT_DESCRIPTION,
+  },
+  twitter: { card: 'summary_large_image', site: '@usemerger', creator: '@usemerger' },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
+  appleWebApp: { title: SITE_NAME },
+  itunes: { appId: '6817136478' },
+  alternates: { types: { 'text/plain': `${SITE}/llms.txt` } },
   applicationName: 'Merger',
   icons: {
     // The gold mark, not the glossy-black gem. A browser tab is usually a dark

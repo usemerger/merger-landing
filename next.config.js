@@ -21,6 +21,13 @@ const nextConfig = {
         { key: 'Referrer-Policy', value: 'no-referrer' },
         { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
       ] },
+      // Account pages: crawlable (robots.js) so this header is seen, never indexed.
+      { source: '/:page(signup|login|forgot-password|download|alpha|dashboard|billing|profile)', headers: [
+        { key: 'X-Robots-Tag', value: 'noindex, follow' },
+      ] },
+      { source: '/admin/:path*', headers: [
+        { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+      ] },
       { source: '/auth/:path*', headers: [
         { key: 'Referrer-Policy', value: 'no-referrer' },
         { key: 'X-Robots-Tag', value: 'noindex, nofollow' },

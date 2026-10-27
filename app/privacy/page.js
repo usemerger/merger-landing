@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Shell from '../components/Shell';
 
-export const metadata = { title: 'Privacy policy', description: 'How Merger accesses, uses, stores, and shares account information, Gmail and Outlook mail, Google Calendar data, messages, and connected services.' };
+export const metadata = { title: 'Privacy policy', description: 'How Merger accesses, uses, stores, and shares account information, Gmail and Outlook mail, Google Calendar data, messages, and connected services.', alternates: { canonical: 'https://usemerger.com/privacy' } };
 
 export default function PrivacyPage() {
   return <Shell><main className="legal-main"><p className="eyebrow">Merger</p><h1>Privacy policy</h1><p>Updated October 18, 2026. This notice covers the Merger website, apps, and connected services. Contact <a href="mailto:support@usemerger.com">support@usemerger.com</a> with privacy questions or requests about your information.</p><p>Connecting Google? Read how we handle <a href="#merger-mail">Gmail, Outlook, and optional Mail contact photos</a> or <a href="#google-calendar">Google Calendar and Google Meet information</a>, including permissions, sharing, and deletion.</p>

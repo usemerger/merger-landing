@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PlaybooksChrome, { JoinPanel } from '../PlaybooksChrome';
 import Inline from '../Inline';
-import { articles, formatDate, getArticle, ILLUSTRATIVE_NOTE, relatedArticles } from '../content';
+import { articles, articleText, formatDate, getArticle, ILLUSTRATIVE_NOTE, relatedArticles } from '../content';
 import '../playbooks.css';
 
 const SITE = 'https://usemerger.com';
@@ -23,8 +23,8 @@ export async function generateMetadata({ params }) {
     title: article.title,
     description: article.description,
     alternates: { canonical: url },
-    openGraph: { title: article.title, description: article.description, url, type: 'article', publishedTime: article.published },
-    twitter: { card: 'summary', title: article.title, description: article.description },
+    openGraph: { title: article.title, description: article.description, url, type: 'article', siteName: 'Merger', publishedTime: article.published, modifiedTime: article.updated || article.published, section: article.type, tags: [article.audience] },
+    twitter: { card: 'summary_large_image', title: article.title, description: article.description },
   };
 }
 
@@ -44,16 +44,37 @@ export default async function PlaybookArticle({ params }) {
   const article = getArticle(slug);
   if (!article) notFound();
 
+  const url = `${SITE}/playbooks/${article.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.description,
-    datePublished: article.published,
-    dateModified: article.updated || article.published,
-    mainEntityOfPage: `${SITE}/playbooks/${article.slug}`,
-    author: { '@type': 'Organization', name: 'Merger', url: SITE },
-    publisher: { '@type': 'Organization', name: 'Merger', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/merger-logo-gold.svg` } },
+    '@graph': [
+      {
+        '@type': 'Article',
+        '@id': `${url}#article`,
+        headline: article.title,
+        description: article.description,
+        datePublished: article.published,
+        dateModified: article.updated || article.published,
+        mainEntityOfPage: url,
+        url,
+        image: `${SITE}/opengraph-image`,
+        articleSection: article.type,
+        about: article.audience,
+        wordCount: articleText(article).split(/\s+/).length,
+        inLanguage: 'en-US',
+        isAccessibleForFree: true,
+        author: { '@type': 'Organization', '@id': `${SITE}/#organization`, name: 'Merger', url: SITE },
+        publisher: { '@type': 'Organization', '@id': `${SITE}/#organization`, name: 'Merger', url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/merger-logo-gold.svg` } },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Merger', item: SITE },
+          { '@type': 'ListItem', position: 2, name: 'Playbooks', item: `${SITE}/playbooks` },
+          { '@type': 'ListItem', position: 3, name: article.title, item: url },
+        ],
+      },
+    ],
   };
 
   return <PlaybooksChrome>

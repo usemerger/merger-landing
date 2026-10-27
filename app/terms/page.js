@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Shell from '../components/Shell';
 import { ALPHA_OFFER, ANNUAL_OFFER } from '../lib/billingOffer';
 
-export const metadata = { title: 'Alpha terms', description: 'Pricing, renewal, cancellation, and use of the Merger alpha.' };
+export const metadata = { title: 'Alpha terms', description: 'Pricing, renewal, cancellation, and use of the Merger alpha.', alternates: { canonical: 'https://usemerger.com/terms' } };
 
 export default function TermsPage() {
   return <Shell><main className="legal-main"><p className="eyebrow">Merger alpha</p><h1>Clear terms, before you join.</h1><p>Updated October 27, 2026. These terms describe the Merger alpha on Windows and iPhone, its membership ($50 monthly, or {ANNUAL_OFFER.priceLabel} a year with annual billing) and the 30-day money-back guarantee. For questions about your account or a charge, contact <a href="mailto:support@usemerger.com">support@usemerger.com</a>.</p>
