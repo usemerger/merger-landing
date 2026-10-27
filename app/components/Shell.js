@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { errorMessage, logout } from '../lib/api';
 import { clearSessionHint } from '../lib/useSession';
 import MarketingMark from './MarketingMark';
+import SocialLinks from './SocialLinks';
 
 export default function Shell({ children, authed = false, capabilities }) {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function Shell({ children, authed = false, capabilities }) {
         {error && <div className="nav-error" role="alert">Sign out failed. {error} <button className="linklike" onClick={onSignOut}>Try again</button></div>}
       </header>
       <div id="account-content" className="account-content" tabIndex={-1}>{children}</div>
-      <footer className="account-footer"><p>Merger for Windows and iPhone</p><nav aria-label="Footer"><Link href="/developers">API & docs</Link><Link href="/support">Support</Link><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link></nav></footer>
+      <footer className="account-footer"><p>Merger for Windows and iPhone</p><SocialLinks /><nav aria-label="Footer"><Link href="/developers">API & docs</Link><Link href="/support">Support</Link><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link></nav></footer>
     </div>
   );
 }
