@@ -90,11 +90,11 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
   const [interval, setInterval] = useState('month');
   const terms = offerTerms(interval);
   const annual = terms.interval === 'year';
-  const today = returning ? terms.priceLabel : ALPHA_OFFER.todayLabel;
+  const today = terms.priceLabel;
 
   if (ctl.phase === PHASE.OFFER_CHANGED) return <section className="plan-step"><h2>Your activation terms changed.</h2><div className="alert alert-warn" role="alert"><p>{ctl.message}</p><button className="btn btn-ghost btn-sm mt-16" type="button" onClick={() => window.location.reload()}>Refresh account terms</button></div></section>;
 
-  if (!termsKnown) return <section className="plan-step"><h2>Confirm your activation terms.</h2><p className="muted mt-16">Your account’s trial eligibility could not be confirmed. Refresh your account before continuing to checkout.</p><p className="field-hint mt-16"><Link href="/dashboard">Return to your account</Link></p></section>;
+  if (!termsKnown) return <section className="plan-step"><h2>Confirm your activation terms.</h2><p className="muted mt-16">Your membership terms could not be confirmed. Refresh your account before continuing to checkout.</p><p className="field-hint mt-16"><Link href="/dashboard">Return to your account</Link></p></section>;
 
   return (
     <section id="join-alpha" className="plan-step" aria-labelledby="alpha-heading">
@@ -125,9 +125,9 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
       </fieldset>}
 
       <p className="alpha-then">
-        {returning ? 'Renews at ' : `${ALPHA_OFFER.trialLabel}, then `}<strong>{terms.priceLabel}{terms.intervalLabel}</strong>
+        {ALPHA_OFFER.guaranteeLabel} · <strong>{terms.priceLabel}{terms.intervalLabel}</strong>
       </p>
-      <p className="muted">{returning ? `${terms.priceLabel} USD is due when you complete checkout, plus applicable tax. A card is required. Your membership renews at ${terms.priceLabel}${terms.perLabel} until canceled. This account has had a membership before, so another free trial does not apply.` : terms.billingNotice}</p>
+      <p className="muted">{terms.billingNotice}</p>
       <p className="muted mt-16">{returning ? `A previous alpha rate guarantee ends when that membership ends. This new membership uses the current alpha offer of ${terms.priceLabel}${terms.perLabel}, which stays in place while this membership remains active.` : terms.rateNotice}</p>
       <p className="field-hint mt-16">Claude requires your own Anthropic API key, with usage billed separately by Anthropic. DocuSign requires your own account. Alpha features may change.</p>
 
@@ -165,7 +165,7 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
         <button className="btn btn-primary btn-block" type="button" onClick={() => ctl.start(interval)} disabled={ctl.busy}>
           {ctl.busy ? 'Opening secure checkout…' : returning ? `Restart membership — ${terms.priceLabel}${terms.perLabel}` : ALPHA_OFFER.checkoutLabel}
         </button>
-        <p className="field-hint center mt-16">Stripe collects your card securely. {returning ? `${terms.priceLabel} plus applicable tax is charged when you finish checkout. Access begins after payment is confirmed.` : `${ALPHA_OFFER.todayLabel} is charged today, and your trial starts when you finish checkout.`}</p>
+        <p className="field-hint center mt-16">Stripe collects your card securely. {`${terms.priceLabel} plus applicable tax is charged when you finish checkout, and access begins right away. Not for you? Email support within ${ALPHA_OFFER.refundDays} days for a full refund.`}</p>
       </>}
 
       <p className="field-hint center mt-16"><Link href="/terms">Alpha terms</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/support">Help</Link></p>

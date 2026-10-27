@@ -36,7 +36,7 @@ export default function AccountWaitlist({ access, onChange }) {
       <p className="field-hint mt-16">Position reflects signup time and referrals. Invitations also depend on platform readiness and cohort size.</p>
     </>}
     {shareUrl && <div className="field mt-24"><label htmlFor="account-referral">Your referral link</label><input type="text" id="account-referral" value={shareUrl} readOnly onFocus={(event) => event.target.select()} /><div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={copy}>{copied ? 'Copied' : 'Copy referral link'}</button></div><span className="field-hint" role="status">{copied ? 'Link copied.' : ''}</span></div>}
-    {!accepted && <p className="field-hint mt-16">No card required while waiting. If eligible, your 14-day trial begins only after you accept an invitation and complete checkout.</p>}
+    {!accepted && <p className="field-hint mt-16">No card required while waiting. Your membership begins only after you accept an invitation and complete checkout.</p>}
     {error && <p className="alert alert-error" role="alert">{error}</p>}
   </section>;
 }

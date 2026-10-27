@@ -59,7 +59,8 @@ describe('the alpha checkout contract', () => {
     expect(ANNUAL_OFFER.monthlyEquivalentLabel).toBe('$40');
     expect(ANNUAL_OFFER.monthlyTotalLabel).toBe('$600');
     expect(ANNUAL_OFFER.savingsLabel).toBe('Save 20%');
-    expect(ANNUAL_OFFER.billingNotice).toContain('$0 is charged today');
+    expect(ANNUAL_OFFER.billingNotice).toContain('charged today');
+    expect(ANNUAL_OFFER.billingNotice).toContain('30-day money-back guarantee');
     expect(ANNUAL_OFFER.rateNotice).toContain('$480/year for life');
     expect(offerTerms('year').priceLabel).toBe('$480');
     expect(offerTerms('anything-else').priceLabel).toBe(ALPHA_OFFER.priceLabel);
@@ -82,13 +83,13 @@ describe('the alpha checkout contract', () => {
 
   it('quotes one offer, and it is the one the backend charges', () => {
     const copy = [ALPHA_OFFER.billingNotice, ALPHA_OFFER.rateNotice, ALPHA_OFFER.summary,
-      ALPHA_OFFER.trialLabel, ALPHA_OFFER.priceLabel].join(' ');
+      ALPHA_OFFER.guaranteeLabel, ALPHA_OFFER.priceLabel].join(' ');
     // The three retired framings. Any of them reappearing means two offers are
     // on screen at once, which is the failure this whole file exists to catch.
     expect(copy).not.toMatch(/invite|50% off|\$99\.99|\$49\.99|\$79|\$159/i);
     expect(copy).toContain('$50');
-    expect(copy).toContain('$0');
-    expect(copy).toMatch(/2 weeks free/);
+    expect(copy).not.toMatch(/\$0|weeks free|free trial/i);
+    expect(copy).toMatch(/30-day money-back guarantee/);
     expect(copy).toMatch(/for life/);
     expect(ALPHA_OFFER.plan).toBe('operator');
   });

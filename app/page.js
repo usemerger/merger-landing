@@ -11,7 +11,7 @@ import ChannelOrbit from './components/ChannelOrbit';
 import PricePreview from './components/PricePreview';
 import './singularity-funnel.css';
 
-const invitationTerms = `Creating an account is free. Start a 14-day free trial with a card from your account, then download Merger for Windows or iPhone. After the trial, Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax. Cancel before the trial ends to avoid a charge.`;
+const invitationTerms = `Creating an account is free. Choose a plan from your account and pay at checkout, then download Merger for Windows or iPhone. Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax, charged at checkout. Not for you? Email support within 30 days of your first payment for a full refund. Cancel any time from your billing page.`;
 
 function SectionLabel({ number, children }) {
   return <p className="sf-label"><span>{number}</span>{children}</p>;
@@ -30,7 +30,7 @@ export default function LandingPage() {
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
             <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
             <div className="sf-hero-actions"><SingularityButton href="/signup">Download Merger</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
-            <p className="sf-hero-note">Windows · iPhone · 14 days free · $0 to start</p>
+            <p className="sf-hero-note">Windows · iPhone · 30-day money-back guarantee</p>
           </div>
           <div className="sf-hero-art"><MergeHero /></div>
         </div>
@@ -55,8 +55,8 @@ export default function LandingPage() {
       </section>
 
       <section id="pricing" className="sf-section sf-access-section"><div className="mk-wrap sf-access-grid">
-        <div className="sf-access-copy"><SectionLabel number="04">Get started</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>Create your account, start your 14-day free trial, and install Merger on Windows, iPhone or both. Early members help shape the workspace around the way they work.</p><PricePreview /><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How the trial and billing work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
-        <div id="download" className="sf-waitlist-card"><span id="waitlist" aria-hidden="true" /><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Download Merger</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Get Merger for Windows and iPhone. Create your account and start your free trial in a few minutes.</p><DownloadCTA /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Start free trial</span><i /><span>Download</span></div></div>
+        <div className="sf-access-copy"><SectionLabel number="04">Get started</SectionLabel><h2>Build your next chapter<br /><span>with Merger.</span></h2><p>Create your account, choose monthly or annual, and install Merger on Windows, iPhone or both. Early members help shape the workspace around the way they work.</p><PricePreview /><p className="sf-rate">Keep your rate while your membership stays active.</p><ul className="sf-access-benefits"><li>Connected messaging, Deal Desk, and Rolodex</li><li>Claude assistance with your own API key</li><li>DocuSign beside your deal contacts</li><li>Meeting scheduling with Google Calendar and Google Meet, rolling out during early access</li></ul><details className="sf-billing-details"><summary>How billing and refunds work <span>+</span></summary><p>{invitationTerms} Anthropic API usage and your DocuSign account are separate.</p></details></div>
+        <div id="download" className="sf-waitlist-card"><span id="waitlist" aria-hidden="true" /><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Download Merger</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Get Merger for Windows and iPhone. Create your account and get started in a few minutes. 30-day money-back guarantee.</p><DownloadCTA /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Choose a plan</span><i /><span>Download</span></div></div>
       </div></section>
 
       <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>

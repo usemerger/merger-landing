@@ -90,7 +90,7 @@ describe('server-authorized account states', () => {
     render(<AccountDashboard />);
     await screen.findByRole('heading', { name: 'Download Merger' });
     expect(screen.queryByRole('button', { name: 'Join the waitlist' })).toBeNull();
-    expect(screen.getByText('Downloads unlock once your free trial starts.')).toBeInTheDocument();
+    expect(screen.getByText('Downloads unlock once your membership starts.')).toBeInTheDocument();
   });
   it('does not treat the verified query parameter as proof', async () => {
     nav.query = 'verified=1';
@@ -124,8 +124,8 @@ describe('invitation lifecycle', () => {
     api.acceptInvitation.mockRejectedValue(new api.ApiError(410, 'invite_expired'));
     render(<InvitePage />);
     await screen.findByRole('button', { name: 'Accept invitation' });
-    expect(screen.getByText(/As a returning member, \$50 plus applicable tax is due at checkout/)).toBeInTheDocument();
-    expect(screen.queryByText(/Your first 14 days are free/)).not.toBeInTheDocument();
+    expect(screen.getAllByText(/charged at checkout, with a 30-day money-back guarantee/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/days are free|free trial/i)).not.toBeInTheDocument();
   });
   it('accepts a verified member arriving from their invite link once, then points to the trial', async () => {
     nav.query = 'token=private-token';
@@ -134,7 +134,7 @@ describe('invitation lifecycle', () => {
     render(<InvitePage />);
     await screen.findByRole('heading', { name: 'Your invitation is accepted.' });
     expect(api.acceptInvitation).toHaveBeenCalledExactlyOnceWith('private-token');
-    expect(screen.getByRole('link', { name: 'Start your 14-day free trial' })).toHaveAttribute('href', '/billing');
+    expect(screen.getByRole('link', { name: 'Choose your plan' })).toHaveAttribute('href', '/billing');
     expect(localStorage.getItem('merger_pending_invite')).toBeNull();
   });
   it('does not accept without a personal token', async () => {
