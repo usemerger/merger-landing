@@ -10,9 +10,20 @@ import DownloadCTA from './components/DownloadCTA';
 import SingularityButton from './components/SingularityButton';
 import ChannelOrbit from './components/ChannelOrbit';
 import PricePreview from './components/PricePreview';
+import { homeJsonLd, jsonLdScript, SHORT_DESCRIPTION, SITE } from './lib/seo';
 import './singularity-funnel.css';
 
+export const metadata = {
+  title: { absolute: 'Merger: one inbox and deal desk for dealmakers' },
+  description: SHORT_DESCRIPTION,
+  alternates: { canonical: SITE },
+  openGraph: { url: SITE, title: 'Merger: one inbox and deal desk for dealmakers', description: SHORT_DESCRIPTION },
+};
+
 const invitationTerms = `Creating an account is free. Choose a plan from your account and pay at checkout, then download Merger for Windows or iPhone. Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax, charged at checkout. Not for you? Email support within 30 days of your first payment for a full refund. Cancel any time from your billing page.`;
+
+const offerAnswer = `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.`;
+const faqAnswers = faqs.map((faq) => ({ ...faq, answer: faq.offer ? offerAnswer : faq.answer }));
 
 function SectionLabel({ number, children }) {
   return <p className="sf-label"><span>{number}</span>{children}</p>;
@@ -20,6 +31,7 @@ function SectionLabel({ number, children }) {
 
 export default function LandingPage() {
   return <div className="marketing-page sf-page">
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(homeJsonLd(faqAnswers)) }} />
     <a className="mk-skip-link" href="#main-content">Skip to content</a>
     <MarketingNav signupHref={WAITLIST.href} checkoutLabel={WAITLIST.ctaShort} singularity />
     <main id="main-content">
@@ -29,7 +41,7 @@ export default function LandingPage() {
           <div className="sf-hero-copy">
             <p className="sf-eyebrow"><span className="sf-live-dot" /> Built for the way deals happen</p>
             <h1 id="hero-title">Your messages.<br />Your deals.<br /><span>One orbit.</span></h1>
-            <p className="sf-intro">One workspace for your conversations, your contacts, and the deals taking shape between them.</p>
+            <p className="sf-intro">One workspace for your WhatsApp, Telegram, LinkedIn and Slack conversations, your contacts, and the deals taking shape between them.</p>
             <div className="sf-hero-actions"><SingularityButton href="/signup">Download Merger</SingularityButton><a className="sf-secondary-button" href="#workflow">Explore Merger</a></div>
             <p className="sf-hero-note">Windows · iPhone · 30-day money-back guarantee</p>
           </div>
@@ -60,7 +72,7 @@ export default function LandingPage() {
         <div id="download" className="sf-waitlist-card"><span id="waitlist" aria-hidden="true" /><div className="sf-waitlist-heading"><span className="sf-live-dot" /><p>Download Merger</p><MarketingMark size={25} /></div><h3>Your next workspace<br />starts here.</h3><p className="sf-waitlist-intro">Get Merger for Windows and iPhone. Create your account and get started in a few minutes. 30-day money-back guarantee.</p><DownloadCTA /><div className="sf-waitlist-bottom"><span>Create account</span><i /><span>Choose a plan</span><i /><span>Download</span></div></div>
       </div></section>
 
-      <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqs.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.offer ? `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.` : faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
+      <section id="faq" className="mk-faq mk-wrap sf-section" aria-labelledby="faq-title"><div className="mk-faq-heading"><SectionLabel number="05">A few more details</SectionLabel><h2 id="faq-title">Good questions.<br /><span>Clear answers.</span></h2><Link className="sf-secondary-button" href="/support">Talk to us</Link></div><div className="mk-faq-list">{faqAnswers.map(faq => <details key={faq.question}><summary>{faq.question}<span aria-hidden="true">+</span></summary><div><p>{faq.answer}</p>{faq.link && <Link className="mk-text-link" href={faq.link.href}>{faq.link.label}</Link>}</div></details>)}</div></section>
 
       <section className="sf-final"><div className="mk-wrap"><MarketingMark size={42} /><h2>Bring it all together.</h2><p>Your messages. Your people. Your next opportunity.</p><SingularityButton href="/signup">Download Merger</SingularityButton></div></section>
     </main>

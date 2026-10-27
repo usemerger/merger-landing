@@ -14,7 +14,10 @@ export const metadata = {
     url: 'https://usemerger.com/playbooks',
     type: 'website',
   },
+  twitter: { card: 'summary_large_image', title: 'Merger Playbooks', description: 'How dealmakers run deals that start in messaging apps.' },
 };
+
+const SITE = 'https://usemerger.com';
 
 const GROUPS = [
   { types: [TYPES.useCase], id: 'use-cases', title: 'Use cases', blurb: 'One deal, start to finish, by the kind of dealmaker running it.' },
@@ -34,7 +37,20 @@ function Card({ article }) {
 
 export default function PlaybooksPage() {
   const [lead, ...rest] = articles;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Merger Playbooks',
+    url: `${SITE}/playbooks`,
+    description: metadata.description,
+    publisher: { '@id': `${SITE}/#organization` },
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: articles.map((article, i) => ({ '@type': 'ListItem', position: i + 1, url: `${SITE}/playbooks/${article.slug}`, name: article.title })),
+    },
+  };
   return <PlaybooksChrome>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
     <header className="pb-hero">
       <p className="pb-eyebrow"><span className="pb-dot" /> Playbooks</p>
       <h1>Deals start in conversations.<br /><span>Here is how to run them there.</span></h1>

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Shell from '../components/Shell';
 
-export const metadata = { title: 'Help & support', description: 'Get help signing in, managing billing, downloading Merger, or reporting an issue.' };
+export const metadata = { title: 'Help & support', description: 'Get help signing in, managing billing, downloading Merger, or reporting an issue.', alternates: { canonical: 'https://usemerger.com/support' } };
 
 export default function SupportPage() {
   return <Shell><main className="legal-main"><p className="eyebrow">Here to help</p><h1>Get back to your conversations.</h1><p>Choose the account task you need, or email <a href="mailto:support@usemerger.com">support@usemerger.com</a>. Include your account email and a short description of the problem.</p><div className="support-grid">
