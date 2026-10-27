@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import MarketingNav from '../components/MarketingNav';
 import MarketingMark from '../components/MarketingMark';
+import SocialLinks from '../components/SocialLinks';
 import { WAITLIST } from '../lib/billingOffer';
 
 /** Nav and footer shared by the Playbooks hub and every article. */
@@ -9,7 +10,7 @@ export default function PlaybooksChrome({ children }) {
     <a className="mk-skip-link" href="#playbooks-content">Skip to content</a>
     <MarketingNav signupHref={WAITLIST.href} checkoutLabel={WAITLIST.ctaShort} sectionPrefix="/" />
     <main id="playbooks-content" className="pb-main">{children}</main>
-    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/playbooks">Playbooks</Link><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Windows · In development</span></div></div></footer>
+    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/playbooks">Playbooks</Link><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/login">Member sign in</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><SocialLinks className="mk-footer-social" /><span>Windows · iPhone</span></div></div></footer>
   </div>;
 }
 

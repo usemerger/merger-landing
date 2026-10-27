@@ -586,3 +586,17 @@
 /* Download buttons with a platform mark */
 .btn-platform { display: inline-flex; align-items: center; gap: 10px; }
 .btn-platform .platform-icon { flex-shrink: 0; }
+
+/* Social profile links, shared by every footer (components/SocialLinks.js). */
+.social-links { display: flex; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; flex-wrap: wrap; }
+.social-links a { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; color: #929ba6; transition: color .15s ease, background-color .15s ease; }
+.social-links a:hover { color: var(--brass-bright, #e2be72); background: #ffffff0a; }
+.social-links a:focus-visible { outline: 2px solid var(--brass, #c9a052); outline-offset: 2px; }
+.social-links svg { display: block; }
+.account-auth-form > footer { flex-wrap: wrap; align-items: center; }
+.auth-footer-social { margin-left: auto; }
+@media (max-width: 760px) {
+  .mk-footer-bottom { flex-wrap: wrap; }
+  .mk-footer-bottom .mk-footer-social { order: -1; width: 100%; margin-left: -8px; }
+  .auth-footer-social, .account-footer .social-links { margin-left: -8px; width: 100%; }
+}

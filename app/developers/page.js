@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import MarketingNav from '../components/MarketingNav';
 import MarketingMark from '../components/MarketingMark';
+import SocialLinks from '../components/SocialLinks';
 import { WAITLIST } from '../lib/billingOffer';
 import CopyCode from './CopyCode';
 import './developers.css';
@@ -121,6 +122,6 @@ export default function DevelopersPage() {
         </div>
       </div>
     </main>
-    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><span>Built for the work in your conversations.</span></div></div></footer>
+    <footer className="mk-footer"><div className="mk-wrap"><div className="mk-footer-top"><Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark /><span>merger</span></Link><p>Everything, drawn together.</p><nav aria-label="Footer navigation"><Link href="/developers">API & documentation</Link><Link href="/support">Support</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav></div><div className="mk-footer-bottom"><span>© 2026 Merger</span><SocialLinks className="mk-footer-social" /><span>Built for the work in your conversations.</span></div></div></footer>
   </div>;
 }

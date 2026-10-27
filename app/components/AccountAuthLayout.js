@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import MarketingMark from "./MarketingMark";
+import SocialLinks from "./SocialLinks";
 import MergeHero from "./MergeHero";
 import "./account-auth.css";
 import "../singularity-funnel.css";
@@ -23,6 +24,7 @@ export default function AccountAuthLayout({ children }) {
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/support">Support</Link>
+          <SocialLinks className="auth-footer-social" />
         </footer>
       </section>
       <aside className="account-auth-story" aria-label="About Merger">
