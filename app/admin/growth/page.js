@@ -153,7 +153,7 @@ export default function AdminGrowthPage() {
         <li><strong>Revenue</strong>: paid Stripe invoices. Refunds are not subtracted yet.</li>
         <li><strong>LTV, realized</strong>: revenue collected so far divided by everyone who has ever paid. <strong>Predicted</strong>: ARPA divided by monthly churn, once there are 30 days of history and at least 10 paying customers.</li>
         <li><strong>Churn</strong>: paying customers 30 days ago who are no longer paying.</li>
-        <li><strong>Channel</strong>: first visit only, in this order: paid ads, email, social, referral, search, other campaign tags, imported list, other websites, direct. Visits before this dashboard launched count as direct unless they came by referral link, email invite or import.</li>
+        <li><strong>Channel</strong>: first visit only, in this order: paid ads, email, AI assistants (ChatGPT, Perplexity, Claude, Gemini and others), social, referral, search, other campaign tags, imported list, other websites, direct. Visits before this dashboard launched count as direct unless they came by referral link, email invite or import.</li>
       </ul></details>
     </>}
   </main></Shell>;

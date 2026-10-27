@@ -33,7 +33,7 @@ describe('playbook content', () => {
       /automatically (file|send|sign)/i,                 // you review and send
       /\$\d/,                                            // prices live in billingOffer.js
       /\bcustomer(s)? (say|said|told)\b/i, /testimonial/i, // no invented social proof
-      /\biOS\b|\biPhone\b|\bmacOS\b|\bAndroid\b/,         // site says Windows today
+      /\bmacOS\b|\bMac app\b|\bAndroid\b/,             // Windows and iPhone only today
     ];
     for (const a of articles) {
       const text = articleText(a);
