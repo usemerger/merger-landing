@@ -56,9 +56,9 @@ export default function DownloadPage() {
 
   if (state.phase === 'locked') {
     return <Shell authed><main className="dash-main">
-      <p className="eyebrow">Downloads</p><h1 className="dash-title">Your next step is in your account.</h1>
-      <p className="dash-sub">Downloads unlock after your invitation and activation are confirmed. Your account shows whether to verify your email, wait for access, or finish activation.</p>
-      <div className="panel mt-24"><h2>One account, on the web and desktop.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Go to your account</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
+      <p className="eyebrow">Downloads</p><h1 className="dash-title">Start your free trial to download.</h1>
+      <p className="dash-sub">Downloads unlock once your 14-day free trial starts. Your account shows the next step: verify your email, choose a plan, then come back here.</p>
+      <div className="panel mt-24"><h2>One account, on the web, Windows and iPhone.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Start your free trial</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
     </main></Shell>;
   }
 

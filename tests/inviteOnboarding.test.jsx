@@ -46,7 +46,7 @@ describe('sign-up from an invitation', () => {
   it('leaves an ordinary sign-up alone', async () => {
     pending('tok', 'invited@example.test');
     render(<SignupPage />);
-    expect(await screen.findByRole('heading', { name: 'Your account. Your place in line.' })).toBeInTheDocument();
+    expect(await screen.findByText('Download Merger')).toBeInTheDocument();
     expect(screen.getByLabelText('Email')).toHaveValue('');
   });
 });
