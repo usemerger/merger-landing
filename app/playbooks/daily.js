@@ -236,4 +236,201 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-10-29 ───────────────────────────────────────────────────────────
+  {
+    slug: 'follow-up-messages-that-restart-a-quiet-deal',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '7 follow-up messages that restart a quiet deal conversation',
+    description:
+      'Seven short follow-ups for when a buyer, seller or founder goes quiet on WhatsApp, Telegram or LinkedIn, with when to send each and what to avoid.',
+    dek: 'Most deals do not die with a no. They die with a silence nobody followed up on. Here are seven messages that get the conversation moving again, and when each one fits.',
+    published: '2026-10-29',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why quiet threads matter more in chat',
+        blocks: [
+          'In a messaging-first deal there is no out-of-office reply and no email chain to forward. A counterparty who stops answering simply drifts down the list, under group chats and newer conversations. A week later you notice, and by then the silence has a reason you cannot see.',
+          'The fix is not to chase harder. It is to send the right kind of follow-up at the right time, in the app the other side already uses, and to know which threads are quiet before they go cold. The messages below are short on purpose. In chat, a long follow-up reads like pressure.',
+          'A useful rule: if a live deal has had no reply for five working days, it gets one of these today.',
+        ],
+      },
+      {
+        heading: '1. The specific question',
+        blocks: [
+          '**When to use it:** the other side went quiet after you sent something long, like terms, a deck or a list of questions.',
+          '**The message:** “Quick one on the numbers you sent: is the 2024 revenue figure before or after the one-off contract?”',
+          'A single, easy question is far simpler to answer than a vague check-in. It also shows you actually read what they sent. Pick the question that matters most and leave the rest for the call.',
+        ],
+      },
+      {
+        heading: '2. The useful update',
+        blocks: [
+          '**When to use it:** you have something new to share, even something small.',
+          '**The message:** “Spoke to the lender this morning. They are comfortable with the structure we discussed. Still keen on a call this week?”',
+          'Follow-ups that carry information get replies. Follow-ups that only ask for information often do not. If you have nothing new, it is usually better to wait a day and find something than to send an empty nudge.',
+        ],
+      },
+      {
+        heading: '3. The easy yes or no',
+        blocks: [
+          '**When to use it:** you suspect interest has cooled and you would rather know.',
+          '**The message:** “Totally fine if the timing is off. Should I keep you in the loop on this one, or park it for now?”',
+          'Giving someone an easy way to say no often gets you a yes, or at least an honest answer. Either is better than a silent pipeline. A clear pass also frees you to spend the time on a buyer who is still in.',
+        ],
+      },
+      {
+        heading: '4. The calendar offer',
+        blocks: [
+          '**When to use it:** the conversation has gone back and forth for a while and needs a call to move forward.',
+          '**The message:** “Easier to talk this through? I have Tuesday at 10 or Wednesday at 3, your time.”',
+          'Two concrete options beat “let me know when works.” Name the time zone. If they are in a different region, offer one slot that is friendly to their morning.',
+        ],
+      },
+      {
+        heading: '5. The introducer loop',
+        blocks: [
+          '**When to use it:** the deal came through an introduction, and both the counterparty and the introducer have gone quiet.',
+          '**The message to the introducer:** “Thanks again for connecting me with Priya. We had a good first exchange, then it went quiet. Any sense of whether the timing changed on their side?”',
+          'Introducers usually know more than they say, and most want their intros to work. Keep it light, and never ask them to chase on your behalf. This only works if you recorded who made the introduction when it happened. [Here is a simple way to do that](/playbooks/turn-introductions-into-contact-records).',
+        ],
+      },
+      {
+        heading: '6. The deadline that is real',
+        blocks: [
+          '**When to use it:** there is an actual date: another buyer, a lender cutoff, a seller who wants to decide by month end.',
+          '**The message:** “Heads up: the seller wants to choose a buyer by the 15th. If you are still interested, can we get your indication by the 10th?”',
+          'Only use real deadlines. An invented one works once and costs trust for every deal after it. When the date is genuine, saying it plainly is a favour to the other side.',
+        ],
+      },
+      {
+        heading: '7. The clean close',
+        blocks: [
+          '**When to use it:** you have followed up twice with nothing back.',
+          '**The message:** “I will take this off my list for now. If anything changes on your side, message me here and we will pick it up.”',
+          'This is not a guilt trip. It closes the loop politely, keeps the door open, and lets you remove the deal from your active list with a clear conscience. A surprising number of people reply to this one.',
+        ],
+      },
+      {
+        heading: 'Three follow-ups to stop sending',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**“Just checking in.”** It asks the other side to do the work of remembering what you wanted.',
+              '**“Bumping this.”** In a chat app, the bump is visible. It reads as impatience, not organization.',
+              '**The app switch.** Moving a quiet WhatsApp conversation to email, or a LinkedIn thread to a phone call, without asking. Follow up where they last answered.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How to know which threads are quiet',
+        blocks: [
+          'The hard part is not writing the follow-up. It is noticing that a thread went quiet before a week has passed. When the deal lives across five apps, each with its own unread badge, nothing tells you that the buyer on LinkedIn has not replied since Tuesday.',
+          'A short weekly pass fixes most of it: list every live deal, note when the other side last replied, and send one of the messages above to anything quiet for five working days. [Our 30-minute weekly review](/playbooks/run-a-weekly-deal-review-from-your-messages) walks through it.',
+          'In Merger, the conversations you connect sit in one list, and each deal on the Deal Desk keeps its source conversation and one next step. Reviewing the desk shows which deals are waiting on the other side, and you reply from Merger on the network the conversation started on. You write and send every follow-up yourself.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: 'pinned-chats-vs-starred-messages-vs-deal-desk',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Pinned chats, saved messages or a deal desk: three ways to track live deals in chat',
+    description:
+      'Most dealmakers track live deals with pinned chats or saved messages. How those built-in tools compare with a deal desk, and when each one is enough.',
+    dek: 'Before anyone buys software, they pin chats and save messages. Both work for a while. Here is what each is good at, where each breaks, and what a deal desk adds.',
+    published: '2026-10-29',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Method', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Pinned chats', 'Keeping a few live conversations at the top of one app', 'Works per app; a deal with people in three apps needs three pins'],
+              ['Saved or starred messages', 'Marking the one message with the price or the terms', 'Saves a message, not a deal; no next step, no people, no status'],
+              ['A deal desk', 'One list of deals, each with its conversation, people and next step', 'Needs a habit of filing the deals that matter'],
+            ],
+          },
+          'Features and limits for pinning and saving vary by app and change over time. The comparison below is about how each method fits a deal, not about any one app’s settings.',
+        ],
+      },
+      {
+        heading: 'Pinned chats',
+        blocks: [
+          'Pinning is the first tool almost every dealmaker reaches for, and it is a good one. A pinned chat stays at the top of the list no matter how many group messages arrive. If your three live deals each live in one WhatsApp chat, pinning those three is a working pipeline.',
+          'It breaks in two ways. First, pins are per app. The seller is pinned in WhatsApp, the buyer in Telegram, the lender is a LinkedIn thread with no pin at all. To see one deal you open three apps. Second, most apps cap how many chats you can pin, and even where they do not, a pin says nothing about what happens next. Ten pinned chats look the same whether the deal is about to sign or has been quiet for three weeks.',
+          '**Enough when:** you run a handful of deals, each mostly in one app, and you can remember the next step for each.',
+        ],
+      },
+      {
+        heading: 'Saved and starred messages',
+        blocks: [
+          'Saving a message is the second habit: star the one with the agreed price, the LOI terms or the email address from an intro. It solves a real problem. The detail you need is one tap away instead of a long scroll up the thread.',
+          'But a saved message is a bookmark, not a record. It does not know which deal it belongs to, who else is involved, or what you promised to do next. Over a few months the saved list becomes a mix of prices, addresses, jokes you meant to reply to and terms from deals that closed long ago. And like pins, saved messages live inside one app, so the price in WhatsApp and the counteroffer in Telegram never sit side by side.',
+          '**Enough when:** you mainly need to find one detail again, and the deal itself is simple to keep in your head.',
+        ],
+      },
+      {
+        heading: 'A deal desk',
+        blocks: [
+          'A deal desk starts from the deal rather than the chat. Each deal is one record: the conversations it came from, the people on each side, and one next step. The chats stay where they are. The desk is the list you look at when you want to know where things stand.',
+          'In Merger, the messaging accounts you connect sit in one list. With your own Anthropic API key connected, Claude can flag a message that looks like a possible deal and show you where it came from. You review it and decide whether it goes on the Deal Desk. People from introductions can become Rolodex contacts linked to the message they came from, and your own DocuSign account opens inside Merger with those contacts beside your template.',
+          'The cost is a habit. Someone has to decide which conversations are deals, and a desk full of maybes is as noisy as a chat list. The habit that works: file a deal the day it is worth a phone call, and dismiss suggestions that are not.',
+          '**Better when:** deals involve people in more than one app, you run more than a handful at once, or someone else (a partner, a seller, an investment committee) asks where things stand.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Pinned chats', 'Saved messages', 'Deal desk'],
+            rows: [
+              ['See all live deals at once', 'Per app only', 'No', 'Yes'],
+              ['Keep the key detail findable', 'Scroll the chat', 'Yes, per app', 'The source conversation stays attached'],
+              ['Know the next step', 'In your head', 'In your head', 'Written on the deal'],
+              ['People in more than one app', 'One pin per app', 'One save per app', 'One deal, every conversation'],
+              ['Spot a deal that went quiet', 'Only if you look', 'No', 'Visible in a weekly review'],
+              ['Fill documents with the right names', 'Retype', 'Copy from the saved message', 'From contact records'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Using them together',
+        blocks: [
+          'These are not either-or. Plenty of people keep pinning the two or three chats they answer every day and saving the odd message, while the desk holds the full list. The difference is which one you trust when someone asks for your pipeline.',
+          'A simple test: could you list every live deal, who is on the other side and the next step for each, in under two minutes and without opening a chat app? If yes, your pins are doing the job. If no, the deals have outgrown them. [Eight more signs](/playbooks/signs-your-deal-pipeline-has-outgrown-your-phone) are worth a look.',
+        ],
+      },
+      {
+        heading: 'How to move from pins to a desk without losing anything',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'List what is pinned', text: 'Go app by app and write down every pinned chat that is a live deal. Ignore the ones that are just people you talk to often.' },
+              { title: 'Group by deal, not by app', text: 'A seller in WhatsApp and two buyers in Telegram are one deal. Give it one name.' },
+              { title: 'Pull the saved details in', text: 'For each deal, find the saved messages that matter (price, terms, contact details) and attach or note them on the deal.' },
+              { title: 'Write one next step', text: 'A verb and a rough date. If you cannot write one, the deal may already be stalled.' },
+              { title: 'Unpin what the desk now holds', text: 'Keep pins for the chats you answer every day. Let the desk be the pipeline.' },
+            ],
+          },
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
