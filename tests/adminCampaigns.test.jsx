@@ -50,6 +50,15 @@ describe('campaigns dashboard', () => {
     expect(screen.getByText(/Email tracking is not connected/)).toBeInTheDocument();
   });
 
+  it('shows hard bounces over everyone emailed, with soft bounces set aside', async () => {
+    api.adminCampaigns.mockResolvedValue({ ...report, ramp: { ...report.ramp, health: { sent: 1000, bounced: 9, soft_bounced: 12, complained: 0 } } });
+    render(<AdminCampaignsPage />);
+    const schedule = await screen.findByRole('region', { name: 'Sending schedule' });
+    expect(schedule).toHaveTextContent('Hard bounce rate, 3 days0.9%');
+    expect(schedule).toHaveTextContent('12 soft, not counted');
+    expect(schedule).toHaveTextContent('People emailed, 3 days1,000');
+  });
+
   it('refuses non-staff', async () => {
     api.adminCampaigns.mockRejectedValue(new api.ApiError(403));
     render(<AdminCampaignsPage />);

@@ -88,7 +88,8 @@ export default function AdminCampaignsPage() {
         <dl className="cp-ramp-grid">
           <div><dt>Sent today</dt><dd>{n(ramp.sentToday)} <span>of {n(ramp.todayQuota)}</span></dd></div>
           <div><dt>Still to invite</dt><dd>{n(data.remaining)}</dd></div>
-          <div><dt>Bounce rate, 3 days</dt><dd>{pct(health.bounced, health.sent)} <span>limit 3%</span></dd></div>
+          <div><dt>Hard bounce rate, 3 days</dt><dd>{pct(health.bounced, health.sent)} <span>limit 3%{health.soft_bounced ? ` · ${n(health.soft_bounced)} soft, not counted` : ''}</span></dd></div>
+          <div><dt>People emailed, 3 days</dt><dd>{n(health.sent)}</dd></div>
           <div><dt>Complaint rate, 3 days</dt><dd>{pct(health.complained, health.sent)} <span>limit 0.1%</span></dd></div>
           <div><dt>Started</dt><dd>{ramp.start ? dayLabel(ramp.start) : 'Not set'}</dd></div>
         </dl>
