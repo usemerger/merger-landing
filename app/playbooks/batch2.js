@@ -9,7 +9,7 @@ const PUBLISHED = '2026-10-16';
 const BEEPER_SOURCE = {
   label: 'Beeper help center: how legacy Beeper and Texts users are transitioning to the new Beeper',
   href: 'https://help.beeper.com/en_US/beeper-plus/subscriptions-how-legacy-beeper-and-texts-users-are-transitioning-to-the-new-beeper',
-  accessed: '2026-10-16',
+  accessed: '2026-10-27',
 };
 
 const WORTH_KNOWING = {
@@ -449,7 +449,7 @@ export const batch2 = [
             rows: [
               ['Spreadsheet', 'Free, flexible, fast to start', 'Always behind the conversation; no link to the messages or the people'],
               ['CRM', 'Structure, reminders, reporting, email sync', 'Messaging apps sit outside it; updating it becomes a separate job'],
-              ['Merger', 'Deals, contacts and documents built from the conversations themselves', 'Early access on Windows; network availability varies by service'],
+              ['Merger', 'Deals, contacts and documents built from the conversations themselves', 'Early release on Windows and iPhone; network availability varies by service'],
             ],
           },
         ],
@@ -476,12 +476,101 @@ export const batch2 = [
   },
 
   {
+    slug: 'whatsapp-crm-for-dealmakers',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'WhatsApp CRM for brokers and dealmakers: how to track deals that start in WhatsApp',
+    description: 'Your deals start in WhatsApp but your CRM never sees them. Three ways to track WhatsApp deal flow, what each records, and a five-field method you can start today.',
+    dek: 'Most WhatsApp CRM tools are built for support teams messaging customers. Dealmakers need something else: the deal, the people and the next step, kept next to the chat.',
+    published: '2026-10-27',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why dealmakers search for a WhatsApp CRM',
+        blocks: [
+          'For brokers, searchers and investors, WhatsApp is where the intro lands, the price gets floated and the “let me check with my partner” comes back. A CRM built around email and calendars never sees any of it, so the pipeline in the CRM and the pipeline in your phone drift apart within a week.',
+          'Searching for a “WhatsApp CRM” is usually a search for one thing: a record of each deal that stays connected to the conversation it lives in.',
+        ],
+      },
+      {
+        heading: 'The five fields that matter',
+        blocks: [
+          'Whatever tool you use, a deal that starts in chat needs five things recorded. Everything else is optional.',
+          {
+            type: 'steps',
+            items: [
+              { title: 'The deal', text: 'A name you will recognize in three months: the company, the asset or the block.' },
+              { title: 'The people', text: 'Who is on the other side, who introduced you, and how to reach each of them outside the chat.' },
+              { title: 'The source', text: 'Which conversation it came from, so you can check what was actually said.' },
+              { title: 'The terms so far', text: 'Price, size, structure or timing, as last stated, with the date.' },
+              { title: 'The next step and its owner', text: 'One action and who owes it. If you cannot name one, the deal is stalled.' },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Option 1: labels inside WhatsApp Business',
+        blocks: [
+          'The WhatsApp Business app lets you organize contacts or chats with labels so you can find them again, and labels work on WhatsApp Web and desktop too ([WhatsApp blog](https://blog.whatsapp.com/celebrating-one-year-of-whats-app-business-with-new-web-and-desktop-features)). A label per stage (New, Talking, NDA, LOI) gives you a rough pipeline at no extra cost.',
+          'Where it stops: labels sit on chats, not deals. A deal with three counterparties is three labelled chats, terms and next steps are not recorded anywhere, and none of it covers the same deal’s Telegram or LinkedIn threads.',
+        ],
+      },
+      {
+        heading: 'Option 2: a spreadsheet beside WhatsApp',
+        blocks: [
+          'The most common setup: WhatsApp for the conversation, a spreadsheet for the five fields above. It is flexible and free, and it works well for a handful of live deals.',
+          'Where it stops: every update is a copy from one app to the other, and the copy is the step that gets skipped on a busy week. The link back to the conversation is usually a note that says “see WhatsApp.”',
+        ],
+      },
+      {
+        heading: 'Option 3: a deal workspace connected to your chats',
+        blocks: [
+          'The third option starts from the conversation instead of asking you to copy it. This is what we built Merger to do.',
+          {
+            type: 'list',
+            items: [
+              '**WhatsApp beside your other networks.** Read and reply to WhatsApp, Telegram, LinkedIn, Slack and more in one inbox. Availability and actions vary by service.',
+              '**Deals flagged for your review.** Claude, using your own Anthropic API key, flags messages that look like a deal. Nothing is filed until you approve it.',
+              '**The five fields, with the source attached.** Each deal on the Deal Desk keeps its conversation, people, terms and next step.',
+              '**Contacts from introductions.** Names, emails and numbers shared in a chat can become Rolodex fields, linked to the message they came from.',
+            ],
+          },
+          'It is not a tool for messaging customers at scale, and it does not send anything on its own. It is a desk for the deals that start in your chats. Merger runs on Windows and iPhone.',
+        ],
+      },
+      {
+        heading: 'Which one to pick',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Setup', 'Best when', 'Watch out for'],
+            rows: [
+              ['WhatsApp Business labels', 'A few deals, all of them in WhatsApp', 'No terms or next steps; other apps not covered'],
+              ['Spreadsheet beside WhatsApp', 'Under a dozen live deals and a weekly review habit', 'Updates depend on copying by hand'],
+              ['Merger', 'Deals across WhatsApp and other chat apps, with contacts and documents to keep together', 'Early release; network availability varies by service'],
+            ],
+          },
+          'Whichever you choose, the [30-minute weekly review](/playbooks/run-a-weekly-deal-review-from-your-messages) keeps it honest, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) fixes the most common gap.',
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'WhatsApp blog: Celebrating one year of WhatsApp Business with new web and desktop features (Jan 24, 2019)',
+        href: 'https://blog.whatsapp.com/celebrating-one-year-of-whats-app-business-with-new-web-and-desktop-features',
+        accessed: '2026-10-27',
+      },
+    ],
+  },
+
+  {
     slug: 'merger-vs-unified-inbox-plus-spreadsheet',
     type: T.comparison,
     audience: 'All dealmakers',
-    title: 'Merger vs a unified inbox plus a spreadsheet',
+    title: 'Merger vs Beeper plus a spreadsheet: tracking deals that start in chat',
     description:
-      'Many dealmakers pair a unified messaging app like Beeper with a spreadsheet. How that setup compares with Merger for tracking deals, contacts and documents.',
+      'Looking for a Beeper alternative for deal flow? Many dealmakers pair Beeper with a spreadsheet. How that setup compares with Merger for deals, contacts and documents.',
     dek: 'A unified inbox fixes “too many apps.” A spreadsheet holds the pipeline. Here is what that pairing does well and what still falls between them.',
     published: PUBLISHED,
     readMinutes: 5,
@@ -518,7 +607,7 @@ export const batch2 = [
       {
         heading: 'When Merger fits better',
         blocks: [
-          'If the copying is where things slip, Merger removes that step by keeping the deal, the people and the paperwork in the same workspace as the conversation. It is early, runs on Windows today, and is opening to dealmakers by invitation.',
+          'If the copying is where things slip, Merger removes that step by keeping the deal, the people and the paperwork in the same workspace as the conversation. It is early, and runs on Windows and iPhone.',
         ],
       },
     ],

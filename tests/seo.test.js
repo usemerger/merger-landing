@@ -74,3 +74,32 @@ describe('homepage structured data', () => {
     expect(SHORT_DESCRIPTION.length).toBeLessThanOrEqual(170);
   });
 });
+
+import { verticals, verticalText } from '../app/for/verticals';
+import { getArticle } from '../app/playbooks/content';
+
+describe('Merger for … pages', () => {
+  it('have unique slugs and link to Playbooks that exist', () => {
+    const slugs = verticals.map((v) => v.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const v of verticals) {
+      expect(v.slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+      expect(v.description.length).toBeLessThanOrEqual(200);
+      expect(getArticle(v.playbook), v.slug).not.toBeNull();
+      for (const r of v.related) expect(getArticle(r), `${v.slug} → ${r}`).not.toBeNull();
+      expect(v.faqs.length).toBeGreaterThanOrEqual(3);
+    }
+  });
+  it('stay inside the claim rules', () => {
+    const banned = [...BANNED, /\bi ?message\b/i, /\bSMS\b/, /\$\d/, /\bfree\b/i, /customer(s)? (say|said|told)/i, /automatically/i];
+    for (const v of verticals) for (const pattern of banned) expect(verticalText(v), `${v.slug} matched ${pattern}`).not.toMatch(pattern);
+  });
+  it('are in the sitemap and llms.txt', () => {
+    const urls = sitemap().map((e) => e.url);
+    const index = llmsIndex();
+    for (const v of verticals) {
+      expect(urls).toContain(`https://usemerger.com/for/${v.slug}`);
+      expect(index).toContain(`(https://usemerger.com/for/${v.slug})`);
+    }
+  });
+});

@@ -7,6 +7,7 @@
 
 import { faqs } from '../landingContent';
 import { articles } from '../playbooks/content';
+import { verticals } from '../for/verticals';
 import { ALPHA_OFFER, ANNUAL_OFFER } from './billingOffer';
 import { APP_STORE_URL, AUDIENCES, DEFINITION, NETWORKS, SITE } from './seo';
 
@@ -62,6 +63,10 @@ export function llmsIndex() {
     `- [API & MCP documentation](${SITE}/developers): connect ChatGPT or Claude to your Merger contacts and deals`,
     `- [Alpha terms](${SITE}/terms) and [Privacy policy](${SITE}/privacy)`,
     '',
+    '## Who Merger is for',
+    '',
+    ...verticals.map((v) => `- [${v.name}](${SITE}/for/${v.slug}): ${v.description}`),
+    '',
     ...sections.flatMap((s) => [s, '']),
     '## Optional',
     '',
@@ -94,6 +99,20 @@ export function llmsFull(illustrativeNote) {
     '',
     ...faqs.flatMap((faq) => [`### ${faq.question}`, '', faqAnswer(faq), '']),
   ];
+  for (const v of verticals) {
+    parts.push(
+      '---', '',
+      `# ${v.title}`, '',
+      `URL: ${SITE}/for/${v.slug}`, '',
+      v.intro, '',
+      '## Where it breaks today', '',
+      ...v.pains.map(([title, text]) => `- **${title}.** ${text}`), '',
+      '## How Merger helps', '',
+      ...v.fit.map((item) => `- ${abs(item)}`), '',
+      '## Questions', '',
+      ...v.faqs.flatMap(([q, a]) => [`### ${q}`, '', abs(a), '']),
+    );
+  }
   for (const article of articles) {
     parts.push(
       '---', '',

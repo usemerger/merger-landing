@@ -1,4 +1,5 @@
 import { articles } from './playbooks/content';
+import { verticals } from './for/verticals';
 
 const SITE = 'https://usemerger.com';
 
@@ -10,6 +11,7 @@ const SITE_UPDATED = '2026-10-27';
 export default function sitemap() {
   const pages = [
     { path: '/', priority: 1 },
+    { path: '/for', priority: 0.8 },
     { path: '/playbooks', priority: 0.8 },
     { path: '/developers', priority: 0.5 },
     { path: '/support', priority: 0.4 },
@@ -24,5 +26,12 @@ export default function sitemap() {
     priority: 0.7,
   }));
 
-  return [...pages, ...posts];
+  const audiences = verticals.map((v) => ({
+    url: `${SITE}/for/${v.slug}`,
+    lastModified: SITE_UPDATED,
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  return [...pages, ...audiences, ...posts];
 }
