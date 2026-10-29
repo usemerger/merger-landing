@@ -433,4 +433,214 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-10-30 ───────────────────────────────────────────────────────────
+  {
+    slug: 'independent-sponsor-founder-conversation-across-three-apps',
+    type: T.useCase,
+    audience: 'Independent sponsors',
+    title: 'How an independent sponsor keeps one founder conversation together across LinkedIn, WhatsApp and Signal',
+    description:
+      'An illustrative walkthrough: a founder sale starts on LinkedIn, moves to WhatsApp, then to Signal. How one workspace keeps the deal, the people and the next step together.',
+    dek: 'The deal started on LinkedIn. Two weeks later it lives in three apps, and the one message that matters is sitting in the app nobody checked.',
+    published: '2026-10-30',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The founder',
+        blocks: [
+          'Marcus is an independent sponsor. He has no committed fund. He finds a business, negotiates the deal, then brings in equity partners to close it. That means his pipeline is a handful of founder conversations at a time, and each one is worth months of work.',
+          'In early spring he sends a LinkedIn message to the founder of a regional commercial cleaning company. The founder, Dana, replies a week later: she is open to a conversation about a sale, not this year, maybe next. Marcus books a call.',
+          'After the call Dana says it is easier to text her on WhatsApp. Two weeks later, after a second call with her accountant on the line, she asks to move the conversation to Signal because that is where she talks to her advisors. Nothing about this is unusual. Founders pick the app they are comfortable with, and they change their minds.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The history splits three ways.** The first conversation about why she might sell is on LinkedIn. Her rough revenue numbers are on WhatsApp. The question about terms is on Signal. No single app holds the whole story.',
+              '**The important message lands in the quiet app.** Marcus checks WhatsApp twenty times a day. Signal he opens once a week. Dana’s question, “before we go further, can we talk terms on Friday?”, sits unread for two days.',
+              '**The accountant is a name in a voice call.** Dana’s accountant joined the second call. His email came in a WhatsApp message afterwards, and it is now a long scroll up.',
+              '**Partners ask for a summary he has to rebuild.** When an equity partner asks where things stand, Marcus scrolls three apps to piece together a timeline he already lived through.',
+            ],
+          },
+          'None of this is a lack of discipline. Each app is built to hold its own conversations, not to hold a deal that moves between them.',
+        ],
+      },
+      {
+        heading: 'The same three weeks, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'All three apps in one list',
+                text: 'Marcus connects the LinkedIn, WhatsApp and Signal accounts he already uses. Dana’s three threads sit in the same list as everything else, newest first. When her Signal message arrives it shows up where he is already looking, and he replies on Signal from the same screen.',
+              },
+              {
+                title: 'A suggested deal, reviewed before it is filed',
+                text: 'With his own Anthropic API key connected, Claude flags the LinkedIn thread as a possible deal and shows the message behind the suggestion. Marcus reviews it, names it “Commercial cleaning, founder sale” and files it on his Deal Desk. Nothing goes on the desk until he approves it.',
+              },
+              {
+                title: 'One deal, every conversation',
+                text: 'As the conversation moves to WhatsApp and then to Signal, Marcus attaches each thread to the same deal. The deal now carries the whole history, in order, whichever app each part happened in.',
+              },
+              {
+                title: 'The accountant becomes a contact',
+                text: 'The WhatsApp message with the accountant’s details becomes a Rolodex contact, linked to the message it came from and to the deal. When the accountant later sends a corrected email address, Marcus updates the record instead of creating a second one.',
+              },
+              {
+                title: 'One next step, written on the deal',
+                text: 'After the second call the deal carries a single next step: answer Dana’s terms question by Friday. When Friday comes, the step is in front of him, and so is the Signal thread it came from.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the partner asks for an update',
+        blocks: [
+          'Three weeks in, an equity partner Marcus has worked with before asks where the cleaning company stands. In the old way of working, the answer would be a twenty-minute scroll and a long voice note.',
+          'Instead Marcus opens the deal. The first LinkedIn exchange, the revenue numbers from WhatsApp and the terms question from Signal are all attached, in order. The accountant is a contact on the deal. The next step is dated. He writes a five-line summary and sends it on the app the partner prefers.',
+          'When it is time for a mutual NDA before Dana shares her financials, Marcus opens his own DocuSign account inside Merger. Dana’s and the accountant’s details come from the Rolodex rather than from a screenshot. He reviews the envelope and sends it from DocuSign as usual.',
+        ],
+      },
+      {
+        heading: 'What to do when a conversation changes apps',
+        blocks: [
+          'Whether or not you use software for it, the moment a founder says “text me here instead” is the moment the deal is most likely to split. A short routine keeps it whole.',
+          {
+            type: 'list',
+            items: [
+              '**Reply in the new app the same day.** A short “got it, talk here from now on” confirms the switch and puts the first message in the new thread.',
+              '**Write a one-line handover.** Note where the last useful detail lives: “revenue figures in WhatsApp, Apr 12”. Future you will thank you.',
+              '**Move the people, not just the chat.** If an advisor or accountant joined along the way, save their details now, with a note on where they came from.',
+              '**Keep the next step in one place.** Not in each app. One place, with a date.',
+              '**Check the quiet app on purpose.** If a founder moved to an app you rarely open, add it to the apps you check every morning until the deal is done.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Questions sponsors usually ask',
+        blocks: [
+          '**Do I have to ask founders to change apps?** No. The point is the opposite. You meet them where they are, and the workspace keeps the deal together behind the scenes.',
+          '**Does Claude decide which conversations are deals?** No. Claude can flag a thread that looks like a possible deal and show you why. You decide what gets filed, and everything else stays in your inbox.',
+          '**What if part of the conversation happened on a call?** Add a short note to the deal after the call. The messages carry the written history; the note carries what was said out loud.',
+          '**Can I still reply from the original apps on my phone?** Yes. Your accounts stay yours. Merger sits on top of the apps you already use.',
+        ],
+      },
+      {
+        heading: 'The habit underneath',
+        blocks: [
+          'Deals with founders are long, personal and spread across whatever app the founder likes this month. The habit that keeps them intact is simple: one deal, one record, every conversation attached, one dated next step. For the weekly side of it, see [how to run a 30-minute deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), and for writing a next step that actually moves, see [the guide to next steps](/playbooks/write-a-next-step-for-every-deal).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: 'write-a-next-step-for-every-deal',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to write a next step for every deal, and why the date matters more than the step',
+    description:
+      'A practical guide for dealmakers who work from chat: what a good next step looks like, who owns it, how to date it, and what to do when you cannot write one.',
+    dek: 'Count your live deals. Now count the ones with a clear next step. The gap between those two numbers is where a pipeline leaks.',
+    published: '2026-10-30',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The quick test',
+        blocks: [
+          'Write down every deal you would call live today. Then, next to each one, write the very next thing that has to happen, who has to do it and by when.',
+          'Most people who run deals from chat find that a third or more of their list has no clear answer. Those are not slow deals. They are deals waiting on something nobody wrote down: a buyer waiting on numbers, a seller waiting on a call back, an NDA nobody sent.',
+          'The fix is one rule. Every live deal gets exactly one next step, and a date. This guide covers how to write them so they are useful, and what to do with the deals where you cannot.',
+        ],
+      },
+      {
+        heading: 'What a good next step looks like',
+        blocks: [
+          'A next step is a single action that moves the deal forward. It has four parts.',
+          {
+            type: 'list',
+            items: [
+              '**A verb.** Send, call, ask, chase, decide. “Follow up” is not a verb you can do; “ask the seller for the 2025 P&L” is.',
+              '**One owner.** You, or a named person on the other side. If the step is theirs, the real step is yours: when you will check.',
+              '**A date.** Not “soon”. A day of the week is enough.',
+              '**Where it happens.** The app or the thread. “Reply in the Telegram thread” saves you hunting for it on the day.',
+            ],
+          },
+          {
+            type: 'table',
+            head: ['Weak', 'Strong'],
+            rows: [
+              ['Follow up with buyer', 'Send the buyer the updated numbers on WhatsApp by Tuesday'],
+              ['Waiting on seller', 'Check with the seller on Thursday if the rent roll has not arrived'],
+              ['NDA', 'Send the mutual NDA from DocuSign once the entity name is confirmed, Wednesday'],
+              ['Circle back', 'Ask the founder on Signal whether Friday works for a terms call'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why the date matters more than the step',
+        blocks: [
+          'A step without a date is a wish. It sits on the list looking active while the other side quietly assumes you lost interest.',
+          'The date does two jobs. It tells you when to act, and it tells you when a deal has gone quiet. If the date passes and nothing happened, you have learned something, and you learned it on the day rather than three weeks later.',
+          'Dates can be rough. “This week” is better than nothing, and “Tuesday” is better than “this week”. What matters is that a date exists, so a missed one is visible.',
+        ],
+      },
+      {
+        heading: 'Only one',
+        blocks: [
+          'It is tempting to write a list of five things for a deal. Resist it. Five steps means none of them is the next one, and the list goes stale the moment the first is done.',
+          'Write the one action that unblocks everything else. When it is done, write the next one. The record of finished steps becomes the history of the deal, and the open step is always the answer to “where are we?”.',
+        ],
+      },
+      {
+        heading: 'When you cannot write one',
+        blocks: [
+          'Sometimes you sit down to write the next step and nothing comes. That is useful information. Usually it means one of three things.',
+          {
+            type: 'list',
+            items: [
+              '**The deal is waiting on the other side, and you have not set a check.** Write the check: “ask the buyer on Friday if the committee met”.',
+              '**The deal is over and nobody said so.** Close it. A short, polite message to the other side keeps the relationship warm and your list honest.',
+              '**You do not know what the other side wants.** Then the next step is a question. Ask it.',
+            ],
+          },
+          'A deal with no possible next step does not belong on the live list. Move it off, and keep the conversation in your inbox for the day it comes back.',
+        ],
+      },
+      {
+        heading: 'Keep the step next to the conversation',
+        blocks: [
+          'The most common reason next steps get lost is that they live somewhere different from the deal: a notes app, a paper pad, the back of your mind. When the date comes, you have the step but not the context, or the context but not the step.',
+          'Put the step where the conversation is. In Merger that is the deal on your Deal Desk, with the source conversations attached, so the step and the thread it came from are on the same screen. Claude can flag messages that look like a possible deal; you approve what gets filed and you write the next step. The same habit works with a spreadsheet, as long as each row links back to the right chat.',
+        ],
+      },
+      {
+        heading: 'Make it a weekly habit',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Once a week, list every live deal', text: 'Every deal, every app. If you need to scroll a chat to remember a deal exists, it is a sign the list needs a home.' },
+              { title: 'Check every date', text: 'Anything past its date gets action today or an honest new date.' },
+              { title: 'Write the missing steps', text: 'Every deal without a step gets one, or comes off the list.' },
+              { title: 'Look one week ahead', text: 'Which steps need a document, a number or a person you have not lined up yet?' },
+            ],
+          },
+          'It takes about half an hour. The full routine is in [the 30-minute weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), and [these follow-up messages](/playbooks/follow-up-messages-that-restart-a-quiet-deal) help when a date has already slipped.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
