@@ -643,4 +643,202 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-10-31 ───────────────────────────────────────────────────────────
+  {
+    slug: 'weekly-buyer-update-for-your-seller',
+    type: T.list,
+    audience: 'Business brokers and M&A advisors',
+    title: '8 lines for a weekly buyer update that answers “where are we?” before the seller asks',
+    description:
+      'A short weekly update a broker or advisor can send a seller, line by line, built from buyer conversations spread across WhatsApp, LinkedIn and Telegram.',
+    dek: 'Sellers do not want a report. They want to know the deal is moving. Eight lines, sent on the same day every week, do more for the relationship than a long call.',
+    published: '2026-10-31',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the question keeps coming',
+        blocks: [
+          'Every seller asks it eventually, usually by text and usually at an awkward moment: “Where are we with buyers?” It is a fair question. They have handed you something they spent years building, and from their side the process is silent.',
+          'The trouble is that the honest answer is scattered. One buyer is on WhatsApp, another prefers LinkedIn messages, a third sits in a Telegram group with two other advisors. Pulling a straight answer together takes twenty minutes of scrolling, and the seller can hear the hesitation.',
+          'The fix is to answer before they ask. A weekly update, sent on the same day, in the app the seller already uses, turns the anxious text into a routine. Here are the eight lines that make it work. Each one is a single sentence. If a line has nothing new, say so in four words and move on.',
+        ],
+      },
+      {
+        heading: '1. The headline',
+        blocks: [
+          '**What it says:** one sentence on the state of the process. “Three buyers still active, one new, one dropped.”',
+          'Lead with the number. Sellers read the first line and skim the rest, so the first line should stand on its own. If the week was quiet, say that too. “Quiet week, nothing lost” is reassuring when it is true.',
+        ],
+      },
+      {
+        heading: '2. Who is new',
+        blocks: [
+          '**What it says:** any buyer who entered the process this week, described by type, not by name unless the seller has agreed. “A regional operator who already owns two similar businesses.”',
+          'Keep it to what the seller needs to judge fit. The full profile can wait for the call.',
+        ],
+      },
+      {
+        heading: '3. Who moved forward',
+        blocks: [
+          '**What it says:** the buyers who took a real step. Signed the NDA, asked for the next set of numbers, booked a site visit.',
+          'Only count steps the buyer took, not steps you took. “I sent the deck to five buyers” is activity. “Two asked follow-up questions about customer concentration” is progress.',
+        ],
+      },
+      {
+        heading: '4. Who went quiet',
+        blocks: [
+          '**What it says:** any buyer with no reply for a week, and what you are doing about it. “One buyer quiet since last Thursday. I followed up Monday and will close the loop Friday if nothing comes back.”',
+          'Sellers find silence more worrying than bad news. Naming the quiet buyer, with a plan, shows you are watching. [Seven follow-ups that restart a quiet thread](/playbooks/follow-up-messages-that-restart-a-quiet-deal) can help with the plan.',
+        ],
+      },
+      {
+        heading: '5. Who dropped out, and why',
+        blocks: [
+          '**What it says:** any buyer who passed, with the reason they gave. “The family office passed. They want a business that does not depend on the owner for sales.”',
+          'This is the most useful line in the update. A pattern in the reasons tells the seller something about how the business reads from outside, and it often comes up in pricing talks later.',
+        ],
+      },
+      {
+        heading: '6. The questions buyers are asking',
+        blocks: [
+          '**What it says:** the one or two questions that keep coming up. “Two buyers asked how many customers make up half of revenue.”',
+          'Repeated questions are a to-do list for the seller. If three buyers ask the same thing, the answer belongs in the materials, not in individual replies.',
+        ],
+      },
+      {
+        heading: '7. What you need from the seller',
+        blocks: [
+          '**What it says:** a specific request with a date. “Could you send the customer list by revenue band by Wednesday?”',
+          'One request is better than four. If you need more, pick the item that unblocks the most buyers and save the rest for next week.',
+        ],
+      },
+      {
+        heading: '8. What happens next week',
+        blocks: [
+          '**What it says:** the one or two things you expect to happen before the next update. “Site visit with the operator on Tuesday. First indications of interest due Friday.”',
+          'This line sets expectations, so next week’s update has something to report against. If a date slips, the next update says so plainly.',
+        ],
+      },
+      {
+        heading: 'A sample update',
+        blocks: [
+          '“Quick Friday update. Three buyers active, one new, one dropped. New: a regional operator who owns two similar businesses. Moved forward: two buyers asked about customer concentration, one booked a site visit for Tuesday. Quiet: one buyer since Thursday; I followed up Monday. Dropped: the family office, because sales still run through you. Could you send the customer list by revenue band by Wednesday? Next week: site visit Tuesday, first indications due Friday.”',
+          'That is under a hundred words. It fits in one message, in whatever app the seller texts you on.',
+        ],
+      },
+      {
+        heading: 'Where the update comes from',
+        blocks: [
+          'The update is only as easy as the record behind it. If each buyer lives in a different app, writing those eight lines means opening every app and scrolling. That is the twenty minutes the seller can hear.',
+          'Two habits make it quick. Keep one line per buyer with the last thing they said and the date. And keep each buyer conversation attached to the deal, so you reread what they actually wrote instead of what you remember.',
+          'In Merger, the messaging accounts you connect sit in one list, and a deal on the Deal Desk keeps the conversations it came from, the people on each side and one next step. Writing the Friday update becomes a read of one deal rather than a tour of five apps. You still write and send the update yourself. A [30-minute weekly review](/playbooks/run-a-weekly-deal-review-from-your-messages) is a good place to do it.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: 'broker-group-chats-mute-folders-or-deal-desk',
+    type: T.comparison,
+    audience: 'Buyers and brokers in listing groups',
+    title: 'Muting, folders or a deal desk: three ways to work deal flow from broker group chats',
+    description:
+      'Listing groups on Telegram and WhatsApp surface deals early and bury them fast. How muting, chat folders and a deal desk compare, and when each one is enough.',
+    dek: 'A busy broker group can post nine listings before breakfast and two hundred messages by lunch. Here is how the three common ways of coping compare, and what each one misses.',
+    published: '2026-10-31',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Method', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Muting groups', 'Protecting your attention from constant notifications', 'You see the listing hours late, or not at all'],
+              ['Chat folders', 'Keeping deal groups apart from friends and family', 'Organizes chats, not listings; the good one still scrolls away'],
+              ['A deal desk', 'Pulling the listings that fit out of the group and into one list', 'Needs a quick daily decision about what counts'],
+            ],
+          },
+          'Muting and folder features vary by app and change over time. This comparison is about how each method fits a buyer’s or broker’s week, not about any one app’s settings.',
+        ],
+      },
+      {
+        heading: 'Why groups are different',
+        blocks: [
+          'Direct messages are about one relationship. Groups are a stream. In a listing group, a dozen brokers and buyers post opportunities, ask for comps, share news and occasionally argue. The signal is real: many off-market deals show up in a group before they show up anywhere else. The noise is real too.',
+          'Most people are in several of these groups across more than one app. A buy-side searcher might follow two Telegram groups, a WhatsApp community for one region and a Slack channel run by a lender. The question is not whether to be in them. It is how to catch the two listings a day that fit what you buy.',
+        ],
+      },
+      {
+        heading: 'Muting groups',
+        blocks: [
+          'Muting is the first move for almost everyone, and it is the right one for your sanity. A group that buzzes forty times an hour will wreck any focused work.',
+          'The cost is timing. A muted group becomes something you check when you remember, and in a busy group the listing from 8 AM is a long scroll up by noon. For competitive listings, a few hours can decide whether you get the first call with the broker.',
+          '**Enough when:** the group is low volume, or listings in it are rarely time sensitive, and you have a fixed time each day to read it properly.',
+        ],
+      },
+      {
+        heading: 'Chat folders',
+        blocks: [
+          'Folders, or the equivalent in your app, group chats so the deal groups sit together and away from personal chats. Opening the “Deals” folder each morning is a solid habit, and it beats hunting through one long list.',
+          'But a folder organizes chats, not listings. Inside the folder, each group is still a stream. The HVAC listing that fits your criteria sits between a question about lender appetite and a link to an article. And folders are per app, so a Telegram folder does nothing for the WhatsApp community or the Slack channel.',
+          '**Enough when:** most of your groups are in one app, and you read them at least once a day.',
+        ],
+      },
+      {
+        heading: 'A deal desk',
+        blocks: [
+          'A deal desk changes the unit from the chat to the deal. When a listing in a group fits, it becomes a deal record: the message it came from, the broker who posted it and one next step. The group keeps streaming. The desk holds the handful of listings worth a call.',
+          'In Merger, the messaging accounts you connect sit in one list, groups included where the service allows it. With your own Anthropic API key connected, Claude can flag a message that looks like a possible deal and show you where it came from. You decide whether it goes on the Deal Desk. The broker who posted it can become a Rolodex contact linked to that message, which matters because the broker who sends one good listing usually sends the next.',
+          'The cost is a daily decision. A flag is a suggestion, not a verdict, and a desk full of maybes is as noisy as the group. The habit that works: review suggestions once or twice a day, approve the listings you would actually call about, dismiss the rest.',
+          '**Better when:** you follow groups in more than one app, listings are time sensitive, or you need to show a partner which opportunities you are pursuing.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Muting', 'Folders', 'Deal desk'],
+            rows: [
+              ['Protect your attention', 'Yes', 'Partly', 'Yes, groups stay in their own list'],
+              ['See a fitting listing early', 'Only if you check', 'Only if you check', 'Flagged for your review'],
+              ['Groups in more than one app', 'Mute each one', 'One folder per app', 'One inbox'],
+              ['Keep the original listing findable', 'Scroll up', 'Scroll up', 'Attached to the deal'],
+              ['Remember which broker sent it', 'In your head', 'In your head', 'Contact linked to the message'],
+              ['Know the next step', 'In your head', 'In your head', 'Written on the deal'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Using them together',
+        blocks: [
+          'These are not either-or. Keep groups muted, so they never interrupt a call. Keep a deals folder in the app you use most, for the days you want to read the whole stream. And let the desk hold the listings you are actually pursuing.',
+          'A simple test: name the last three listings from your groups that fit your criteria, who posted each one and what you did next. If you can do it in under a minute, your current setup works. If you have to go looking, the groups have outgrown it. The [commercial real estate walkthrough](/playbooks/commercial-real-estate-broker-off-market-listing-groups) shows one broker’s version of this week.',
+        ],
+      },
+      {
+        heading: 'A ten-minute morning routine for group deal flow',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Write down what fits', text: 'Three or four criteria you can check in a few seconds: sector, region, size, deal type. Pin them somewhere you will see them.' },
+              { title: 'Read each group once', text: 'Muted all night, read once in the morning. Skim for listings only; skip the discussion.' },
+              { title: 'Pull out the fits', text: 'Anything that matches goes into one list with the original message and the broker’s name.' },
+              { title: 'Reply in the group’s app', text: 'Message the broker directly, in the app they posted on. A fast, specific reply gets the first call.' },
+              { title: 'Set one next step', text: 'For each listing you pursue, a verb and a date. Drop the rest without guilt.' },
+            ],
+          },
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
