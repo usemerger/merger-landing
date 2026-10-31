@@ -59,6 +59,20 @@ describe('campaigns dashboard', () => {
     expect(schedule).toHaveTextContent('People emailed, 3 days1,000');
   });
 
+  it('shows total emails today against the daily target when one is set', async () => {
+    api.adminCampaigns.mockResolvedValue({ ...report, ramp: { ...report.ramp, emailTarget: 2000, emailsToday: 845 } });
+    render(<AdminCampaignsPage />);
+    const schedule = await screen.findByRole('region', { name: 'Sending schedule' });
+    expect(schedule).toHaveTextContent('Emails today, all flows845 target 2,000');
+    expect(schedule).toHaveTextContent('New people invited today420 of 1,000');
+  });
+
+  it('hides the email target when none is set', async () => {
+    render(<AdminCampaignsPage />);
+    const schedule = await screen.findByRole('region', { name: 'Sending schedule' });
+    expect(schedule).not.toHaveTextContent('Emails today, all flows');
+  });
+
   it('refuses non-staff', async () => {
     api.adminCampaigns.mockRejectedValue(new api.ApiError(403));
     render(<AdminCampaignsPage />);
