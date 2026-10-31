@@ -841,4 +841,186 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-11-01 ───────────────────────────────────────────────────────────
+  {
+    slug: 'private-credit-originator-loan-requests-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Private credit',
+    title: 'How a private credit originator keeps loan requests from five messaging apps in one pipeline',
+    description:
+      'An illustrative walkthrough: borrower requests arrive on WhatsApp, LinkedIn, Telegram, Slack and Signal. How one workspace keeps each request, its people and its next step together.',
+    dek: 'Borrowers do not fill in intake forms. They send a voice note on WhatsApp at 9 PM and a rent roll on Telegram the next morning.',
+    published: '2026-11-01',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The desk',
+        blocks: [
+          'Priya originates loans for a small private credit fund that lends against commercial real estate and to lower middle market businesses. She is the first conversation a borrower has with the fund. Her job is to find the requests worth pursuing, collect enough to size them, and hand a clean file to the credit committee.',
+          'On paper there is an intake process. In practice, almost nothing arrives through it. Brokers she has known for years message her on WhatsApp. A mortgage advisor she met at a conference sends deals over LinkedIn. A borrower group she belongs to posts requests on Telegram. Her fund’s partners talk in Slack, and one repeat sponsor will only use Signal.',
+          'In a normal week she sees thirty or forty requests. Most are a poor fit. Four or five are worth a call, and one or two will reach committee. The work is not reading the requests. It is making sure the good ones do not get lost among the rest.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The request and the documents arrive in different apps.** The broker describes the loan on WhatsApp. The borrower sends the rent roll on Telegram. The appraisal comes through a LinkedIn message a week later. Nobody sends everything in one place.',
+              '**Good requests sink in group chats.** A refinance that fits the fund’s box is posted in a busy Telegram group at 8 AM. By lunch it is sixty messages up, under a debate about rates.',
+              '**Committee asks for a summary she has to rebuild.** When a partner asks in Slack where a deal stands, Priya scrolls four apps to rebuild a timeline she already lived through.',
+              '**The broker who sent the deal is forgotten.** Six months later, when the loan closes, she cannot remember whether the intro came from the broker or the borrower’s advisor. The person who should get the thank-you, and the next deal, does not.',
+            ],
+          },
+          'None of this is carelessness. Each app is built to hold its own conversations. A loan request that moves between five of them has no natural home.',
+        ],
+      },
+      {
+        heading: 'One inbox before one pipeline',
+        blocks: [
+          'In this composite, Priya starts by connecting the apps where requests actually arrive: WhatsApp, LinkedIn, Telegram, Slack and Signal. Her conversations now sit in one inbox in Merger, in the order they arrived, without her switching apps to check each one.',
+          'This step changes less than people expect and more than they think. The requests are the same. What changes is that the Telegram group and the Signal thread are no longer the apps she forgets to open. Everything is read in the same place, at the same time of day.',
+        ],
+      },
+      {
+        heading: 'Flagged, then approved',
+        blocks: [
+          'With her own Anthropic API key connected, Claude reads her conversations and flags messages that look like a possible deal: a borrower describing a loan, a broker asking whether a request fits, a sponsor asking for terms. A flag is a suggestion. Nothing is filed until Priya reviews it.',
+          'The 8 AM refinance in the Telegram group is flagged. Priya reads it, decides it fits, and approves it onto her Deal Desk. The request becomes a deal with the source conversation attached. When the borrower sends the rent roll later that day, she attaches that conversation to the same deal.',
+          'Most flags she dismisses, and that is the point. The decision about what counts as a real request stays with the person who knows the fund’s box. Claude only makes sure the candidates are in front of her.',
+          {
+            type: 'callout',
+            title: 'Why the review step matters',
+            text: 'A lender’s pipeline is a list of judgments. A tool that filed every mention of a loan would bury the good requests again, just in a different place. Flag, review, approve keeps the list short and real.',
+          },
+        ],
+      },
+      {
+        heading: 'People, not just threads',
+        blocks: [
+          'When the broker introduces the borrower on WhatsApp, Priya saves the borrower as a contact in her Rolodex, linked to the message that introduced them. The broker is already there from an earlier deal.',
+          'Six months later, when the loan closes, the record shows who opened the door. Priya sends the broker a thank-you the same afternoon. In a business where most deal flow comes from a few dozen relationships, that is not a courtesy. It is the next deal.',
+        ],
+      },
+      {
+        heading: 'The term sheet stage',
+        blocks: [
+          'Before the borrower shares financials, the fund asks for a confidentiality agreement. Priya sends the NDA from her own DocuSign account inside Merger, with the borrower’s details coming from the Rolodex contact rather than retyped from a chat. She checks the names once and sends it herself.',
+          'The signed NDA, the conversations and the next step all sit on the same deal. When a partner asks in Slack where the refinance stands, the answer is one screen, and she can reply in the Slack thread without leaving her inbox.',
+        ],
+      },
+      {
+        heading: 'What a week looks like now',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Morning: one pass through the inbox', text: 'Every app, read once. Flags reviewed, most dismissed, a few approved.' },
+              { title: 'Each live request gets one next step', text: 'Ask for the rent roll. Book the sponsor call. Send the NDA. One step and a date.' },
+              { title: 'Documents attached as they arrive', text: 'Whichever app they come through, they join the deal they belong to.' },
+              { title: 'Friday: the committee list', text: 'Every live deal on one screen, with its conversation and its next step. No rebuilding.' },
+            ],
+          },
+          'The [weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages) covers the Friday routine in more detail, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers the Rolodex habit.',
+        ],
+      },
+      {
+        heading: 'What to take from this',
+        blocks: [
+          'Lending runs on relationships, and relationships run on whatever app the other side prefers. You will not move borrowers and brokers onto an intake form. What you can do is read every app in one place, decide quickly which requests are real, and keep each one together with the people and documents that belong to it.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'close-a-dead-deal-without-burning-the-relationship',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to close out a dead deal without burning the relationship',
+    description:
+      'A practical guide for dealmakers who work from chat: how to tell a deal is over, what to send, what to keep, and why a clean close often brings the next deal.',
+    dek: 'Most deals do not end with a no. They end with silence, and a pipeline full of deals nobody has the heart to close.',
+    published: '2026-11-01',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why dead deals stay on the list',
+        blocks: [
+          'Look at your live deals and count the ones where nothing has happened in a month. For most people who run deals from chat, it is a meaningful share of the list.',
+          'They stay for understandable reasons. Closing a deal feels like admitting defeat. The other side might come back. And in a chat app there is no moment where a deal officially ends. The conversation just stops, and the thread slides down the screen.',
+          'The cost is real, though. A list full of dead deals hides the live ones. Your weekly review takes longer, your follow-ups go to people who have moved on, and when someone asks how many deals you are working, the honest answer is unclear even to you.',
+        ],
+      },
+      {
+        heading: 'How to tell a deal is over',
+        blocks: [
+          'A deal is not dead because it is slow. Some of the best deals take a year. Use signals, not feelings.',
+          {
+            type: 'list',
+            items: [
+              '**Two follow-ups with no reply.** One unanswered message is a busy week. Two, spaced a week or more apart, is an answer.',
+              '**The reason for the deal is gone.** The seller decided to keep the business. The buyer closed on something else. The fund’s mandate changed.',
+              '**You cannot write a next step.** If you sit down to write the next action and nothing makes sense, the deal is probably over. The guide on [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers this test.',
+              '**Terms are too far apart, and both sides said so.** Not every gap closes. When both sides have named their limit, it is fine to stop.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Send a closing message',
+        blocks: [
+          'The single most useful habit is to send a short message that closes the loop. It does three things: it ends the ambiguity for both sides, it leaves a good last impression, and it gives the other side an easy way to come back.',
+          'Keep it short, warm and specific. Send it in the app where the conversation happened, not in a new channel.',
+          {
+            type: 'table',
+            head: ['Situation', 'A closing message that works'],
+            rows: [
+              ['No reply after two follow-ups', 'I’ll take the quiet as a not-right-now. I’m closing this out on my side. If timing changes, message me here and we’ll pick it up.'],
+              ['Seller decided not to sell', 'Thanks for being straight with me. If anything changes in a year or two, I’d like to be the first call.'],
+              ['Terms too far apart', 'We’re too far apart on structure to make this work today. I appreciated the time. Happy to look again if the picture changes.'],
+              ['Buyer went with another deal', 'Congratulations on closing. I’ll keep you in mind for anything similar.'],
+            ],
+          },
+          'If you are not sure the deal is dead, say so in the message. “It sounds like the timing is wrong, so I’m pausing this on my side” is honest, and it invites a correction if you read the silence wrong. A surprising number of quiet deals restart with a reply to exactly this kind of message.',
+          'None of these messages asks for anything. That is deliberate. A closing message that is secretly another follow-up reads as pressure, and pressure is what burns relationships.',
+        ],
+      },
+      {
+        heading: 'Keep the record, not the deal',
+        blocks: [
+          'Closing a deal does not mean deleting it. The conversation, the people and the reason it ended are worth keeping, because dead deals come back more often than people expect.',
+          'Before you take it off the live list, write one line: why it ended and what would have to change for it to come back. “Seller not ready; revisit after next year’s numbers” is enough. When the seller messages you eighteen months later, that line and the original thread are the difference between picking up where you left off and starting over.',
+          'Keep the people too. The broker who sent you the deal still sends deals. The buyer who went elsewhere will be buying again. Save them as contacts, linked to the conversation that introduced them, so the relationship outlives the deal.',
+        ],
+      },
+      {
+        heading: 'Make it part of the weekly review',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Sort by last activity', text: 'Every live deal, oldest conversation first.' },
+              { title: 'Apply the signals', text: 'Two unanswered follow-ups, reason gone, no possible next step, terms named and apart.' },
+              { title: 'Send the closing message', text: 'Same day, same app, no ask.' },
+              { title: 'Write the one line and move it off the live list', text: 'Why it ended, and what would bring it back.' },
+            ],
+          },
+          'It adds about five minutes to [the 30-minute weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), and it makes the rest of the review faster.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, a deal on your Deal Desk keeps its source conversations attached, so the closing message goes out in the right thread and the history stays with the deal after you move it off the live list. Contacts in your Rolodex stay linked to the message that introduced them. Claude can flag messages that look like a possible deal, including an old contact who comes back; you decide what goes on the Desk.',
+          'The habit works without any tool, though. What matters is that a dead deal gets a clean ending, a one-line reason and a door left open.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
