@@ -86,7 +86,8 @@ export default function AdminCampaignsPage() {
       <section className="cp-ramp" aria-label="Sending schedule">
         <div className="cp-ramp-head"><div><p className="wa-kicker">Sending schedule</p><h2>{ramp.campaign}</h2></div><span className={`cp-status cp-status-${statusTone}`}>{statusLabel}</span></div>
         <dl className="cp-ramp-grid">
-          <div><dt>Sent today</dt><dd>{n(ramp.sentToday)} <span>of {n(ramp.todayQuota)}</span></dd></div>
+          {ramp.emailTarget > 0 && <div><dt>Emails today, all flows</dt><dd>{n(ramp.emailsToday)} <span>target {n(ramp.emailTarget)}</span></dd></div>}
+          <div><dt>New people invited today</dt><dd>{n(ramp.sentToday)} <span>of {n(ramp.todayQuota)}</span></dd></div>
           <div><dt>Still to invite</dt><dd>{n(data.remaining)}</dd></div>
           <div><dt>Hard bounce rate, 3 days</dt><dd>{pct(health.bounced, health.sent)} <span>limit 3%{health.soft_bounced ? ` · ${n(health.soft_bounced)} soft, not counted` : ''}</span></dd></div>
           <div><dt>People emailed, 3 days</dt><dd>{n(health.sent)}</dd></div>
