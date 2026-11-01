@@ -1023,7 +1023,7 @@ export const daily = [
       },
     ],
   },
-  // ── 2026-11-02 ───────────────────────────────────────────────────────────
+  // ── 2026-11-01 (b) ───────────────────────────────────────────────────────────
   {
     slug: 'places-deal-terms-hide-in-your-chats',
     type: T.list,
@@ -1032,7 +1032,7 @@ export const daily = [
     description:
       'Prices, dates and conditions agreed in WhatsApp, Telegram and LinkedIn messages often end up somewhere nobody can find them. Eight common hiding places and a fix for each.',
     dek: 'The number was agreed. Everyone remembers agreeing it. Nobody can find where. Here are the eight places terms usually go missing in a chat-first deal, and the small habit that brings each one back.',
-    published: '2026-11-02',
+    published: '2026-11-01',
     readMinutes: 6,
     illustrative: false,
     sections: [
@@ -1133,7 +1133,7 @@ export const daily = [
     description:
       'Buyers on WhatsApp, sellers on Telegram, advisors on LinkedIn. Comparing three ways to handle it: move everyone to one channel, reply in each app, or one inbox for all of them.',
     dek: 'Every dealmaker has tried asking a counterparty to switch apps. Sometimes it works. Often it costs a little momentum each time. Here is how the three common approaches compare.',
-    published: '2026-11-02',
+    published: '2026-11-01',
     readMinutes: 6,
     illustrative: false,
     sections: [
