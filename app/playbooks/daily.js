@@ -1023,4 +1023,192 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-02 ───────────────────────────────────────────────────────────
+  {
+    slug: 'places-deal-terms-hide-in-your-chats',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '8 places deal terms hide in your chats, and how to pull each one out',
+    description:
+      'Prices, dates and conditions agreed in WhatsApp, Telegram and LinkedIn messages often end up somewhere nobody can find them. Eight common hiding places and a fix for each.',
+    dek: 'The number was agreed. Everyone remembers agreeing it. Nobody can find where. Here are the eight places terms usually go missing in a chat-first deal, and the small habit that brings each one back.',
+    published: '2026-11-02',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why terms get lost in chat',
+        blocks: [
+          'In a deal that runs on email, the terms tend to end up in an attachment or a long thread you can search. In a deal that runs on messaging apps, they end up wherever the conversation happened to be that day. A price in a voice note. A closing date in a group chat. A condition in a reply to a reply.',
+          'None of that is a problem while the deal is moving. It becomes one the moment someone asks, “What did we agree?” and you have to reconstruct it from memory across four apps. The list below is about catching terms when they are said, not hunting for them later.',
+          'One rule underlies every fix: a term is not agreed until it exists in writing, in one place, next to the deal it belongs to.',
+        ],
+      },
+      {
+        heading: '1. Voice notes',
+        blocks: [
+          'A two-minute voice note from a seller can carry the price, the timeline and a condition, all in one breath. It is fast for them and invisible for everyone else. You cannot search a voice note, quote it or forward the relevant ten seconds.',
+          '**Fix:** reply in text with the number. “Confirming: asking price stays where you said, close targeted for Q1, owner stays on for six months.” If the reply is wrong, they will correct it now, not at the letter of intent.',
+        ],
+      },
+      {
+        heading: '2. Screenshots in the camera roll',
+        blocks: [
+          'Someone sends a screenshot of a spreadsheet or a term summary. You save it, or it saves itself. Three weeks later it is one of four hundred images, with no name and no link to the conversation it came from.',
+          '**Fix:** when an image carries terms, type the two or three numbers that matter into the deal record the same day, with the date and who sent it. The screenshot is the evidence. Your note is the part you will actually read.',
+        ],
+      },
+      {
+        heading: '3. Group chats',
+        blocks: [
+          'A buyer confirms an earnest money figure in a group with the broker, the seller’s advisor and two people nobody can place. By lunch the message is sixty replies up, under a debate about rates.',
+          '**Fix:** move the agreement, not the conversation. Reply directly to the person in the same app: “Just to confirm what you said in the group.” Now the term lives in a one-to-one thread you can find, and the group stays a group.',
+        ],
+      },
+      {
+        heading: '4. Edited and deleted messages',
+        blocks: [
+          'Many messaging apps let people edit or delete messages, and how visible that is varies by app. A number that was there on Tuesday can look different on Thursday, with nothing more than a small “edited” label, if that.',
+          '**Fix:** treat a message as a draft and your confirmation as the record. When a term matters, restate it in your own message. If something later changes, ask about it directly rather than relying on what the thread shows today.',
+        ],
+      },
+      {
+        heading: '5. A reply to a reply',
+        blocks: [
+          'Quoted replies are useful until they nest. “Yes to that” only means something if you can still see what “that” was, and in a long thread the quoted message may be days up and two topics ago.',
+          '**Fix:** answer terms with full sentences. “Yes to the six-month transition” costs five extra words and survives being read out of context, which is how every term is eventually read.',
+        ],
+      },
+      {
+        heading: '6. The other app',
+        blocks: [
+          'The price was set on WhatsApp. The closing date came up on LinkedIn. The condition about the lease arrived on Signal, because that is where the seller’s partner lives. Each app holds a third of the deal, and none of them knows about the others.',
+          '**Fix:** keep one deal record that every app feeds into. It can be a document, a spreadsheet row or a deal workspace. What matters is that you write each term into the same place, with the app and date it came from.',
+        ],
+      },
+      {
+        heading: '7. Your own head',
+        blocks: [
+          'Some terms are only ever said on a call. “We can live with a small holdback.” Nobody writes it down, and in a month both sides remember a slightly different number.',
+          '**Fix:** after any call where a term moved, send a short message in the app where the deal lives: “Good call. Noting what we discussed: holdback is on the table, size to be agreed.” It turns a memory into a record both sides have seen.',
+        ],
+      },
+      {
+        heading: '8. A message you meant to answer later',
+        blocks: [
+          'The buyer asks a direct question about terms while you are between meetings. You read it, plan to answer properly, and then forty other messages arrive. The question is unanswered, and the term it was about is undecided.',
+          '**Fix:** when you read a term question and cannot answer now, give it a next step right away, even a rough one: “Answer the holdback question by 10 tomorrow.” The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the habit.',
+        ],
+      },
+      {
+        heading: 'A five-minute end-of-day check',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'List the deals that moved today', text: 'Any deal where a price, date or condition came up, in any app.' },
+              { title: 'Find the sentence', text: 'For each one, find the message where the term was said. If it was a voice note or a call, there is no sentence yet.' },
+              { title: 'Write the confirmation', text: 'One short message, in the app the deal lives in, that restates the term in full.' },
+              { title: 'Copy it to the deal record', text: 'Same words, with the date and the person who agreed it.' },
+            ],
+          },
+          'It sounds like admin. It is cheaper than the call where both sides discover they agreed different things.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the WhatsApp price, the LinkedIn date and the Signal condition are read in the same place. A deal on your Deal Desk keeps its source conversations attached, so the confirmation you sent is next to the deal it belongs to. With your own Anthropic API key, Claude can flag messages that look like a possible deal; you decide what goes on the Desk.',
+          'The habit matters more than the tool, though. Terms that are restated in writing, in one place, survive the deal. Terms that live in voice notes and memory rarely do.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'reply-in-their-app-vs-move-everyone-to-one-channel',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Reply in their app or move everyone to one channel? How to handle counterparties on different messaging apps',
+    description:
+      'Buyers on WhatsApp, sellers on Telegram, advisors on LinkedIn. Comparing three ways to handle it: move everyone to one channel, reply in each app, or one inbox for all of them.',
+    dek: 'Every dealmaker has tried asking a counterparty to switch apps. Sometimes it works. Often it costs a little momentum each time. Here is how the three common approaches compare.',
+    published: '2026-11-02',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Approach', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Move everyone to one channel', 'One searchable place for the whole deal', 'Counterparties reply slower, or keep using their app anyway'],
+              ['Reply in each app', 'Fast replies, no friction for the other side', 'The deal is split across apps and you carry the map in your head'],
+              ['One inbox for every app', 'Replies stay in their app, and you read everything in one place', 'You still need a habit for deciding what is a deal'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why counterparties pick the app',
+        blocks: [
+          'People choose a messaging app for reasons that have nothing to do with your deal. A seller uses WhatsApp because that is where their family is. A secondaries buyer lives on Telegram because their whole desk does. A banker answers on LinkedIn because it is open all day. A founder’s co-investor insists on Signal.',
+          'Each of those choices is reasonable on its own. Together they mean that a single deal with four people can involve four apps. The question is who carries the cost of that: the counterparties, or you.',
+        ],
+      },
+      {
+        heading: 'Option 1: move everyone to one channel',
+        blocks: [
+          'The traditional answer is to pick a channel, often the one you prefer, and ask everyone to move there. “Can we take this to a group?” or “Let’s keep everything in one thread.”',
+          'The benefit is real. One channel is one place to search, one history to forward to a partner and one record of who said what. For long deals with many parties, a dedicated group can work well once everyone is in it.',
+          'The cost shows up in small ways. Each switch asks the other side to do something for your convenience. Some will, and then answer a day slower because the new channel is not where they live. Others will agree and keep messaging you in their app anyway. Early in a deal, when interest is fragile, that friction can be the difference between a fast reply and none.',
+          '**Works when:** the deal is far enough along that every party has a reason to make the effort, and someone is clearly running the process.',
+        ],
+      },
+      {
+        heading: 'Option 2: reply in each app',
+        blocks: [
+          'The opposite approach is to meet everyone where they are. The seller gets WhatsApp replies, the buyer gets Telegram replies and the banker gets LinkedIn replies. Nobody is asked to switch.',
+          'Counterparties like this. Replies are fast, the tone stays natural and nobody feels managed. For relationship-driven deal flow, this is usually the better instinct.',
+          'The cost moves to you. The deal now lives in four apps and only you know how the pieces fit. A question on Signal sits unread because you checked WhatsApp twice and Signal once. When a partner asks where things stand, you rebuild the timeline by scrolling. The [seven ways deals die in messaging apps](/playbooks/seven-ways-deals-die-in-messaging-apps) are mostly versions of this problem.',
+          '**Works when:** you have only a few live deals, each with one or two people, and you check every app at fixed times.',
+        ],
+      },
+      {
+        heading: 'Option 3: one inbox for every app',
+        blocks: [
+          'The third approach keeps the counterparty’s choice and fixes your side of it. Every app you use for deals feeds one inbox. You still reply in the app they chose, but you read everything in one place and in the order it arrived.',
+          'In Merger, the messaging accounts you connect sit in that one inbox, and you reply from it in each person’s app. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal. You decide what goes on the Deal Desk, and an approved deal keeps its conversations attached, whichever apps they came from.',
+          'The cost is a habit. One inbox means more messages in one list, and a deal desk full of maybes is as noisy as four apps. The routine that works: review flags once or twice a day, approve what you would actually act on, dismiss the rest.',
+          '**Works when:** your deals regularly involve people on different apps, or you are tired of being the only place the full picture exists.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'One channel', 'Reply in each app', 'One inbox'],
+            rows: [
+              ['Fast replies from the other side', 'Slower after the switch', 'Yes', 'Yes'],
+              ['No friction for counterparties', 'They have to move', 'Yes', 'Yes'],
+              ['One place to read the deal', 'Yes, once everyone moved', 'No', 'Yes'],
+              ['Answer a partner’s status question', 'Search one thread', 'Scroll several apps', 'Open the deal'],
+              ['Catch the question in the app you check least', 'Not an issue after the move', 'Easy to miss', 'In the same list'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A practical rule',
+        blocks: [
+          'Do not ask anyone to switch apps until the deal gives them a reason to. Early on, reply where they wrote. Once there is a signed NDA and several parties need the same information, a shared group or a data room can make sense, and by then nobody minds the extra step.',
+          'Whatever you choose, keep one record of the deal outside any single app. A term agreed on WhatsApp and a date set on LinkedIn belong on the same page. The list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers how to pull them out.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
