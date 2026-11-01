@@ -18,6 +18,7 @@
 // Inline markup inside strings: **bold** and [text](href). Nothing else.
 
 import { batch2 } from './batch2';
+import { daily } from './daily';
 
 export const TYPES = Object.freeze({
   useCase: 'Use case',
@@ -419,7 +420,7 @@ const batch1 = [
   },
 ];
 
-export const articles = [...batch1, ...batch2];
+export const articles = [...batch1, ...batch2, ...daily];
 
 export function formatDate(iso) {
   return new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
