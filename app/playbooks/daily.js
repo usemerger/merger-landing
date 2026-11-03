@@ -1211,4 +1211,184 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-03 ───────────────────────────────────────────────────────────
+  {
+    slug: 'what-to-check-before-you-forward-a-deal',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: 'What to check before you forward a deal: 7 questions for brokers, bankers and connectors',
+    description:
+      'Forwarding a deal takes four seconds and can cost a relationship. Seven questions to answer first, from permission and stale numbers to who gets the reply.',
+    dek: 'A forward is the fastest move in dealmaking and the easiest one to regret. Seven checks that take about two minutes and keep your name attached to good deals.',
+    published: '2026-11-03',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why a forward deserves two minutes',
+        blocks: [
+          'A forward costs nothing to send. You hold your thumb on a message in WhatsApp, pick four names and move on. The person who sent it to you did the work of sourcing it, and you get credit for sharing it.',
+          'That is also the risk. Every forward carries your judgment with it. The person on the other end does not read it as “a message that passed through you.” They read it as “something you think is worth their time.” Do that well for a year and people open what you send first. Do it badly a few times and you become a name they mute.',
+          'The seven questions below cover what tends to go wrong. Most take seconds. The list is written for anyone who passes deals along: brokers, bankers, independent sponsors, family office principals and people who simply know a lot of people.',
+        ],
+      },
+      {
+        heading: 'The seven questions',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Am I allowed to share this?',
+                text: 'Start here, because it is the one you cannot undo. Check whether the message came with any restriction, stated or implied. A seller who told a friend about a sale in confidence did not agree to a group chat of forty. If an NDA is signed, the answer is in the document, so read it. If you are unsure, send one line to the source: “Fine if I show this to two buyers I trust?”',
+              },
+              {
+                title: 'Does it name something that should stay hidden?',
+                text: 'Read the whole message as your recipient will. Company names, an owner’s phone number, a screenshot with a logo in the corner and a file name that gives away the target are all common leaks. A forward also copies the context around it, so check the caption and any quoted reply. If the opportunity is good, a blind description travels just as well: industry, region, rough size, reason for sale.',
+              },
+              {
+                title: 'Is it still current?',
+                text: 'Deal messages age fast. A note from three weeks ago may describe a price that has moved, a process that has closed or a seller who has signed with someone else. A quick message to the source before you pass it along saves you from a reply that says “this traded in September.” Add the date to your forward so the reader knows how fresh it is.',
+              },
+              {
+                title: 'Who is this actually for?',
+                text: 'Send it to the two people it fits, not the twelve it might. Think about what each one has said they want, the size they can write, the sector they know. A focused forward with a reason is worth far more than a broadcast: “You said you wanted founder-owned logistics under a certain size. This is one.” If you cannot write that sentence, ask whether the person needs it at all.',
+              },
+              {
+                title: 'What do I actually know about it?',
+                text: 'Say what you know and how you know it. “I have met this seller twice” and “this came from a group, I know nothing about it” are both useful. They are also different, and your reader will treat them differently. Separate facts you have checked from claims in the original message. If a number looks too good, say so. A short honest note protects you when the deal turns out to be thin.',
+              },
+              {
+                title: 'Who gets credit, and who gets the reply?',
+                text: 'Before you send, decide how the introducer is credited and how a reply reaches the source. If there is a fee, a referral arrangement or a simple expectation of a thank-you, it is much easier to raise now than after a buyer has engaged. Tell the recipient to come back through you, or offer a direct intro once both sides agree. Avoid the version where two people end up talking and nobody remembers how they met.',
+              },
+              {
+                title: 'Will I remember I sent it?',
+                text: 'This is the question most people skip. In two weeks someone will reply “still available?” and you will need to know who you sent it to, what you told them and what the source said since. Note the recipients and the date somewhere other than the chat. If a reply comes in on another app, you want it to land next to the original, not in a separate thread you find by accident.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A forward that passes all seven',
+        blocks: [
+          'Put together, a good forward is short. Something like this, sent to one person with an invented example:',
+          {
+            type: 'callout',
+            title: 'Example message',
+            text: 'Fits your brief: family-owned distribution business in the Southwest, owner retiring, no bank process yet. From a broker I have worked with twice, shared with his OK on Tuesday. I have not seen numbers. If it interests you, tell me and I will set up the intro with him directly.',
+          },
+          'That message took about a minute to write. It tells the reader why they are getting it, how fresh it is, what you know, what you do not know and what happens next. It names nothing sensitive, and it leaves you in the conversation.',
+        ],
+      },
+      {
+        heading: 'What to do when you get it wrong',
+        blocks: [
+          'Sooner or later, you will forward something you should not have. Say so quickly and plainly. Ask the recipient to delete it, tell the source what happened and do not wait to see whether anyone noticed. In a relationship business, a mistake you raise yourself usually costs less than one somebody else finds.',
+          'Deleting a forward in one app does not remove it from another person’s memory, or from a chat they already passed it to. That is the reason question one comes first.',
+        ],
+      },
+      {
+        heading: 'Keeping track of what you sent',
+        blocks: [
+          'The last two questions are the hard ones to hold in your head, because deals move across apps. The tip arrives on Telegram, you forward it on WhatsApp and the answer comes back on LinkedIn two weeks later.',
+          'In Merger, the messaging accounts you connect sit in one inbox, so those three threads are in one place. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk. An approved deal keeps its conversation attached, and the intro can go into your Rolodex [as a contact record](/playbooks/turn-introductions-into-contact-records), so you can see who brought it to you.',
+          'If a forward turns into a live conversation, give it [a next step and a date](/playbooks/write-a-next-step-for-every-deal) the same day. And if it goes nowhere, [close it out](/playbooks/close-a-dead-deal-without-burning-the-relationship) with the person who sent it. They were deciding whether to send you the next one.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'one-phone-or-two-personal-vs-work-numbers-for-deal-messages',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'One phone or two? Personal vs work numbers for deal messages',
+    description:
+      'Should deal chats share a phone with your family group? Comparing one phone for everything, a second number for deals, and one inbox for your connected accounts.',
+    dek: 'Your sellers have the same number as your mother. For a lot of dealmakers that started by accident and never got revisited. Here is how the three common setups compare.',
+    published: '2026-11-03',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Setup', 'Good at', 'Where it breaks'],
+            rows: [
+              ['One number for everything', 'Simple, and nobody ever has the wrong number', 'Deals and family share one list, and nothing ever switches off'],
+              ['A second number for deals', 'Clear line between work and life', 'Two sets of chats to check, and contacts rarely move over'],
+              ['One inbox for connected accounts', 'Deal conversations read in one place, however many accounts you use', 'You still choose which chats count as deals'],
+            ],
+          },
+          'These are not strictly alternatives. The first two are about your numbers and accounts. The third is about how you read them. Plenty of people end up combining the second and third.',
+        ],
+      },
+      {
+        heading: 'Why this comes up at all',
+        blocks: [
+          'Most dealmakers did not choose their setup. They gave a seller a cell number once because it was faster than email, and the seller put it on WhatsApp. Three years later, that personal number is the most valuable asset in the business and it also receives school group messages.',
+          'The question usually surfaces at one of three moments: a message goes to the wrong chat, a partner asks to see a conversation that sits on your personal phone, or someone joins or leaves the firm and nobody can say who owns the relationship.',
+          'The answer depends mostly on how many people work on your deals and how much your counterparties care about reaching you personally. Solo brokers and larger desks often land in different places.',
+        ],
+      },
+      {
+        heading: 'Option 1: one number for everything',
+        blocks: [
+          'This is the default, and it has real advantages. Everyone can reach you. There is one set of chats to open, one phone to carry and no number to explain. Many counterparties like having a direct line, and in relationship businesses that access is part of what they are buying.',
+          'The costs are slow to show. A family message and a seller’s question sit next to each other, and it takes only one distracted moment to send the wrong thing to the wrong person. There is no natural end to the day either, because the app you use to see your kids’ photos is the one holding a buyer’s unanswered question.',
+          'History is the other cost. If everything sits in a personal account, the record of your deals is mixed with your private life. Handing that to a colleague, even briefly, is not realistic.',
+          '**Works when:** you work alone, your deal count is small and you are disciplined about reading before you hit send.',
+        ],
+      },
+      {
+        heading: 'Option 2: a second number for deals',
+        blocks: [
+          'The classic fix is to split. One number for life, another for deals, on a second phone or a second line on the same phone. New contacts get the deal number. The personal one goes quiet during the evening, or at least quieter.',
+          'The clean line helps. Wrong-chat mistakes mostly disappear, and it becomes easier to hand over a deal account during time away or when someone leaves. For a firm, a number the business controls also answers the question of who keeps the relationship.',
+          'The difficulty is the transition. Existing contacts rarely move. A seller who has reached you on one number for five years will keep using it, and asking them to change costs some of the same momentum as [asking a counterparty to switch apps](/playbooks/reply-in-their-app-vs-move-everyone-to-one-channel). So for a year or two, you are likely running both, with deals on each.',
+          'A second number also does nothing about the other apps. Your LinkedIn messages, Telegram groups and Slack channels stay where they were. You now have one more place to check.',
+          '**Works when:** you are starting fresh, building a team, or dealing with enough volume that the separation is worth the awkward transition. Before you switch, check any policies at your firm on business communications and record keeping.',
+        ],
+      },
+      {
+        heading: 'Option 3: one inbox for connected accounts',
+        blocks: [
+          'The third approach changes how you read rather than which number you use. Instead of opening each app, you connect the accounts you use for deals and work from one list.',
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s app. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal. You review each one and decide what goes on the Deal Desk. An approved deal keeps its conversation attached, so the working record lives on the deal and not on a phone screen.',
+          'This helps most with the part numbers cannot fix: a deal that runs across WhatsApp, LinkedIn and Telegram at once. It also lets the personal-work line sit somewhere more useful than a phone. The family chat can exist without appearing on your Deal Desk, because only what you approve lands there.',
+          'It does not decide for you. You still choose which accounts to connect and which conversations count as deals, and a desk full of maybes is as noisy as any inbox. Check which services fit your setup before you plan around one, because availability varies.',
+          '**Works when:** your deals already run across several apps, whether you keep one number or two.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'One number', 'Second number', 'One inbox'],
+            rows: [
+              ['Stay reachable on the number people already have', 'Yes', 'Only if you keep both', 'Yes'],
+              ['Fewer wrong-chat mistakes', 'No', 'Yes', 'Helps, if you read before sending'],
+              ['A clear end to the working day', 'No', 'Yes, if you put it down', 'Depends on your habits'],
+              ['Hand a deal to a colleague', 'Hard', 'Easier', 'Easier to summarize from the deal'],
+              ['See one deal across several apps', 'No', 'No', 'Yes'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A practical rule',
+        blocks: [
+          'If you work alone and your counterparties have your number, do not spend a year moving them. Keep the number and fix how you read it. Set fixed times to go through messages, and [review your deals every week](/playbooks/run-a-weekly-deal-review-from-your-messages).',
+          'If you are building a team, start giving new contacts a business number now, and let the old relationships stay where they are. Over a couple of years the balance shifts without anyone being asked to move.',
+          'Either way, the phone number is the smaller question. The bigger one is whether the record of a deal depends on one person’s phone. If it does, solve that first.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
