@@ -20,7 +20,8 @@ import { bookingTarget } from './booking';
  * email to hello@usemerger.com, so a link in an email never dead-ends.
  *
  * ?v=<vertical> comes from the nurture emails (backend nurture.py) and only
- * picks the wording and the Playbook shown beside the calendar.
+ * picks the Playbook shown beside the calendar. The pitch itself is the same
+ * for every business: it never narrows the call to one industry.
  */
 
 export const metadata = {
@@ -31,15 +32,15 @@ export const metadata = {
 };
 
 const VERTICALS = {
-  secondaries: ['secondaries brokers', 'secondaries-broker-counterparties-across-messaging-apps'],
-  search_fund: ['searchers', 'search-fund-broker-outreach-without-a-crm'],
-  business_broker: ['business brokers', 'business-broker-sell-side-buyer-conversations'],
-  real_estate: ['real estate syndicators and investors', 'real-estate-syndicator-capital-raise-from-intro-to-signature'],
-  family_office: ['family office principals', 'family-office-co-investment-deal-flow'],
-  private_equity: ['private equity dealmakers', 'private-equity-add-on-sourcing-for-a-roll-up'],
-  venture: ['venture investors', 'venture-investor-founder-intros-from-x-and-linkedin'],
-  ecommerce: ['ecommerce acquirers', 'ecommerce-brand-acquisition-from-founder-dms'],
-  general: ['dealmakers', 'your-deal-flow-lives-in-your-dms'],
+  secondaries: 'secondaries-broker-counterparties-across-messaging-apps',
+  search_fund: 'search-fund-broker-outreach-without-a-crm',
+  business_broker: 'business-broker-sell-side-buyer-conversations',
+  real_estate: 'real-estate-syndicator-capital-raise-from-intro-to-signature',
+  family_office: 'family-office-co-investment-deal-flow',
+  private_equity: 'private-equity-add-on-sourcing-for-a-roll-up',
+  venture: 'venture-investor-founder-intros-from-x-and-linkedin',
+  ecommerce: 'ecommerce-brand-acquisition-from-founder-dms',
+  general: 'your-deal-flow-lives-in-your-dms',
 };
 
 const HELLO = 'hello@usemerger.com';
@@ -47,7 +48,7 @@ const HELLO = 'hello@usemerger.com';
 export default async function BookPage({ searchParams }) {
   const params = (await searchParams) || {};
   const key = Object.hasOwn(VERTICALS, params.v) ? params.v : 'general';
-  const [audience, slug] = VERTICALS[key];
+  const slug = VERTICALS[key];
   const playbook = getArticle(slug);
   const target = bookingTarget(process.env.NEXT_PUBLIC_BOOKING_URL);
   const mailto = `mailto:${HELLO}?subject=${encodeURIComponent('15-minute Merger setup')}&body=${encodeURIComponent('Hi Owen, I’d like to book a 15-minute setup. A few times that work for me:\n\n')}`;
@@ -57,7 +58,7 @@ export default async function BookPage({ searchParams }) {
       <div className="bk-copy">
         <p className="pb-eyebrow"><span className="pb-dot" /> 15 minutes · Google Meet</p>
         <h1 id="bk-title">Set up Merger with Owen.</h1>
-        <p className="bk-lead">Owen is Merger’s founder. He sets up a small group of {audience} personally, on a short call around a deal like yours.</p>
+        <p className="bk-lead">Owen is Merger’s founder. On a short call, he shows you how Merger fits the way your business runs, and how it can help you spot the serious inquiries and convert more of them.</p>
         <ol className="bk-steps">
           <li><strong>Connect your accounts.</strong> The messaging apps you actually use for deals. Available networks vary by service.</li>
           <li><strong>See the Deal Desk.</strong> A walkthrough on a deal like yours: conversations, contacts and paperwork in one place.</li>
