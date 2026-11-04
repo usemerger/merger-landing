@@ -1218,7 +1218,7 @@ export const daily = [
     audience: 'Real estate investors',
     title: 'How a multifamily investor tracks off-market deals from wholesalers, owners and lenders across messaging apps',
     description:
-      'An illustrative walkthrough: a small multifamily investor hears about off-market buildings on WhatsApp, Messenger and LinkedIn. One workspace keeps each property, its people and its next step together.',
+      'An illustrative walkthrough: a multifamily investor hears about off-market buildings on WhatsApp, Messenger and LinkedIn. One workspace keeps each property and its next step together.',
     dek: 'A wholesaler on WhatsApp, an owner on Messenger, a lender on LinkedIn. Three conversations about one 24-unit building, and a seller who picks whoever answers first.',
     published: '2026-11-04',
     readMinutes: 7,
