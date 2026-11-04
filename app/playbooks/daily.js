@@ -1211,4 +1211,178 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-04 ───────────────────────────────────────────────────────────
+  {
+    slug: 'multifamily-investor-off-market-deals-from-wholesalers-and-owners',
+    type: T.useCase,
+    audience: 'Real estate investors',
+    title: 'How a multifamily investor tracks off-market deals from wholesalers, owners and lenders across messaging apps',
+    description:
+      'An illustrative walkthrough: a small multifamily investor hears about off-market buildings on WhatsApp, Messenger and LinkedIn. One workspace keeps each property, its people and its next step together.',
+    dek: 'A wholesaler on WhatsApp, an owner on Messenger, a lender on LinkedIn. Three conversations about one 24-unit building, and a seller who picks whoever answers first.',
+    published: '2026-11-04',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The building',
+        blocks: [
+          'Maya buys small multifamily properties with two capital partners. She owns six buildings and looks at many more than she buys. Almost nothing she closes reaches a listing site, because the good ones change hands through people who know her.',
+          'On a Thursday morning a wholesaler she has worked with twice sends a WhatsApp message: a 24-unit building, older owner, tired of managing it, no broker yet. He attaches two photos and a rent figure he describes as “roughly right.” That same day the owner’s nephew finds Maya on Messenger, because a friend mentioned she buys in the area. Neither of them knows the other has reached out, and at first Maya does not realize they mean the same building.',
+          'By Friday she has also asked a lender on LinkedIn what terms might look like at that size, and one of her capital partners has replied on Signal asking for the rent roll. Four apps, one property, no paperwork yet.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The same property arrives twice.** The wholesaler calls it “the building on Grant.” The nephew calls it “my uncle’s place.” Without one record, two conversations run side by side and nobody connects them.',
+              '**The numbers drift.** The rent figure on WhatsApp, the one the nephew mentions and the one in the eventual rent roll are all different. Each sits in a separate app with a separate date.',
+              '**The partner asks and nobody answers.** A capital partner’s question on Signal gets read on a phone between showings and forgotten by the evening.',
+              '**The owner goes quiet.** Older owners decide slowly. If the follow-up date lives only in Maya’s head, the next investor who calls at the right moment gets the conversation.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'One inbox first',
+        blocks: [
+          'Maya connects the accounts she uses for deals to Merger, so WhatsApp, Messenger, LinkedIn and Signal sit in one inbox. She still replies in the app each person chose. The nephew never has to learn a new tool, and the wholesaler keeps sending photos the way he always has.',
+          'The change is on her side. She reads everything in one list, in the order it arrived. When the wholesaler’s message and the nephew’s message land a few rows apart with the same street name, the overlap is easy to see. She now knows two people are talking about one property, and she can be careful about what she says to each of them.',
+        ],
+      },
+      {
+        heading: 'From a message to a deal',
+        blocks: [
+          'With her own Anthropic API key connected, Claude can flag conversations that look like a possible deal. The wholesaler’s message gets flagged because it mentions a unit count and an owner ready to talk. Maya reviews the flag and approves it. A flag is only a suggestion; nothing lands on the Deal Desk until she says so.',
+          'The building is now one item on her Deal Desk with the conversation attached. She adds the nephew’s thread and the lender’s thread to it, so the deal holds everything said so far, whichever app it came from. She writes one next step in plain words: “Call the owner Tuesday, ask about the roof and the two vacant units.”',
+          'She keeps the rule from [write a next step for every deal](/playbooks/write-a-next-step-for-every-deal): one action, one date, one person. It is the difference between a live deal and a thread she feels vaguely good about.',
+        ],
+      },
+      {
+        heading: 'Keeping the people straight',
+        blocks: [
+          'Small multifamily is a relationship business. The wholesaler matters as much as the building, since he will bring her the next one if she treats this one well. Maya saves him, the nephew and the lender to her Rolodex, each linked to the message where they came in. A year from now she can see who brought what. The habit is the same one described in [turn introductions into contact records](/playbooks/turn-introductions-into-contact-records).',
+          'She also credits the source early. A short note back to the wholesaler, “The family reached out to me directly too, I’ll keep you in this,” costs one line and keeps the relationship clean. That message goes out from her, in WhatsApp, in her own words.',
+        ],
+      },
+      {
+        heading: 'The first paper',
+        blocks: [
+          'Two weeks in, the owner agrees to share the rent roll and the last two years of expenses, and his attorney asks for an NDA. Maya has the owner’s legal name in one thread and the entity’s address in another. Because the contact details already sit on the deal, she can fill the NDA from her saved contact and send it from her own DocuSign account inside Merger, then read it once before it goes.',
+          'When the rent roll arrives, the figures replace the “roughly right” number. She notes the real one on the deal, along with who sent it and when. Her capital partners get a single short update instead of three screenshots.',
+        ],
+      },
+      {
+        heading: 'What she checks every week',
+        blocks: [
+          'Maya keeps a short routine, a version of the [weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), that takes about half an hour on Friday:',
+          {
+            type: 'list',
+            items: [
+              'Every property on the desk has a next step with a date.',
+              'Every owner who said “not yet” has a check-in date, not just a good feeling.',
+              'Every wholesaler who sent something this week got an answer, even if the answer was no.',
+              'Every capital partner question from the week has a reply.',
+            ],
+          },
+          'Most of the deals she looks at go nowhere, and that is fine. The point of the routine is that the ones that die, die on purpose.',
+        ],
+      },
+      {
+        heading: 'What to take from this',
+        blocks: [
+          'If you buy off-market, you cannot control which app a deal shows up in. You can control whether you read it all in one place, whether each property has one record, and whether anyone who brought you something hears back. Start with the next building that lands in your messages: give it a single record, a next step and a date.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'qualify-a-deal-in-chat-before-you-take-the-call',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to qualify a deal in chat before you take the call',
+    description:
+      'Five short questions that tell you whether a deal deserves a call, how to ask them in a chat without sounding like a form, and what to do with the answers.',
+    dek: 'A thirty-minute call costs you thirty minutes. Five short messages can tell you first whether it is worth taking, and the other side will usually thank you for it.',
+    published: '2026-11-04',
+    readMinutes: 6,
+    sections: [
+      {
+        heading: 'The call is the expensive part',
+        blocks: [
+          'Most deal conversations start with a line like “Got something you might like, can we talk?” The instinct is to say yes. If you say yes to all of them, your week fills with calls about deals that were never a fit, and you learn that twenty minutes in.',
+          'A chat is a better first filter. It costs both sides less, the answers are in writing and you can look them up later. The aim is not to interrogate anyone. It is to find out, in a few messages, whether a call would be useful for both of you.',
+        ],
+      },
+      {
+        heading: 'The five questions',
+        blocks: [
+          'You rarely need all five, and you should not send them as a block. Ask one or two at a time, in the order the conversation allows.',
+          {
+            type: 'list',
+            items: [
+              '**What is it, in one line?** Asset, size, location or sector. If the other side cannot say this in one line, either they do not know yet or they cannot tell you yet. Both are useful to learn.',
+              '**How do you know about it?** Are they the owner, an advisor with a mandate, or someone two steps removed? This is the question that saves the most time. A forwarded tip and a signed mandate are very different things.',
+              '**Why now?** A retirement, a partner dispute, a fund ending, a loan coming due. The reason shapes the timeline and the price. “Just testing the market” is an answer too.',
+              '**What does the other side want?** A price, a range, a structure or a clean exit. If there is no number and no sense of one, you are early. That is fine, as long as you know it.',
+              '**What happens next, and when?** Is there a process, a deadline or other buyers? Is it waiting on you, or on them?',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How to ask without sounding like a form',
+        blocks: [
+          'Tone matters more than the questions. A numbered list dropped into WhatsApp reads like a screening process, and people who bring you deals do not want to be screened. Make it conversational and explain why you are asking.',
+          {
+            type: 'list',
+            items: [
+              '“Thanks for thinking of me. Before we get on a call, is this one you’re working on directly or did it come through someone?”',
+              '“Sounds interesting. What’s prompting the sale now?”',
+              '“Happy to look. Do they have a number in mind, or is it early?”',
+            ],
+          },
+          'Answer in the app they wrote from. Moving someone to email to ask a basic question adds friction before they have a reason to make an effort.',
+        ],
+      },
+      {
+        heading: 'Read the answers',
+        blocks: [
+          'What you do next depends on what came back, and on how quickly.',
+          {
+            type: 'table',
+            head: ['What you hear', 'What it usually means', 'What to do'],
+            rows: [
+              ['Clear asset, direct source, a reason and a number', 'Worth a call', 'Book it now, with a specific time'],
+              ['Clear asset, source is two steps away', 'Could be real, could be stale', 'Ask for the direct contact or the original note'],
+              ['Vague asset, urgent tone', 'Pressure, not information', 'Ask one more question and wait'],
+              ['Good fit, seller not ready', 'Too early, not dead', 'Set a check-in date'],
+              ['Not your size or sector', 'Not for you', 'Say no quickly, and say what would fit'],
+            ],
+          },
+          'A fast, polite no is one of the best things you can send. It keeps you on the list for the next one, and it tells the sender exactly what you want. The message can be as short as “Not my size, but send me anything under ten units in this area.”',
+        ],
+      },
+      {
+        heading: 'Keep the answers somewhere',
+        blocks: [
+          'The weakness of qualifying in chat is that the answers end up spread out. The price range is on WhatsApp, the source is on LinkedIn and the reason for sale is in a voice note. Three weeks later you remember the deal but not the details.',
+          'Whatever system you use, write the five answers down in one place the same day, along with a next step. A note on your phone is enough if you actually keep it up. The list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) shows where the details tend to get lost.',
+          'In Merger, those conversations sit in one inbox, whichever app they started in. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk. Anything you approve keeps its conversation attached, so the answers stay with the deal.',
+        ],
+      },
+      {
+        heading: 'A simple rule for your week',
+        blocks: [
+          'Try this for two weeks: no call goes on the calendar until you can write the deal in one line and say who the source is. You will take fewer calls, the ones you take will be better, and you will have a written record of why you took them.',
+          'If a deal stalls after the first exchange, these [follow-up messages that restart a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) are a good next step.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
