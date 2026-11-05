@@ -1,3 +1,5 @@
+> HISTORICAL / SUPERSEDED for the current offer. See [current pricing and admission contract](https://github.com/usemerger/merger-backend/blob/codex/launch-foundation/docs/PRICING.md). The dated observations below are retained as history; they do not define current eligibility, prices, or checkout behavior.
+
 # Merger funnel: soft-launch review
 
 Updated September 14, 2026.
