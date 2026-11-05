@@ -1211,4 +1211,184 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-05 ───────────────────────────────────────────────────────────
+  {
+    slug: 'what-to-write-down-after-every-deal-call',
+    type: T.list,
+    audience: 'Every dealmaker',
+    title: 'Six things to write down after every deal call',
+    description:
+      'A call leaves no record unless you make one. Six things worth writing down within ten minutes of hanging up, and where to put them so you can find them later.',
+    dek: 'The call went well. Three weeks later you can’t remember the number, the date or who was going to send what. Ten minutes after hanging up is when you fix that.',
+    published: '2026-11-05',
+    readMinutes: 6,
+    sections: [
+      {
+        heading: 'Why calls are the weakest link',
+        blocks: [
+          'Everything else in a deal leaves a trail. A WhatsApp message can be scrolled back to. A LinkedIn thread has dates on it. A call leaves nothing but what you remember, and memory gets worse every day after the call ends.',
+          'That matters most on the calls that matter most. The real number usually comes out by voice. So does the real reason for selling, the name of the other buyer and the date a partner has to be back by. People say things on a call that they would never type.',
+          'A short note fixes this. It takes less time than the small talk at the start of the call. What follows is the list. You don’t need all six on every call, but check each one before you move on.',
+        ],
+      },
+      {
+        heading: 'The six things',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The number, in their words.** Not your summary of it. “Four, if the audit comes back clean” and “four” are different deals. Write down the condition with the figure.',
+              '**The date anything depends on.** A lease renewal, a fund’s close, a partner’s return from travel, a board meeting. Deals move around dates that nobody puts in writing.',
+              '**Who has to say yes.** The person on the call is often not the person who decides. Write down the spouse, the partner, the lender or the investment committee they mentioned.',
+              '**What each side owes next.** One line for you, one line for them. “I send the buyer list by Thursday. He sends the last two years of financials.”',
+              '**What was said in confidence.** If they asked you not to share something, record that next to it. This is the line you are most likely to forget and most likely to regret.',
+              '**Who else is involved.** Other buyers, other brokers, an advisor they mentioned once. Names dropped on calls are the first thing to disappear.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Do it in the ten minutes after you hang up',
+        blocks: [
+          'The timing matters more than the format. Straight after a call you can still hear how something was said. By the evening you remember the gist. By next week you remember what you wish had been said.',
+          'Try to block ten minutes after any call that might move a deal. If calls run back to back, type the two or three most fragile items, usually the number and the date, before you join the next one. You can fill in the rest later because those were the parts you could not rebuild.',
+          'Keep the note plain. A few short lines beat a tidy page you never get around to writing.',
+        ],
+      },
+      {
+        heading: 'Send the part that belongs to both of you',
+        blocks: [
+          'Some of the note should go back to the other side. A short message the same day does two jobs: it confirms what you heard and it gives you a dated record of it.',
+          'Keep it light, and send it in the app you usually talk in. Something like: “Good talk. To confirm, you’re looking at four, subject to the audit, and I’ll send the buyer list by Thursday.”',
+          'If you heard it wrong, they will correct you now, which is far cheaper than finding out at the letter of intent. If you heard it right, you have it in writing. The guide to [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers what happens when nobody does this.',
+          'Leave out anything said in confidence, and anything that would read oddly if forwarded. Assume that any message about a deal can be forwarded.',
+        ],
+      },
+      {
+        heading: 'Put the note where the deal lives',
+        blocks: [
+          'A note in a notebook, a phone memo or a blank document solves half the problem. You have the record, but the next time you need it you have to remember that it exists and where you left it.',
+          'The note should sit with the deal, next to the messages it relates to. Then the five minutes before the next call look different. You open one place, read what was said, and join the call knowing where things stand. If you are starting from scratch, a [next step for every deal](/playbooks/write-a-next-step-for-every-deal) is the simplest place to begin.',
+          'In Merger, the messaging accounts you connect sit in one inbox. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk. An approved deal keeps its conversation attached, so your same-day confirmation stays with the deal alongside everything else that person sent you.',
+        ],
+      },
+      {
+        heading: 'A simple template',
+        blocks: [
+          'If a blank page slows you down, copy this and fill in what applies. Skip the lines that don’t.',
+          {
+            type: 'table',
+            head: ['Line', 'Example'],
+            rows: [
+              ['Number and condition', 'Four, subject to the audit'],
+              ['Date it depends on', 'Lease renews end of March'],
+              ['Who decides', 'Seller’s brother owns 40% and has to agree'],
+              ['I owe', 'Buyer list by Thursday'],
+              ['They owe', 'Last two years of financials'],
+              ['In confidence', 'Do not mention the second location'],
+              ['Others involved', 'Their accountant, one other buyer'],
+            ],
+          },
+          'A week from now, reread one of these before a follow-up call. The value of the habit shows up the first time you open a call with the exact point where you left off.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'voice-notes-vs-calls-vs-text-for-deal-terms',
+    type: T.comparison,
+    audience: 'Every dealmaker',
+    title: 'Voice notes, calls or text: which one to use for deal terms',
+    description:
+      'Voice notes feel personal, calls move fast and text leaves a record. Where each one works for deal terms, where it breaks, and a simple rule for using all three.',
+    dek: 'Each format is good at something different. The trouble starts when the only copy of a term lives in the one that can’t be searched.',
+    published: '2026-11-05',
+    readMinutes: 7,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          'Use calls to negotiate, voice notes to keep things warm and text to record what was agreed. Most problems come from letting a term stop at the first or second step.',
+          {
+            type: 'table',
+            head: ['Format', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Phone or video call', 'Hard conversations, reading the other person, moving quickly', 'Leaves no record unless someone writes one'],
+              ['Voice note', 'Warmth, nuance, answering while on the move', 'Hard to find, hard to skim, hard to quote'],
+              ['Text message', 'A dated record you can find and forward', 'Tone gets lost, and hard things read colder than you meant'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Calls',
+        blocks: [
+          'A call is the best tool for anything sensitive. You hear the pause before the answer. You can test a number without committing to it in writing. A seller who would never type the real reason for selling will often say it out loud.',
+          'Calls also move fast. Ten minutes of talking can settle what twenty messages would not, because each side can adjust as they go.',
+          'The cost is that a call disappears when it ends. Two people can walk away with different versions of the same conversation and both be sincere. If the number matters, somebody has to write it down. The list of [things to write down after every deal call](/playbooks/what-to-write-down-after-every-deal-call) covers what to capture.',
+          '**Use it for:** price discussions, bad news, anything you would not want forwarded and the first real conversation with an owner.',
+        ],
+      },
+      {
+        heading: 'Voice notes',
+        blocks: [
+          'In some markets and with some counterparties, voice notes are simply how business gets done. A two-minute WhatsApp voice note from a seller is often more candid than anything they would type. It is quick to record and it sounds like a person, which is why many dealmakers like them.',
+          'The weakness shows up later. You can’t skim a voice note, so you replay all of it to find one figure. It’s hard to search for what was said in one. You can’t quote one cleanly to a partner. And since each note arrives on its own, a thread of ten voice notes can hide a change of terms in the seventh.',
+          'If someone prefers voice notes, don’t try to retrain them. Asking a seller to change how they communicate rarely helps, and it can cost you warmth. Keep receiving them and write a line back that captures anything that matters.',
+          '**Use it for:** quick updates, relationship upkeep and answering someone who sends them. Never leave a term only here.',
+        ],
+      },
+      {
+        heading: 'Text',
+        blocks: [
+          'Text is the only one of the three that gives you a dated record you can find, quote and forward. That makes it the right final home for anything both sides agreed: a price, a date, a condition, a next step.',
+          'Text has its own failure mode. It’s easy to misread, and a hard message can land much colder than you meant. Negotiating purely in short messages tends to harden positions, because every line reads like a final answer. Long threads also split across apps, so a deal can have its terms in WhatsApp and its dates in LinkedIn. The piece on [replying in their app or moving everyone to one channel](/playbooks/reply-in-their-app-vs-move-everyone-to-one-channel) goes through that tradeoff.',
+          '**Use it for:** confirming what was said, scheduling, sending facts and leaving a record of what was agreed.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Call', 'Voice note', 'Text'],
+            rows: [
+              ['Discuss a sensitive number', 'Best', 'Fine', 'Risky'],
+              ['Deliver bad news', 'Best', 'Second best', 'Last resort'],
+              ['Find the exact words later', 'Not possible', 'Slow', 'Fast'],
+              ['Reply while driving or walking', 'Yes', 'Yes', 'Not safely'],
+              ['Show a partner what was agreed', 'Only from your notes', 'Forward and hope they listen', 'Forward it'],
+              ['Keep a dated record', 'No', 'Partly', 'Yes'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A simple rule: talk it, then type it',
+        blocks: [
+          'You don’t need to pick one. Use whichever format suits the moment, then finish in text whenever something has been agreed.',
+          {
+            type: 'list',
+            items: [
+              '**After a call,** send one line the same day confirming the number, the date and who owes what.',
+              '**After a voice note with a term in it,** reply in text with the term as you understood it. “Got it, so four, subject to the audit?” gives them an easy yes or a quick correction.',
+              '**Before sending anything difficult in text,** ask whether it should be a call. A short “can we talk at four?” is often the better message.',
+              '**When a term changes,** restate the whole term rather than the change. Someone reading the thread in three months should not have to work out the current number.',
+            ],
+          },
+          'This takes about thirty seconds per message, and it gives you something most deals lack: one clear written line for each thing that was agreed.',
+        ],
+      },
+      {
+        heading: 'Where those lines should live',
+        blocks: [
+          'A written confirmation helps only if you can find it. If the seller is on WhatsApp, the buyer is on Telegram and the partner is on Signal, each confirmation sits in a different app, and you are back to searching.',
+          'Merger puts the messaging accounts you connect into one inbox, and you reply in each person’s app. With your own Anthropic API key connected, Claude can flag messages that look like a possible deal. You review each one and decide what goes on the Deal Desk, and an approved deal keeps its conversations attached.',
+          'Merger doesn’t decide what was agreed. You still write the line. The point is that once you do, it stays with the deal.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
