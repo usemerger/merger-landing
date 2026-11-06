@@ -1211,4 +1211,240 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-11-06 ───────────────────────────────────────────────────────────
+  {
+    slug: 'co-brokers-splitting-one-business-sale-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Business brokers',
+    title: 'How two co-brokers keep one business sale straight when the buyers are on three different apps',
+    description:
+      'An illustrative walkthrough: two brokers split a business sale, the buyers write on WhatsApp, Telegram and LinkedIn, and one record keeps who said what to whom.',
+    dek: 'A shared listing, a split fee and a buyer who asks both brokers the same question on the same afternoon. A walkthrough of keeping one story when the deal has two voices.',
+    published: '2026-11-06',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The listing',
+        blocks: [
+          'Marcus is a business broker who mostly sells home services companies. A broker he has worked with twice before, Lena, has a seller who owns a commercial cleaning company with three regional contracts. Lena has the seller. Marcus has a list of buyers who have been asking for exactly this kind of business. They agree to co-broker the sale and split the fee.',
+          'The arrangement is common and sensible. It also means the deal now has two brokers talking to the same buyers, and those buyers have their own habits. One private buyer prefers WhatsApp. A search funder Marcus met last year messages on LinkedIn. A small holding company runs everything through a Telegram chat with its two partners.',
+          'Lena talks to the seller on WhatsApp. Marcus and Lena talk to each other on Signal. Within a week the sale is spread across four apps and two phones.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Two answers to one question.** The search funder asks Marcus on LinkedIn whether the largest contract renews next year. The same afternoon he asks Lena on WhatsApp. Marcus says it renews in March. Lena says the seller is still negotiating. Both are partly right, and the buyer now trusts neither answer.',
+              '**Nobody knows who sent what.** Lena sent the teaser to the holding company. Marcus, not knowing, sends it again a day later with a slightly older revenue figure.',
+              '**The seller hears about buyers second hand.** The seller asks Lena where things stand. Lena has to ask Marcus, who has to scroll three apps to answer.',
+              '**Promises get split.** Marcus told the private buyer he would send the customer concentration numbers by Friday. Lena does not know he promised it, and the seller is waiting on Lena to ask for them.',
+            ],
+          },
+          'None of this comes from bad brokers. It comes from two people working one deal in a set of apps that were never meant to hold a shared record.',
+        ],
+      },
+      {
+        heading: 'Agree the split before the first buyer message',
+        blocks: [
+          'The most useful thing Marcus and Lena do happens before any software. They spend fifteen minutes on Signal agreeing who answers what.',
+          {
+            type: 'list',
+            items: [
+              '**Seller questions go through Lena.** She owns that relationship, and the seller hears one voice.',
+              '**Buyer outreach and buyer questions go through Marcus.** If a buyer asks Lena directly, she answers with one line: “Good question, Marcus will come back to you today with the exact answer.”',
+              '**Numbers come from one document.** The teaser and the summary financials have a version date. Nobody quotes a figure that is not in the current version.',
+              '**One update a week to each other.** Friday, in the Signal thread: which buyers are active, what each one asked, what each broker promised.',
+            ],
+          },
+          'This turns two voices into one story. The rest is keeping Marcus’s side of that story in one place so he can actually honor the split.',
+        ],
+      },
+      {
+        heading: 'Marcus’s side, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every buyer thread in one list',
+                text: 'Marcus connects the WhatsApp, Telegram, LinkedIn and Signal accounts he already uses. The private buyer, the search funder, the holding company chat and his thread with Lena sit in one inbox. He replies from Merger, and each reply goes out in the app the buyer chose.',
+              },
+              {
+                title: 'The sale, filed once',
+                text: 'With his own Anthropic API key connected, Claude flags the search funder’s message about the contract renewal as a possible deal. Marcus reviews it and approves it onto his Deal Desk as the cleaning company sale. The holding company chat and the private buyer thread are attached to the same deal, so the conversations sit together whichever app they came from.',
+              },
+              {
+                title: 'The people, saved with their source',
+                text: 'Lena, the search funder and each partner at the holding company become Rolodex contacts, each linked to the message they came from. When the holding company’s second partner joins the Telegram chat a week later, Marcus saves him the same way.',
+              },
+              {
+                title: 'Promises written as next steps',
+                text: 'The customer concentration numbers become the deal’s next step, with Friday as the date. On Friday’s Signal update, Marcus can tell Lena exactly what he owes and to whom, because it is written on the deal instead of buried in a LinkedIn thread.',
+              },
+            ],
+          },
+          'Merger does not merge two brokers’ accounts or share Marcus’s inbox with Lena. It gives Marcus one place for his half of the deal, which is what lets him keep the agreement they made.',
+        ],
+      },
+      {
+        heading: 'What changes for the buyers',
+        blocks: [
+          'From the buyers’ side, very little looks different. They still write in the app they prefer. What changes is the quality of the answers. The search funder gets one renewal answer, with the condition attached: the contract renews in March if the seller signs the extension under discussion. The holding company gets the current teaser once. The private buyer gets the numbers on Friday, as promised.',
+          'Buyers notice consistency. In a co-brokered sale, the fastest way to lose a serious buyer is to make him wonder which broker is telling the truth. The fastest way to keep one is to make the two brokers sound like one desk.',
+        ],
+      },
+      {
+        heading: 'What to write down for a co-brokered deal',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Who owns which relationship.** Seller, each buyer, any lender or advisor. One name per relationship.',
+              '**Which version of the numbers is current.** A date on the teaser and the financial summary, and a rule that nobody quotes from an older one.',
+              '**What each buyer has received.** Teaser, summary, NDA, data room access. Write the date each one went out and who sent it.',
+              '**What each broker promised.** One line per promise, with a date.',
+              '**When you update each other.** A fixed time, in a fixed thread.',
+            ],
+          },
+          'Five lines per deal. That is enough to stop the double send and the conflicting answer, which are the two mistakes buyers remember.',
+        ],
+      },
+      {
+        heading: 'Questions brokers usually ask',
+        blocks: [
+          '**Does my co-broker need Merger too?** No. Each broker runs their own side. Merger keeps your conversations, your contacts and your deal together. The agreement on who answers what is between the two of you.',
+          '**Can Claude tell which broker should answer?** No. Claude can flag messages that look like possible deals and show the message behind each flag. Deciding who answers, and what to say, stays with you.',
+          '**What if a buyer insists on talking to both of us?** Then answer together in one thread, in the app the buyer prefers, so there is one written answer instead of two.',
+        ],
+      },
+      {
+        heading: 'The short version',
+        blocks: [
+          'A co-brokered sale works when it has one story. Agree who answers what, date the numbers, write down every promise and update each other at a fixed time. Then keep your side of the deal in one place, so the agreement survives a busy week. For the weekly rhythm, see [how to run a 30-minute deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), and for the habit that makes promises visible, [write a next step for every deal](/playbooks/write-a-next-step-for-every-deal).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: 'answer-a-reference-request-from-a-buyer-in-chat',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'A buyer asks for references in chat. How to answer the same day without scrambling',
+    description:
+      'A practical guide to reference requests that arrive in WhatsApp, LinkedIn or Telegram: who to ask, what to send, how to ask permission first, and how to keep the list ready.',
+    dek: 'Every dealmaker has people who would vouch for them. The trouble is that those people are spread across five apps and two years of messages. Here is how to keep the answer ready.',
+    published: '2026-11-06',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the request matters',
+        blocks: [
+          'A reference request usually comes at a good moment. A buyer, a seller or an investor has decided you might be the right person, and they want one more reason to believe it. “Can you put me in touch with a couple of people you have worked with?” is a sign the deal is moving.',
+          'It is also a test of how organized you are. A same-day answer with two relevant names says you run a tidy desk. A three-day silence, followed by a name that does not fit, says the opposite, even if your track record is strong.',
+          'The problem is rarely a lack of references. It is that the seller who loved working with you is in a LinkedIn thread from last spring, the investor who would vouch for you is on Signal, and the co-broker you closed with is somewhere in a Telegram group.',
+        ],
+      },
+      {
+        heading: 'Step 1: pick the right two',
+        blocks: [
+          'Two good references beat five loose ones. Choose people whose situation looks like the person asking.',
+          {
+            type: 'list',
+            items: [
+              '**Match the side of the table.** A seller wants to hear from another seller you represented. A buyer wants to hear from a buyer, or from a seller who can speak to how you ran the process.',
+              '**Match the size and type of deal, roughly.** A founder selling a small services company wants someone who sold something similar, not a fund manager.',
+              '**Prefer recent.** A reference from the last two years can speak to how you work now.',
+              '**Prefer people who will answer.** A warm reference who replies within a day is worth more than an impressive one who takes a week.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Step 2: ask them first',
+        blocks: [
+          'Never send a name without asking. A reference who gets a surprise message is a weaker reference, and you have spent some of their goodwill without telling them.',
+          'Ask in the app you already use with that person. Keep it short: who is asking, what kind of deal it is, and what they might ask about. For example: “A seller I am talking to wants to hear from someone I have represented. Would you be open to a short call this week? He will probably ask how the buyer process went and how often I kept you updated.”',
+          'Give them an easy way to say no. Some people are busy, and a quick no is better than a reluctant yes.',
+        ],
+      },
+      {
+        heading: 'Step 3: send the names the same day',
+        blocks: [
+          'Once a reference says yes, reply to the person who asked, in the app they used to ask. Send each name with one line of context and the way they prefer to be reached.',
+          {
+            type: 'list',
+            items: [
+              '**Who they are.** Name, and the deal you worked on together, described the way they would describe it.',
+              '**Why they are relevant.** One line. “He sold a similar business last year and I represented him.”',
+              '**How to reach them.** The channel they agreed to, not just any number you have.',
+            ],
+          },
+          'If one reference needs a few days, send the first name now and say the second is coming. Momentum matters more than a complete list.',
+        ],
+      },
+      {
+        heading: 'Step 4: close the loop with the reference',
+        blocks: [
+          'After the call happens, thank the reference in the same thread you asked them in. If the deal moves forward, tell them. People who vouch for you like to know it helped, and they are more likely to say yes again.',
+          'Keep a short note of who you have used as a reference and when. Asking the same person every month wears them out. Rotating between a few people keeps everyone willing.',
+        ],
+      },
+      {
+        heading: 'Mistakes that weaken a good reference',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Forwarding a number without asking.** It saves you a minute and costs the reference their goodwill.',
+              '**Sending a group chat instead of a name.** “Ask anyone in this group” reads as if nobody in particular will vouch for you.',
+              '**Scripting the reference.** Tell them what the person may ask about, but let them answer in their own words. Rehearsed praise sounds rehearsed.',
+              '**Picking only the biggest name.** A well-known investor who barely remembers the deal helps less than a seller who can describe how you handled a hard week.',
+              '**Going quiet afterwards.** If you never follow up, you will not know whether the call happened, and the person who asked may assume it did not go well.',
+            ],
+          },
+          'Each of these is easy to avoid once the request has a routine. The routine is the four steps above, done in the same day.',
+        ],
+      },
+      {
+        heading: 'Keep the list ready before anyone asks',
+        blocks: [
+          'The scramble happens because references live wherever the original deal lived. The fix is to save the people who could vouch for you while the deal is still fresh.',
+          {
+            type: 'list',
+            items: [
+              '**At closing, note who was happy.** A seller who thanked you warmly, a buyer who said the process was smooth. Write their name and the deal down that week.',
+              '**Keep the source.** A link to the message where they said it is useful. It reminds you of the context before you ask them for a favor.',
+              '**Note their preferred channel.** If they only answer on WhatsApp, write that down.',
+              '**Review the list twice a year.** People change jobs and numbers. A quick check keeps the list usable.',
+            ],
+          },
+          'In Merger, the messaging apps you connect sit in one inbox, and introductions become Rolodex contacts linked to the message they came from. That makes the list easier to keep, because the person and the conversation stay together. The decision about who to ask, and what to say, stays with you. For the habit behind it, see [turn introductions into contact records](/playbooks/turn-introductions-into-contact-records).',
+        ],
+      },
+      {
+        heading: 'A short checklist',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Pick two people who match the side of the table and the type of deal.',
+              'Ask each one first, in the app you already use with them.',
+              'Send the names the same day, with one line of context each.',
+              'Thank the reference afterwards and tell them how it went.',
+              'Save happy counterparties at closing, so the next request is easy.',
+            ],
+          },
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
