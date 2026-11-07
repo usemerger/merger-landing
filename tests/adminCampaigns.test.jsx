@@ -73,6 +73,13 @@ describe('campaigns dashboard', () => {
     expect(schedule).not.toHaveTextContent('Emails today, all flows');
   });
 
+  it('shows the send window and says when sending waits for it', async () => {
+    api.adminCampaigns.mockResolvedValue({ ...report, ramp: { ...report.ramp, status: 'outside_window', sendWindowUtc: [13, 19], sendWeekdaysOnly: true } });
+    render(<AdminCampaignsPage />);
+    expect(await screen.findByText('Waiting for the morning send window')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Sending schedule' })).toHaveTextContent(/Send window.*weekdays/);
+  });
+
   it('refuses non-staff', async () => {
     api.adminCampaigns.mockRejectedValue(new api.ApiError(403));
     render(<AdminCampaignsPage />);

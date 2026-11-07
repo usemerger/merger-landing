@@ -28,6 +28,8 @@ const STATUS = {
   no_ramp: ['No ramp configured', 'warn'],
   bounce_rate: ['Paused: bounce rate too high', 'warn'],
   complaint_rate: ['Paused: complaint rate too high', 'warn'],
+  outside_window: ['Waiting for the morning send window', 'muted'],
+  weekend: ['Weekend: resumes Monday morning', 'muted'],
 };
 
 export function totals(days = []) {
@@ -38,6 +40,11 @@ export function totals(days = []) {
 const pct = (part, whole) => (whole ? `${((part / whole) * 100).toFixed(part / whole < 0.1 ? 1 : 0)}%` : '–');
 // Funnel days and the start date are calendar dates in UTC; show them as such.
 const dayLabel = (value) => new Date(`${String(value).slice(0, 10)}T12:00:00Z`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+// The window is stored in UTC hours; show it in the viewer's own time.
+export const windowLabel = ([start, end]) => {
+  const at = (h) => new Date(Date.UTC(2026, 0, 5, h)).toLocaleTimeString(undefined, { hour: 'numeric', timeZoneName: 'short' });
+  return `${at(start)} to ${at(end)}`;
+};
 const n = (value) => (Number(value) || 0).toLocaleString();
 
 export default function AdminCampaignsPage() {
@@ -92,6 +99,7 @@ export default function AdminCampaignsPage() {
           <div><dt>Hard bounce rate, 3 days</dt><dd>{pct(health.bounced, health.sent)} <span>limit 3%{health.soft_bounced ? ` · ${n(health.soft_bounced)} soft, not counted` : ''}</span></dd></div>
           <div><dt>People emailed, 3 days</dt><dd>{n(health.sent)}</dd></div>
           <div><dt>Complaint rate, 3 days</dt><dd>{pct(health.complained, health.sent)} <span>limit 0.1%</span></dd></div>
+          {ramp.sendWindowUtc && <div><dt>Send window</dt><dd>{windowLabel(ramp.sendWindowUtc)} <span>{ramp.sendWeekdaysOnly ? 'weekdays' : 'every day'}</span></dd></div>}
           <div><dt>Started</dt><dd>{ramp.start ? dayLabel(ramp.start) : 'Not set'}</dd></div>
         </dl>
         {!ramp.webhookConfigured && <p className="cp-warning" role="status">Email tracking is not connected yet, so delivered, clicked, bounced and complained will read zero and the safety brake cannot see bounces.</p>}
