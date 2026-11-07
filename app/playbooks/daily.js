@@ -1211,4 +1211,191 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-07 ───────────────────────────────────────────────────────────
+  {
+    slug: 'proof-of-funds-in-chat-what-to-ask-a-buyer-for',
+    type: T.list,
+    audience: 'Business brokers and sell-side advisors',
+    title: 'Proof of funds in chat: seven things to ask a buyer for before the deal moves forward',
+    description:
+      'A buyer says he is ready and sends a screenshot on WhatsApp. Seven things to ask for instead, and how to handle the document once you have it.',
+    dek: 'A screenshot of a balance with no date and no bank name is not proof of anything. Here is what to ask for, how to ask without souring the conversation, and where the document should go next.',
+    published: '2026-11-07',
+    readMinutes: 6,
+    sections: [
+      {
+        heading: 'The screenshot problem',
+        blocks: [
+          'It happens on almost every sell-side deal. A buyer has read the teaser, likes the business and wants to move. You ask, politely, whether he can show he has the funds. Ten minutes later a WhatsApp message arrives: a cropped screenshot of an account balance. No bank name, no date, no account holder.',
+          'The buyer is not necessarily hiding anything. Most people send whatever is fastest. But a screenshot like that tells you very little, and your seller will reasonably ask what you checked before you put a buyer in front of them.',
+          'The fix is not a more suspicious tone. It is a short, standard request that you send to every buyer at the same stage, so nobody feels singled out. The list below is a starting point. Your own practice, your seller and, where it matters, your lawyer should shape the final version.',
+        ],
+      },
+      {
+        heading: 'Seven things to ask for',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**A letter, not a screenshot.** Ask for a letter on the letterhead of the bank, the fund administrator or the buyer’s lawyer or accountant. A letter has an author who can be contacted. A screenshot does not.',
+              '**A recent date.** Ask for a document dated within the last week or two. A balance from last quarter says little about today. Put the date range in your request so nobody has to guess.',
+              '**The name that will sign.** The entity on the proof of funds should match the entity that will sign the letter of intent. If a buyer shows personal funds but plans to buy through a new company, ask how the money moves from one to the other.',
+              '**The source, in one sentence.** Cash on hand, a fund commitment, a lender, or a mix. You do not need the detail yet. You need to know which conversations are still ahead, for example a lender who has not seen the business.',
+              '**A contact who can confirm it.** The name and role of the person at the bank, fund or firm who wrote the letter. You may never call them. Asking is still a signal that you will check.',
+              '**What the buyer needs from you in return.** Many serious buyers will ask for an NDA or more detail before they send anything sensitive. That is reasonable. Agree the order of steps in writing so it does not stall in a voice note.',
+              '**How the document should be sent.** Suggest a direct message to you, not a group. A proof of funds letter does not belong in a broker group or a chat with five people in it, and the buyer will notice that you thought about it.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How to ask without souring the conversation',
+        blocks: [
+          'Tone matters more than the list. A request that sounds like an accusation slows the deal. A request that sounds like routine keeps it moving. Something like this works in any chat app:',
+          '“Thanks for this. Before I take you to the seller, I ask every buyer for the same thing: a short letter from your bank, adviser or lawyer, dated this week, confirming funds for a purchase of this size, in the name of the company that will sign. Send it here directly when you have it, and tell me what you need from our side first.”',
+          'Three details carry the weight. “Every buyer” removes the sting. “Dated this week” and “in the name of the company that will sign” remove the guesswork. “What you need from our side first” turns a demand into an exchange.',
+          'Send the request in the same app the buyer used. Moving a buyer to email at this stage adds friction for no gain. The case for [replying in their app](/playbooks/reply-in-their-app-vs-move-everyone-to-one-channel) holds here too.',
+        ],
+      },
+      {
+        heading: 'What to do once it arrives',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Read it against the request',
+                text: 'Check the date, the name and the author against what you asked for. If something is missing, ask once, specifically: “Could the letter name the company that will sign?” is easier to answer than “This isn’t quite right.”',
+              },
+              {
+                title: 'Send it to the seller directly',
+                text: 'Forward it to your seller in a one-to-one message, with one line of context: who the buyer is, what you checked, what you have not. Not into a group, and not to anyone who has not signed the same NDA.',
+              },
+              {
+                title: 'Write down where it lives',
+                text: 'Note the date you received it, the app it came in and the next step. Three weeks from now, when the seller asks whether this buyer was qualified, you want the answer in one place, not in a scroll through WhatsApp.',
+              },
+              {
+                title: 'Set a date for the next step',
+                text: 'A qualified buyer with no next step goes quiet like any other. The habit of [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) matters most right after a buyer has done the work you asked for.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Three mistakes worth avoiding',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Asking only the buyers you doubt.** Buyers compare notes. An uneven standard looks personal, and it lets a smooth talker skip the step.',
+              '**Treating a screenshot as a yes.** It is a start, not a finish. Thank the buyer for it, then send the standard request.',
+              '**Letting the document scatter.** The letter arrives on WhatsApp, the buyer’s questions on LinkedIn, the seller’s reaction on Signal. A month later the evidence that you checked is in three apps.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Merger puts the messaging apps you connect into one inbox, so the buyer’s letter, his questions and the seller’s reply are in one list, and you answer each person in the app they chose.',
+          'With your own Anthropic API key connected, Claude can flag a message that looks like a possible deal, such as a buyer who just sent proof of funds. You review the flag and decide whether it goes on the Deal Desk. Nothing is filed until you approve it, and an approved deal keeps its conversation attached, so the record of what you asked for and what arrived stays with the deal.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'seller-changed-phone-numbers-two-chats-one-deal',
+    type: T.comparison,
+    audience: 'Brokers and dealmakers who work in WhatsApp',
+    title: 'Your seller changed phone numbers: three ways to handle two chats for one deal',
+    description:
+      'A seller gets a new number and the deal splits into two chats. Comparing three ways to handle it: start fresh, keep both and summarize, or one inbox per deal.',
+    dek: 'The old chat has the price and the timeline. The new one says “it’s me, new number.” Three ways to keep one deal from turning into two conversations, and what each one costs.',
+    published: '2026-11-07',
+    readMinutes: 6,
+    sections: [
+      {
+        heading: 'How one seller becomes two chats',
+        blocks: [
+          'A seller you have worked with for two months gets a new phone and a new number. One evening a message arrives from a number you do not recognise: “It’s me, new number.” You save it, reply, and carry on.',
+          'Now the deal lives in two places. The old chat holds everything that matters: the asking price, the timeline he agreed to, the buyer questions you passed along, the voice note where he explained why he is selling. The new chat holds one line and whatever you add from here.',
+          'Nothing goes wrong on day one. It goes wrong a week later, when a buyer’s question needs his answer from three weeks ago, or when you reply to the old number out of habit and the message sits unread. Your phone will usually show the new number as a new contact until you change it yourself, so the split is easy to miss.',
+        ],
+      },
+      {
+        heading: 'Option 1: start fresh on the new number',
+        blocks: [
+          'The simplest response is to treat the new chat as the conversation from now on. You archive or ignore the old one and keep going.',
+          'This works for light relationships. If the old chat had a few pleasantries and a phone call request, nothing is lost.',
+          'For a live deal it is risky. The terms and dates you agreed to now sit in an archived chat you will not open until you need them, usually under time pressure. If you ever have to show what the seller said and when, the record is split across two threads with no link between them.',
+          '**Works when:** the old chat holds nothing you would need to quote back to anyone.',
+        ],
+      },
+      {
+        heading: 'Option 2: keep both and write a summary',
+        blocks: [
+          'A more careful approach: on the day the number changes, update the contact so both numbers sit under one name, then send the seller a short summary in the new chat. “Picking up here. For the record: asking price as we discussed on the 2nd, aiming to close by March, two buyers reviewing the numbers. Tell me if anything has changed.”',
+          'This does three useful things. It confirms the key terms in writing on the number he now uses. It gives him a chance to correct anything. And it means the new chat stands on its own if you never open the old one again.',
+          'The cost is discipline. You have to notice the change the day it happens, write the summary, and tell him which chat you will use from now on. If he keeps answering on both numbers for a while, which is common, you are back to checking two threads.',
+          '**Works when:** you have a handful of live deals and you are good at small routines.',
+        ],
+      },
+      {
+        heading: 'Option 3: one inbox, one deal record',
+        blocks: [
+          'The third approach stops depending on which chat a message arrived in. Both chats sit in the same inbox as the rest of your messaging apps, and the deal record, not the chat, is where you look for the terms.',
+          'In Merger, the WhatsApp chats for the old and the new number appear in the one inbox alongside LinkedIn, Telegram and the other apps you connect. The deal on the Deal Desk keeps the conversation attached, and the Rolodex keeps the seller as a contact. You still send the summary from option 2, because confirming terms in writing is good practice whatever tool you use, but you no longer rely on remembering which thread holds what.',
+          'The cost is setup: connecting your accounts and building the habit of approving deals onto the Deal Desk. With your own Anthropic API key, Claude can flag messages that look like a deal for you to review. Nothing lands on the desk until you approve it.',
+          '**Works when:** you run several deals at once and sellers, buyers and introducers change numbers, apps or devices more often than you would like.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Start fresh', 'Keep both and summarize', 'One inbox, one deal record'],
+            rows: [
+              ['Terms confirmed on the new number', 'Only if you remember', 'Yes, in the summary', 'Yes, in the summary'],
+              ['Old messages easy to find', 'Archived, out of sight', 'Under one contact', 'In the same inbox'],
+              ['Replies to the wrong number', 'Likely', 'Less likely', 'Less likely'],
+              ['Seller answers on both for a while', 'Missed', 'Two threads to check', 'Same list'],
+              ['Effort on the day of the change', 'None', 'Ten minutes', 'Ten minutes'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A ten-minute routine for the day the number changes',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Reply on the new number the same day',
+                text: 'A short “Got it, saved” tells the seller the change landed.',
+              },
+              {
+                title: 'Put both numbers under one contact',
+                text: 'Whatever app you use for contacts, one name with both numbers beats two strangers.',
+              },
+              {
+                title: 'Send the summary',
+                text: 'Price, timeline, open questions, in three lines. Ask him to correct anything that has moved. The same habit covers [deal terms that hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats).',
+              },
+              {
+                title: 'Say which chat you will use',
+                text: '“I’ll message you here from now on” saves a week of replies to a phone in a drawer.',
+              },
+            ],
+          },
+          'The same routine works when a buyer moves from WhatsApp to Signal, or an introducer changes firms and LinkedIn accounts. The details change. The point does not: one counterparty should mean one record of the deal, wherever the messages come from.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
