@@ -110,7 +110,13 @@ Before release, record the current Vercel deployment ID and exact tested candida
 
 ## Current status
 
-Preparation complete: branch, reviewed copy/reference snapshot, dependency inventory, route/control map, baseline tests/build, preservation fence and rollout/rollback plan. **Native integration, candidate acceptance and production promotion remain pending.** The live homepage remains unchanged.
+Native integration and local acceptance completed on 2026-11-08. The new homepage is selected by `MERGER_FUNNEL_VERSION=3`; the original homepage remains available when the setting is unset. The 112 protected files and 30 route patterns remain unchanged. No database migration is required.
+
+Validation: 317 Vitest tests across 27 files and four real-HTTP synthetic API tests passed. The Next 15.5.29 production build passed. The asset check resolved 361 declared assets/frame paths. Compatible Next/sharp/source-map-js patch updates clear the production dependency audit (zero reported vulnerabilities). Existing dev-tool audit findings are outside the production bundle.
+
+Browser checks passed for anonymous and synthetic member navigation, sign-in/dashboard/sign-out, monthly/annual price display, referral links, client navigation cleanup, desktop 3D channel animation, narrow/mobile menu/layout, reduced motion and readable no-JavaScript content. Google provider acceptance and real payments were not repeated; their retained code and regression tests are unchanged. Physical GPU/Safari-specific testing is not claimed.
+
+Production promotion is pending the staged deployment checks. Previous production rollback: `dpl_6i3sygip4tRizVuqQLNW74URpm8w` (`merger-landing-mjcs38zf7-merger1.vercel.app`). Deployment receipts will be recorded separately.
 
 Commands from the integration checkout:
 

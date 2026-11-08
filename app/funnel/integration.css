@@ -1,0 +1,18 @@
+.funnel-home {position:relative;background:#080a08;color:#f0f0eb;font-family:MergerFunnelInter,Arial,sans-serif;isolation:isolate;}
+.funnel-home .funnel-anchor {position:absolute;top:0;pointer-events:none;}
+.funnel-home section {position:relative;}
+.funnel-home .mk-nav {position:relative;top:auto;background:transparent;color:#fff;z-index:50;}
+.funnel-home .mk-brand {gap:12px;}
+.funnel-home .mk-brand>span {text-transform:uppercase;font-size:17px;letter-spacing:.3em;font-weight:650;}
+.funnel-home .mk-nav-inner {max-width:1440px;padding-inline:40px;min-height:90px;}
+.funnel-home .mk-nav-links a {color:#d4d4d4;}
+.funnel-home .mk-nav-links a.mk-button {background:#f5f5f5;color:#111;border-color:#f5f5f5;}
+.funnel-home .mk-nav-links {font-size:13px;}
+.funnel-home .mk-nav-you {color:#aaa;}
+.funnel-home .social-links {list-style:none;display:flex;flex-wrap:wrap;gap:14px;padding:0;margin:24px 0;}
+.funnel-home .social-links a {display:flex;min-height:32px;align-items:center;color:#ccc;}
+.funnel-home .offer-founder strong {display:block;margin-bottom:6px;}
+.funnel-home .offer-cta {color:#111;}
+.funnel-home .footer-brand .social-links svg {width:18px;height:18px;}
+@media(max-width:800px){.funnel-home .mk-nav-inner {padding-inline:20px;min-height:76px;}.funnel-home .mk-nav-links.is-open {background:#111;border:1px solid #333;}.funnel-home .mk-nav-auth {flex-wrap:wrap;}}
+@media(prefers-reduced-motion:reduce){.funnel-home {scroll-behavior:auto;}}
