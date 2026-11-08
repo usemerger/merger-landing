@@ -90,7 +90,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     const time=(parent?trigger.animation.labels['match-preview']:0)+stops[key];
     const y=trigger.start+(trigger.end-trigger.start)*time/trigger.animation.duration();
     const smoother=window.ScrollSmoother?.get();
-    if(smoother)smoother.scrollTo(y,false);else scrollTo(0,y);
+    if(smoother)smoother.scrollTo(y,false);else window.scrollTo({top:y,behavior:'instant'});
     ScrollTrigger.update();trigger.getTween()?.progress(1);trigger.animation.time(time);
     if(key==='posts')feed.querySelector('.match-author').focus({preventScroll:true});
     else (key==='adrian'?adrian:maya).querySelector('.match-back').focus({preventScroll:true});

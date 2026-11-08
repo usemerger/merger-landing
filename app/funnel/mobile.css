@@ -58,7 +58,7 @@
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-viewport{left:24px;top:26%;overflow:visible}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-sentence{width:max-content;white-space:nowrap;font-size:clamp(40px,11vw,64px);line-height:1.28;text-wrap:nowrap}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-handoff{display:inline-flex;flex-direction:row;gap:24px;margin:0 0 0 100px}
-#why[data-origin-mode="flow"] [data-touch-vision] .vision-arrow{transform:none;width:80px;margin:0}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-arrow{transform:none;rotate:90deg;width:80px;margin:0}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-object img{max-height:none;height:100%}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-status{font-size:11px;bottom:9%}
 @media(max-height:650px){
@@ -102,6 +102,22 @@
 .match-stage[data-motion="mobile"] .match-metrics{grid-template-columns:1fr 1fr;gap:20px}
 .match-stage[data-motion="mobile"] .match-metric dt,.match-stage[data-motion="mobile"] .match-profile-section h5,.match-stage[data-motion="mobile"] .match-accolades li,.match-stage[data-motion="mobile"] .match-social,.match-stage[data-motion="mobile"] .match-member-since{font-size:11px}
 .match-stage[data-motion="mobile"] .match-metric small{font-size:10px}
+#why[data-origin-mode="flow"] #origin-match[data-touch-match]{overflow:clip;display:block}
+#why[data-origin-mode="flow"] #origin-match[data-touch-match] .origin-copy{margin-bottom:32px}
+#why [data-touch-match] .origin-art-match{padding-top:64px;padding-bottom:20px;max-width:560px;margin:auto}
+#why [data-touch-match] .match-brand>span:last-child{font-size:9px}
+#why [data-touch-match] .match-author,#why [data-touch-match] .match-profile-link,#why [data-touch-match] .match-back{min-height:44px}
+#why [data-touch-match] .match-name{font-size:13px}
+#why [data-touch-match] .match-caption{margin-top:12px}
+@media(max-height:700px){
+ #why [data-touch-match] .match-profile{padding:16px}
+ #why [data-touch-match] .match-profile-top{margin-bottom:8px}
+ #why [data-touch-match] .match-profile-person .match-avatar{width:48px;height:48px}
+ #why [data-touch-match] .match-profile-bio{margin:10px 0}
+ #why [data-touch-match] .match-metrics{gap:10px;padding:12px 0}
+ #why [data-touch-match] .match-profile-section{margin-top:10px}
+ #why [data-touch-match] .match-member-since{margin-top:10px}
+}
 #why[data-origin-mode="flow"] .match-caption,#why[data-origin-mode="flow"] .vault-caption{font-size:11px;line-height:1.65;color:#a7ada0}
 @media(max-width:850px),(pointer:coarse) {
   #why[data-origin-mode="flow"] .origin-scene{grid-template-columns:minmax(0,1fr);gap:32px;padding:56px 24px;max-width:680px;margin:auto}
