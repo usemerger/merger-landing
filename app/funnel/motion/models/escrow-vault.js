@@ -6,7 +6,7 @@ const clamp=n=>Math.max(0,Math.min(1,n));
 const mix=(a,b,t)=>a+(b-a)*t;
 export function createEscrowVault(host){
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
- renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+ renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,matchMedia('(pointer:coarse), (max-width:850px)').matches?1.25:1.75));
  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.95;
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
  renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);

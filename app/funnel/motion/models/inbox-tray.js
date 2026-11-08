@@ -22,7 +22,7 @@ const documents=[
 
 export async function createInboxTray(host) {
  const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
- renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));
+ renderer.setClearColor(0,0);renderer.setPixelRatio(Math.min(devicePixelRatio,matchMedia('(pointer:coarse), (max-width:850px)').matches?1.25:1.75));
  renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);
