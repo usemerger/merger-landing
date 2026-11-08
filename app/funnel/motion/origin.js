@@ -1,4 +1,5 @@
 import {touchStory} from './touch-story';
+import {originTouchScene} from './origin-touch-scene';
 
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
@@ -107,7 +108,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
         if(scene.id==='origin-match'){
           scene.dataset.touchMatch='true';
           const motion=window.MergerMatchPreview.timeline();
-          cleanups.push(touchStory(scope,scene.querySelector('.origin-art-match'),motion,{id:'merger-match-mobile',distance:2400}));
+          cleanups.push(originTouchScene(scope,scene,motion,{id:'merger-match-mobile',distance:2400}));
           cleanups.push(()=>delete scene.dataset.touchMatch);
           return;
         }
@@ -128,10 +129,10 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
           cleanups.push(()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync);button.remove();});
           return;
         }
-        const messages=scene.id==='origin-detection',roundtable=scene.id==='origin-network';
-        // Let all three messages enter the narrow viewport before they turn
-        // into icons; finish while the aligned results are still in view.
-        ScrollTrigger.create({trigger:scene.querySelector('.origin-art'),start:messages?'top 45%':roundtable?'top 65%':'top 90%',end:messages||roundtable?'center 35%':'bottom 45%',animation:motion,scrub:.5,invalidateOnRefresh:true});
+        cleanups.push(originTouchScene(scope,scene,motion,{
+          id:'merger-touch-'+scene.id,
+          distance:Math.max(1000,Math.min(1800,motion.duration()*200))
+        }));
       });
       return ()=>{cleanups.forEach(cleanup=>cleanup());window.MergerVisionStatement?.reset();window.MergerIdentityScan?.reset();window.MergerMatchPreview?.reset();window.MergerEscrowVault?.reset();scenes.forEach(scene=>scene.removeAttribute('aria-hidden'));};
     }
@@ -144,7 +145,9 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
       const arrival=arrivals[i];
       if(scene.id==='origin-match')timeline.addLabel('match-preview',Math.max(0,arrival-.1));
       if(scene.id==='origin-escrow')timeline.addLabel('escrow-vault',Math.max(0,arrival-.1));
-      timeline.add(choreograph(scene),Math.max(0,arrival-.1));
+      // The scene must finish travelling into view before its content plays.
+      // Preserve the final vault's existing transition and playback timing.
+      timeline.add(choreograph(scene),scene.id==='origin-escrow'?Math.max(0,arrival-.1):arrival);
       if(i===0)return;
       const start=arrival-travel;
       timeline.to(world,{x:()=>-route[i][0]*stage.clientWidth,y:()=>-route[i][1]*stage.clientHeight,duration:travel,ease:'power2.inOut'},start);
