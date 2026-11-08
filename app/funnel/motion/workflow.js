@@ -1,4 +1,6 @@
 
+import {createInlinePlayback} from './inline-playback';
+
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
 (() => {
@@ -15,6 +17,25 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   const reduce=matchMedia('(prefers-reduced-motion:reduce)');
   let active=0,visible=false,paused=false,mode='flow',current=null;
   function load(film){if(!film.getAttribute('src')){film.src=film.dataset.src;film.load();}}
+  const mobileButtons=new Map(mobileFilms.map((film,index)=>{
+    const button=document.createElement('button');button.type='button';button.className='workflow-inline-playback';
+    button.textContent='Play walkthrough';button.setAttribute('aria-label',`Play walkthrough ${index+1}`);
+    film.closest('.workflow-mobile-phone').append(button);
+    const nativeControls=film.controls;film.controls=false;film.loop=true;
+    scope.onDispose(()=>{button.remove();film.controls=nativeControls;film.loop=false;});
+    return [film,button];
+  }));
+  const inline=createInlinePlayback({videos:mobileFilms,load,isHidden:()=>document.hidden,
+    canAutoplay:()=>!reduce.matches&&!window.navigator.connection?.saveData,
+    onState:(film,state)=>{const button=mobileButtons.get(film);button.dataset.state=state;
+      button.textContent=state==='playing'?'Pause video':state==='loading'?'Pause video':state==='error'?'Retry video':'Play video';
+      const title=panels[mobileFilms.indexOf(film)].querySelector('h3');
+      button.setAttribute('aria-label',`${button.textContent}: ${title.getAttribute('aria-label')||title.textContent}`);
+    }});
+  mobileButtons.forEach((button,film)=>scope.listen(button,'click',()=>inline.toggle(film)));
+  const mobileObserver=new IntersectionObserver(entries=>inline.visibility(entries),{threshold:[0,.35,.5,.75,1]});
+  mobileFilms.forEach(film=>{mobileObserver.observe(film);scope.listen(film,'ended',()=>inline.ended(film));});
+  scope.listen(document,'visibilitychange',inline.sync);scope.listen(reduce,'change',inline.sync);scope.onDispose(()=>inline.dispose());
   function label(){playback.textContent=paused?'▶':'Ⅱ';playback.setAttribute('aria-label',paused?'Play walkthrough video':'Pause walkthrough video');}
   function sync(){
     if(mode==='flow'){desktopFilms.forEach(f=>f.pause());if(!visible||document.hidden)mobileFilms.forEach(f=>f.pause());return;}
@@ -32,8 +53,6 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     sync();
   }
   scope.listen(playback,'click',()=>{if(current?.ended){current.currentTime=0;paused=false;}else paused=!paused;label();sync();});
-  // Native controls remain available on the stacked/mobile recordings.
-  mobileFilms.forEach(f=>scope.listen(f,'play',()=>films.forEach(other=>{if(other!==f)other.pause();})));
   const observer=new IntersectionObserver(entries=>{const e=entries[0];visible=e.isIntersecting&&(mode==='flow'||e.intersectionRatio>=.45);sync();},{threshold:[0,.45]});observer.observe(section.querySelector('.workflow-stage'));
   scope.listen(document,'visibilitychange',sync);
   films.forEach(f=>scope.listen(f,'ended',()=>{if(f===current&&mode==='horizontal'){playback.textContent='↻';playback.setAttribute('aria-label','Replay walkthrough video');}}));
@@ -42,7 +61,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   media?.revert();
   media=window.gsap?.matchMedia();
   media?.add({wide:'(min-width:720px) and (min-height:760px) and (pointer:fine)',reduce:'(prefers-reduced-motion:reduce)',all:'all'},({conditions})=>{
-    const triggers=[];mode=conditions.wide&&!conditions.reduce?'horizontal':'flow';section.dataset.workflowMode=mode;
+    const triggers=[];mode=conditions.wide&&!conditions.reduce?'horizontal':'flow';section.dataset.workflowMode=mode;inline.setEnabled(mode==='flow');
     const titleWords=panels.map(p=>window.MergerTextMotion.split(p.querySelector('h3')));
     paused=false;label();
     if(mode==='horizontal'){
@@ -64,7 +83,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     }
     gsap.set([rail,...panels.map(p=>p.querySelector('.workflow-panel-copy'))],{clearProps:'transform,opacity'});
     if(!conditions.reduce)panels.forEach(p=>window.MergerTextMotion.reveal(p.querySelector('h3'),{start:'top 88%'}));
-    // Stacked recordings use native controls, so they never play before the reader reaches them.
+    // Only the visible mobile recording plays; tap playback survives autoplay denial.
     chapter(0);
     return()=>{triggers.forEach(t=>t.kill());films.forEach(f=>f.pause());};
   });

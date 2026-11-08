@@ -12,7 +12,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   const duration=12.6,stops={posts:1.5,adrian:4.9,maya:10.5};
   let currentView=null;
   function fit(){
-    if(!stage.dataset.motion)return;
+    if(stage.dataset.motion!=='enabled')return;
     stage.style.removeProperty('height');
     // Measure only on layout/refresh, never during the scroll animation.
     const needed=Math.max(feed.offsetTop+feed.offsetHeight,adrian.offsetHeight,maya.offsetHeight)+10;
@@ -31,6 +31,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     stage.style.removeProperty('height');
     for(const el of [feed,adrian,maya]){el.inert=false;el.removeAttribute('aria-hidden');}
   }
+  function mobile(){stage.dataset.motion='mobile';setView('posts');}
   function point(person,axis,offset=0){
     const target=scene.querySelector('.match-post-'+person+' .match-author');
     // offsetLeft/Top describe the stable card layout, unaffected by entrance transforms.
@@ -72,6 +73,13 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   // than creating a second, competing animation state or an external profile.
   scene.querySelectorAll('[data-match-open]').forEach(button=>scope.listen(button,'click',()=>{
     const key=button.dataset.matchOpen;
+    if(stage.dataset.motion==='mobile'){
+      setView(key);
+      const target=key==='posts'?feed:key==='adrian'?adrian:maya;
+      target.scrollIntoView({behavior:'instant',block:'start'});
+      target.querySelector(key==='posts'?'.match-author':'.match-back').focus({preventScroll:true});
+      return;
+    }
     if(!stage.dataset.motion){
       (key==='posts'?feed:key==='adrian'?adrian:maya).scrollIntoView({behavior:'instant',block:'center'});
       return;
@@ -88,7 +96,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     else (key==='adrian'?adrian:maya).querySelector('.match-back').focus({preventScroll:true});
   }));
   scope.listen(ScrollTrigger,'refreshInit',fit);
-  window.MergerMatchPreview={duration,timeline,reset};
+  window.MergerMatchPreview={duration,timeline,reset,mobile};
 })();
 
 }

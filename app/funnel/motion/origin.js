@@ -93,20 +93,33 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     section.dataset.originMode=pin?'pinned':'flow';active=-1;select(0);
     if(context.conditions.reduce)return ()=>scenes.forEach(scene=>scene.removeAttribute('aria-hidden'));
     if(!pin){
+      const cleanups=[];
       scenes.forEach(scene=>{
         const vision=scene.id==='origin-vision-statement';
-        if((vision||scene.id==='origin-match'||scene.id==='origin-escrow')&&innerHeight<620)return;
-        const motion=choreograph(scene);
         if(vision){
-          ScrollTrigger.create({id:'merger-vision-mobile',trigger:scene.querySelector('.vision-stage'),start:'top top',end:()=>'+='+Math.max(2600,innerWidth*2.5),pin:true,animation:motion,scrub:.35,invalidateOnRefresh:true});
+          // A readable, wrapping promise replaces the desktop's wide typewriter.
+          gsap.fromTo(scene.querySelectorAll('.vision-word'),{opacity:0,y:10},{opacity:1,y:0,duration:.45,stagger:.055,ease:'power2.out',scrollTrigger:{trigger:scene.querySelector('.vision-viewport'),start:'top 80%',once:true}});
           return;
         }
         if(scene.id==='origin-match'){
-          ScrollTrigger.create({id:'merger-match-mobile',trigger:scene.querySelector('.origin-art-match'),start:'top 30px',end:()=>'+='+Math.max(2800,innerHeight*4),pin:true,animation:motion,scrub:.4,invalidateOnRefresh:true});
+          window.MergerMatchPreview?.mobile();
           return;
         }
+        const motion=choreograph(scene);
         if(scene.id==='origin-escrow'){
-          ScrollTrigger.create({id:'merger-escrow-mobile',trigger:scene.querySelector('.origin-art-escrow'),start:()=>innerHeight<700?'top 58px':'top 80px',end:()=>'+='+Math.max(2900,innerHeight*3.8),pin:true,animation:motion,scrub:.4,invalidateOnRefresh:true});
+          // Keep all three phases readable without thousands of pinned pixels.
+          // The visitor can pause or replay the example while the page stays free.
+          motion.pause(0);
+          const art=scene.querySelector('.origin-art-escrow'),button=document.createElement('button');
+          button.type='button';button.className='funnel-scene-playback';button.textContent='Play example';art.append(button);
+          let userPaused=false,inView=false;
+          const label=()=>{button.textContent=motion.progress()>=1?'Replay example':motion.paused()?'Play example':'Pause example';};
+          const sync=()=>{if(inView&&!document.hidden&&!userPaused&&motion.progress()<1)motion.play();else motion.pause();label();};
+          const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting&&entry.intersectionRatio>=.5;sync();},{threshold:[0,.5]});observer.observe(scene.querySelector('.vault-visual'));
+          const toggle=()=>{if(motion.paused()){userPaused=false;motion.progress()>=1?motion.restart():motion.play();}else{userPaused=true;motion.pause();}label();};
+          button.addEventListener('click',toggle);motion.eventCallback('onComplete',label);
+          document.addEventListener('visibilitychange',sync);
+          cleanups.push(()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync);button.remove();});
           return;
         }
         const messages=scene.id==='origin-detection',roundtable=scene.id==='origin-network';
@@ -114,7 +127,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
         // into icons; finish while the aligned results are still in view.
         ScrollTrigger.create({trigger:scene.querySelector('.origin-art'),start:messages?'top 45%':roundtable?'top 65%':'top 90%',end:messages||roundtable?'center 35%':'bottom 45%',animation:motion,scrub:.5,invalidateOnRefresh:true});
       });
-      return ()=>{window.MergerVisionStatement?.reset();window.MergerIdentityScan?.reset();window.MergerMatchPreview?.reset();window.MergerEscrowVault?.reset();scenes.forEach(scene=>scene.removeAttribute('aria-hidden'));};
+      return ()=>{cleanups.forEach(cleanup=>cleanup());window.MergerVisionStatement?.reset();window.MergerIdentityScan?.reset();window.MergerMatchPreview?.reset();window.MergerEscrowVault?.reset();scenes.forEach(scene=>scene.removeAttribute('aria-hidden'));};
     }
     const place=()=>scenes.forEach((scene,i)=>gsap.set(scene,{left:route[i][0]*stage.clientWidth,top:route[i][1]*stage.clientHeight}));
     place();stops=arrivals.map((arrival,i)=>i===0?.1:arrival+(i===1?.6:i===2?.25:i===3?1.4:i===4?.55:i===5?.6:1.7));
@@ -150,12 +163,12 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   // Warm static artwork as the visitor approaches. The 3D tray loads separately
   // when its own scene is near the viewport.
   const preload=new IntersectionObserver(entries=>{
-    if(entries.some(entry=>entry.isIntersecting)){
-      section.querySelectorAll('img').forEach(img=>{img.loading='eager';});
-      preload.disconnect();
-    }
-  },{rootMargin:'900px'});
-  preload.observe(section);
+    entries.filter(entry=>entry.isIntersecting).forEach(entry=>{
+      entry.target.querySelectorAll('img').forEach(img=>{img.loading='eager';});
+      preload.unobserve(entry.target);
+    });
+  },{rootMargin:'500px'});
+  scenes.forEach(scene=>preload.observe(scene));
   // Reordered sections must refresh their pins in page order.
   scope.listen(window,'load',()=>{ScrollTrigger.sort();ScrollTrigger.refresh();},{once:true});
 })();
