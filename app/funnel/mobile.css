@@ -110,9 +110,9 @@
 .match-stage[data-motion="mobile"] .match-metrics{grid-template-columns:1fr 1fr;gap:20px}
 .match-stage[data-motion="mobile"] .match-metric dt,.match-stage[data-motion="mobile"] .match-profile-section h5,.match-stage[data-motion="mobile"] .match-accolades li,.match-stage[data-motion="mobile"] .match-social,.match-stage[data-motion="mobile"] .match-member-since{font-size:11px}
 .match-stage[data-motion="mobile"] .match-metric small{font-size:10px}
-#why[data-origin-mode="flow"] #origin-match[data-touch-match]{overflow:clip;display:block}
+#why[data-origin-mode="flow"] #origin-match[data-touch-match]{overflow:visible;display:block}
 #why[data-origin-mode="flow"] #origin-match[data-touch-match] .origin-copy{margin-bottom:32px}
-#why [data-touch-match] .origin-art-match{padding-top:64px;padding-bottom:20px;max-width:560px;margin:auto}
+#why [data-touch-match] .origin-art-match{max-width:560px;margin:auto}
 #why [data-touch-match] .match-brand>span:last-child{font-size:9px}
 #why [data-touch-match] .match-author,#why [data-touch-match] .match-profile-link,#why [data-touch-match] .match-back{min-height:44px}
 #why [data-touch-match] .match-name{font-size:13px}
@@ -147,5 +147,14 @@
   .match-profile-top{gap:8px}.match-verified{font-size:9px}
   .vault-party{font-size:9px;gap:4px}.vault-person-avatar{width:24px;height:24px}
 }
+/* Keep the sticky frame and its ancestors unclipped for Safari. Only the
+   inner artboard clips artwork; a stable svh height ignores toolbar motion. */
+#why[data-origin-mode="flow"] .origin-stage{overflow:visible}
+#why[data-origin-mode="flow"] .origin-depth{display:none}
+#why[data-origin-mode="flow"] .origin-scene[data-touch-arrival]{display:block;overflow:visible}
+#why[data-origin-mode="flow"] [data-touch-arrival] .origin-copy{margin-bottom:32px}
+#why [data-touch-arrival] .origin-touch-frame{height:100svh;min-height:0;width:100%}
+#why [data-touch-arrival] .origin-touch-artboard{height:100%;width:100%;display:grid;place-items:center;overflow:clip;padding:64px 0 40px}
+#why [data-touch-arrival] .origin-art{grid-area:1/1;min-height:0;margin:0;transform-origin:center;align-self:center}
 @media(prefers-reduced-motion:reduce){.workflow-inline-playback:active,.funnel-scene-playback:active{scale:1}}
 }
