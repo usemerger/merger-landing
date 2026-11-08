@@ -4,16 +4,22 @@
 .touch-story>.touch-story-stage{position:sticky!important;top:0;align-self:start}
 /* Touch stories use a stable small viewport while Safari's URL bar expands.
    Horizontal movement is inside the stage, never on the document itself. */
-.context-section[data-context-touch] .context-scene{height:100svh;min-height:0;padding:64px 24px 22px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:12px;overflow:clip}
+/* Keep clipping below the sticky element. An overflow clip on its ancestor
+   makes Safari repaint the entire scene against the moving scroll layer. */
+.context-section[data-context-touch]{overflow:visible}
+.context-section[data-context-touch] .context-scene{height:100svh;min-height:0;padding:64px 24px 22px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:12px;overflow:visible}
+.context-section[data-context-touch] .context-backdrop{inset:0;width:100%;transform:none}
+.context-section[data-context-touch] :is(.context-visual,.context-channel-visual){overflow:clip;overflow-clip-margin:16px}
 .context-section[data-context-touch] :is(.context-copy,.context-channel-copy){grid-column:1;grid-row:1;margin:0}
-.context-section[data-context-touch] :is(.context-visual,.context-channel-visual){grid-column:1;grid-row:2;max-width:520px;align-self:center}
+.context-section[data-context-touch] :is(.context-visual,.context-channel-visual){grid-column:1;grid-row:2;max-width:520px;align-self:stretch;height:100%;min-height:0;container-type:size;display:grid;place-items:center}
 .context-section[data-context-touch] .context-copy .eyebrow{margin-bottom:14px}
 .context-section[data-context-touch] .context-copy h2{font-size:clamp(29px,7.4vw,42px);line-height:1.07;margin-bottom:12px}
 .context-section[data-context-touch] .context-copy>p:not(.eyebrow){font-size:13px;line-height:1.5;margin:0;max-width:430px}
 .context-section[data-context-touch] .context-beats{min-height:100px;display:grid;grid-template-columns:1fr;gap:0;margin-top:16px}
 .context-section[data-context-touch] .context-beats strong{font-size:20px;line-height:1.12}
 .context-section[data-context-touch] .context-beats p{font-size:12px;line-height:1.4;margin-top:7px}
-.context-section[data-context-touch] .context-canvas{aspect-ratio:1.2}
+.context-section[data-context-touch] .context-canvas{aspect-ratio:1.2;width:min(100cqw,120cqh)}
+.context-section[data-context-touch] .channel-orbit{width:min(100cqw,100cqh)}
 .context-section[data-context-touch] .context-diagram{display:block;padding:0;aspect-ratio:auto}
 .context-section[data-context-touch] .context-board{inset:0}
 .context-section[data-context-touch] .context-board-heading{position:absolute;inset:6% 6% auto;padding:0}
@@ -61,7 +67,9 @@
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-arrow{transform:none;rotate:90deg;width:80px;margin:0}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-object img{max-height:none;height:100%}
 #why[data-origin-mode="flow"] [data-touch-vision] .vision-status{font-size:11px;bottom:9%}
-@media(max-height:650px){
+/* Width, unlike the live viewport height, cannot cross this breakpoint when
+   Safari expands/collapses its toolbar during a portrait scroll. */
+@media(min-width:700px) and (max-height:650px){
  .context-section[data-context-touch] .context-scene{padding-top:20px;grid-template-columns:1fr 1fr;grid-template-rows:1fr;gap:20px}
  .context-section[data-context-touch] :is(.context-visual,.context-channel-visual){grid-column:2;grid-row:1}
  .context-section[data-context-touch] .context-copy h2{font-size:28px}
