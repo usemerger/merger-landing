@@ -1,3 +1,4 @@
+import {touchStory} from './touch-story';
 
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
@@ -97,8 +98,10 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
       scenes.forEach(scene=>{
         const vision=scene.id==='origin-vision-statement';
         if(vision){
-          // A readable, wrapping promise replaces the desktop's wide typewriter.
-          gsap.fromTo(scene.querySelectorAll('.vision-word'),{opacity:0,y:10},{opacity:1,y:0,duration:.45,stagger:.055,ease:'power2.out',scrollTrigger:{trigger:scene.querySelector('.vision-viewport'),start:'top 80%',once:true}});
+          const motion=window.MergerVisionStatement.timeline();
+          scene.dataset.touchVision='true';
+          cleanups.push(touchStory(scope,scene.querySelector('.vision-stage'),motion,{id:'merger-touch-vision',distance:()=>Math.max(2000,scene.querySelector('.vision-sentence').scrollWidth*.6)}));
+          cleanups.push(()=>delete scene.dataset.touchVision);
           return;
         }
         if(scene.id==='origin-match'){

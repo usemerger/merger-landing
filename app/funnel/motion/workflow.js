@@ -1,3 +1,4 @@
+import {touchStory} from './touch-story';
 
 import {createInlinePlayback} from './inline-playback';
 
@@ -12,6 +13,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   const desktopFilms=[...section.querySelectorAll('.workflow-desktop-video')];
   const mobileFilms=[...section.querySelectorAll('.workflow-mobile-phone video')];
   const films=[...desktopFilms,...mobileFilms];
+  films.forEach(film=>{film.muted=true;film.defaultMuted=true;film.playsInline=true;film.setAttribute('muted','');film.setAttribute('playsinline','');});
   const playback=section.querySelector('.workflow-playback');
   const positions=[...section.querySelectorAll('.workflow-position span')];
   const reduce=matchMedia('(prefers-reduced-motion:reduce)');
@@ -61,11 +63,11 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
   media?.revert();
   media=window.gsap?.matchMedia();
   media?.add({wide:'(min-width:720px) and (min-height:760px) and (pointer:fine)',reduce:'(prefers-reduced-motion:reduce)',all:'all'},({conditions})=>{
-    const triggers=[];mode=conditions.wide&&!conditions.reduce?'horizontal':'flow';section.dataset.workflowMode=mode;inline.setEnabled(mode==='flow');
+    const triggers=[];mode=!conditions.reduce?'horizontal':'flow';const touch=!conditions.wide&&mode==='horizontal';section.dataset.workflowMode=mode;section.toggleAttribute('data-workflow-touch',touch);inline.setEnabled(mode==='flow');
     const titleWords=panels.map(p=>window.MergerTextMotion.split(p.querySelector('h3')));
     paused=false;label();
     if(mode==='horizontal'){
-      const timeline=gsap.timeline({scrollTrigger:{id:'merger-workflow-story',trigger:section,start:'top top',end:()=>'+='+Math.max(2200,innerWidth*2),pin:section.querySelector('.workflow-stage'),scrub:.65,invalidateOnRefresh:true},onUpdate:()=>chapter(timeline.time()<1.7?0:timeline.time()<4.5?1:2)});
+      const timeline=gsap.timeline({scrollTrigger:touch?undefined:{id:'merger-workflow-story',trigger:section,start:'top top',end:()=>'+='+Math.max(2200,innerWidth*2),pin:section.querySelector('.workflow-stage'),scrub:.65,invalidateOnRefresh:true},onUpdate:()=>chapter(timeline.time()<1.7?0:timeline.time()<4.5?1:2)});
       timeline.to({}, {duration:1})
         .to(rail,{xPercent:-100/3,duration:1.4,ease:'power2.inOut'},1)
         .to({}, {duration:1.4},2.4)
@@ -78,8 +80,9 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
           .fromTo(p.querySelector('.workflow-chapter'),{y:8,opacity:0},{y:0,opacity:1,duration:.5,ease:'power3.out'},at-.08)
           .fromTo(p.querySelector('.workflow-panel-body'),{y:10,opacity:0},{y:0,opacity:1,duration:.65,ease:'power3.out'},at+.15);
       });
+      const releaseTouch=touch?touchStory(scope,section.querySelector('.workflow-stage'),timeline,{id:'merger-workflow-story',distance:1800}):null;
       chapter(0);
-      return()=>{timeline.scrollTrigger?.kill();timeline.kill();films.forEach(f=>f.pause());section.dataset.workflowMode='flow';};
+      return()=>{releaseTouch?.();section.removeAttribute('data-workflow-touch');timeline.scrollTrigger?.kill();timeline.kill();films.forEach(f=>f.pause());section.dataset.workflowMode='flow';};
     }
     gsap.set([rail,...panels.map(p=>p.querySelector('.workflow-panel-copy'))],{clearProps:'transform,opacity'});
     if(!conditions.reduce)panels.forEach(p=>window.MergerTextMotion.reveal(p.querySelector('h3'),{start:'top 88%'}));
