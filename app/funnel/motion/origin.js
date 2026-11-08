@@ -116,7 +116,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
           const label=()=>{button.textContent=motion.progress()>=1?'Replay example':motion.paused()?'Play example':'Pause example';};
           const sync=()=>{if(inView&&!document.hidden&&!userPaused&&motion.progress()<1)motion.play();else motion.pause();label();};
           const observer=new IntersectionObserver(([entry])=>{inView=entry.isIntersecting&&entry.intersectionRatio>=.5;sync();},{threshold:[0,.5]});observer.observe(scene.querySelector('.vault-visual'));
-          const toggle=()=>{if(motion.paused()){userPaused=false;motion.progress()>=1?motion.restart():motion.play();}else{userPaused=true;motion.pause();}label();};
+          const toggle=()=>{if(motion.progress()>=1){userPaused=false;motion.restart();}else if(motion.paused()){userPaused=false;motion.play();}else{userPaused=true;motion.pause();}label();};
           button.addEventListener('click',toggle);motion.eventCallback('onComplete',label);
           document.addEventListener('visibilitychange',sync);
           cleanups.push(()=>{observer.disconnect();document.removeEventListener('visibilitychange',sync);button.remove();});
