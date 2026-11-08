@@ -1,3 +1,4 @@
+import {touchStory} from './touch-story';
 
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
@@ -21,21 +22,8 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
     media.add({wide:'(min-width:1100px) and (min-height:760px) and (pointer:fine)',reduce:'(prefers-reduced-motion:reduce)',all:'all'}, ({conditions}) => {
       if(conditions.reduce) { orbit.staticPose(); return; }
       const glass = section.querySelector('.context-brand-glass');
-      if(!conditions.wide){
-        section.dataset.contextMotion='flow';
-        const elements=section.querySelectorAll('.context-fragment,.context-board,.context-board-heading,.context-next,.context-diagram,.context-line>span,.context-beats li,.context-beats strong,.context-beats p');
-        gsap.set(elements,{clearProps:'transform,opacity,visibility'});
-        gsap.set(section.querySelector('.context-line-draw'),{clearProps:'clipPath'});
-        window.MergerTextMotion.reveal(heading,{start:'top 92%'});
-        const orbitMotion=orbit.timeline();
-        ScrollTrigger.create({trigger:section.querySelector('.context-channel-visual'),start:'top 92%',end:'bottom 18%',animation:orbitMotion,scrub:.55,invalidateOnRefresh:true});
-        section.querySelectorAll('.context-fragment,.context-next,.context-beats li').forEach(element=>{
-          gsap.fromTo(element,{y:12,opacity:0},{y:0,opacity:1,duration:.6,ease:'power3.out',scrollTrigger:{trigger:element,start:'top 96%',once:true}});
-        });
-        gsap.fromTo(glass,{yPercent:12,opacity:0},{yPercent:-8,opacity:.42,ease:'none',scrollTrigger:{trigger:section.querySelector('.context-visual'),start:'top bottom',end:'bottom top',scrub:.55}});
-        return ()=>{section.dataset.contextMotion='static';delete section.dataset.contextPhase;};
-      }
       section.dataset.contextMotion = 'scroll';
+      const touch=!conditions.wide;section.toggleAttribute('data-context-touch',touch);
       const find = s => section.querySelector(s);
       const steps = [...section.querySelectorAll('[data-context-beat]')];
       gsap.set(steps,{autoAlpha:0});
@@ -47,7 +35,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
       }
       window.MergerTextMotion.reveal(heading,{trigger:section,start:'top 82%'});
       window.MergerTextMotion.reveal(steps[0].querySelector('strong'),{trigger:section,start:'top 65%'});
-      const tl = gsap.timeline({defaults:{ease:'power2.inOut'},scrollTrigger:{id:'merger-context-story',trigger:section,start:'top top',end:'+=3335',pin:'.context-scene',scrub:.55,invalidateOnRefresh:true},onUpdate:()=>beat(tl.time()<1.4?0:tl.time()<3.25?1:tl.time()<5.7?2:3)});
+      const tl = gsap.timeline({defaults:{ease:'power2.inOut'},scrollTrigger:touch?undefined:{id:'merger-context-story',trigger:section,start:'top top',end:'+=3335',pin:'.context-scene',scrub:.55,invalidateOnRefresh:true},onUpdate:()=>beat(tl.time()<1.4?0:tl.time()<3.25?1:tl.time()<5.7?2:3)});
       tl.set(find('.context-channel-copy'),{autoAlpha:0,y:14})
         .set(find('.context-channel-visual'),{autoAlpha:0})
         .set(find('.context-diagram'),{autoAlpha:1,scale:1})
@@ -89,8 +77,9 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
           .fromTo(words,{yPercent:110,opacity:0},window.MergerTextMotion.target(words,{duration:.6,immediateRender:false}),position)
           .fromTo(step.querySelector('p'),{yPercent:100,opacity:0},{yPercent:0,opacity:1,duration:.6,ease:'power3.out',immediateRender:false},position+.12);
       });
+      const releaseTouch=touch?touchStory(scope,find('.context-scene'),tl,{id:'merger-context-story',distance:2100}):null;
       beat(0);
-      return () => {tl.scrollTrigger?.kill();tl.kill();section.dataset.contextMotion='static';delete section.dataset.contextPhase;};
+      return () => {releaseTouch?.();section.removeAttribute('data-context-touch');tl.scrollTrigger?.kill();tl.kill();section.dataset.contextMotion='static';delete section.dataset.contextPhase;};
     });
     ScrollTrigger.refresh();
   }

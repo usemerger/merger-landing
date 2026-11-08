@@ -1,4 +1,72 @@
 @scope (.funnel-home) {
+.context-section[data-context-motion="scroll"] :is(.context-channel-copy,.context-channel-visual,.context-result){opacity:0;visibility:hidden}
+.touch-story{position:relative;display:block;width:100%;min-width:0}
+.touch-story>.touch-story-stage{position:sticky!important;top:0;align-self:start}
+/* Touch stories use a stable small viewport while Safari's URL bar expands.
+   Horizontal movement is inside the stage, never on the document itself. */
+.context-section[data-context-touch] .context-scene{height:100svh;min-height:0;padding:64px 24px 22px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:12px;overflow:clip}
+.context-section[data-context-touch] :is(.context-copy,.context-channel-copy){grid-column:1;grid-row:1;margin:0}
+.context-section[data-context-touch] :is(.context-visual,.context-channel-visual){grid-column:1;grid-row:2;max-width:520px;align-self:center}
+.context-section[data-context-touch] .context-copy .eyebrow{margin-bottom:14px}
+.context-section[data-context-touch] .context-copy h2{font-size:clamp(29px,7.4vw,42px);line-height:1.07;margin-bottom:12px}
+.context-section[data-context-touch] .context-copy>p:not(.eyebrow){font-size:13px;line-height:1.5;margin:0;max-width:430px}
+.context-section[data-context-touch] .context-beats{min-height:100px;display:grid;grid-template-columns:1fr;gap:0;margin-top:16px}
+.context-section[data-context-touch] .context-beats strong{font-size:20px;line-height:1.12}
+.context-section[data-context-touch] .context-beats p{font-size:12px;line-height:1.4;margin-top:7px}
+.context-section[data-context-touch] .context-canvas{aspect-ratio:1.2}
+.context-section[data-context-touch] .context-diagram{display:block;padding:0;aspect-ratio:auto}
+.context-section[data-context-touch] .context-board{inset:0}
+.context-section[data-context-touch] .context-board-heading{position:absolute;inset:6% 6% auto;padding:0}
+.context-section[data-context-touch] .context-board-heading strong{font-size:15px}
+.context-section[data-context-touch] .context-fragment{position:absolute;padding:11px;border-radius:12px;width:auto;min-height:0}
+.context-section[data-context-touch] .context-fragment-label{font-size:7px;margin-bottom:8px}
+.context-section[data-context-touch] .context-fragment strong{font-size:11px}
+.context-section[data-context-touch] .context-fragment p{font-size:10px;line-height:1.4;margin:8px 0}
+.context-section[data-context-touch] .context-message{left:5%;right:48%;top:25%}
+.context-section[data-context-touch] .context-message-reply{font-size:9px;line-height:1.4;padding:7px;margin-top:8px}
+.context-section[data-context-touch] .context-person{left:55%;right:5%;top:25%}
+.context-section[data-context-touch] .context-person-row{gap:5px}.context-section[data-context-touch] .context-avatar{width:24px;height:24px;font-size:8px}
+.context-section[data-context-touch] .context-person-row>div>span{font-size:8px}
+.context-section[data-context-touch] .context-terms{left:55%;right:5%;top:53%}
+.context-section[data-context-touch] .context-next{position:absolute;left:5%;right:5%;top:82%;width:auto;padding:10px 0 0;gap:8px}
+.context-section[data-context-touch] .context-next strong{font-size:10px;line-height:1.3}.context-section[data-context-touch] .context-next>div>span{font-size:7px;margin-bottom:4px}
+.context-section[data-context-touch] .context-channel-copy h2{font-size:38px;margin-bottom:14px}
+.context-section[data-context-touch] .context-channel-copy .eyebrow{margin-bottom:16px}.context-section[data-context-touch] .channel-count{margin-top:14px}
+.aspiration[data-aspiration-touch] .aspiration-stage{height:100svh;min-height:0}
+.aspiration[data-aspiration-touch] .aspiration-rail{display:flex;width:max-content;height:100%}
+.aspiration[data-aspiration-touch] .aspiration-beat{width:100vw;height:100%;min-height:0}
+.aspiration[data-aspiration-touch] .aspiration-words{font-size:clamp(44px,10vw,78px);left:7%;top:15%;white-space:normal}
+.aspiration[data-aspiration-touch] .aspiration-goals .goal-word{font-size:clamp(76px,18vw,135px)}
+.aspiration[data-aspiration-touch] .aspiration-car{width:125%;left:-13%;bottom:12%}
+.workflow[data-workflow-touch] .workflow-stage{height:100svh;min-height:0}
+.workflow[data-workflow-touch] .workflow-heading{padding:64px 24px 0}
+.workflow[data-workflow-touch] .workflow-heading .eyebrow{font-size:8px;margin-bottom:10px}
+.workflow[data-workflow-touch] .workflow-heading h2{font-size:27px}
+.workflow[data-workflow-touch] .workflow-heading p:not(.eyebrow){display:none}
+.workflow[data-workflow-touch] .workflow-panel{padding:150px 24px 0;align-items:flex-start}
+.workflow[data-workflow-touch] .workflow-panel-copy{width:100%;max-width:450px}
+.workflow[data-workflow-touch] .workflow-panel h3{font-size:32px;line-height:1.04;margin-bottom:10px}
+.workflow[data-workflow-touch] .workflow-panel h3 span{display:inline}
+.workflow[data-workflow-touch] .workflow-chapter{font-size:9px;margin-bottom:10px}
+.workflow[data-workflow-touch] .workflow-panel-copy>p:last-child{font-size:12px;line-height:1.5;max-width:390px}
+.workflow[data-workflow-touch] .workflow-anchor{top:auto;bottom:55px;right:50%;transform:translateX(50%);width:min(66vw,calc((100svh - 340px)/2))}
+.workflow[data-workflow-touch] .workflow-position{bottom:16px;left:24px;right:24px;gap:15px;justify-content:center;font-size:9px}
+.workflow[data-workflow-touch] .workflow-position span{min-width:0;flex:1;padding-top:9px}
+.workflow[data-workflow-touch] .workflow-playback{width:44px;height:44px;right:-45px;bottom:12px}
+#why[data-origin-mode="flow"] #origin-vision-statement[data-touch-vision]{max-width:none;padding:0;overflow:clip}
+#why[data-origin-mode="flow"] #origin-vision-statement[data-touch-vision] .vision-stage{height:100svh;min-height:0;padding:0}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-viewport{left:24px;top:26%;overflow:visible}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-sentence{width:max-content;white-space:nowrap;font-size:clamp(40px,11vw,64px);line-height:1.28;text-wrap:nowrap}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-handoff{display:inline-flex;flex-direction:row;gap:24px;margin:0 0 0 100px}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-arrow{transform:none;width:80px;margin:0}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-object img{max-height:none;height:100%}
+#why[data-origin-mode="flow"] [data-touch-vision] .vision-status{font-size:11px;bottom:9%}
+@media(max-height:650px){
+ .context-section[data-context-touch] .context-scene{padding-top:20px;grid-template-columns:1fr 1fr;grid-template-rows:1fr;gap:20px}
+ .context-section[data-context-touch] :is(.context-visual,.context-channel-visual){grid-column:2;grid-row:1}
+ .context-section[data-context-touch] .context-copy h2{font-size:28px}
+ .workflow[data-workflow-touch] .workflow-panel-copy{width:48%}.workflow[data-workflow-touch] .workflow-anchor{right:10%;bottom:50px;transform:none;width:min(200px,35svh)}
+}
 /* Flow mode is selected by the motion modules for phones, touch tablets and
    short viewports. Desktop pinned scenes keep their original geometry. */
 .workflow-inline-playback,.funnel-scene-playback {

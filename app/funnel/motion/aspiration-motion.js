@@ -1,3 +1,4 @@
+import {touchStory} from './touch-story';
 
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
@@ -62,13 +63,13 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
  function build(){
   media?.revert();media=gsap.matchMedia();
   media.add({wide:'(min-width:720px) and (min-height:760px) and (pointer:fine)',reduce:'(prefers-reduced-motion:reduce)',all:'all'},({conditions})=>{
-   const horizontal=conditions.wide&&!conditions.reduce;section.dataset.aspirationMode=horizontal?'horizontal':'flow';
+   const horizontal=!conditions.reduce,touch=!conditions.wide;section.dataset.aspirationMode=horizontal?'horizontal':'flow';section.toggleAttribute('data-aspiration-touch',horizontal&&touch);
    const state={open:0,clock:0,drive:0,hands:0,shake:0};
    if(conditions.reduce){updateLogo(.2,0);return;}
    if(horizontal){
     // Artwork may overflow the rail. Its layout width is the intended pan distance.
     const travel=()=>Math.max(0,rail.offsetWidth-stage.clientWidth);
-    const tl=gsap.timeline({scrollTrigger:{id:'merger-aspiration-story',trigger:section,start:'top top',end:()=>'+='+Math.round(travel()*1.12),pin:stage,scrub:.5,invalidateOnRefresh:true},onUpdate:()=>{
+    const tl=gsap.timeline({scrollTrigger:touch?undefined:{id:'merger-aspiration-story',trigger:section,start:'top top',end:()=>'+='+Math.round(travel()*1.12),pin:stage,scrub:.5,invalidateOnRefresh:true},onUpdate:()=>{
      updateLogo(state.open,state.clock);carSequence.update(state.drive);watchSequence.update(state.hands);peopleSequence.update(state.shake);
      section.dataset.aspirationProgress=tl.progress().toFixed(3);
     }});
@@ -85,7 +86,8 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
       .fromTo(car,{xPercent:-65},{xPercent:28,duration:3.2,ease:'none'},6.8)
       .fromTo(car,{opacity:0},{opacity:1,duration:.55,ease:'power3.out'},7.4)
       .to(state,{drive:1,duration:3.2,ease:'none'},6.8);
-    return()=>{tl.scrollTrigger?.kill();tl.kill();};
+    const releaseTouch=touch?touchStory(scope,stage,tl,{id:'merger-aspiration-story',distance:()=>Math.max(1800,travel()*1.12)}):null;
+    return()=>{releaseTouch?.();section.removeAttribute('data-aspiration-touch');tl.scrollTrigger?.kill();tl.kill();};
    }
    const triggers=[];
    triggers.push(ScrollTrigger.create({trigger:section.querySelector('.aspiration-tools'),start:'top 60%',end:'bottom 25%',onUpdate:s=>updateLogo(Math.min(.92,s.progress*2.5),s.progress*22)}));
