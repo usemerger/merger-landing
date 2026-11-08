@@ -29,5 +29,16 @@
 .funnel-home .funnel-back-to-top:focus-visible {outline:2px solid #fff;outline-offset:4px;}
 @media(hover:hover) and (pointer:fine){.funnel-home .funnel-back-to-top:hover {background:rgba(38,38,38,.96);}}
 @media(prefers-reduced-motion:reduce){.funnel-home .funnel-back-to-top {transition:opacity 120ms ease-out,visibility 120ms;transform:translate(-50%,0);}.funnel-home .funnel-back-to-top[data-visible="true"]:active {transform:translate(-50%,0);}}
-@media(max-width:800px){.funnel-home .mk-nav-inner {padding-inline:20px;min-height:76px;}.funnel-home .mk-nav-links.is-open {background:#111;border:1px solid #333;}.funnel-home .mk-nav-auth {flex-wrap:wrap;}}
+@media(max-width:800px){
+ .funnel-home .mk-nav-inner{position:relative;padding-inline:20px;min-height:76px;flex-wrap:nowrap}
+ .funnel-home .mk-menu-toggle{min-width:76px;min-height:44px;justify-content:center}
+ /* Opening navigation must not move the hero or invalidate story positions. */
+ .funnel-home .mk-nav-links{position:absolute;top:100%;left:16px;right:16px;width:auto;margin:0;padding:12px;max-height:calc(100svh - 100px);overflow-y:auto;border-radius:18px;box-shadow:0 20px 50px #0009;gap:2px}
+ .funnel-home .mk-nav-links.is-open{background:#111;border:1px solid #333}
+ .funnel-home .mk-nav-links>a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-radius:8px;font-size:15px}
+ .funnel-home .mk-nav-links>a:active{background:#242424}
+ .funnel-home .mk-nav-auth{width:100%;min-width:0;flex-wrap:wrap;gap:12px;border-top:1px solid #ffffff1c;margin-top:8px;padding:16px 12px 8px}
+ .funnel-home .mk-nav-auth a,.funnel-home .mk-nav-signout{min-height:44px;display:inline-flex;align-items:center}
+ .funnel-home .mk-nav-you{width:100%;overflow-wrap:anywhere}
+}
 @media(prefers-reduced-motion:reduce){.funnel-home {scroll-behavior:auto;}}

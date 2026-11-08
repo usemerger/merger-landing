@@ -15,6 +15,16 @@ beforeEach(() => {
 });
 
 describe('the marketing nav and the session it never used to ask about', () => {
+  it('closes the mobile disclosure on navigation, outside input and Escape', async () => {
+    meOrNull.mockResolvedValue(null);nav();
+    await screen.findByRole('link', { name: 'Sign in' });
+    const toggle=screen.getByRole('button', {name:'Open navigation'});
+    fireEvent.click(toggle);expect(toggle).toHaveAttribute('aria-expanded','true');
+    fireEvent.click(screen.getByRole('link',{name:'Pricing'}));expect(toggle).toHaveAttribute('aria-expanded','false');
+    fireEvent.click(toggle);fireEvent.pointerDown(document.body);expect(toggle).toHaveAttribute('aria-expanded','false');
+    fireEvent.click(toggle);fireEvent.keyDown(toggle,{key:'Escape'});
+    expect(toggle).toHaveAttribute('aria-expanded','false');expect(toggle).toHaveFocus();
+  });
   it('shows the account, a dashboard link and sign out when a session exists', async () => {
     meOrNull.mockResolvedValue(account);
     nav();

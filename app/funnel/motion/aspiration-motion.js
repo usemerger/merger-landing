@@ -1,4 +1,5 @@
 import {touchStory} from './touch-story';
+import {scrollFrames} from './scroll-frames';
 
 export default function mount(scope) {
 const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnimationFrame,cancelAnimationFrame,setTimeout,clearTimeout,setInterval,clearInterval,IntersectionObserver,ResizeObserver,fetch,createImageBitmap}=scope;
@@ -10,38 +11,7 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
  const car=section.querySelector('.aspiration-car'),watch=section.querySelector('.aspiration-watch'),people=section.querySelector('.aspiration-people');
  let logo,logoPromise,logoAmount=0,logoTime=0,visible=false,disposed=false;
 
- // Scroll selects a pose directly. Bound decoded images to six per sequence,
- // including when scrubbing backwards; the static poster is the error fallback.
- function sequence(host,folder,count,{loop=0}={}){
-  const canvas=host.querySelector('canvas'),ctx=canvas.getContext('2d');
-  const frames=new Map(),pending=new Set(),failed=new Set(),controllers=new Set();
-  let wanted=0,rendered=-1,direction=1;
-  function draw(){
-   const bitmap=frames.get(wanted);if(!bitmap||disposed||reduce.matches)return;
-   ctx.clearRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
-   host.dataset.ready='true';host.dataset.frame=String(wanted);rendered=wanted;
-  }
-  function load(i){
-   if(i<0||i>=count||frames.has(i)||pending.has(i)||failed.has(i)||pending.size>=2||reduce.matches||!visible||disposed)return;
-   pending.add(i);const controller=new AbortController();controllers.add(controller);
-   fetch(`/funnel-v3/assets/aspiration/${folder}/${String(i).padStart(2,'0')}.webp`,{signal:controller.signal})
-    .then(r=>{if(!r.ok)throw Error('frame unavailable');return r.blob();}).then(createImageBitmap).then(bitmap=>{
-     if(disposed){bitmap.close();return;}frames.set(i,bitmap);if(i===wanted)draw();
-     while(frames.size>6){const key=[...frames.keys()].find(k=>k!==wanted&&k!==rendered);if(key===undefined)break;frames.get(key).close();frames.delete(key);}
-    }).catch(e=>{if(e.name!=='AbortError')failed.add(i);}).finally(()=>{
-     pending.delete(i);controllers.delete(controller);load(wanted);
-    });
-  }
-  function warm(){load(wanted);load(wanted+direction);}
-  return {
-   update(progress){
-    const next=loop?((Math.floor(progress*count*loop)%count)+count)%count:Math.round(Math.max(0,Math.min(1,progress))*(count-1));
-    if(next!==wanted)direction=next>wanted?1:-1;
-    wanted=next;if(wanted!==rendered){draw();warm();}
-   },warm,
-   dispose(){controllers.forEach(c=>c.abort());frames.forEach(b=>b.close());frames.clear();}
-  };
- }
+ const sequence=(host,folder,count,options={})=>scrollFrames(scope,host,folder,count,{...options,active:()=>visible&&!disposed,reduced:()=>reduce.matches});
  const carSequence=sequence(car,'car-silhouette-frames',16,{loop:4});
  const watchSequence=sequence(watch,'watch-cinematic-frames',96);
  const peopleSequence=sequence(people,'handshake-frames',96);
@@ -73,20 +43,27 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
      updateLogo(state.open,state.clock);carSequence.update(state.drive);watchSequence.update(state.hands);peopleSequence.update(state.shake);
      section.dataset.aspirationProgress=tl.progress().toFixed(3);
     }});
-    tl.to(rail,{x:()=>-travel(),duration:7.8,ease:'none'},1.4)
-      .to(state,{open:.92,duration:1.7,ease:'power2.inOut'},0)
+    // A phone needs reading holds: continuously panning the desktop timeline
+    // moved the watch and handshake out of frame before their actions finished.
+    if(touch){
+     const beats=[...rail.querySelectorAll('.aspiration-beat')];
+     tl.to(rail,{x:()=>-beats[1].offsetLeft,duration:.8,ease:'power2.inOut'},2.4)
+       .to(rail,{x:()=>-beats[2].offsetLeft,duration:.8,ease:'power2.inOut'},5.8)
+       .to(rail,{x:()=>-beats[3].offsetLeft,duration:.8,ease:'power2.inOut'},9.3);
+    } else tl.to(rail,{x:()=>-travel(),duration:7.8,ease:'none'},1.4);
+    tl.to(state,{open:.92,duration:1.7,ease:'power2.inOut'},0)
       // Time keeps advancing after opening, until the logo has passed out of view.
       .to(state,{clock:22,duration:4.4,ease:'none'},0)
       // Let the silhouette become visible before its slow physical turn begins.
       .fromTo(watch,{opacity:0},{opacity:1,duration:1.5,ease:'power3.out'},3.05)
       .fromTo(watch,{y:20,scale:.97},{y:-14,scale:1,duration:2.75,ease:'power2.inOut'},3.1)
       .to(state,{hands:1,duration:2.5,ease:'power2.inOut'},3.35)
-      .fromTo(people,{y:65,scale:.96,opacity:0},{y:-10,scale:1.02,opacity:.85,duration:2,ease:'power3.out'},4.3)
-      .to(state,{shake:1,duration:3.4,ease:'none'},4.35)
-      .fromTo(car,{xPercent:-65},{xPercent:28,duration:3.2,ease:'none'},6.8)
-      .fromTo(car,{opacity:0},{opacity:1,duration:.55,ease:'power3.out'},7.4)
-      .to(state,{drive:1,duration:3.2,ease:'none'},6.8);
-    const releaseTouch=touch?touchStory(scope,stage,tl,{id:'merger-aspiration-story',distance:()=>Math.max(1800,travel()*1.12)}):null;
+      .fromTo(people,{y:65,scale:.96,opacity:0},{y:-10,scale:1.02,opacity:.85,duration:touch?1:2,ease:'power3.out'},touch?6.3:4.3)
+      .to(state,{shake:1,duration:touch?2.6:3.4,ease:'none'},touch?6.6:4.35)
+      .fromTo(car,{xPercent:touch?-35:-65},{xPercent:touch?6:28,duration:3.2,ease:'none'},touch?9.8:6.8)
+      .fromTo(car,{opacity:0},{opacity:1,duration:.55,ease:'power3.out'},touch?9.8:7.4)
+      .to(state,{drive:1,duration:3.2,ease:'none'},touch?9.8:6.8);
+    const releaseTouch=touch?touchStory(scope,stage,tl,{id:'merger-aspiration-story',distance:()=>Math.max(3200,stage.clientHeight*4.5)}):null;
     return()=>{releaseTouch?.();section.removeAttribute('data-aspiration-touch');tl.scrollTrigger?.kill();tl.kill();};
    }
    const triggers=[];

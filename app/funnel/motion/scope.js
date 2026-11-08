@@ -6,6 +6,9 @@ import {ScrollSmoother as Smoother} from 'gsap/ScrollSmoother';
 // must never inherit a pinned page, WebGL renderer or pending frame fetch.
 export function createMotionScope(root) {
   engine.registerPlugin(Trigger,Smoother);
+  // Safari's collapsing URL bar is not a new layout. Rebuilding scrubbed
+  // stories during those height-only changes rewinds them under the finger.
+  Trigger.config({ignoreMobileResize:true});
   let disposed=false;
   const cleanups=[],raf=new Set(),timers=new Set(),intervals=new Set(),bitmaps=new Set();
   const abort=new AbortController();

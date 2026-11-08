@@ -10,6 +10,7 @@ import { logout } from '../lib/api';
 export default function MarketingNav({ signupHref, checkoutLabel, singularity = false, sectionPrefix = '' }) {
   const [open, setOpen] = useState(false);
   const toggle = useRef(null);
+  const header = useRef(null);
   const session = useSession();
   const [signingOut, setSigningOut] = useState(false);
 
@@ -40,6 +41,15 @@ export default function MarketingNav({ signupHref, checkoutLabel, singularity = 
   function escape(event) {
     if (event.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); }
   }
+
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = event => {
+      if (!header.current?.contains(event.target)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', dismiss);
+    return () => document.removeEventListener('pointerdown', dismiss);
+  }, [open]);
 
   async function onSignOut() {
     if (signingOut) return;
@@ -79,7 +89,7 @@ export default function MarketingNav({ signupHref, checkoutLabel, singularity = 
           {singularity ? <SingularityButton className="sf-nav-cta" href={signupHref}>{checkoutLabel}</SingularityButton> : <Link className="mk-button mk-button-small" href={signupHref}>{checkoutLabel}</Link>}
         </>;
 
-  return <header className={`mk-nav${lifted ? ' is-lifted' : ''}`} onKeyDown={escape}>
+  return <header ref={header} className={`mk-nav${lifted ? ' is-lifted' : ''}`} onKeyDown={escape}>
     <div className="mk-wrap mk-nav-inner">
       <Link className="mk-brand" href="/" aria-label="Merger home"><MarketingMark hover /><span>merger</span></Link>
       <button ref={toggle} className="mk-menu-toggle" type="button" aria-expanded={open} aria-controls="marketing-navigation" aria-label={open ? 'Close navigation' : 'Open navigation'} onClick={() => setOpen(!open)}>

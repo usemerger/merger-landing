@@ -105,7 +105,10 @@ const {window,document,gsap,ScrollTrigger,ScrollSmoother,matchMedia,requestAnima
           return;
         }
         if(scene.id==='origin-match'){
-          window.MergerMatchPreview?.mobile();
+          scene.dataset.touchMatch='true';
+          const motion=window.MergerMatchPreview.timeline();
+          cleanups.push(touchStory(scope,scene.querySelector('.origin-art-match'),motion,{id:'merger-match-mobile',distance:2400}));
+          cleanups.push(()=>delete scene.dataset.touchMatch);
           return;
         }
         const motion=choreograph(scene);
