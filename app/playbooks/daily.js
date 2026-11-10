@@ -1211,4 +1211,187 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-10 ───────────────────────────────────────────────────────────
+  {
+    slug: 'dental-practice-broker-sale-when-counsel-joins-the-group-chat',
+    type: T.useCase,
+    audience: 'Healthcare practice brokers',
+    title: 'How a dental practice broker keeps a sale on track after the buyer’s lawyer joins the group chat',
+    description:
+      'An illustrative walkthrough: a practice sale runs in a WhatsApp group until the buyer’s counsel joins. What changes in the chat, and how the broker keeps the record straight.',
+    dek: 'For six weeks the deal lived in a friendly WhatsApp group. Then a lawyer joined, and every line in the chat became something someone could quote.',
+    published: '2026-11-10',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The practice and the group',
+        blocks: [
+          'Elena brokers dental and veterinary practice sales in the Southwest. Her current listing is a four-chair general dentistry practice whose owner, Dr. Lee, wants to retire within a year. The buyer is a younger dentist, Dr. Shah, who already runs one location and wants a second.',
+          'Like most of her deals, this one started in chat. Dr. Lee prefers WhatsApp. Dr. Shah found the listing through a LinkedIn post and moved to WhatsApp after the first call. Within a week Elena had made a group with the three of them, because it was the fastest way to schedule a site visit.',
+          'The group worked well for six weeks. It handled the visit, the questions about equipment age and the patient count, and a lot of friendly back and forth. Somewhere in there, Dr. Lee mentioned a number he would be happy with, and Elena replied with a joke about how the buyer would react.',
+        ],
+      },
+      {
+        heading: 'The moment the chat changed',
+        blocks: [
+          'On a Tuesday afternoon a notification appeared in the group: the buyer had added his lawyer.',
+          'Nothing was wrong with that. Counsel always joins at some point. But the group had been written for three people who trusted each other, and now it had a fourth reader whose job was to protect the buyer. From that moment on, every line in the chat was a line that could be read back in a negotiation.',
+          'Elena noticed three problems in the first hour:',
+          {
+            type: 'list',
+            items: [
+              '**Loose numbers.** The owner’s “happy with” figure was an informal remark. It was never meant as an asking price, but it read like one.',
+              '**Jokes and shorthand.** Lines like “we’ll figure it out at closing” are harmless between friends and unhelpful in front of counsel.',
+              '**Terms with no single home.** The equipment list was in the group, the lease question was in a separate chat with Dr. Lee, and the buyer’s financing note was in LinkedIn messages. Nobody could point to one place where the terms were written down.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What Elena changed in the group',
+        blocks: [
+          'She did not leave the group or ask everyone to move to email. The buyer and his lawyer had chosen the chat, and pulling them out of it would have slowed things down. Instead she changed what the group was for.',
+          {
+            type: 'steps',
+            items: [
+              { title: 'Logistics only in the group', text: 'She posted one short message: from here, the group is for scheduling and document requests. Terms go in writing to the right person.' },
+              { title: 'One written summary of the terms', text: 'She wrote a plain summary of what had been discussed so far, sent it to Dr. Lee first, and only then shared the agreed version with the buyer’s side.' },
+              { title: 'Correct the loose number directly', text: 'She did not delete anything. She messaged the buyer’s counsel separately to say that the earlier figure was an informal remark, not an offer or an asking price, and pointed to the written summary.' },
+              { title: 'One question per message', text: 'When counsel asked for documents, she answered one request per message, so each answer could be found later.' },
+            ],
+          },
+          'The chat got quieter and more useful. Small talk moved to direct messages. The group became a clean record of what was requested and when it was sent.',
+        ],
+      },
+      {
+        heading: 'Keeping the record straight',
+        blocks: [
+          'The harder problem was not the group itself. It was that the deal now lived in four conversations across two apps: the group, Elena’s direct chat with Dr. Lee, her direct chat with Dr. Shah, and the original LinkedIn thread where the buyer first asked about financing.',
+          'When the lawyer asked “when did the seller first mention the lease?”, Elena needed to answer quickly and accurately. Scrolling four threads to rebuild the history is how mistakes get made.',
+          'This is the part Merger is built for. Elena’s WhatsApp and LinkedIn conversations sit in one inbox. The practice sale sits on her Deal Desk with all four conversations attached, so she can see what was said before counsel joined and answer from the record, not from memory. The buyer’s lawyer is saved to her Rolodex, linked to the message where he joined.',
+          'Early in the deal, Claude had flagged Dr. Shah’s first LinkedIn message as a possible deal. Elena read it, approved it onto the Desk, and from then on the conversations she attached kept the history together. Nothing went onto the Desk without her approving it.',
+        ],
+      },
+      {
+        heading: 'What other brokers can take from it',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Assume counsel will join.** Write every group message as if a lawyer will read it later, because one usually does.',
+              '**Keep numbers out of the group until they are agreed.** Informal figures belong in a direct conversation with your own client.',
+              '**Give the terms one written home.** A short summary that both sides have seen beats a dozen scattered messages.',
+              '**Correct, do not delete.** If something loose was said, clarify it in writing. Deleting messages raises more questions than it answers.',
+              '**Keep every conversation attached to the deal.** When someone asks what was said and when, you want one place to look. The guide on [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) pairs well with this.',
+            ],
+          },
+          'None of this is legal advice, and brokers should follow their own counsel and their local rules. The point is simpler: a group chat is a fine place to run a deal, as long as you change how you write once the lawyers arrive.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  // ── 2026-11-10 (b) ───────────────────────────────────────────────────────────
+  {
+    slug: 'track-a-buyers-diligence-questions-across-chat-apps',
+    type: T.guide,
+    audience: 'Business brokers and M&A advisors',
+    title: 'How to track a buyer’s diligence questions when they arrive across chat apps',
+    description:
+      'A practical guide for brokers and advisors: how to log diligence questions that arrive on WhatsApp, LinkedIn and Slack, answer them once, and never lose a request between apps.',
+    dek: 'The buyer asks about the lease on WhatsApp, payroll on LinkedIn and customer concentration in Slack. Two weeks later he asks why nobody answered the second one.',
+    published: '2026-11-10',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why diligence questions get lost',
+        blocks: [
+          'Formal diligence often runs through a data room and a request list. But the questions that matter most tend to arrive informally first, in whatever app the buyer was already using. A quick “does the lease transfer?” on WhatsApp. A “can you send the last two years of payroll?” in a LinkedIn message. A note in a shared Slack channel from the buyer’s analyst.',
+          'Each one feels small. Each one is also a promise the seller’s side has to keep. When the questions live in three apps, three things go wrong:',
+          {
+            type: 'list',
+            items: [
+              '**Questions get answered twice, differently.** The broker answers on WhatsApp, the seller answers on LinkedIn, and the two answers do not match.',
+              '**Questions never get answered.** A request scrolls out of view in a busy chat and nobody notices until the buyer asks again, less patiently.',
+              '**Nobody can say what is still open.** When the buyer’s lawyer asks for a status, the honest answer takes an hour to put together.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Step 1: Keep one question log',
+        blocks: [
+          'Start a single log for the deal, the moment the first diligence question arrives. A table works. What matters is that there is exactly one, and that every question goes into it, whatever app it came from.',
+          {
+            type: 'table',
+            head: ['Column', 'What to write'],
+            rows: [
+              ['Question', 'In the buyer’s own words, copied from the message.'],
+              ['Where it came from', 'App, person and date, so you can find the original message.'],
+              ['Owner', 'Who on the sell side answers it: broker, seller, accountant or counsel.'],
+              ['Status', 'Open, waiting on seller, answered.'],
+              ['Answer', 'The answer as sent, and where it was sent.'],
+            ],
+          },
+          'Copy the buyer’s words exactly. A paraphrase is how “last two years of payroll” turns into “recent payroll”, and then the answer misses the question.',
+        ],
+      },
+      {
+        heading: 'Step 2: Acknowledge in the app it came from',
+        blocks: [
+          'Reply where the buyer asked, the same day, even if you do not have the answer yet. One line is enough: “Got it, logged, I’ll have that to you by Thursday.”',
+          'This does two things. It tells the buyer the question did not vanish, and it gives you a date to hold yourself to. Do not ask the buyer to resend everything to email. They chose the app, and moving them slows the deal. The guide on [replying in their app or moving everyone to one channel](/playbooks/reply-in-their-app-vs-move-everyone-to-one-channel) goes into this trade-off.',
+        ],
+      },
+      {
+        heading: 'Step 3: Answer once, in writing',
+        blocks: [
+          'Agree with your seller who answers each question before anyone replies. Then answer once, in writing, to the person who asked. If the buyer’s lawyer is involved, send substantive answers to the person who should have them, not into a busy group chat.',
+          'If an earlier answer was loose or wrong, correct it in writing and note the correction in the log. Do not delete the original message. A clear correction is easier to explain than a missing one.',
+          'Voice notes are fine for a quick check, but anything that answers a diligence question should end up as text. A two-minute voice note is hard to find later and harder to quote accurately.',
+        ],
+      },
+      {
+        heading: 'Step 4: Review the open list twice a week',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Sort by status', text: 'Open and waiting on seller at the top.' },
+              { title: 'Chase the owners, not the buyer', text: 'Most stuck questions are waiting on someone on your own side.' },
+              { title: 'Send the buyer a short status', text: 'Answered this week, still open, expected dates. One message, in the app they use most.' },
+            ],
+          },
+          'It takes ten minutes. It also changes how the buyer sees the seller: a short, regular status reads as organized, and organized sellers get fewer surprise price conversations late in the process. It fits naturally into [the 30-minute weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages).',
+        ],
+      },
+      {
+        heading: 'Questions that usually start in chat',
+        blocks: [
+          'Some diligence questions arrive in chat far more often than others. If you see one of these in a message, log it straight away, because each tends to grow into a document request.',
+          {
+            type: 'list',
+            items: [
+              '**The lease.** Does it transfer, how many years are left, and does the landlord need to approve the new owner?',
+              '**Key people.** Who stays after the sale, and has anyone been told?',
+              '**Customer concentration.** How much of revenue comes from the largest few customers?',
+              '**Add-backs.** What is in the owner’s adjusted earnings, and can each item be shown?',
+              '**Anything the seller mentioned casually.** A remark about a pending dispute or an equipment repair will come back as a formal question.',
+            ],
+          },
+          'When the same question arrives twice, from two people on the buyer’s side or in two apps, log it once and note both sources. Answer both people, with the same words, and say that you have answered the other person too. That single habit prevents most of the mismatched answers that make buyers nervous.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, your WhatsApp, LinkedIn and Slack conversations sit in one inbox, so a question in any of them is in the same list you are already reading. The deal on your Deal Desk keeps its conversations attached, which makes it quicker to find the original message behind each line in your question log. Claude can flag messages that look like a possible deal, and you decide what goes on the Desk. The log itself is yours to keep, in whatever format your team already uses.',
+          'The habit matters more than the tool: one log, the buyer’s exact words, an acknowledgement the same day and one written answer per question.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
