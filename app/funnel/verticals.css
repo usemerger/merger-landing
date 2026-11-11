@@ -1,0 +1,45 @@
+/* Deal Desk's category marks, presented as a quiet extension of the promise. */
+.verticals-strip {
+  display:flex;align-items:center;gap:4px;
+  width:min(100%,760px);margin:22px auto 0;
+}
+.verticals-strip .integration-window {flex:1;min-width:0;}
+.verticals-strip .integration-track {--drift-duration:54s;}
+.verticals-strip .integration-set {
+  min-width:0;gap:32px;padding:6px 32px 6px 0;
+}
+.verticals-strip .integration-brand {gap:8px;min-height:28px;color:#c4c5bf;}
+.verticals-strip .integration-brand span {font-size:13px;font-weight:450;letter-spacing:-.015em;line-height:1.4;}
+.verticals-strip .vertical-icon {display:block;flex:none;width:18px;height:18px;}
+.verticals-strip[data-running="true"] .integration-track {animation-play-state:running;}
+.verticals-strip .integration-window:focus-within .integration-track {animation-play-state:paused;}
+.verticals-pause {
+  display:grid;place-items:center;flex:none;width:44px;height:44px;
+  border:0;background:transparent;color:#a7a9a2;padding:0;border-radius:50%;
+  transition:color 160ms ease,background-color 160ms ease;
+}
+.verticals-pause[hidden],.verticals-pause .verticals-play {display:none;}
+.verticals-pause[aria-pressed="true"] .verticals-play {display:block;}
+.verticals-pause[aria-pressed="true"] .verticals-stop {display:none;}
+.verticals-pause:focus-visible {outline:1px solid #d5bc88;outline-offset:-5px;}
+.verticals-pause:active {background:#ffffff12;}
+@media(hover:hover) and (pointer:fine){
+  .verticals-strip .integration-window:hover .integration-track {animation-play-state:paused;}
+  .verticals-pause:hover {color:#fff;background:#ffffff0a;}
+}
+/* Keep every category readable without JS or continuous motion. */
+.verticals-strip:not([data-ready="true"]) .integration-window {mask-image:none;-webkit-mask-image:none;}
+.verticals-strip:not([data-ready="true"]) .integration-track {animation:none;width:auto;}
+.verticals-strip:not([data-ready="true"]) .integration-set {flex-wrap:wrap;justify-content:center;padding:4px 8px;gap:12px 24px;}
+.verticals-strip:not([data-ready="true"]) .verticals-pause {display:none;}
+@media(max-width:700px){
+  .verticals-strip {margin-top:17px;gap:0;}
+  .verticals-strip .integration-brand span {font-size:12px;}
+  .verticals-strip .vertical-icon {width:17px;height:17px;}
+  .verticals-strip .integration-set {gap:25px;padding-right:25px;}
+  .hero-copy:has(.verticals-strip) .lede {margin-top:13px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .verticals-strip .integration-set {width:100%;flex-wrap:wrap;justify-content:center;padding:4px 8px;gap:12px 24px;}
+  .verticals-strip .verticals-pause {display:none;}
+}
