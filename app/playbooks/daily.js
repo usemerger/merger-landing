@@ -1211,4 +1211,224 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-11 ───────────────────────────────────────────────────────────
+  {
+    slug: 'updates-to-send-the-person-who-introduced-you',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '6 updates the person who introduced you should get, and when to send each one',
+    description:
+      'An introduction costs the introducer a favor. Six short updates, from the same-day thanks to how it ended, that keep them sending you the next one.',
+    dek: 'A month after the intro, your friend asks how it went. If you have to think about the answer, he has been waiting too long. Six updates that take a minute each and keep the door he opened open.',
+    published: '2026-11-11',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the introducer matters more than the intro',
+        blocks: [
+          'Most dealmakers treat an introduction as the start of a conversation with someone new. The person who made it fades into the background the moment the other side replies. That is a mistake, and a common one.',
+          'The introducer spent something to connect you. Maybe a favor, maybe a little of their reputation with the seller, maybe just their attention on a busy day. They will decide whether to do it again based on one thing: whether they ever heard back.',
+          'People who report back get the next intro. People who go quiet get remembered as the person who went quiet. The six updates below are short on purpose. None of them takes more than a minute, and most fit in one line in whatever app the introducer used.',
+        ],
+      },
+      {
+        heading: '1. The same-day thanks',
+        blocks: [
+          'Before you write to the new contact, or right after, thank the person who connected you. In the group, in the thread, or in a direct message if the intro arrived as a forward.',
+          '**When:** the day the intro arrives. **Sounds like:** “Thanks, Dan. Writing to Ruth now.”',
+          'This also tells the introducer the intro landed. Many introductions die because each side assumes the other will move first, and the person in the middle has no idea.',
+        ],
+      },
+      {
+        heading: '2. “We spoke”',
+        blocks: [
+          'After the first call or meeting, send one line. You do not need to share anything confidential. The introducer only wants to know the two of you actually talked.',
+          '**When:** within a day of the first conversation. **Sounds like:** “Had a good first call with Ruth. Sending her a few questions this week.”',
+        ],
+      },
+      {
+        heading: '3. A real step forward',
+        blocks: [
+          'If something meaningful happens, such as an NDA, a site visit or a first look at numbers, the introducer is usually glad to hear it. Keep it general and check what the other side is comfortable with you sharing.',
+          '**When:** once, at the first milestone. **Sounds like:** “Ruth and I are under NDA now. Thank you again for the connection.”',
+          'Skip this one if the deal is sensitive or the counterparty has asked for discretion. The thanks and the ending matter more than the middle.',
+        ],
+      },
+      {
+        heading: '4. A quiet check-in if things stall',
+        blocks: [
+          'Sometimes the introducer can help. If the other side has gone quiet for a few weeks, a short note can bring a useful answer: they are travelling, they are talking to someone else, or they were never really ready.',
+          '**When:** only after you have followed up directly at least once. **Sounds like:** “Ruth has been quiet since our call. Any sense whether timing changed on her side?”',
+          'Ask once and accept whatever answer you get. The introducer is not your collections agent.',
+        ],
+      },
+      {
+        heading: '5. How it ended',
+        blocks: [
+          'This is the update most people never send, and the one that matters most. Deals end. Many end in nothing. The introducer still deserves to know, in one line, without detail.',
+          '**When:** the same week it ends, whichever way it ends. **Sounds like:** “Ruth and I talked it through and didn’t land on price. Thank you for the intro, it was worth the conversation.”',
+          'A clear ending protects the introducer too. If they mention you to the seller later, they will not be caught saying “I think they are still talking.” The guide to [closing a dead deal without burning the relationship](/playbooks/close-a-dead-deal-without-burning-the-relationship) covers the message to the other side.',
+        ],
+      },
+      {
+        heading: '6. The return favor',
+        blocks: [
+          'The best update is not about the deal at all. When you meet someone the introducer would want to know, make the intro. When you see something relevant to their work, send it.',
+          '**When:** whenever it is genuinely useful, not on a schedule. **Sounds like:** “You mentioned you were looking at dental practices. I just met a broker who works only in that space. Want an intro?”',
+        ],
+      },
+      {
+        heading: 'What not to send',
+        blocks: [
+          'Short updates build trust. A few kinds of update do the opposite.',
+          {
+            type: 'list',
+            items: [
+              '**Numbers the other side shared in confidence.** The introducer does not need the asking price or the offer, and the seller would not thank you for passing it on.',
+              '**Complaints about the person they introduced.** If it did not work, say it did not work. The reasons can stay between you and the other side.',
+              '**A request to chase.** Asking the introducer to push the other side for an answer puts them in an awkward spot. Ask once, as in update 4, and leave it there.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Keeping track without a spreadsheet',
+        blocks: [
+          'The hard part is not writing these lines. It is remembering who introduced whom, a month later, when the original message is two hundred messages up in an app you rarely open.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Save the contact with the intro attached',
+                text: 'When the intro arrives, save the new person with a note of who introduced them and where. The guide to [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) walks through it.',
+              },
+              {
+                title: 'Write the introducer into the next step',
+                text: 'If the deal moves, add “tell Dan” to the next step after the first call and again when it ends. A [next step for every deal](/playbooks/write-a-next-step-for-every-deal) is the habit that makes this stick.',
+              },
+              {
+                title: 'Review once a week',
+                text: 'In your weekly review, look for deals that ended or stalled and ask one question of each: does the person who introduced it know?',
+              },
+            ],
+          },
+          'In Merger, the messaging apps you connect sit in one inbox, and an introduction can be saved to the Rolodex as a contact linked to the message it came from. When the introducer asks how it went, the answer and the history are in the same place.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'deal-group-chat-vs-direct-messages-where-terms-belong',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Deal group chat vs direct messages: where logistics, questions and terms belong',
+    description:
+      'A deal group keeps everyone informed. A direct message keeps terms clear. What each one is good for, where each one breaks, and a simple rule for which goes where.',
+    dek: 'Someone adds the buyer, the seller, both advisors and a lender to one WhatsApp group. It is fast and friendly for a week. Then a number gets floated in the group, and nobody is sure who agreed to what.',
+    published: '2026-11-11',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Two ways to run one deal in chat',
+        blocks: [
+          'Once a deal has more than two people, you have a choice. Put everyone in one group chat, on WhatsApp, Telegram, Slack or Signal, or keep separate direct conversations with each person.',
+          'Most deals end up with both. The question is not which one to use, but which kind of message belongs in each. Getting that wrong is how a deal ends up with a price floated in a group, a condition agreed in a direct message, and three people with three different versions of the terms.',
+        ],
+      },
+      {
+        heading: 'The deal group chat',
+        blocks: [
+          'A group puts everyone on the same page at the same moment. Nobody has to forward anything, and nobody can say they were not told.',
+          {
+            type: 'list',
+            items: [
+              '**Good for:** scheduling, site visits, document requests, “the draft is in the data room”, and quick status updates that everyone needs.',
+              '**Breaks when:** the group gets long and important lines scroll away under logistics and small talk.',
+              '**Breaks when:** someone floats a number or a condition, and it is unclear whether that is a proposal, a position or a thought out loud.',
+              '**Breaks when:** a new person joins, such as counsel or a lender, and can now read everything said before they arrived.',
+            ],
+          },
+          '**Works best when:** the group has a clear owner, a clear purpose, and everyone knows it is a record.',
+        ],
+      },
+      {
+        heading: 'Direct messages',
+        blocks: [
+          'A one-to-one thread is where people say what they actually think. A seller will tell you their real timeline in a direct message long before they say it in front of the buyer’s advisor.',
+          {
+            type: 'list',
+            items: [
+              '**Good for:** positions, prices, conditions, concerns, and anything you would not want quoted back to you in front of the other side.',
+              '**Breaks when:** you have six direct threads for one deal and only you know how they fit together.',
+              '**Breaks when:** something agreed one-to-one never reaches the people who need it, and the group carries on as if it was never said.',
+            ],
+          },
+          '**Works best when:** each direct thread has one job, and anything agreed there is confirmed in writing to the right person.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Group chat', 'Direct message'],
+            rows: [
+              ['Everyone sees the same update', 'Yes', 'Only if you forward it'],
+              ['Float an idea without committing', 'Risky, everyone reads it', 'Yes'],
+              ['Confirm an agreed term', 'Hard to find later', 'Clear, one person, one line'],
+              ['A new party joins midway', 'They can scroll back', 'They see nothing you did not send'],
+              ['Find what was said a month ago', 'Long scroll through logistics', 'Shorter, but spread over threads'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Four moments to move from the group to a direct message',
+        blocks: [
+          'Most trouble starts when a conversation that belongs in a direct message happens in the group because that is where everyone already is. These are the moments to step out.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Someone mentions a number',
+                text: 'A price, a deposit, a fee, a date with money attached. Reply in a direct message to that person: “Picking this up with you directly.” Then confirm the number in writing there.',
+              },
+              {
+                title: 'Someone adds a condition',
+                text: '“If the lease transfers” or “subject to the audit” changes what was said before it. Ask about the condition one-to-one and get the full sentence in writing.',
+              },
+              {
+                title: 'Someone sounds unhappy',
+                text: 'Frustration in front of the other side tends to harden into a position. A direct message gives the person room to say what is actually wrong.',
+              },
+              {
+                title: 'Someone new is about to join',
+                text: 'Before a lawyer, lender or partner is added, read back through the group and decide whether anything in it should have been said elsewhere. You cannot unsay it, but you can confirm the correct version in writing before they arrive.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A simple rule: logistics in the group, terms in writing',
+        blocks: [
+          'Use the group for anything everyone needs and nobody will argue about: times, places, documents, who is doing what this week. Keep positions and terms out of it.',
+          'When a term is agreed, confirm it once, in writing, to the person who agreed it. “Confirming what you said: close by the end of Q1, owner stays three months.” If the whole group needs to know, post the confirmed line afterwards, not the negotiation that led to it. The list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers the other spots where agreements go missing.',
+          'And assume every group line can be quoted. When counsel joins, the group stops being a chat and becomes a record of everything said in it.',
+        ],
+      },
+      {
+        heading: 'Keeping both in one view',
+        blocks: [
+          'The real cost of running a deal in a group plus several direct threads is that the full picture lives only in your head. Someone asks what was agreed, and you open four apps to rebuild it.',
+          'In Merger, the groups and direct conversations from the messaging apps you connect sit in one inbox, and you still reply in each app. With your own Anthropic API key connected, Claude can flag a message that looks like a possible deal, and you decide whether it goes on the Deal Desk. An approved deal keeps its conversations attached, the group and the direct threads together, so you can answer “what did we agree?” from one screen.',
+          'For the bigger question of whether to ask people to move apps at all, see [reply in their app vs move everyone to one channel](/playbooks/reply-in-their-app-vs-move-everyone-to-one-channel).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
