@@ -7,7 +7,7 @@ import { homeJsonLd, DEFINITION, SHORT_DESCRIPTION } from '../app/lib/seo';
 import { articles, ILLUSTRATIVE_NOTE } from '../app/playbooks/content';
 import { ALPHA_OFFER, ANNUAL_OFFER } from '../app/lib/billingOffer';
 
-const BANNED = [/end-to-end/i, /\bencrypt/i, /automatically (files|sends)/i, /\bmac(os)?\b app/i, /free trial/i, /14-day/i];
+const BANNED = [/end-to-end/i, /\bencrypt/i, /automatically (files|sends)/i, /free trial/i, /14-day/i];
 
 describe('robots.txt', () => {
   const r = robots();
@@ -48,6 +48,7 @@ describe('llms.txt', () => {
     for (const text of [index, full]) {
       expect(text).toContain(`${ALPHA_OFFER.priceLabel} USD/month`);
       expect(text).toContain(ANNUAL_OFFER.priceLabel);
+      expect(text).toMatch(/Mac and iPhone apps/);
       for (const pattern of BANNED) expect(text).not.toMatch(pattern);
       expect(text).toMatch(/iMessage are not supported/);
     }
@@ -63,7 +64,7 @@ describe('homepage structured data', () => {
   it('describes the organisation, the app and the FAQ', () => {
     expect(graph.map((n) => n['@type'])).toEqual(['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
     const app = graph[2];
-    expect(app.operatingSystem).toBe('Windows, iOS');
+    expect(app.operatingSystem).toBe('Windows, macOS, iOS');
     expect(app.offers.map((o) => o.price)).toEqual([ALPHA_OFFER.priceLabel.slice(1), ANNUAL_OFFER.priceLabel.slice(1)]);
     expect(graph[3].mainEntity).toHaveLength(faqs.length);
   });

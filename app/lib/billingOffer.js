@@ -149,10 +149,10 @@ export const WAITLIST = Object.freeze({
   /** The anchor the nav and the lower CTAs scroll to. */
   href: '/signup',
 
-  eyebrow: 'Windows and iPhone · 30-day money-back guarantee',
+  eyebrow: 'Windows, Mac and iPhone · 30-day money-back guarantee',
   heading: 'Download Merger.',
   blurb: 'Create your account, choose monthly or annual, and install Merger '
-    + 'on Windows, iPhone or both. Every membership has a 30-day money-back guarantee.',
+    + 'on Windows, Mac, iPhone or all three. Every membership has a 30-day money-back guarantee.',
 
   /**
    * The reason to join now rather than later — the same promise as the offer.

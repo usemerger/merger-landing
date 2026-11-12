@@ -29,7 +29,7 @@ function facts() {
     '- Deal Desk: each approved deal keeps its source conversation, people, terms and next step.',
     '- Rolodex: contact details from introductions, linked to the message they came from.',
     '- Documents: the member\'s own DocuSign account opens inside Merger with deal contacts beside templates. The member reviews and sends.',
-    `- Platforms: Windows desktop app and iPhone app (${APP_STORE_URL}). Mac and Android are not available yet.`,
+    `- Platforms: Windows desktop app, plus Mac and iPhone apps from the App Store (${APP_STORE_URL}). The Mac app needs macOS 13 or later on Apple silicon. Android is not available yet.`,
     `- Price: ${ALPHA_OFFER.priceLabel} USD/month or ${ANNUAL_OFFER.priceLabel} USD/year, paid at checkout, with a ${ALPHA_OFFER.refundDays}-day money-back guarantee. Alpha members keep their rate while their membership stays active.`,
     `- Get started: ${SITE}/signup · Book a 15-minute setup call: ${SITE}/book · Support: support@usemerger.com`,
     '- Company: Merger, founded by Owen Van Holtz. Operated by Void Ecom LLC (Florida, USA).',

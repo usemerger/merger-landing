@@ -6,7 +6,7 @@
 // homepage, the JSON-LD and llms.txt can never describe Merger differently.
 //
 // Claim rules are the same as the Playbooks (see playbooks/content.js): no
-// encryption claims, nothing "automatic", no SMS/iMessage, no Mac or Android,
+// encryption claims, nothing "automatic", no SMS/iMessage, no Android,
 // and prices come from lib/billingOffer.js only.
 
 import { ALPHA_OFFER, ANNUAL_OFFER } from './billingOffer';
@@ -24,7 +24,7 @@ export const DEFINITION =
 
 export const SHORT_DESCRIPTION =
   'One inbox for WhatsApp, Telegram, LinkedIn and Slack, built for dealmakers. '
-  + 'Claude flags possible deals and you approve them onto your Deal Desk. Windows and iPhone.';
+  + 'Claude flags possible deals and you approve them onto your Deal Desk. Windows, Mac and iPhone.';
 
 /** Networks shown in the homepage channel orbit. Availability varies by service. */
 export const NETWORKS = Object.freeze([
@@ -94,7 +94,7 @@ export function homeJsonLd(faqItems) {
         url: SITE,
         applicationCategory: 'BusinessApplication',
         applicationSubCategory: 'Unified inbox and deal management',
-        operatingSystem: 'Windows, iOS',
+        operatingSystem: 'Windows, macOS, iOS',
         downloadUrl: `${SITE}/signup`,
         installUrl: APP_STORE_URL,
         publisher: { '@id': `${SITE}/#organization` },
