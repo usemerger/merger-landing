@@ -1211,4 +1211,224 @@ export const daily = [
       },
     ],
   },
+
+  // ── 2026-11-08 ───────────────────────────────────────────────────────────
+  {
+    slug: 'franchise-resale-broker-buyers-sellers-and-franchisor-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Franchise resale',
+    title: 'How a franchise resale broker keeps the seller, the buyers and the franchisor in step across messaging apps',
+    description:
+      'An illustrative walkthrough: a franchise resale with buyers on WhatsApp and LinkedIn, a seller on Signal and a franchisor in Slack, kept on one Deal Desk.',
+    dek: 'A franchise resale has a third party most business sales do not: the franchisor, who has to approve the buyer. Here is how one broker keeps three sides moving without losing the thread.',
+    published: '2026-11-08',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The listing',
+        blocks: [
+          'Nadia brokers resales of existing franchise units. This month she is selling a two-unit fitness franchise for an owner who wants to retire. The owner, Greg, prefers Signal and answers late in the evening.',
+          'Four buyers are interested. Two found the listing through her LinkedIn posts and stayed there. One is a former multi-unit operator who only uses WhatsApp. The fourth came through a referral partner, an accountant who introduced him in a WhatsApp group with three people in it.',
+          'Then there is the franchisor. A franchise resale usually needs the franchisor to approve the buyer before the sale can close, and this franchisor’s development team works with brokers in a shared Slack channel. They ask for the buyer’s background, the financing plan and a date for the discovery call.',
+          'That is three sides, four apps and one timeline that only Nadia can see in full.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The franchisor’s question waits.** The development team asks in Slack whether the lead buyer has multi-unit experience. The answer is in a WhatsApp thread from two weeks ago, and Nadia only sees the Slack message the next morning.',
+              '**The buyers blur together.** Two buyers asked about the equipment lease. One asked on LinkedIn, one on WhatsApp. When the seller answers, Nadia has to remember who asked first and whether she already replied.',
+              '**The referral gets forgotten.** The accountant who introduced the fourth buyer expects a thank-you and an update. His introduction is now 150 messages up a group chat.',
+              '**The seller hears late.** Greg asks on Signal where things stand. Nadia has the answer, but it is spread across three apps and her memory, so the reply takes an evening.',
+            ],
+          },
+          'None of this is unusual. Franchise resales add an approval step, and each extra party adds one more app and one more place for a question to wait.',
+        ],
+      },
+      {
+        heading: 'The same month, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every side in one list',
+                text: 'Nadia connects the Signal, WhatsApp, LinkedIn and Slack accounts she already uses. Greg’s Signal chat, the four buyer threads, the referral group and the franchisor’s Slack channel sit in one list, and each reply goes out on the network the conversation started on.',
+              },
+              {
+                title: 'Buyers suggested, then reviewed',
+                text: 'With her own Anthropic API key connected, Claude flags the buyer conversations that look like serious interest and shows the message behind each flag. Nadia approves three onto her Deal Desk and passes on the fourth, who asked only for the price and stopped replying.',
+              },
+              {
+                title: 'The introducer, saved with the introduction',
+                text: 'The accountant and the buyer he introduced become Rolodex contacts, each linked to the group message the introduction came from. When the buyer reaches the franchisor’s discovery call, Nadia knows exactly who to thank and sends the accountant one line in the same group.',
+              },
+              {
+                title: 'The franchisor’s questions, answered from the record',
+                text: 'When the development team asks about the lead buyer’s experience, Nadia opens the deal, finds the WhatsApp message where he described his past units, and answers in Slack the same morning.',
+              },
+              {
+                title: 'One next step per buyer',
+                text: 'Each buyer carries one next step: send financing details, book the discovery call, wait for the franchisor’s decision. Friday’s update to Greg is a short list, not an evening of scrolling.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What the desk looks like before approval',
+        blocks: [
+          'Three weeks in, Nadia has one sale and three buyers on her desk, each with the conversations attached and one open step. The franchisor has the lead buyer’s background and a call date. Greg has a weekly update he can read in a minute.',
+          'The apps are the same as before. Greg still writes on Signal at ten at night. The franchisor still works in Slack. What changed is that a question from any side reaches Nadia in the same list as everything else, and the answer is one click away.',
+        ],
+      },
+      {
+        heading: 'What to track in a franchise resale',
+        blocks: [
+          'A franchise resale has more parties than most small business sales. A short record per buyer covers the questions that come back later.',
+          {
+            type: 'list',
+            items: [
+              '**Where the buyer came from.** The listing, a post, or an introduction. If someone introduced them, who, and in which chat.',
+              '**What the buyer has told you about experience and financing.** The franchisor will ask, and the answer is usually already in a chat.',
+              '**Where the buyer is in the franchisor’s process.** Application sent, discovery call booked, decision pending.',
+              '**What the seller has been told.** One line per update, so you never tell him the same thing twice or skip a buyer.',
+              '**One next step, with a rough date.** One verb, one date.',
+            ],
+          },
+          'For the habit behind the last item, see [how to write a next step for every deal](/playbooks/write-a-next-step-for-every-deal).',
+        ],
+      },
+      {
+        heading: 'Questions brokers usually ask',
+        blocks: [
+          '**Does the franchisor see my other chats?** No. Merger is your workspace. Replies go out from your own accounts, on the network each conversation started on.',
+          '**Does Claude decide which buyers are serious?** No. Claude can flag conversations that look like a possible deal and show you why. You approve or pass, and nothing lands on the Deal Desk until you do.',
+          '**Can I still use my own documents?** Yes. When a confidentiality agreement is needed, you send it from your own DocuSign account inside Merger, with names filled from your Rolodex.',
+        ],
+      },
+      {
+        heading: 'A habit that works with or without software',
+        blocks: [
+          'In any sale with a third party who must approve the buyer, keep one place where all three sides meet: the seller’s questions, each buyer’s answers and the approver’s requests. Write down where each answer came from, so you can find it again when someone else asks.',
+          'Merger is built for that place. The weekly side of it is in [the weekly buyer update for your seller](/playbooks/weekly-buyer-update-for-your-seller).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: 'answer-a-seller-who-asks-what-other-buyers-offered',
+    type: T.guide,
+    audience: 'Sell-side brokers and advisors',
+    title: 'Your seller asks what the other buyers offered: how to answer without breaking a confidence',
+    description:
+      'A practical guide for brokers: what you can share when a seller asks about competing offers, what stays private, and how to answer from the record.',
+    dek: 'The question always comes, usually in a chat, usually at night. Here is a way to give the seller a useful answer while keeping every buyer’s trust.',
+    published: '2026-11-08',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the question is harder than it looks',
+        blocks: [
+          'Sooner or later every seller asks it: what did the other buyers offer? It is a fair question. The seller wants to know whether the best offer is really the best, and you work for the seller.',
+          'But the offers reached you in confidence. One buyer sent his number on WhatsApp, another on LinkedIn, a third in a Telegram group where he assumed only you would act on it. If a buyer later learns that his exact message was forwarded, he stops telling you things. So do his friends.',
+          'The answer is not to refuse. It is to share the shape of the offers, not the people or the words behind them. Before you share anything, check what your engagement letter and any confidentiality agreements say. This guide is practical advice, not legal advice.',
+        ],
+      },
+      {
+        heading: 'What you can usually share',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The range.** The lowest and highest headline numbers, rounded. That tells the seller where the market is.',
+              '**The structure.** How much is offered at closing, how much depends on an earnout, a seller note or a lease. Structure often matters more than the headline.',
+              '**The conditions.** Financing contingencies, diligence time, whether a buyer needs a lender or a landlord to agree.',
+              '**The count.** How many serious offers there are, and how many buyers are still looking.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What stays private',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Names and firms.** Unless a buyer has said you can share them.',
+              '**Screenshots and forwards.** A screenshot carries the buyer’s name, the app, the time and his exact words. Even a cropped one can be recognized.',
+              '**Anything a buyer asked you to keep between you.** If he said it, honor it, even if it would help the seller.',
+              '**Your guesses.** If a buyer hinted he might go higher, that is not an offer. Do not present it as one.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A reply you can adapt',
+        blocks: [
+          'Answer in the app the seller asked in, the same day. Keep it short and specific:',
+          '“Three serious offers so far. They range from 2.8 to 3.1 million. Two want part of the price at closing and the rest over two years. One needs bank financing, the others do not. To move the top offer, the question is whether you would carry a small note.”',
+          'Notice what the reply does. It gives the range, the structure and the condition. It names nobody. And it ends with what the seller would need to decide to move the deal, which is the part he actually needs.',
+        ],
+      },
+      {
+        heading: 'Answer from the record, not from memory',
+        blocks: [
+          'The hard part is rarely deciding what to share. It is finding the offers. Each one arrived in a different app on a different day, and a few came with conditions in a later message. Answering from memory is how a broker tells a seller “all cash” when one buyer said “all cash if the lease transfers”.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Keep each offer with its conversation',
+                text: 'When an offer arrives, record it on the deal with a link to the message it came from, so the exact words are one click away.',
+              },
+              {
+                title: 'Write the conditions next to the number',
+                text: 'A number without its conditions is a different offer. If the buyer adds a condition later, add it the same day.',
+              },
+              {
+                title: 'Reread before you answer',
+                text: 'Before you reply to the seller, open each offer and read the buyer’s words again. It takes two minutes.',
+              },
+              {
+                title: 'Log what you told the seller',
+                text: 'One line: date, what you shared. When a buyer asks what the seller knows, you can answer honestly.',
+              },
+            ],
+          },
+          'In Merger, the messaging apps you connect share one inbox. With your own Anthropic API key, Claude can flag messages that look like an offer. You approve them onto the Deal Desk, where each deal keeps its conversations attached, whichever app they came from.',
+        ],
+      },
+      {
+        heading: 'Three mistakes that cost trust',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Forwarding the offer message.** It feels efficient. It is the fastest way to lose a buyer, because forwarded messages travel further than you expect.',
+              '**Rounding up.** Telling the seller the range is higher than it is buys you a good evening and a hard conversation at closing. Round to the nearest clean number, never up.',
+              '**Answering a buyer with another buyer’s terms.** A buyer who asks what he needs to beat should hear what the seller needs, not what a competitor offered. The same rule protects him later.',
+            ],
+          },
+          'Each of these starts as a small shortcut in a chat at the end of a long day. Decide your rule once, before the first offer arrives, and you will not have to decide it again at night.',
+        ],
+      },
+      {
+        heading: 'When the seller pushes for names',
+        blocks: [
+          'Some sellers want to know who. Usually the reason is reasonable: they want to know whether a buyer is a competitor, a local operator, or someone who will keep the staff.',
+          'Answer the reason, not the question. Describe the buyer type without the name: a regional operator with three locations, a first-time buyer backed by a lender, a competitor in the next county. If the seller still needs a name, ask the buyer first, in his app, and wait for a yes.',
+          'For keeping the seller informed every week, see [the weekly buyer update for your seller](/playbooks/weekly-buyer-update-for-your-seller). For the sell-side workflow in full, see [how a business broker runs buyer conversations](/playbooks/business-broker-sell-side-buyer-conversations).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
