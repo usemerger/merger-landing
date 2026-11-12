@@ -1211,4 +1211,187 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-12 ───────────────────────────────────────────────────────────
+  {
+    slug: 'aircraft-broker-pre-owned-jet-sale-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Aircraft brokers',
+    title: 'How an aircraft broker sells one pre-owned jet to buyers on WhatsApp, Signal and LinkedIn',
+    description:
+      'An illustrative walkthrough: one pre-owned jet, an owner on WhatsApp, buyers on Signal and LinkedIn, and a broker keeping offers, inspections and next steps in one place.',
+    dek: 'The owner writes from Geneva on WhatsApp. One buyer’s pilot asks about maintenance records on Signal. A chief of staff in Dallas asks for a call on LinkedIn. One airplane, three time zones, and a broker who has to remember who asked what.',
+    published: '2026-11-12',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The listing',
+        blocks: [
+          'Marta is an independent aircraft broker. She works alone, with a part-time assistant and a short list of owners who trust her to sell quietly. This month she has one exclusive: a midsize business jet owned by a manufacturing family who want it gone before the end of the year.',
+          'Nothing about this sale happens on a listing site. The owner’s family office writes to her on WhatsApp. Buyers reach her through people they already know. A good share of the real questions come from the people around a buyer, not the buyer: a chief pilot, a maintenance director, an executive assistant who manages the calendar.',
+          'By the end of the first week, Marta has the owner on WhatsApp, one buyer’s chief pilot on Signal, a corporate buyer’s chief of staff on LinkedIn, a second broker representing a client on Telegram, and the owner’s maintenance provider in a Slack channel they share with her.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Questions come from the wrong person, on purpose.** The chief pilot asks about engine programs and logbooks. The chief of staff asks about timing. Neither is the buyer, and both expect answers that match what the other one heard.',
+              '**The same document goes out three times.** The spec sheet gets sent on Signal, again on LinkedIn, and again on Telegram, each time with a slightly different note on the side.',
+              '**The owner hears late.** A buyer asks to fly in for a viewing on Saturday. Marta agrees on Signal and remembers to tell the owner on WhatsApp on Friday night.',
+              '**The offer is a sentence, not a document.** “We’d be interested at around this number if the inspection is clean” arrives on LinkedIn at 11 PM. Is that an offer? Who else has seen it?',
+            ],
+          },
+          'None of these is dramatic. Together they are how a broker ends up giving two buyers different answers about the same airplane, which is the fastest way to lose the trust of both.',
+        ],
+      },
+      {
+        heading: 'The same month, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every thread in one inbox',
+                text: 'Marta connects the accounts she already uses: WhatsApp, Signal, LinkedIn, Telegram and Slack. The owner, the chief pilot, the chief of staff, the co-broker and the maintenance channel now sit in one list, in the order the messages arrived. She still replies to each person in the app they chose.',
+              },
+              {
+                title: 'A suggested deal, reviewed before it is filed',
+                text: 'With her own Anthropic API key connected, Claude flags the LinkedIn message about “interest at around this number” as a possible deal. Marta opens the conversation, reads the condition about the inspection, and approves it onto the Deal Desk as an indication, not an offer.',
+              },
+              {
+                title: 'One deal, every conversation attached',
+                text: 'The sale lives as one deal. The owner’s WhatsApp thread, the chief pilot’s Signal thread and the LinkedIn conversation are attached to it, so when the owner asks where things stand she reads one page instead of five apps.',
+              },
+              {
+                title: 'People saved with where they came from',
+                text: 'The chief pilot was introduced by a mechanic Marta has known for years. She saves him to her Rolodex as a contact linked to that introduction, so when the next airplane comes along she knows who opened the door.',
+              },
+              {
+                title: 'Paperwork from the contacts she already has',
+                text: 'When the corporate buyer asks for a confidentiality agreement before the logbooks, Marta fills it from the contact and sends it from her own DocuSign account inside Merger. She reads it once before it goes, and nothing is retyped from a screenshot.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The habits that do most of the work',
+        blocks: [
+          'Software keeps the threads together. A few habits keep the answers straight.',
+          {
+            type: 'list',
+            items: [
+              '**One answer per question, in writing.** When the chief pilot asks about the engine program, Marta answers once on Signal and copies the same wording to anyone else who asks. Two versions of a maintenance answer is a problem that surfaces at inspection.',
+              '**The owner hears first.** Any viewing, any number, any request for records goes to the owner the same day, before Marta confirms anything to a buyer.',
+              '**An indication is not an offer.** A sentence in chat with “around” and “if” in it goes on the Deal Desk as an indication. It becomes an offer when it arrives as a letter of intent.',
+              '**Name the decision maker.** For every buyer, Marta writes down who actually decides, and who is only gathering information. It changes who gets which answer.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What changed for Marta',
+        blocks: [
+          'In this composite, the airplane does not sell faster because of an inbox. It sells with fewer awkward moments. The owner never learns about a Saturday viewing on Friday night. The chief pilot and the chief of staff hear the same answer about the logbooks. When the second broker on Telegram asks whether the airplane is still available, Marta can answer in one line because the current state of the deal is on one page.',
+          'The bigger change is what is left afterwards. When the sale closes, the conversations, the contacts and the introductions are still there, linked to each other. The next time the manufacturing family wants to upgrade, or the chief pilot moves to a new operator, Marta starts from a record instead of from memory.',
+        ],
+      },
+      {
+        heading: 'If you broker assets like this',
+        blocks: [
+          'The pattern is the same for yachts, private aircraft, specialist equipment and any other high-value asset sold through relationships: a small number of buyers, a large number of people around each buyer, and every one of them on a different app.',
+          'Two articles that fit alongside this one: the guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal), and the list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats).',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'answer-a-buyer-who-asks-the-same-question-twice',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to answer a buyer who asks the same question twice',
+    description:
+      'When a buyer repeats a question in chat, the first answer did not land. How to find what you actually wrote, work out why it missed, and answer once more, shorter and in writing.',
+    dek: 'Two weeks ago a buyer asked about customer concentration on WhatsApp. You answered. Today he asks again on LinkedIn, almost word for word. He is not being difficult. He is telling you something.',
+    published: '2026-11-12',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'A repeated question is information',
+        blocks: [
+          'It is tempting to read a repeated question as carelessness. He lost the message, he did not read it, he is asking his junior to chase you. Sometimes that is true. More often the first answer did not do its job.',
+          'There are four usual reasons. The answer was buried in a longer message. It answered a slightly different question. It went to the wrong person, such as the buyer’s advisor instead of the buyer. Or it was given on a call, and nothing was ever written down.',
+          'Each of those has a different fix. The steps below take about ten minutes, and they leave you with one clear answer the buyer can forward to whoever asked him.',
+        ],
+      },
+      {
+        heading: 'Step 1: find what you actually wrote',
+        blocks: [
+          'Before you reply, find your first answer. Not what you remember saying, but the words you sent.',
+          'This is harder than it sounds when a deal runs across several apps. The question might have come in on WhatsApp, the answer might have gone out on a call, and the follow-up might sit in a LinkedIn thread with the buyer’s associate. Search each app for the key term (“concentration”, “lease”, “payroll”) and the buyer’s name.',
+          'If you cannot find a written answer at all, that is your answer. You told him on a call, and he has nothing to forward to his partners or his lender.',
+          'While you are looking, note who else heard the first answer. If you answered the buyer’s associate, or a group with his advisor in it, that changes who needs the second answer and in which app.',
+        ],
+      },
+      {
+        heading: 'Step 2: work out why it missed',
+        blocks: [
+          'Put your first answer next to his second question and read them side by side. Most of the time the reason is obvious.',
+          {
+            type: 'table',
+            head: ['What happened', 'What it looks like', 'The fix'],
+            rows: [
+              ['Buried', 'The answer was paragraph four of a long update', 'Answer this one question on its own'],
+              ['Different question', 'He asked about the top three customers, you answered about the top one', 'Quote his question, then answer exactly that'],
+              ['Wrong person', 'You answered his advisor, who never passed it on', 'Answer the buyer, copy the advisor if appropriate'],
+              ['Never written', 'You explained it on a call', 'Put it in writing now'],
+              ['Changed', 'The figure moved since you answered', 'Say it changed, and why'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Step 3: answer once more, shorter, in writing',
+        blocks: [
+          'Reply in the app he used for the second question. Quote or restate his question in one line, then answer it in as few sentences as the facts allow. If the answer depends on a document, say which one and where it is.',
+          '**Sounds like:** “You asked about customer concentration. The top three customers were 41 percent of revenue last year, the largest at 18 percent. The customer list by revenue is in the data room under Financials.”',
+          'Do not mention that you answered before. “As I said on the 3rd” makes the buyer defensive and adds nothing. If the figure changed since your first answer, say so plainly: “This is updated from the number I sent on WhatsApp, which was before the year-end close.”',
+        ],
+      },
+      {
+        heading: 'Step 4: make it the answer of record',
+        blocks: [
+          'The second answer should be the last one. Make it easy to find for both of you.',
+          {
+            type: 'list',
+            items: [
+              '**Keep a question log.** One line per question: his exact words, the app, the date, who owns the answer, and where the written answer lives. The list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) shows where to look for the ones you missed.',
+              '**Tell your seller.** If the question touches the business, the seller should see the answer before or at the same time as the buyer. Surprises later cost more than a message now.',
+              '**Use the same words for every buyer.** If two buyers ask the same thing, they should get the same answer. Different wording turns into different facts by the time it reaches an investment committee.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the third ask comes',
+        blocks: [
+          'If the same question arrives a third time after a clear written answer, the problem is no longer the answer. Something else is going on. The buyer may not believe the figure, may be preparing to reprice, or may be passing your answer to someone who needs more detail.',
+          'At that point a short call is worth more than another message. Ask directly: “You’ve asked about concentration a few times. Is there a concern behind it I can help with?” Then write down what you agreed after the call, and add it to your log. A [weekly deal review from your messages](/playbooks/run-a-weekly-deal-review-from-your-messages) is a good place to check nothing is still open.',
+        ],
+      },
+      {
+        heading: 'Making this easier',
+        blocks: [
+          'Most repeated questions come from the same root cause: a deal spread across several apps, with no single place where the answers live. You answered on WhatsApp, he asked again on LinkedIn, and neither of you could see the other thread.',
+          'In Merger, the messaging apps you connect sit in one inbox, and a deal on the Deal Desk keeps its conversations attached, whichever app they came from. When a buyer asks again, the first question and your first answer are on the same page as his new message.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
