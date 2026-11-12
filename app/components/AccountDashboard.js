@@ -212,7 +212,7 @@ export default function AccountDashboard() {
     <h1 className="dash-title">{billingPage ? 'Your membership.' : user.displayName ? `Welcome, ${user.displayName.split(' ')[0]}.` : 'Your Merger account.'}</h1>
     <p className="dash-handle">{user.email}</p>
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
-    <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to choose a plan.' : admitted ? (access.rollout?.inviteRequired === false ? 'Choose monthly or annual below, then download Merger for Windows or iPhone. 30-day money-back guarantee.' : 'Your invitation is accepted. Finish activation when you’re ready.') : 'Your account is ready. We’ll keep your access progress here.'}</p>
+    <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to choose a plan.' : admitted ? (access.rollout?.inviteRequired === false ? 'Choose monthly or annual below, then download Merger for Windows, Mac or iPhone. 30-day money-back guarantee.' : 'Your invitation is accepted. Finish activation when you’re ready.') : 'Your account is ready. We’ll keep your access progress here.'}</p>
     {waitlistPermissions(access.capabilities).canViewWaitlist && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">{waitlistPermissions(access.capabilities).canManageWaitlistInvitations ? 'Manage waitlist' : 'View waitlist'}</Link></div>}
     {access.capabilities?.isAdmin === true && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/users">Users & access</Link></div>}
     {complimentary && <section className="panel mt-24" aria-label="Complimentary partner access"><div className="panel-head"><h2>Complimentary partner access</h2><span className="pill good">Free access</span></div><p className="muted mt-16">Your partner access is complimentary. {access.billing.complimentary.expiresAt ? `Available until ${formatDate(access.billing.complimentary.expiresAt)}.` : 'No expiry date.'}</p><p className="field-hint mt-16">{hasSubscription ? 'Your existing paid subscription is separate and has not been changed.' : 'No paid subscription is required for this access.'}</p></section>}
@@ -281,7 +281,7 @@ export default function AccountDashboard() {
     {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Download Merger</h2></div>
-      <p className="muted mt-16">{entitled ? 'Get Merger for Windows and iPhone.' : access.rollout?.inviteRequired === false ? 'Downloads unlock once your membership starts.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
+      <p className="muted mt-16">{entitled ? 'Get Merger for Windows, Mac and iPhone.' : access.rollout?.inviteRequired === false ? 'Downloads unlock once your membership starts.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
       {entitled && <div className="dl-row"><Link className="btn btn-primary btn-sm" href="/download">Go to downloads</Link></div>}
     </div>
   </main></Shell>;

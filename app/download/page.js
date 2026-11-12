@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Shell from '../components/Shell';
-import PlatformIcon, { IOS_APP_URL } from '../components/PlatformIcon';
+import PlatformIcon, { IOS_APP_URL, MAC_APP_URL, MAC_REQUIREMENT } from '../components/PlatformIcon';
 import { download, errorMessage, meOrNull, statusLabel } from '../lib/api';
 import { normalizeInstallers } from '../lib/authFlow';
 
@@ -58,27 +58,34 @@ export default function DownloadPage() {
     return <Shell authed><main className="dash-main">
       <p className="eyebrow">Downloads</p><h1 className="dash-title">Choose a plan to download.</h1>
       <p className="dash-sub">Downloads unlock once your membership starts. Your account shows the next step: verify your email, choose monthly or annual, then come back here. Every membership has a 30-day money-back guarantee.</p>
-      <div className="panel mt-24"><h2>One account, on the web, Windows and iPhone.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Choose a plan</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
+      <div className="panel mt-24"><h2>One account, on the web, Windows, Mac and iPhone.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Choose a plan</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
     </main></Shell>;
   }
 
   const { windows, macos } = state.installers;
-  const anyReady = Boolean(windows || macos);
+  const anyReady = Boolean(windows);
   return <Shell authed><main className="dash-main">
     <p className="eyebrow">Downloads</p>
-    <h1 className="dash-title">Get Merger for Windows and iPhone.</h1>
+    <h1 className="dash-title">Get Merger for Windows, Mac and iPhone.</h1>
     <p className="dash-sub">Your account has download access. Install Merger on your computer, your phone or both, sign in and connect your messaging accounts.</p>
     <div className="panel mt-24">
-      <div className="panel-head"><h2>Desktop</h2>{anyReady && state.version && <span className="pill neutral">Version {state.version}</span>}</div>
+      <div className="panel-head"><h2>Windows</h2>{anyReady && state.version && <span className="pill neutral">Version {state.version}</span>}</div>
       {anyReady ? <>
         <div className="dl-row">
           {windows && <a className="btn btn-primary btn-sm btn-platform" href={windows} download><PlatformIcon platform="windows" />Download for Windows{state.version ? ` (v${state.version})` : ''}</a>}
-          {macos && <a className="btn btn-ghost btn-sm btn-platform" href={macos} download><PlatformIcon platform="apple" />Download for macOS{state.version ? ` (v${state.version})` : ''}</a>}
         </div>
-        {!windows && <p className="field-hint mt-16">A Windows installer is not currently available.</p>}
         <p className="field-hint mt-16">If your download does not start, try the link again or refresh the installer list below.</p>
-      </> : <p className="muted mt-16">No desktop installer is available right now. Please check again shortly.</p>}
+      </> : <p className="muted mt-16">The Windows installer isn’t available right now. Please check again shortly.</p>}
       <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={load}>{anyReady ? 'Refresh installers' : 'Check again'}</button></div>
+    </div>
+    <div className="panel mt-16">
+      <div className="panel-head"><h2>Mac</h2></div>
+      <p className="muted mt-16">Get Merger for Mac from the App Store and sign in with the same account.</p>
+      <div className="dl-row">
+        <a className="btn btn-primary btn-sm btn-platform" href={MAC_APP_URL} target="_blank" rel="noopener noreferrer"><PlatformIcon platform="apple" />Download for Mac</a>
+        {macos && <a className="btn btn-ghost btn-sm btn-platform" href={macos} download>Direct download{state.version ? ` (v${state.version})` : ''}</a>}
+      </div>
+      <p className="field-hint mt-16">{MAC_REQUIREMENT}</p>
     </div>
     <div className="panel mt-16">
       <div className="panel-head"><h2>iPhone</h2></div>
