@@ -1211,4 +1211,208 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-09 ───────────────────────────────────────────────────────────
+  {
+    slug: 'conditional-offers-in-chat-read-the-if-before-you-call-it-a-deal',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '7 conditions hiding inside a chat offer, and how to read each one before you call it a deal',
+    description:
+      '“I’d do three if the lease transfers” looks like an offer. Seven conditions that often ride along with a number in WhatsApp, Telegram or LinkedIn, and how to pin each one down.',
+    dek: 'A number and a name look like a deal. Half the time the real offer is in the clause after the comma. Here are seven conditions that hide in chat offers, and a short reply that brings each one into the open.',
+    published: '2026-11-09',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why chat offers are easy to misread',
+        blocks: [
+          'Offers in messaging apps are short. A buyer types one line between meetings: “I’d do three if the lease transfers.” It has a number, a buyer and something that sounds like a yes. It is easy to tell the seller you have an offer at three.',
+          'You do not. You have an offer at three on one condition, and nobody has checked whether the condition can be met. In a formal letter of intent the conditions sit in their own numbered section. In chat they sit after a comma, inside a voice note, or in a follow-up message two days later.',
+          'The list below covers the conditions that most often travel with a number in a chat offer. For each one there is a short reply that turns it from a clause into a question with an answer.',
+        ],
+      },
+      {
+        heading: '1. “If the lease transfers”',
+        blocks: [
+          'For many small businesses the lease is worth as much as the equipment. A buyer who ties the price to the lease is telling you the deal depends on a landlord who has not been asked yet.',
+          '**Read it as:** no offer until the landlord says yes. **Reply:** “Understood. Do you need a new lease on the same terms, or an assignment of the current one? I’ll ask the seller what the landlord has said so far.”',
+        ],
+      },
+      {
+        heading: '2. “Subject to financing”',
+        blocks: [
+          'Almost every buyer needs money from somewhere. The question is how certain that money is. A buyer with a lender who has already seen the numbers is a different buyer from one who plans to start calling banks next week.',
+          '**Read it as:** the offer is as strong as the lender. **Reply:** “Who is the lender, and have they seen the financials yet? A short note from them would help me put this in front of the seller.” The habit of asking for a dated letter applies here too.',
+        ],
+      },
+      {
+        heading: '3. “Assuming the numbers hold up”',
+        blocks: [
+          'This one sounds harmless and is the widest condition on the list. It can mean a light review of tax returns or a full quality-of-earnings report, and the buyer may not have decided which.',
+          '**Read it as:** a price with no floor yet. **Reply:** “Which numbers matter most to you, and what would make you change the price?” The answer tells you whether you are looking at a price or a starting point.',
+        ],
+      },
+      {
+        heading: '4. “If the owner stays on”',
+        blocks: [
+          'Buyers of owner-run businesses often want the seller to stay for a transition. Sellers often want to leave on closing day. When a buyer ties the price to a transition period, the condition is really a question for the seller.',
+          '**Read it as:** two offers, one with a transition and one without. **Reply:** “How long would you need him, and in what role? I’ll check what he is willing to do before we talk price.”',
+        ],
+      },
+      {
+        heading: '5. “If my partner agrees”',
+        blocks: [
+          'A buyer who mentions a partner, a spouse, an investment committee or a co-investor is telling you the person you are talking to does not have the final word. The real decision-maker may never have seen the deal.',
+          '**Read it as:** interest, not an offer. **Reply:** “Makes sense. What does your partner need to see, and would it help if I sent a short summary you can forward?” Then note who the partner is, so the next update goes to the right person.',
+        ],
+      },
+      {
+        heading: '6. “At that structure”',
+        blocks: [
+          'Sometimes the number comes with a shape: part paid at closing, part over time, part tied to how the business performs. A headline price with a large deferred piece can be worth much less to the seller than a lower price paid up front.',
+          '**Read it as:** a price you cannot compare until you know the split. **Reply:** “How much at closing, how much later, and what does the later part depend on?” Write the answer down in full. Structure is the term most likely to be remembered differently by each side.',
+        ],
+      },
+      {
+        heading: '7. “If we can close by year end”',
+        blocks: [
+          'A timing condition can help you. It gives the buyer a reason to move. It can also sink the deal if the seller cannot be ready in time, and nobody says so until the date has passed.',
+          '**Read it as:** a deadline both sides need to agree is real. **Reply:** “What happens to the offer if we close in February instead?” If the price changes, you have learned something important about this buyer.',
+        ],
+      },
+      {
+        heading: 'Restate the offer in one message',
+        blocks: [
+          'Once you have the answers, send one message in the app where the buyer made the offer. Restate the number and every condition in full sentences, and ask the buyer to confirm. For example: “Confirming where we are: three million, subject to an assignment of the current lease, with the owner staying on for three months. Anything I have missed?”',
+          'That message is the version you take to the seller. It is also the one you will be glad to find in three weeks, when someone remembers the offer slightly differently. The list of [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers where the rest of the terms tend to go missing.',
+        ],
+      },
+      {
+        heading: 'A quick check before you tell the seller',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Find the comma', text: 'Read the offer message again and mark every “if”, “assuming”, “subject to” and “depending on”.' },
+              { title: 'Ask one question per condition', text: 'In the buyer’s app, the same day, while the offer is fresh.' },
+              { title: 'Restate it in full', text: 'One message with the number and every condition, and a request to confirm.' },
+              { title: 'Give it a next step', text: 'Who needs to answer what, and by when. See [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal).' },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so an offer on WhatsApp and the follow-up condition on LinkedIn are read in the same list. With your own Anthropic API key, Claude can flag a message that looks like a possible deal. A flag is a suggestion: you open the conversation, read the condition, and decide whether it goes on the Deal Desk. An approved deal keeps its conversations attached, so the restated offer sits next to the deal it belongs to.',
+          'No tool reads the condition for you, though. The habit is what protects the deal: find the “if”, ask about it, and write the answer down.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'forwarded-profile-vs-double-opt-in-vs-group-add-three-kinds-of-intro',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Forwarded profile, double opt-in or group add? Three kinds of introduction and how to answer each',
+    description:
+      'Introductions arrive as a bare LinkedIn link, a polite double opt-in or a new WhatsApp group. How the three compare, what each one is missing, and how to answer it the same day.',
+    dek: 'Most deals start with an introduction, and introductions now arrive in three very different shapes. Each one leaves out something different. Here is how they compare and what to do with each.',
+    published: '2026-11-09',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Kind of intro', 'What you get', 'What is usually missing'],
+            rows: [
+              ['Forwarded profile', 'A name and a LinkedIn link, often with no message', 'Why you should talk, and whether the other person knows'],
+              ['Double opt-in', 'Context, and both sides already said yes', 'Speed: it can take days to arrive'],
+              ['Group add', 'Both people in one chat, right away', 'A clear next step, and a private place to talk'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why the shape matters',
+        blocks: [
+          'An introduction is a favor. Someone spent a little of their reputation connecting two people. How it arrives tells you how much context they gave, how much the other side expects, and what you need to do next.',
+          'The three shapes below are the ones most dealmakers see every week. None of them is wrong. Each one just leaves a different gap, and the fastest way to waste an introduction is to answer all three the same way.',
+        ],
+      },
+      {
+        heading: 'The forwarded profile',
+        blocks: [
+          'A friend sends a LinkedIn profile on WhatsApp. No message. Sometimes a single word: “Talk.” The person who sent it clearly thinks you two should meet, and forgot to say why.',
+          'This is the fastest kind of introduction and the thinnest. You do not know what the person does that matters to you, whether they know your name, or whether your friend has told them to expect you. Writing to them cold, with only “a friend sent me your profile”, puts all of that work on a stranger.',
+          '**Answer it by** asking the sender one line first: “What should I know before I reach out, and do they know I’m writing?” Then write to the person the same day and name who sent you. A message that starts with a shared contact is far easier to answer than one that starts with you.',
+        ],
+      },
+      {
+        heading: 'The double opt-in',
+        blocks: [
+          'The careful version. The introducer asks each side privately whether they want to meet, then sends one message to both with a line about each person and why they should talk. Both sides have already agreed.',
+          'This is the strongest kind of introduction. The context is written down, expectations are set, and nobody is surprised. The cost is time: by the time it arrives, the moment that made it relevant may have moved on.',
+          '**Answer it by** replying the same day, thanking the introducer, and moving them to bcc or out of the thread in your next message, where the app allows. Suggest a specific time to talk. The introducer did the slow part, so the rest should be quick.',
+        ],
+      },
+      {
+        heading: 'The group add',
+        blocks: [
+          'Someone creates a WhatsApp or Telegram group with you, the other person and themselves, and writes “You two should talk.” It is immediate and public. It is also easy to lose: if the group goes quiet, the introduction sits there, and if it gets busy, it scrolls away.',
+          'The group add has the opposite gap to the forwarded profile. You have plenty of reach, both people are already in the chat, but nobody owns the next step and there is no private place to discuss terms.',
+          '**Answer it by** replying in the group the same day so the introducer sees it, then messaging the other person directly to set up a call. Leave the group for thank-yous and updates.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Question', 'Forwarded profile', 'Double opt-in', 'Group add'],
+            rows: [
+              ['Does the other person expect you?', 'Often not', 'Yes', 'Yes, publicly'],
+              ['Is the reason to talk written down?', 'Rarely', 'Usually', 'Sometimes'],
+              ['How fast does it arrive?', 'Immediately', 'Days', 'Immediately'],
+              ['Who owns the next step?', 'You, after asking the sender', 'You, the same day', 'You, in a direct message'],
+              ['Where should the conversation go next?', 'A direct message that names the sender', 'A call booked by reply', 'A direct message outside the group'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Three mistakes that waste an introduction',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Waiting for a better moment.** An introduction is warmest on the day it arrives. A reply on day four reads as a polite no, even when it is not.',
+              '**Pitching in the first message.** The first reply to any introduction should be short: thanks, a line about why you are glad to meet, and a time to talk. The details belong on the call.',
+              '**Forgetting the introducer.** Tell the person who connected you what happened, whether it turned into a deal or not. It is the main reason they will introduce you again.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'One habit for all three',
+        blocks: [
+          'Whichever shape it takes, an introduction has two jobs to do after it arrives. The first is a reply the same day, even a short one. The second is a record: who introduced you, when, in which app, and what they said. Six months later, when the deal closes or the person sends you another one, that record is how you remember who opened the door.',
+          'If the first message gets no answer, a short follow-up a week later is normal. The guide to [follow-up messages that restart a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) has examples that work for introductions too.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so a profile forwarded on WhatsApp, a double opt-in on LinkedIn and a group add on Telegram land in the same list. When you save the new person to your Rolodex, the contact stays linked to the message the introduction came from, so you can always see who made it and what they said.',
+          'The tool keeps the record. The same-day reply is still yours to send.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
