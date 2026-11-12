@@ -1211,4 +1211,197 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-02 ───────────────────────────────────────────────────────────
+  {
+    slug: 'angel-syndicate-lead-filling-an-allocation-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Angel syndicates',
+    title: 'How an angel syndicate lead fills an allocation when every backer answers in a different app',
+    description:
+      'An illustrative walkthrough: a syndicate lead has ten days to fill an allocation, and the yeses arrive on WhatsApp, Telegram, LinkedIn and Signal. One workspace keeps the count honest.',
+    dek: 'Ten days to fill an allocation. Twenty-six people said they were interested, in four apps. A walkthrough of turning a pile of friendly messages into a real count.',
+    published: '2026-11-02',
+    readMinutes: 6,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The allocation',
+        blocks: [
+          'Nina leads a small angel syndicate. She has no staff and no fund, just a list of about ninety people who like to see early deals and a reputation for bringing good ones. On a Monday a founder she has known for years offers her an allocation in a seed extension. She has ten days to say how much she can take.',
+          'She writes one short memo and sends it the way her backers actually read things. The Telegram channel gets it first. A WhatsApp group of former operators gets it next. A handful of older investors get a direct LinkedIn message, because that is the only place they answer. Two people who insist on Signal get it there.',
+          'By Wednesday the replies have started. Some are clear. Most are not. “Love this team.” “Probably in, send me the deck.” “What did you do on the last one?” “Yes, same as before.” Twenty-six people have responded with something warm, and Nina cannot say how many of them have actually committed.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          'A syndicate lead’s job in that window is a counting problem dressed up as a relationship problem. Each backer deserves a personal reply, and the founder needs a real number by Friday of next week.',
+          {
+            type: 'list',
+            items: [
+              '**Warm is not committed.** “Love this team” feels like a yes while you are reading it. It sits in the same mental pile as “I’m in for the usual amount.”',
+              '**The tally lives apart from the messages.** Nina keeps a spreadsheet, but it only holds what she remembered to type. It says fourteen. Her phone suggests more.',
+              '**Questions go missing.** A backer asks on Signal about the pro rata terms. Signal is the app she checks least, so the question waits two days and the backer cools off.',
+              '**The last days get expensive.** With the deadline close, she re-reads four apps to work out who still needs a nudge, and sends one to someone who already confirmed.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'One inbox for the raise',
+        blocks: [
+          'Nina connects her messaging accounts to Merger, so the Telegram, WhatsApp, LinkedIn and Signal conversations sit in one inbox. She keeps replying in each person’s app. Nobody is asked to move anywhere, which matters when the favor runs from them to her.',
+          'The first change is small. She now reads replies in the order they arrived rather than the order she happened to open apps. The Signal question about pro rata sits in the same list as everything else, and she answers it that afternoon.',
+          'With her own Anthropic API key connected, Claude flags messages that look like a possible deal and suggests details from the conversation. It does not know who is good for their word. Nina reviews each suggestion and decides what goes on the Deal Desk.',
+        ],
+      },
+      {
+        heading: 'From warm to counted',
+        blocks: [
+          'She approves the seed extension onto the Deal Desk with the founder’s conversation attached, then makes herself a simple rule for the backers: nobody counts until they have restated an amount in writing.',
+          'So every warm reply gets the same short answer, in the app it arrived in:',
+          {
+            type: 'callout',
+            title: 'The confirming reply',
+            text: 'Great to hear. So I can count you properly: what amount should I put you down for? I am closing the list Friday of next week.',
+          },
+          'That one message sorts the pile. Some people answer with a number. Some say they need to think about it, which is useful to know on day four rather than day ten. A few go quiet, and they are now a named list instead of a feeling.',
+          'New backers who come in through someone else’s introduction get saved to her Rolodex, linked to the message they came from. When she runs the next deal, she can see who brought whom.',
+        ],
+      },
+      {
+        heading: 'What the last three days look like',
+        blocks: [
+          'Nina runs the same short routine each morning until the list closes.',
+          {
+            type: 'steps',
+            items: [
+              { title: 'Read the inbox once, oldest first', text: 'Answer any open question before sending anything new.' },
+              { title: 'Update the count', text: 'Only written amounts go in. Warm replies stay out, however warm.' },
+              { title: 'Set one next step for the deal', text: 'For example: “Send final numbers to the founder Thursday.” It stays on the Deal Desk where she can see it.' },
+              { title: 'Nudge the undecided once', text: 'One message each, in their app, with the closing date. Then leave them alone.' },
+            ],
+          },
+          'On the last day she has a number she trusts, and she can tell the founder exactly how much she can take. The people who passed get a short thank you, which is how they stay on the list. The guide to [closing a dead deal without burning the relationship](/playbooks/close-a-dead-deal-without-burning-the-relationship) has wording that works here too.',
+        ],
+      },
+      {
+        heading: 'What to take from this',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Keep the backer’s app.** The people doing you a favor should not have to change how they message you.',
+              '**Count only what is written.** A restated amount is a commitment you can plan around. A kind word is not.',
+              '**Keep one deal record.** Whether it is a spreadsheet or a Deal Desk, it needs to sit beside the conversations, not depend on your memory of them.',
+              '**Close the list out loud.** Tell everyone the date, then thank the ones who passed.',
+            ],
+          },
+          'Securities rules for private raises vary, and they apply to how you describe a deal and who you describe it to. This walkthrough is about keeping track of conversations, not about what you may offer or to whom. Check that part with your own counsel.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'hand-off-your-live-deals-before-time-away',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to hand off your live deals before a week away when everything lives in chat',
+    description:
+      'A practical guide to stepping away for a week: a one-line status for each deal, who covers what, the note you send counterparties, and how to pick things back up.',
+    dek: 'If your pipeline lives in your messaging apps, you are the only copy of it. Here is an hour of preparation that lets you take a week off without a deal going quiet.',
+    published: '2026-11-02',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why this is harder than it should be',
+        blocks: [
+          'An email inbox can be delegated. A shared drive can be opened by a colleague. A pipeline spread across your WhatsApp, Telegram, LinkedIn and Signal cannot. Those accounts are personal, the context is in your head, and most people would rather not hand anyone their phone.',
+          'So dealmakers do one of two things. They stay half-working through the whole trip, or they disappear and come back to a seller who has been wondering for six days whether anyone is still looking. Neither is necessary. What you need is not access to your chats. You need a short written picture of each deal that exists outside them.',
+          'The whole process takes about an hour. Do it two days before you leave, not the night before, so there is time to clear what you find.',
+        ],
+      },
+      {
+        heading: 'Step 1: list every live deal',
+        blocks: [
+          'Open each app you use for deals once and write down every deal that has moved in the last thirty days. Include the ones you think are dead. They are the ones that surprise you with a message while you are away.',
+          'Do not stop to answer anything yet. Getting the whole list first is the point. If you already run a [weekly deal review](/playbooks/run-a-weekly-deal-review-from-your-messages), this step takes minutes, because the list exists.',
+        ],
+      },
+      {
+        heading: 'Step 2: write one line per deal',
+        blocks: [
+          'Each deal gets one line with four parts: who the other side is, where it stands, what happens next, and which app the conversation is in. That last part is the one people skip, and it is the first thing a colleague will ask.',
+          {
+            type: 'table',
+            head: ['Deal', 'Where it stands', 'Next step and date', 'Where it lives'],
+            rows: [
+              ['Ridge Bakery, seller', 'LOI out since Tuesday', 'Buyer reply due Friday', 'WhatsApp'],
+              ['Coastal HVAC, buyer', 'NDA signed, waiting on numbers', 'Seller sends financials Monday', 'LinkedIn'],
+              ['Elm St duplex', 'Inspection scheduled', 'Nothing until the 14th', 'Telegram group'],
+            ],
+          },
+          'If you cannot write a next step for a deal, that is a useful finding on its own. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers what to do about it.',
+        ],
+      },
+      {
+        heading: 'Step 3: sort into three groups',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Finish before you go.** Anything that would wait on you while you are away. Send the document, answer the question, make the call.',
+              '**Safe to wait.** The next step belongs to the other side, or its date falls after you return. Tell them so.',
+              '**Needs cover.** Something will happen while you are gone, and someone has to be able to respond.',
+            ],
+          },
+          'Most lists end up with a lot in the first group, which is why starting two days early matters. Keep the third group as small as you can. A colleague covering two deals will do it well. A colleague covering nine will not.',
+        ],
+      },
+      {
+        heading: 'Step 4: brief whoever is covering',
+        blocks: [
+          'Give your partner or colleague the one-line list for the deals they are covering, plus three things it does not show:',
+          {
+            type: 'list',
+            items: [
+              '**What they may say.** For example, they can confirm a call time but should not discuss price.',
+              '**What should reach you anyway.** Pick one or two triggers, such as a signed LOI or a buyer walking away, and how they should contact you.',
+              '**Who the people are.** One sentence on each counterparty: how they like to communicate, and anything that would be awkward to get wrong.',
+            ],
+          },
+          'If nobody can cover, say that plainly in the note below and move anything urgent into the first group. A clear “back on the 14th” does less harm than silence.',
+        ],
+      },
+      {
+        heading: 'Step 5: tell counterparties in their own app',
+        blocks: [
+          'Send a short message to everyone in the second and third groups, in the app where that deal already lives. An out-of-office reply will not do this for you in a messaging app. Keep it to the facts.',
+          {
+            type: 'callout',
+            title: 'A note that works',
+            text: 'Quick heads up: I am away from the 7th to the 14th. Nothing changes on our side. If anything comes up on the numbers, Sam will pick it up and I will follow up on the 14th.',
+          },
+          'Two rules. Send it before you leave, since a note from the airport reads as an afterthought. And mention your return date, so the other side knows when the silence ends.',
+        ],
+      },
+      {
+        heading: 'Step 6: the first morning back',
+        blocks: [
+          'Do not reply to anything until you have read everything. Open each app once, in the same order, and add what happened to your list. Then answer the oldest open question first. People who waited the longest have been the most patient, and they notice.',
+          'Thank whoever covered, and ask what surprised them. That answer usually tells you what to add to the list next time.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Steps one and six are where most of the time goes, because they mean opening every app. In Merger, the messaging accounts you connect sit in one inbox, so you read them in one place. Deals on your Deal Desk keep their conversations attached, and each can carry its next step, which gives you most of the one-line list before you start.',
+          'You still write the note, choose who covers and decide what can wait. Those are judgment calls, and they stay yours.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
