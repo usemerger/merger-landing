@@ -1211,4 +1211,230 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-13 ───────────────────────────────────────────────────────────
+  {
+    slug: 'what-to-put-in-a-blind-teaser-you-send-in-chat',
+    type: T.list,
+    audience: 'Business brokers and sell-side advisors',
+    title: 'What to put in a blind teaser you send in chat: seven lines, no names',
+    description:
+      'A buyer on WhatsApp asks what you have. Seven lines that describe a business well enough to qualify interest, without naming it before the NDA.',
+    dek: 'Most deals are first described in a chat message, not a PDF. Those few lines decide who asks for the NDA and who quietly moves on. Here is what belongs in them, and what does not.',
+    published: '2026-11-13',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the teaser moved into chat',
+        blocks: [
+          'A formal teaser is still a one-page document. But the first description of most small and mid-sized deals now goes out as a message: a buyer on WhatsApp asks what is new, an operator on LinkedIn says he is looking for a services business, a search funder on Telegram asks whether you have anything in the Mountain West.',
+          'You answer in a few lines, in the app they wrote in. That message does the same job as the one-pager. It has to be specific enough that the right buyer asks for the NDA, and vague enough that nobody can work out which company it is.',
+          'The seven lines below are a template. Not every deal needs all seven, but every line you drop should be a choice, not an accident.',
+        ],
+      },
+      {
+        heading: '1. Sector, as a buyer would search for it',
+        blocks: [
+          '“Commercial HVAC service” tells a buyer far more than “home services” and far less than the company’s name. Use the words a buyer would type into their own notes. If the business has two lines, name the larger one first.',
+          '**Avoid:** brand names, product names and anything that appears on the company’s website as a tagline.',
+        ],
+      },
+      {
+        heading: '2. Region, one level wider than you think',
+        blocks: [
+          'If the business is the only one of its kind in its town, the town is the name. Give the state or the region instead: “Mountain West”, “Southeast”, “Northern England”. A serious buyer will ask for more after the NDA.',
+        ],
+      },
+      {
+        heading: '3. Size, as a band',
+        blocks: [
+          'Revenue and earnings, rounded into a band, or a single phrase like “steady earnings, 20 years in”. Exact figures belong in the summary you send after the NDA. A band is enough for a buyer to say “too small for us”, and that answer is as useful to you as a yes.',
+          'Be consistent. If you give one buyer a band, give every buyer the same band. Two versions of the same deal in two chats is how numbers get quoted back at you later.',
+        ],
+      },
+      {
+        heading: '4. Why now',
+        blocks: [
+          '“Owner retiring, wants a two-year handover.” “Founder moving abroad.” “Partners splitting.” Buyers read the reason for sale as a risk signal, so a clear, true reason helps. If the reason is sensitive, say less, not something different.',
+        ],
+      },
+      {
+        heading: '5. Who fits',
+        blocks: [
+          'One line on the buyer you think suits the deal: “a strategic in the region, or a search fund with operating experience.” It saves the wrong buyers a call, and it tells the right ones you have thought about them.',
+        ],
+      },
+      {
+        heading: '6. One honest wrinkle',
+        blocks: [
+          'Every business has one: a customer that is a large share of revenue, a lease up for renewal, an owner who is the main salesperson. Mentioning it early in neutral words, “one customer is a meaningful share of revenue”, filters out buyers who would walk at diligence and builds trust with the ones who stay.',
+          'This line is optional in a first message. It is not optional by the time you send the full summary.',
+        ],
+      },
+      {
+        heading: '7. The next step',
+        blocks: [
+          'End with what happens if they are interested: “NDA first, then the full summary.” Without it the buyer replies “interesting”, and you have to ask the obvious question yourself.',
+        ],
+      },
+      {
+        heading: 'What a finished teaser looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example',
+            text: 'Commercial HVAC service, Mountain West. Steady earnings, 20 years in. Owner retiring, wants a two-year handover. Best fit: an operator in the region or a search fund with ops experience. One customer is a meaningful share of revenue. NDA first, then the full summary.',
+          },
+          'Six sentences. It fits on a phone screen without scrolling, and it reads the same whether you paste it into WhatsApp, Telegram or a LinkedIn message.',
+          'Read it as the buyer would. Could a competitor in the same region guess the company from these lines? If yes, widen the region or soften the sector until they could not. Could a buyer decide from these lines whether to ask for the NDA? If no, the size band or the reason for sale is probably too vague.',
+        ],
+      },
+      {
+        heading: 'What to leave out',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The company name, the town and the owner’s name.** All three come after the NDA.',
+              '**Photos.** A photo of the workshop or the storefront is often enough to identify the business.',
+              '**Exact figures.** They travel. A band is enough at this stage.',
+              '**Anything you would not want forwarded.** Assume the message will be forwarded at least once.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'After you send it',
+        blocks: [
+          'The teaser is the easy part. The harder part is the list of who received it, in which app, and who asked for the NDA. Six buyers across three apps is enough for that list to live only in your head.',
+          {
+            type: 'steps',
+            items: [
+              { title: 'Send the same text to everyone', text: 'Same lines, same band. Paste it, do not retype it.' },
+              { title: 'Keep a list of who got it', text: 'Name, app and date. One line each.' },
+              { title: 'Mark who asked for the NDA', text: 'And send it the same day, from one template.' },
+              { title: 'Close the loop with the rest', text: 'A short “understood, I will keep you in mind” to the buyers who passed keeps them for the next one.' },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the replies to one teaser read as one list even when they came from WhatsApp, Telegram and LinkedIn. A deal on your Deal Desk keeps those conversations attached. When a buyer asks for the NDA, names and emails can fill from your contacts, and it goes out from your own DocuSign account. The guide to [sending an NDA without retyping names from chat](/playbooks/send-an-nda-without-retyping-names-from-chat) covers that step.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'chat-attachments-vs-email-vs-data-room-for-deal-documents',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Chat attachments, email or a data room: where to send deal documents at each stage',
+    description:
+      'A buyer writes “send me the numbers.” Comparing three ways to share deal documents, chat attachments, email and a data room, and when each one fits.',
+    dek: 'The first document request usually arrives in a chat app. Where you send the file decides who can find it later, who can forward it, and whether anyone knows which version they read.',
+    published: '2026-11-13',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Channel', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Chat attachment', 'Fast, in the conversation the request came from', 'Easy to forward, hard to find a month later, no version history'],
+              ['Email', 'A searchable record with a date and a recipient list', 'Slower for counterparties who live in chat; attachments multiply'],
+              ['Data room', 'One current version, access you control, a view history', 'Overkill before an NDA; another login for the other side'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'First, ask which numbers',
+        blocks: [
+          '“Send me the numbers” can mean the last twelve months of profit and loss, three years of tax returns, a one-page summary or the add-backs. Guessing usually means sending too much, too early, or the wrong file.',
+          'One line back saves a week of follow-ups: “Happy to. Last twelve months P&L, or the one-page summary first?” Then the channel question gets easier, because you know what you are sending.',
+        ],
+      },
+      {
+        heading: 'Option 1: attach it in the chat',
+        blocks: [
+          'The buyer asked on WhatsApp, so you reply on WhatsApp with the file. It is the fastest option and it keeps the request and the answer side by side.',
+          'The costs show up later. A chat attachment can be forwarded in two taps, often without the message that explained it. Six weeks on, “which version of the summary did you send him?” means scrolling. And if the buyer asked in one app and his partner asks in another, you now have two copies in two places.',
+          '**Works when:** the document is meant to travel, like a one-page teaser or a non-confidential summary, and before any NDA is in place.',
+        ],
+      },
+      {
+        heading: 'Option 2: move the document to email',
+        blocks: [
+          'Many dealmakers keep the conversation in chat and send documents by email: “Sent the summary to your email, let me know when you have it.” Email gives you a dated record, a recipient list and a thread that a lawyer or accountant can be added to.',
+          'The cost is a second channel. Counterparties who live in chat may read the email a day later. Each revision becomes a new attachment, and by the third round there are several files with similar names in several inboxes.',
+          '**Works when:** the document is confidential enough that you want a clean record of who received it, and the deal does not yet justify a data room.',
+        ],
+      },
+      {
+        heading: 'Option 3: a data room',
+        blocks: [
+          'A virtual data room holds one current version of every document, lets you decide who sees what, and shows who opened which file. For diligence with several parties it is the standard for good reasons.',
+          'Before an NDA, it is usually too much. Asking a buyer who has seen six lines of teaser to create an account is friction at the moment interest is most fragile. Most deals add the data room once there is a signed NDA and a buyer who is moving toward an offer.',
+          '**Works when:** an NDA is signed, more than one person on the buyer’s side needs access, and documents will change during diligence.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Chat attachment', 'Email', 'Data room'],
+            rows: [
+              ['Answer a request in minutes', 'Yes', 'Usually', 'Only once set up'],
+              ['Know who received which version', 'Scroll and guess', 'Search sent mail', 'Yes'],
+              ['Limit forwarding', 'No', 'No', 'Partly, with access controls'],
+              ['No new login for the other side', 'Yes', 'Yes', 'No'],
+              ['Fits before an NDA', 'For non-confidential files', 'For light documents', 'Rarely'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Three habits that cause most of the trouble',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Sending the full folder to the first person who asks.** It feels helpful. It also means confidential numbers now sit in a chat you do not control, with a buyer who has not signed anything.',
+              '**Renaming nothing.** “Summary.pdf” sent three times over a month is three different documents with one name. Put the date in the file name before it leaves your desk.',
+              '**Answering a document question in a different app from the document.** The buyer asks on LinkedIn about a figure in a file you emailed. You answer on LinkedIn. Now the question, the answer and the file live in three places. Note the answer next to wherever the file went, even if it is one line.',
+            ],
+          },
+          'None of these is about the tool. They are about deciding, once per deal, where documents go and where the record of sending them lives.',
+        ],
+      },
+      {
+        heading: 'A practical rule by stage',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              { title: 'Before the NDA', text: 'Teaser lines in chat. Nothing that identifies the company. See [what to put in a blind teaser you send in chat](/playbooks/what-to-put-in-a-blind-teaser-you-send-in-chat).' },
+              { title: 'NDA signed', text: 'A summary or the specific numbers asked for, by email or a shared link, with a note in the chat saying where it went.' },
+              { title: 'Serious buyer, diligence starting', text: 'A data room, with the chat used for scheduling and quick questions only.' },
+            ],
+          },
+          'Whichever channel carries the file, the request usually arrived in chat, and so do the follow-up questions. Write one line in the chat each time you send something: what it was, where it went, and the date. That line is what you will search for later.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Merger does not replace a data room. What it does is keep the chat side of the deal in one place. The messaging accounts you connect sit in one inbox, so the document request on WhatsApp and the follow-up question on LinkedIn are read together, and a deal on your Deal Desk keeps those conversations attached. With your own Anthropic API key, Claude can flag messages that look like a possible deal; you decide what goes on the Desk. For the NDA step, the guide to [sending an NDA without retyping names from chat](/playbooks/send-an-nda-without-retyping-names-from-chat) shows how it goes out from your own DocuSign account.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
