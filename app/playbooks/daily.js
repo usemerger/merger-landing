@@ -1211,4 +1211,236 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-14 ───────────────────────────────────────────────────────────
+  {
+    slug: 'self-storage-investor-buying-facilities-from-owners-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Real estate investors',
+    title: 'How a self-storage investor buys facilities from owners who answer on four different messaging apps',
+    description:
+      'An illustrative walkthrough: a self-storage buyer works owner leads from WhatsApp, LinkedIn, Messenger and a Telegram broker group, and keeps each facility, owner and next step in one place.',
+    dek: 'The owners who sell small storage facilities rarely live on email. One answers on WhatsApp, one on Facebook Messenger, one only through his son on LinkedIn. A walkthrough of keeping four conversations from becoming four lost deals.',
+    published: '2026-11-14',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The buy box',
+        blocks: [
+          'Marcus buys small self-storage facilities with two partners. Their buy box is narrow: 200 to 500 units, older owners, secondary towns within a day’s drive, and room to add climate-controlled units or raise rents that have not moved in years.',
+          'Facilities like that almost never reach a listing site. They come from owners who have run the place for twenty years, from local brokers who know them, and from a Telegram group where a few dozen storage investors swap leads. Marcus’s pipeline is a mix of cold outreach, introductions and group posts.',
+          'At any time he has around fifteen owner conversations going. On a normal week three of them move. The rest are owners who said “not yet”, owners who stopped replying, and owners whose sons or daughters are now the ones answering.',
+        ],
+      },
+      {
+        heading: 'Four owners, four apps',
+        blocks: [
+          'Here is one ordinary week, with invented names.',
+          {
+            type: 'list',
+            items: [
+              '**Glenn, WhatsApp.** Owns a 340-unit facility two hours north. Marcus met him at a regional conference. Glenn sends voice notes and the occasional photo of the office. On Tuesday he writes: “Thinking about it more seriously after the holidays.”',
+              '**Rita, Facebook Messenger.** Found through a local group. Rita answers fast, in short lines. She asks whether Marcus would keep her manager on, which is the real question behind any sale she would consider.',
+              '**Paul, LinkedIn.** Paul’s father owns the facility; Paul handles the business side. He sends a rough rent roll as an attachment and asks for a call “sometime next week”.',
+              '**A Telegram post.** A broker in the investor group posts a 260-unit facility with a gravel lot and expansion land. Two other investors reply in the thread within an hour.',
+            ],
+          },
+          'None of these is an offer yet. Each is a possible deal, and each has a different next step: a date to check back with Glenn, an answer on the manager for Rita, a call with Paul, and a private message to the broker before the Telegram post goes cold.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**“After the holidays” has no date.** Glenn’s message is the warmest of the week and the easiest to lose. By February it is forty voice notes up.',
+              '**The real question goes unanswered.** Rita asked about her manager. Marcus meant to check with his partners and reply. Messenger is the app he opens least.',
+              '**The rent roll lives in a LinkedIn attachment.** When a partner asks what the facility collects, Marcus scrolls LinkedIn to find it.',
+              '**The group lead is first come, first served.** By the time Marcus messages the broker privately, the broker has already sent the package to the two investors who replied in the thread.',
+              '**The partners see none of it.** His partners ask for a status update on Friday. Marcus rebuilds the week from four apps.',
+            ],
+          },
+          'Nothing here is unusual. Small-facility owners pick the app they already use with their family, and the buyer carries the cost of keeping the picture together.',
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every owner chat in one list',
+                text: 'Marcus connects the WhatsApp, Messenger, LinkedIn and Telegram accounts he already uses. Glenn, Rita, Paul and the investor group sit in one inbox. He replies from Merger, and each reply goes out in the app the owner chose.',
+              },
+              {
+                title: 'Possible deals flagged for review',
+                text: 'With his own Anthropic API key connected, Claude flags Glenn’s “more seriously after the holidays”, Paul’s rent roll and the Telegram post as possible deals. Marcus reads each conversation and decides. He approves all three, and passes on a fourth flag from an owner who was only asking about a referral.',
+              },
+              {
+                title: 'One deal per facility, conversations attached',
+                text: 'Each approved facility goes on the Deal Desk with its conversation attached. The rent roll Paul sent sits with Paul’s facility. Glenn’s voice notes sit with Glenn’s.',
+              },
+              {
+                title: 'A next step with a date',
+                text: 'For Glenn: “Check in January 8, ask about timing and whether his daughter is involved.” For Rita: “Answer the manager question by Thursday.” For Paul: “Offer two call times.” For the group lead: “Message the broker directly today.”',
+              },
+              {
+                title: 'Owners saved as contacts',
+                text: 'Paul is saved to the Rolodex with a note that his father is the owner, linked to the message where Paul introduced himself. When a buyer later asks who decides, the answer is one click away.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What changed for Rita',
+        blocks: [
+          'The manager question was the one most likely to slip, because it needed a conversation with the partners first. On the Deal Desk it had a next step with a date, so it came up on Thursday instead of three weeks later.',
+          'Marcus answered on Messenger in two lines: the partners would keep the manager for at least a year, and they would want to meet her before making an offer. Rita replied within the hour and asked when they could visit. A reply like that rarely comes from a question answered late.',
+          'None of this needed new software habits from Rita. She stayed on Messenger the whole time.',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Give every “not yet” a date.** An owner who says “after the holidays” has told you when to ask again. Write the date down the same day.',
+              '**Answer the question behind the question.** Owners of small facilities usually care about their staff, their customers and their name in town as much as the price. Answer that first.',
+              '**Keep documents with the deal, not the app.** A rent roll in a LinkedIn attachment is hard to find when a partner asks for it. Note where each document lives, or keep it with the deal.',
+              '**Move group leads to a private message fast.** A post in a group is seen by everyone in the group. Reply to the broker directly, the same hour if you can.',
+              '**Write the Friday update from one list.** If the update takes more than ten minutes to write, the pipeline is in too many places.',
+            ],
+          },
+          'The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the date habit in more detail, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers the Rolodex side.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each owner’s app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'ask-for-an-introduction-someone-can-forward-in-one-message',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to ask for an introduction that someone can forward in one message',
+    description:
+      'Most intro requests stall because they ask the introducer to write your pitch. Here is the three-line blurb to send instead, with examples, an easy out, and what to do when the intro lands.',
+    dek: '“Could you introduce me to Dan?” asks your contact to explain who you are, why Dan should care and what you want. Most people mean to. Then the week happens. Write the part they forward.',
+    published: '2026-11-14',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why intro requests stall',
+        blocks: [
+          'An introduction is a favor, and the size of the favor decides whether it happens this week. When you ask “Could you introduce me to Dan?”, you are asking your contact to do three things: remember what you do, work out why Dan would care, and write a message Dan will answer.',
+          'That is ten minutes of thought for someone who owes you nothing. They agree, they mean it, and the request sinks under the rest of their messages. Two weeks later you are deciding whether a follow-up would be rude.',
+          'The fix is to do the writing yourself. Send a short blurb your contact can forward as it is, in whatever app they use with Dan. Now the favor is copy, paste and send.',
+        ],
+      },
+      {
+        heading: 'The three-line blurb',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Who you are, in one line',
+                text: 'Write it in the third person so it reads naturally when forwarded. “Maya Ruiz is a search funder buying one services business in the Southeast.” Not your whole background. One line Dan can place.',
+              },
+              {
+                title: 'Why this person',
+                text: 'The specific reason you want Dan and not anyone else. “Dan sold a company like the ones she looks at.” If you cannot write this line, you are not ready to ask for the intro.',
+              },
+              {
+                title: 'What you would ask',
+                text: 'A small, clear ask with a limit. “Twenty minutes on how his handover went.” A small ask is easy to say yes to, and a clear one tells Dan what the call is for.',
+              },
+            ],
+          },
+          'Then add one sentence that makes saying no easy: “No pressure if the timing is wrong.” People forward more readily when they know the other side can decline without awkwardness.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          'Two messages to your contact, in the app you already talk in. First the request, then the blurb on its own so it can be forwarded cleanly:',
+          {
+            type: 'callout',
+            title: 'Message 1',
+            text: 'Could you introduce me to Dan? Here is a short note you can forward as it is. Completely fine if now is not a good time.',
+          },
+          {
+            type: 'callout',
+            title: 'Message 2 (the blurb)',
+            text: 'Maya Ruiz is a search funder buying one services business in the Southeast. Dan sold a company like the ones she looks at, and she would value twenty minutes on how his handover went. No pressure if the timing is wrong.',
+          },
+          'Sending the blurb as its own message matters. A forward of message 2 carries no context Dan does not need, and your contact does not have to edit anything.',
+        ],
+      },
+      {
+        heading: 'Adjust it for the deal',
+        blocks: [
+          {
+            type: 'table',
+            head: ['You are', 'Who you want', 'The “why this person” line'],
+            rows: [
+              ['Business broker', 'A buyer who closed in the sector last year', 'He bought a business like the one you are selling and knows what lenders asked for.'],
+              ['Real estate investor', 'A local owner with older properties', 'She has owned in the submarket for twenty years and knows which owners are thinking about selling.'],
+              ['Secondaries broker', 'An early employee at a named company', 'He has been through a transfer at the company and knows how the approval process works.'],
+              ['Fund manager', 'A family office in a new region', 'They have backed two managers with a similar strategy.'],
+            ],
+          },
+          'The pattern holds across deals: the reason is about them, not about you, and it is specific enough that they would recognize it as true.',
+        ],
+      },
+      {
+        heading: 'Mistakes that make people hesitate',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**A pitch deck as the blurb.** Attachments do not forward well in chat, and nobody reads a deck from someone they have not met. Keep it to three lines.',
+              '**Asking for “a quick call” with no topic.** Dan cannot judge a call he knows nothing about. Name the topic and the time.',
+              '**Asking for five intros at once.** Each one is a favor. Ask for the one that matters, then ask again later.',
+              '**Writing in the first person.** “I am a search funder…” reads strangely when your contact forwards it. Third person forwards cleanly.',
+              '**Following up after two days.** Give it a week. Then one line: “Did you get a chance to send that? Happy to rewrite it if it is not quite right.”',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the intro lands',
+        blocks: [
+          'The intro is the start, not the finish. Three things to do the same day:',
+          {
+            type: 'steps',
+            items: [
+              { title: 'Reply to Dan', text: 'Thank him for being open to it, restate the twenty-minute ask and offer two specific times. Do it in the app the intro arrived in.' },
+              { title: 'Thank the introducer', text: 'One line back to your contact: the intro landed, and you will let them know how it goes. Then actually let them know.' },
+              { title: 'Save the contact with its source', text: 'Record Dan as a contact, with who introduced him and a link to the message. Six months from now, “who connected us?” should take one look, not a scroll.' },
+            ],
+          },
+          'The guide to [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers that last step in detail.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Intros arrive in whatever app the introducer uses: a WhatsApp forward, a LinkedIn group message, a Telegram add. In Merger, the messaging accounts you connect sit in one inbox, so the intro does not depend on which app you check most. You can save the new contact to the Rolodex linked to the message it came from, and if it turns into a deal, it goes on the Deal Desk with the conversation attached once you approve it.',
+          'The blurb itself needs no software. Three lines, written so someone else can send them, is the whole habit.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
