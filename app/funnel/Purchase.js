@@ -1,6 +1,6 @@
 'use client';
 import {useState,useEffect} from 'react';
-import {ALPHA_OFFER,ANNUAL_OFFER,offerTerms} from '../lib/billingOffer';
+import {STANDARD_OFFER as ALPHA_OFFER,STANDARD_ANNUAL_OFFER as ANNUAL_OFFER,offerTerms} from '../lib/billingOffer';
 import {captureRef} from '../lib/waitlist';
 
 export default function Purchase(){
@@ -21,6 +21,5 @@ export default function Purchase(){
   <p className="offer-billing" aria-live="polite" aria-atomic="true">{terms.billingNotice}</p>
   <a className="offer-cta" href={'/signup'+(ref?`?ref=${encodeURIComponent(ref)}`:'')}><span>Make Merger yours</span><span aria-hidden="true">↗</span></a>
   <p className="offer-checkout-note">Create your free account, then choose your final plan at checkout.</p>
-  <div className="offer-founder"><p><strong>Your alpha rate. Locked in.</strong>{terms.rateNotice}</p></div>
  </div>;
 }

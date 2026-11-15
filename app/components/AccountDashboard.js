@@ -203,7 +203,7 @@ export default function AccountDashboard() {
   // With open access (no invitation required) every account can start a trial.
   const admitted = ['accepted', 'member'].includes(access.admission?.status) || access.rollout?.inviteRequired === false;
   const billingPage = pathname === '/billing';
-  const planName = s.offer === 'alpha' ? ALPHA_OFFER.name : s.plan === 'operator' ? 'Operator' : s.plan === 'desk' ? 'Desk' : '—';
+  const planName = s.offer === 'alpha' ? 'Merger pilot rate' : s.offer === 'standard' || s.plan === 'operator' ? 'Merger' : s.plan === 'desk' ? 'Desk' : '—';
   const price = priceLabel(s.pricing);
   const trialing = subscriptionStatus === 'trialing' && entitled;
 
@@ -278,7 +278,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>}
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'pilot'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Download Merger</h2></div>
       <p className="muted mt-16">{entitled ? 'Get Merger for Windows, Mac and iPhone.' : access.rollout?.inviteRequired === false ? 'Downloads unlock once your membership starts.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
