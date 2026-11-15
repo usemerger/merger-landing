@@ -1443,4 +1443,216 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-15 ───────────────────────────────────────────────────────────
+  {
+    slug: 'chat-replies-that-look-like-agreement-and-are-not',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '7 chat replies that look like agreement and aren’t, and the one line that settles each',
+    description:
+      'A thumbs up, an “ok”, a “sounds good, let me check”. Seven replies in deal chats that feel like a yes, what each one usually means, and the one-line follow-up that gets a real answer.',
+    dek: 'You send terms. The reply comes back in two seconds and it feels like a yes. Often it is not one yet. Here are the seven replies that fool dealmakers most, and the short message that turns each into a clear answer.',
+    published: '2026-11-15',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why chat makes this worse',
+        blocks: [
+          'In a meeting, agreement comes with a face, a pause and usually a handshake. In email, it comes in sentences you can quote. In messaging apps, it often comes as a reaction, a single word or a voice note recorded while walking to the car.',
+          'Fast replies are good for deals. The problem is what we read into them. A tired seller taps a thumbs up to say “seen it, will look later”. A buyer writes “ok” to mean “ok, I understand your position”. The person who sent the terms reads both as acceptance, and the gap only shows up at the letter of intent.',
+          'The fix is not to slow anyone down. It is one short follow-up, sent the same day, that asks for the sentence instead of the signal.',
+        ],
+      },
+      {
+        heading: '1. The reaction',
+        blocks: [
+          'You send the price and a closing date. He reacts with a thumbs up. It is the most common false yes in deal chat, because it is the fastest thing anyone can send.',
+          'A reaction tells you he read the message. It might mean he likes it. It might mean “noted”. It almost never means he has checked it with whoever else signs.',
+          '**Send:** “Good to send the LOI on those terms?” A yes to that is a sentence you can point to later.',
+        ],
+      },
+      {
+        heading: '2. The one-word “ok”',
+        blocks: [
+          'Your message had three things in it: a number, a date and a request for a call. The reply is “ok”. Ok to which one?',
+          'One-word replies usually answer the part of the message the reader cared about. That may not be the part you care about.',
+          '**Send:** pick the one that matters and ask about it alone. “Just to be sure: ok on the March 31 close?”',
+        ],
+      },
+      {
+        heading: '3. “Sounds good, let me run it by my partner”',
+        blocks: [
+          'It reads warm. It is a not-yet. Someone else has a vote, and you do not know when they will use it or what they think.',
+          'Treat it as an open item with a date, not as progress. The deal has not moved until the partner has seen it.',
+          '**Send:** “Makes sense. When do you two usually meet? I’ll check in the day after.” Then put that date on the deal.',
+        ],
+      },
+      {
+        heading: '4. The heart or thumbs up on a meeting time',
+        blocks: [
+          'You propose “Tuesday at 10?” and get a heart. Most of the time it holds. When it does not, you find out at 10:05 on Tuesday.',
+          'Reactions on times are easy to forget because nobody typed anything. There is no calendar invite and nothing to search for.',
+          '**Send:** the day before, one line: “Still on for 10 tomorrow?” If it is a first meeting, send a calendar invite too.',
+        ],
+      },
+      {
+        heading: '5. “Should be fine”',
+        blocks: [
+          'You ask whether the landlord will consent to the lease transfer, or whether the books will be ready by Friday. The answer is “should be fine”.',
+          'That is an opinion about the future, not a commitment. It is often sincere and often wrong, because the person answering does not control the outcome.',
+          '**Send:** “Great. Who confirms it, and by when?” Now you know whose answer you are actually waiting for.',
+        ],
+      },
+      {
+        heading: '6. Silence after “seen”',
+        blocks: [
+          'The message shows as read. No reply. Some people take that as quiet acceptance: he saw the terms and did not object.',
+          'In practice, silence after a read usually means he did not have an answer yet, did not like the answer he had, or read it on his phone between two other things and forgot. None of those is agreement.',
+          '**Send:** after a reasonable gap, one line with a question only he can answer. The list of [follow-up messages that restart a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) has examples that do not sound like chasing.',
+        ],
+      },
+      {
+        heading: '7. The voice note that says yes and something else',
+        blocks: [
+          'A two-minute voice note: “Yeah, yeah, the number works, as long as we sort out the working capital piece, but yeah, let’s do it.” You heard “let’s do it”. The condition was in the middle.',
+          'Voice notes are where conditions go to hide. They are hard to search and hard to quote, and the person who sent one rarely remembers exactly what they said.',
+          '**Send:** reply in text with the number and the condition in the same sentence. “Confirming: the number works, subject to agreeing working capital. Right?” The guide to [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers voice notes and six other hiding places.',
+        ],
+      },
+      {
+        heading: 'The pattern behind all seven',
+        blocks: [
+          'Every false yes above has the same shape. The other side sent a signal, and you filled in the meaning you hoped for. The follow-up in each case does the same thing: it asks for a sentence that contains the term itself.',
+          {
+            type: 'table',
+            head: ['Reply', 'What it usually means', 'Ask for'],
+            rows: [
+              ['Thumbs up', 'Read it', 'A yes to sending the LOI on those terms'],
+              ['“ok”', 'Agreed with one part', 'A yes on the specific term'],
+              ['“Let me run it by my partner”', 'Someone else decides', 'The date they meet'],
+              ['Heart on a time', 'Probably coming', 'A confirm the day before'],
+              ['“Should be fine”', 'Hopes so', 'Who confirms it, and by when'],
+              ['Read, no reply', 'No answer yet', 'One question only he can answer'],
+              ['Voice note yes', 'Yes, with a condition', 'The number and condition in text'],
+            ],
+          },
+          'None of these follow-ups is pushy. They are short, specific and easy to answer, which is why they work. Most people are glad to be asked, because it saves them a harder conversation later.',
+        ],
+      },
+      {
+        heading: 'Keep the answer next to the deal',
+        blocks: [
+          'Once you get the sentence, it is worth keeping where you will find it. The clear “yes, March 31 works” is often in a different app from the terms it answers: terms sent on WhatsApp, confirmation on LinkedIn, the partner’s view in a Signal group.',
+          'In Merger, the messaging accounts you connect sit in one inbox. With your own Anthropic API key, Claude can flag a message that looks like a possible deal, and you decide whether it goes on the Deal Desk. An approved deal keeps its conversations attached, so the sentence that settled a term is one click from the deal it belongs to. Claude reads words; it does not know whether a thumbs up meant yes. That judgment stays with you, as the guide to [AI deal triage without giving up judgment](/playbooks/ai-deal-triage-without-giving-up-judgment) explains.',
+          'The habit itself needs no software. When a reply feels like a yes, ask for the sentence.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Shorthand, written out, or a term summary? Three ways to send deal numbers in chat',
+    description:
+      '“We could do 3.5” can mean millions, a multiple or a percent. Comparing three ways to send deal numbers in messaging apps: shorthand, the full figure in words, and a short term summary.',
+    dek: 'Chat strips the units off numbers. Everyone fills them back in with what they expected to see. Here is how the three common ways of sending a number compare, and when each one is the right call.',
+    published: '2026-11-15',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Approach', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Shorthand (“3.5”, “4x”, “70/30”)', 'Speed, early conversations where both sides share context', 'Units and conditions go missing; forwards lose meaning'],
+              ['Written out in one sentence', 'One number that matters, with its condition attached', 'Gets long if there are several terms'],
+              ['A short term summary', 'Several terms at once, before an LOI', 'Feels formal too early; can stall a casual conversation'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why numbers go wrong in chat',
+        blocks: [
+          'A buyer writes, “We could do 3.5 if the owner stays on.” The broker reads three and a half million. The buyer meant a 3.5 times multiple of earnings, which he assumed was obvious from a call last week. The seller’s accountant, reading a forward, wonders if it is 3.5 percent of something.',
+          'None of them is careless. Messaging apps reward short messages, and short messages drop the parts that seem obvious to the writer. The units, the basis (revenue or earnings, this year or last), and the condition all live in someone’s head.',
+          'This matters more in chat than in email for one reason: chat messages get forwarded alone. The person reading your number may never see the thread above it.',
+        ],
+      },
+      {
+        heading: 'Option 1: shorthand',
+        blocks: [
+          'Shorthand is how most deal numbers start. “3.5”, “4x”, “70/30 on the earn-out”, “mid-sevens”. Between two people who have been talking all week, it is fast and usually understood.',
+          'The risk grows with every person added to the conversation and every day that passes. A week later, even the sender may not remember whether “4x” was on this year’s earnings or a forecast.',
+          '**Works when:** it is early, two people share the context, and nobody is going to act on the number yet.',
+        ],
+      },
+      {
+        heading: 'Option 2: written out in one sentence',
+        blocks: [
+          'The second approach is to write the number in full once, with its unit and its condition, and ask for a confirm. “To confirm: three and a half million, with the owner staying six months?”',
+          'Three rules make this work. Write the unit in words, not just a symbol. Put the condition in the same sentence as the number, so nobody can quote half of it. End with a question, so the other side has to say yes or correct you.',
+          'It costs one message. It saves the conversation at the letter of intent where both sides discover they agreed to different things.',
+          '**Works when:** one number has started to matter, such as a price, a multiple, a split or a deposit, and someone is about to act on it.',
+        ],
+      },
+      {
+        heading: 'Option 3: a short term summary',
+        blocks: [
+          'Once there are several numbers in play, a single sentence stops being enough. A short summary, five to eight lines sent as one message, lists each term with its basis and condition.',
+          {
+            type: 'list',
+            items: [
+              '**Price:** three and a half million, cash at close.',
+              '**Basis:** about 3.5 times last year’s earnings, before owner add-backs are agreed.',
+              '**Owner transition:** six months, paid at the current salary.',
+              '**Condition:** landlord consents to the lease transfer.',
+              '**Next step:** LOI draft by Friday.',
+            ],
+          },
+          'A summary like this is not a term sheet and should say so. Its job is to make sure everyone is looking at the same numbers before lawyers get involved.',
+          'The risk is tone. Sent too early, a structured summary can feel like pressure in a conversation that is still friendly and loose. Wait until the other side is discussing more than one term.',
+          '**Works when:** two or more terms are being discussed, more than two people are involved, or a draft LOI is close.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Shorthand', 'Written out', 'Term summary'],
+            rows: [
+              ['Speed early on', 'Best', 'Fine', 'Slow'],
+              ['Survives being forwarded', 'Rarely', 'Yes', 'Yes'],
+              ['Keeps the condition attached', 'No', 'Yes', 'Yes'],
+              ['Handles several terms', 'No', 'Gets long', 'Yes'],
+              ['Feels casual', 'Yes', 'Yes', 'Can feel formal'],
+              ['Gets an explicit confirm', 'Rarely', 'If you ask', 'If you ask'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A practical rule',
+        blocks: [
+          'Use shorthand freely while you are exploring. The moment a number moves the deal, write it out once in full and ask for a yes. When a second term joins it, switch to a short summary.',
+          'And whichever you use, keep the confirmed version somewhere other than the bottom of a chat. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) pairs well with this: a confirmed number and a dated next step are most of what a deal record needs.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Numbers rarely arrive in one app. The price comes on WhatsApp, the multiple on a LinkedIn message, the condition in a Telegram group. In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal. You review each flag and decide what goes on the Deal Desk, where an approved deal keeps its conversations attached.',
+          'That means the message where someone confirmed “three and a half million, with six months of transition” stays next to the deal it belongs to. The habit of writing it out in full is still yours.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
