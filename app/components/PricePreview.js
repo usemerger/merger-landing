@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ALPHA_OFFER, ANNUAL_OFFER } from '../lib/billingOffer';
+import { STANDARD_OFFER as ALPHA_OFFER, STANDARD_ANNUAL_OFFER as ANNUAL_OFFER } from '../lib/billingOffer';
 
 // The public price, with a monthly / annual switch. Display only: nobody pays
 // from the marketing page. The choice itself is made at checkout (PlanStep).

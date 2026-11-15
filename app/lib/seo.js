@@ -9,7 +9,7 @@
 // encryption claims, nothing "automatic", no SMS/iMessage, no Android,
 // and prices come from lib/billingOffer.js only.
 
-import { ALPHA_OFFER, ANNUAL_OFFER } from './billingOffer';
+import { STANDARD_OFFER as ALPHA_OFFER, STANDARD_ANNUAL_OFFER as ANNUAL_OFFER } from './billingOffer';
 
 export const SITE = 'https://usemerger.com';
 

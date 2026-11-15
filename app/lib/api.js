@@ -157,15 +157,17 @@ export const billingStatus = () => request('/api/billing/status');
  * It is sent only when the member chose annual, so the monthly request is
  * unchanged. The backend must accept it before the annual option ships.
  */
-export const checkout = (interval) =>
-  request('/api/billing/checkout', {
+export const checkout = (interval, offer = 'pilot') => {
+  // The pilot is asked for only when the server said this account still
+  // qualifies (rollout.offer === 'pilot'); otherwise the Standard price is
+  // billed. The server decides either way: asking for the pilot after it has
+  // ended for this account answers 409 pilot_offer_ended, never a charge.
+  const body = offer === 'standard' ? { plan: 'operator', alpha: false } : { plan: 'operator', alpha: true };
+  return request('/api/billing/checkout', {
     method: 'POST',
-    // Monthly sends the body it always has, byte for byte. Annual adds one
-    // field. Nothing else a caller passes can change the plan.
-    body: interval === 'year'
-      ? { plan: 'operator', alpha: true, interval: 'year' }
-      : { plan: 'operator', alpha: true },
+    body: interval === 'year' ? { ...body, interval: 'year' } : body,
   });
+};
 
 /** Returns the hosted Stripe Customer Portal URL. */
 export const billingPortal = () => request('/api/billing/portal', { method: 'POST' });
@@ -259,6 +261,10 @@ export function errorMessage(err) {
     // because if it ever appears it is a bug here, not something the user did.
     case 'alpha_is_operator_only':
       return 'The alpha covers one plan only. Refresh this page and try again.';
+    case 'pilot_offer_ended':
+      return 'The $50 pilot rate is no longer available for this account, so nothing was charged. Refresh to see the current price before continuing.';
+    case 'standard_not_configured':
+      return 'Checkout is not available right now. Nothing was charged. Please try again shortly.';
     case 'trial_offer_changed':
       return 'We found a previous membership on this account. No checkout was created and nothing was charged. Refresh your account to review the returning-member price before continuing.';
     case 'checkout_processing':
