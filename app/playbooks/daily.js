@@ -1655,4 +1655,235 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-16 ───────────────────────────────────────────────────────────
+  {
+    slug: 'insurance-agency-acquirer-owner-conversations-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Independent agency acquirers',
+    title: 'How an insurance agency acquirer keeps retiring owners, producers and a lender in step across messaging apps',
+    description:
+      'An illustrative walkthrough: a buyer of small independent insurance agencies works owners on LinkedIn and WhatsApp, a lender in Slack and a broker group on Telegram, with one next step per agency.',
+    dek: 'Small insurance agencies change hands when an owner is ready to stop, and owners rarely announce it by email. A walkthrough of one buyer, four agencies and the messages that decide which ones close.',
+    published: '2026-11-16',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The buyer',
+        blocks: [
+          'Elena buys small independent insurance agencies with a group of investors behind her. Her targets are agencies with one owner close to retirement, a book of personal and small commercial lines, a few long-serving staff and no plan for who takes over.',
+          'Those agencies are rarely listed. Elena hears about them from carrier contacts, from a Telegram group where a few dozen agency buyers and brokers share leads, from her own LinkedIn outreach, and from owners who already know someone she bought from.',
+          'At any time she has ten or twelve owner conversations going. Most are slow on purpose. An owner who has run an agency for thirty years does not decide in a week, and the buyer who stays patient and organized is usually the one still talking to him when he does.',
+        ],
+      },
+      {
+        heading: 'Four agencies, five apps',
+        blocks: [
+          'Here is one ordinary week, with invented names.',
+          {
+            type: 'list',
+            items: [
+              '**Frank, LinkedIn.** Owns a two-office agency. Elena wrote to him in the spring; he answered “not yet”. On Monday he writes back: “My producer wants to talk about staying on. Can we find a time?”',
+              '**Denise, WhatsApp.** Runs a one-office agency with her husband. They send voice notes from the office and photos of their renewal reports. Denise asks whether Elena would keep their two customer service reps.',
+              '**A Telegram post.** A broker in the buyers’ group posts an agency with a strong commercial book and an owner who wants to close before year end. Three buyers ask for details in the thread within the hour.',
+              '**Gary, WhatsApp, through his daughter.** Gary owns the agency; his daughter Lauren handles the business side and is added to the chat on Wednesday. She has not seen any of the earlier messages.',
+            ],
+          },
+          'Behind all four sits the lender, who works in a shared Slack channel and asks on Thursday which agencies are close enough to need a term sheet this quarter.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The producer question is the real deal.** Frank’s message is about his top producer, not about price. If Elena treats it as small talk, Frank’s agency stalls on the one person who can walk out with the book.',
+              '**The staff question goes unanswered.** Denise asked about her reps. Elena needs to check with her investors first. WhatsApp moves on and the question sinks under the next voice note.',
+              '**The group lead is first come, first served.** By the time Elena messages the broker privately, he has already sent the package to the buyers who replied in the thread.',
+              '**The new person starts from zero.** Lauren joined Gary’s chat late. Whatever she believes the deal is will come from the first summary she gets, from Elena or from someone else.',
+              '**The lender gets a reconstruction.** Answering Thursday’s Slack question means scrolling LinkedIn, two WhatsApp chats and Telegram to rebuild where each agency stands.',
+            ],
+          },
+          'None of this is unusual. Agency owners use the app they already use with their family and staff, and the buyer carries the cost of keeping the picture together.',
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every conversation in one list',
+                text: 'Elena connects the LinkedIn, WhatsApp, Telegram and Slack accounts she already uses. Frank, Denise, Gary and Lauren, the buyers’ group and the lender channel sit in one inbox. Each reply goes out in the app the other person chose.',
+              },
+              {
+                title: 'Possible deals flagged for review',
+                text: 'With her own Anthropic API key connected, Claude flags Frank’s message, Denise’s staff question and the Telegram post as possible deals. Elena reads each conversation before deciding. She approves all three and passes on a fourth flag, a carrier contact asking for a referral.',
+              },
+              {
+                title: 'One deal per agency, conversations attached',
+                text: 'Each approved agency goes on the Deal Desk with its conversation attached. Denise’s renewal photos stay with Denise’s agency. Frank’s spring “not yet” and Monday’s message sit in the same thread.',
+              },
+              {
+                title: 'A next step with a date',
+                text: 'For Frank: “Offer two times for a call with him and his producer by Wednesday.” For Denise: “Answer the reps question by Friday, after the investor call.” For the group lead: “Message the broker directly today.” For Gary: “Send Lauren a three-line recap today.”',
+              },
+              {
+                title: 'Owners and family saved as contacts',
+                text: 'Lauren is saved to the Rolodex with a note that her father owns the agency, linked to the message where she joined. When the lender asks who signs, the answer is one look away.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What changed for Gary’s agency',
+        blocks: [
+          'Lauren was the risk. She arrived three weeks into the conversation and would not scroll up through voice notes. Elena sent her three lines the same afternoon:',
+          {
+            type: 'callout',
+            title: 'The recap',
+            text: 'Welcome, Lauren. Where it stands: your father and I agreed to look at a sale next year, nothing signed. What we discussed: a price range based on last year’s commissions, if the two account managers stay. Next step: I send a one-page summary Friday, and we talk the week after.',
+          },
+          'Lauren replied with two questions about the account managers, which told Elena what the family cared about most. Without the recap, those questions would likely have surfaced much later, as doubts instead of questions.',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Treat staff questions as deal questions.** In a small agency, the producer and the account managers carry the relationships. An owner asking about them is asking whether the sale is safe.',
+              '**Give every “not yet” a date.** An owner who said no in spring may say yes in autumn. Write down when to ask again.',
+              '**Move group leads to a private message fast.** Reply to the broker directly, the same hour if you can.',
+              '**Recap for anyone who joins late.** Three lines: where it stands, the number with its condition, the next step with a date.',
+              '**Answer the lender from one list.** If the update takes more than ten minutes to write, the pipeline is in too many places.',
+            ],
+          },
+          'The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the date habit, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers the Rolodex side.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'send-a-recap-when-someone-new-joins-a-deal',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to send a three-line recap when someone new joins a deal',
+    description:
+      'A CFO, a lender or the seller’s daughter joins three weeks in and will not scroll up. Here is the three-line recap to send the day they join, with examples and the mistakes to avoid.',
+    dek: 'Deals pick up people as they go. Each new person forms a view of the deal from the first thing they are told. Make sure that is you, in three lines, the same day.',
+    published: '2026-11-16',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why late joiners matter',
+        blocks: [
+          'Most deals start between two people and end with six or eight. The buyer adds his CFO to the WhatsApp group. The lender loops in someone from credit on Slack. The seller adds his daughter, who will run the handover. A lawyer appears in week five.',
+          'None of them will read three weeks of history. They will ask someone what is going on, or they will skim the last few messages and fill in the rest. Either way, the first account they get becomes their picture of the deal.',
+          'If that account comes from you, it is accurate and it is short. If it comes from someone else, or from a screenshot of the wrong message, you spend the next two weeks correcting it.',
+        ],
+      },
+      {
+        heading: 'The three lines',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Where it stands',
+                text: 'One sentence on the stage, in plain words. “Price agreed in principle. LOI drafting this week.” Not the history of how you got there.',
+              },
+              {
+                title: 'The number and its condition',
+                text: 'The term that matters most, written out in full, with its condition in the same sentence. “Three million, if the lease transfers.” A number without its condition is the most common thing a new person repeats wrongly.',
+              },
+              {
+                title: 'The next step, with a date and an owner',
+                text: '“Landlord call Thursday. I send notes Friday.” The new person now knows what happens next, when, and who is doing it.',
+              },
+            ],
+          },
+          'That is the whole recap. Send it the day they join, in the app where they joined.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example',
+            text: 'Welcome, Priya. Quick recap: price agreed in principle, LOI drafting this week. Three million if the lease transfers. Landlord call Thursday, I’ll send notes Friday. Happy to walk you through any of it.',
+          },
+          'The last line is optional, but it gives the new person an easy way to ask a question instead of guessing.',
+        ],
+      },
+      {
+        heading: 'Adjust it for who joined',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Who joined', 'What they care about', 'Lead with'],
+            rows: [
+              ['Buyer’s CFO', 'Numbers and what they depend on', 'The number and its condition'],
+              ['Lender', 'Timing and what is still open', 'Where it stands and the next date'],
+              ['Seller’s family member', 'What was promised and what was not', 'Where it stands, in plain words'],
+              ['Lawyer', 'What has been agreed in writing', 'What is agreed, and what is still only discussed'],
+              ['Co-broker', 'Who answers what', 'The next step and its owner'],
+            ],
+          },
+          'The three lines stay the same. Only the order and the emphasis change.',
+        ],
+      },
+      {
+        heading: 'Mistakes to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Forwarding screenshots instead.** Screenshots carry old numbers, jokes and half-agreed ideas. A new person cannot tell which parts still stand.',
+              '**Writing the history.** Nobody needs the story of the first call. They need where things are now.',
+              '**Dropping the condition.** “Three million” and “three million if the lease transfers” are different deals. Keep them in one sentence.',
+              '**Waiting a few days.** By then the new person has already formed a view from somewhere else.',
+              '**Sending it only to them.** If the chat is a group, post the recap in the group. Everyone already in the deal reads the same three lines, and any disagreement shows up now rather than at closing.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the deal moves again',
+        blocks: [
+          'A recap is a snapshot. When one of the three lines changes, say so in one message rather than letting the change live only in the chat where it happened.',
+          'If the lease call goes well, the second line becomes “Three million, lease transfer confirmed by the landlord on Thursday.” If the date slips, the third line becomes “Landlord call moved to Tuesday. Notes Wednesday.” Short updates like these keep the late joiner, and everyone else, on the same version of the deal.',
+          'A useful rule: whenever a new person joins, or whenever one of the three lines changes, post the three lines again. On a busy deal that may be once a week. On a quiet one it may be once a month. Either way, nobody has to reconstruct the deal from scrollback, and nobody can say later that they were working from a different number.',
+        ],
+      },
+      {
+        heading: 'Why this helps everyone already in the deal',
+        blocks: [
+          'A recap written for one new person works as a check for everyone else. If the seller reads “three million if the lease transfers” and thought the lease was settled, you hear about it today, in one message, instead of in a lawyer’s markup.',
+          'It also gives you a habit worth keeping: if you cannot write the three lines for a deal, you do not know where it stands. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the third line in more detail, and [deal numbers in chat](/playbooks/deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary) covers the second.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'The hard part of a recap is finding the facts, because they are spread across apps: the price on WhatsApp, the condition on LinkedIn, the next step in Slack. In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk. An approved deal keeps its conversations attached, so the facts for the recap are in one place.',
+          'The three lines themselves are still yours to write. That is the point: the new person hears it from you.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
