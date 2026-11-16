@@ -77,7 +77,7 @@ export function useStartCheckout() {
   return { busy, phase, message, start };
 }
 
-export default function PlanStep({ ctl, heading = 'Choose your plan', note, trialEligible, offer = 'standard', pilotEndsAt = null }) {
+export default function PlanStep({ ctl, accountId = null, heading = 'Choose your plan', note, trialEligible, offer = 'standard', pilotEndsAt = null }) {
   const pathname = usePathname();
   // Sign in and come back to the page they were on, with the offer in front of
   // them again — not to a dashboard they then have to navigate out of.
@@ -85,9 +85,24 @@ export default function PlanStep({ ctl, heading = 'Choose your plan', note, tria
   const closed = ctl.phase === PHASE.CLOSED;
   const termsKnown = typeof trialEligible === 'boolean';
   const returning = trialEligible === false;
-  // Monthly is the default: annual is something a member opts into, never
-  // something they find they were charged for.
-  const [interval, setInterval] = useState('month');
+  // Keep an explicit choice when Stripe returns to /billing in this tab.
+  // Bind it to the account and offer so another sign-in or changed terms
+  // cannot inherit an annual selection. Never store prices or eligibility.
+  const storageKey = typeof accountId === 'string' && accountId.length > 0 && accountId.length <= 128
+    ? `merger.checkout.interval.v1:${accountId}:${offer}` : null;
+  const [selection, setSelection] = useState({ key: null, interval: 'month' });
+  const selectionReady = selection.key === storageKey;
+  const interval = selectionReady ? selection.interval : 'month';
+  useEffect(() => {
+    let saved = null;
+    try { if (storageKey) saved = window.sessionStorage.getItem(storageKey); } catch { /* Storage may be blocked. */ }
+    setSelection({ key: storageKey, interval: saved === 'year' ? 'year' : 'month' });
+  }, [storageKey]);
+  const setInterval = (value) => {
+    const next = value === 'year' ? 'year' : 'month';
+    setSelection({ key: storageKey, interval: next });
+    try { if (storageKey) window.sessionStorage.setItem(storageKey, next); } catch { /* The current choice still works. */ }
+  };
   const pilot = offer === 'pilot';
   const monthlyOffer = pilot ? ALPHA_OFFER : STANDARD_OFFER;
   const annualOffer = pilot ? ANNUAL_OFFER : STANDARD_ANNUAL_OFFER;
@@ -99,6 +114,8 @@ export default function PlanStep({ ctl, heading = 'Choose your plan', note, tria
   if (ctl.phase === PHASE.OFFER_CHANGED) return <section className="plan-step"><h2>Your activation terms changed.</h2><div className="alert alert-warn" role="alert"><p>{ctl.message}</p><button className="btn btn-ghost btn-sm mt-16" type="button" onClick={() => window.location.reload()}>Refresh account terms</button></div></section>;
 
   if (!termsKnown) return <section className="plan-step"><h2>Confirm your activation terms.</h2><p className="muted mt-16">Your membership terms could not be confirmed. Refresh your account before continuing to checkout.</p><p className="field-hint mt-16"><Link href="/dashboard">Return to your account</Link></p></section>;
+
+  if (!selectionReady) return <section className="plan-step" aria-busy="true"><h2>{heading}</h2><p role="status">Loading your billing choice…</p></section>;
 
   return (
     <section id="join-alpha" className="plan-step" aria-labelledby="alpha-heading">
