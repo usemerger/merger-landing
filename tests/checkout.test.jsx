@@ -14,10 +14,62 @@ vi.mock('../app/lib/api', () => ({
 }));
 
 // The pilot path is what most of these tests were written for; Standard has its own block below.
-function TestCheckout({ trialEligible = true, offer = 'pilot', pilotEndsAt = null }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} offer={offer} pilotEndsAt={pilotEndsAt} />; }
+function TestCheckout({ accountId = null, trialEligible = true, offer = 'pilot', pilotEndsAt = null }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} accountId={accountId} trialEligible={trialEligible} offer={offer} pilotEndsAt={pilotEndsAt} />; }
 const join = () => screen.getByRole('button', { name: 'Continue to checkout' });
 
-beforeEach(() => { checkout.mockReset(); });
+beforeEach(() => { checkout.mockReset(); sessionStorage.clear(); });
+
+describe('returning from hosted checkout', () => {
+  it('keeps the explicitly chosen annual billing and checkout amount after a remount', async () => {
+    checkout.mockReturnValue(new Promise(() => {}));
+    const first = render(<TestCheckout accountId="account-a" offer="standard" />);
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    first.unmount();
+    render(<TestCheckout accountId="account-a" offer="standard" />);
+    expect(screen.getByRole('radio', { name: /Annual/ })).toBeChecked();
+    expect(document.querySelector('.alpha-amount')).toHaveTextContent('$1,908due today');
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year', 'standard'));
+  });
+
+  it('keeps a later monthly choice when returning again', () => {
+    const first = render(<TestCheckout accountId="account-a" offer="standard" />);
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    fireEvent.click(screen.getByRole('radio', { name: /Monthly/ }));
+    first.unmount();
+    render(<TestCheckout accountId="account-a" offer="standard" />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    expect(document.querySelector('.alpha-amount')).toHaveTextContent('$199due today');
+  });
+
+  it('defaults to monthly for another account or changed offer', () => {
+    const view = render(<TestCheckout accountId="account-a" offer="pilot" />);
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    view.rerender(<TestCheckout accountId="account-b" offer="pilot" />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    view.rerender(<TestCheckout accountId="account-a" offer="standard" />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    expect(document.querySelector('.alpha-amount')).toHaveTextContent('$199due today');
+  });
+
+  it('ignores invalid saved billing values', () => {
+    sessionStorage.setItem('merger.checkout.interval.v1:account-a:standard', 'weekly');
+    render(<TestCheckout accountId="account-a" offer="standard" />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    expect(join()).toBeEnabled();
+  });
+
+  it('still permits a deliberate annual choice when browser storage is blocked', async () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    checkout.mockReturnValue(new Promise(() => {}));
+    render(<TestCheckout accountId="account-a" offer="standard" />);
+    expect(screen.getByRole('radio', { name: /Monthly/ })).toBeChecked();
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year', 'standard'));
+  });
+});
 
 describe('joining the alpha', () => {
   it('goes straight to checkout with no availability call in front of it', async () => {

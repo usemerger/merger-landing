@@ -278,7 +278,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>}
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'pilot'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
+    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} accountId={access.user?.id} trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'pilot'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Download Merger</h2></div>
       <p className="muted mt-16">{entitled ? 'Get Merger for Windows, Mac and iPhone.' : access.rollout?.inviteRequired === false ? 'Downloads unlock once your membership starts.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
