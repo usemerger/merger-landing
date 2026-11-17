@@ -1886,4 +1886,203 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-17 ───────────────────────────────────────────────────────────
+  {
+    slug: 'messages-to-send-in-the-first-week-after-an-loi-is-signed',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '6 messages to send in the first week after an LOI is signed',
+    description:
+      'The LOI is signed and everyone relaxes. Six short messages to send in the first week, in the chats the deal already lives in, so the next sixty days start organised.',
+    dek: 'A signed letter of intent feels like the finish line. It is the start of diligence, lawyers, lenders and a lot more chat. Here are the six messages that set up the next two months, most of them one or two lines long.',
+    published: '2026-11-17',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the first week matters',
+        blocks: [
+          'For weeks the deal has been two people trading messages: you and the seller, or you and the buyer. The day the LOI comes back signed, that changes. Lawyers join. An accountant joins. A lender wants a call. The seller’s spouse or business partner starts to have opinions.',
+          'Everyone is relieved, and relief is when things get skipped. Nobody writes down the timeline because it was in the LOI. Nobody shares who the lawyers are because they will find each other. A week later, three people are asking the same question in three different apps.',
+          'The six messages below take about an hour to send in total. Most are two lines. They do one job: make sure everyone starts the next phase with the same picture.',
+        ],
+      },
+      {
+        heading: '1. Thank the seller, with the timeline',
+        blocks: [
+          'Send it the same day the LOI is signed, in the app you have been using with them. Thank them, then put the dates in writing: when diligence should wrap, when you are aiming to close, and what happens next.',
+          '**Sounds like:** “Thank you, Ray. Signed copy attached. Plan: diligence wraps by January 15, closing target end of February. I’ll send the first request list Monday.”',
+          'A seller who has the dates in front of them worries less and asks less. And when a date slips, you both have the original to talk about.',
+        ],
+      },
+      {
+        heading: '2. Who’s who, in one message',
+        blocks: [
+          'List the people on each side and how to reach them: your lawyer, their lawyer, the accountant, the lender, anyone else who will be asking for things. Name, role and best channel.',
+          'This message saves a surprising amount of time. Without it, the seller’s lawyer emails your accountant to ask who your lawyer is, and the answer comes back two days later.',
+          'If people are being added to a group chat, send this as the first message in the group so everyone sees it at once.',
+        ],
+      },
+      {
+        heading: '3. The first diligence request, not the whole list',
+        blocks: [
+          'The full request list can run to dozens of items. Sending it all on day one tends to produce silence while the seller works out where to start.',
+          'Send the first two or three items instead, with one owner on their side and a date. “Could you send the last three years of tax returns and the current lease by Friday?” Then send the next batch once those arrive.',
+          'Track every request where you will see it, with the exact words, the date asked and who owes the answer. The habit of [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) works just as well for your own requests.',
+        ],
+      },
+      {
+        heading: '4. Which chat is for what',
+        blocks: [
+          'By week one there is usually a group chat, a few direct threads and some email. Say plainly what goes where. A simple rule many dealmakers use: logistics and scheduling in the group, terms and numbers in writing between the two principals, documents through the channel the lawyers prefer.',
+          'It sounds fussy. It prevents the most common week-three problem: a number floated casually in a group, quoted later as if it were agreed.',
+        ],
+      },
+      {
+        heading: '5. A check-in with the person who introduced you',
+        blocks: [
+          'If someone introduced you to this deal, tell them it reached an LOI. One line is enough: “The intro you made in September just signed an LOI. Thank you.”',
+          'Introducers rarely hear how things went. The ones who do tend to introduce you again. The guide to [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers keeping track of who opened which door.',
+        ],
+      },
+      {
+        heading: '6. A date for the first update',
+        blocks: [
+          'Finally, tell the seller when they will next hear from you, even if nothing has happened. “I’ll send a short update every Friday until closing.” Then do it.',
+          'Silence in diligence reads as trouble, even when everything is fine. A regular, short update removes the guesswork. The list of [weekly buyer updates for your seller](/playbooks/weekly-buyer-update-for-your-seller) has formats that take five minutes.',
+        ],
+      },
+      {
+        heading: 'The six at a glance',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Message', 'When', 'Why it matters'],
+            rows: [
+              ['Thanks plus timeline', 'Day of signing', 'Dates both sides can point to'],
+              ['Who’s who', 'Day one or two', 'Nobody hunts for a lawyer’s contact'],
+              ['First diligence request', 'First week', 'Small asks get answered; long lists stall'],
+              ['Which chat is for what', 'First week', 'Terms stay out of casual group threads'],
+              ['Check-in with the introducer', 'First week', 'The person who opened the door hears about it'],
+              ['Date for the first update', 'End of week one', 'Silence stops reading as trouble'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Keep week one findable in week six',
+        blocks: [
+          'Six messages across several apps is exactly the kind of thing that gets lost by closing. The timeline went to the seller on WhatsApp, the lawyer’s contact came in a LinkedIn message, the first request was answered in a Telegram group.',
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply to each person in their own app. New names from those conversations can go into your Rolodex, linked to the message they came from. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk, where an approved deal keeps its conversations attached.',
+          'The habit itself needs no software. Signed is the start: send the six.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'running-late-on-a-deal-deliverable-heads-up-vs-apology-vs-partial-send',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Running late on something you promised a buyer: heads-up, apology, or partial send?',
+    description:
+      'You promised the P&L by Friday and it will not be ready. Comparing three ways to handle a missed deal deadline in chat: a heads-up before, an apology after, or sending part of it now.',
+    dek: 'Every deal has a Friday where something you promised is not ready. How you tell the other side matters more than the delay itself. Here is how the three common approaches compare, and the one that usually works best.',
+    published: '2026-11-17',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Approach', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Heads-up before the deadline', 'Keeps trust; the other side can plan', 'Only works if you notice the delay in time'],
+              ['Apology after the deadline', 'Better than nothing', 'Reads as if you hoped nobody would notice'],
+              ['Partial send now, rest later', 'Gives the other side something to work on', 'Can confuse if the partial version is not labelled'],
+            ],
+          },
+          'In practice, the best answer is usually a heads-up that includes a partial send. More on that below.',
+        ],
+      },
+      {
+        heading: 'Why small delays cause big problems',
+        blocks: [
+          'You told a buyer the October P&L would be with him by Friday. On Thursday afternoon the accountant says it needs until Tuesday. It is a four-day delay on one document. It should not matter much.',
+          'It matters because of what the buyer does with silence. If Friday passes with nothing, he does not think “the accountant is closing the month”. He thinks something is wrong with the numbers. He mentions it to his partner. By Monday the deal has a mood problem that has nothing to do with the business.',
+          'Chat makes this sharper. The buyer can see you were online. He can see his last message was read. A missed deadline in a messaging app feels more personal than one in email.',
+        ],
+      },
+      {
+        heading: 'Option 1: a heads-up before the deadline',
+        blocks: [
+          'Send it as soon as you know, and before the deadline, not on it. Three parts: the new date, the reason in one plain sentence, and what happens in the meantime.',
+          '**Sounds like:** “Quick heads-up: the P&L will be with you Tuesday, not today. The accountant is closing October. I’ll send it the moment I have it.”',
+          'The new date should be a day, not “early next week”. The reason should be short. A long apology makes a small delay sound like a big one.',
+          '**Works when:** you notice the delay at least a few hours before the deadline. Which, if you check your promises each morning, is most of the time.',
+        ],
+      },
+      {
+        heading: 'Option 2: an apology after the deadline',
+        blocks: [
+          'Sometimes the deadline passes before you notice. The message then has to do two jobs: own the miss and give a new date.',
+          '**Sounds like:** “I missed Friday on the P&L, sorry. It will be with you Tuesday. The accountant is closing October.”',
+          'Keep it to the facts. Do not explain at length, and do not wait for the buyer to ask first. A late apology sent before he chases is still much better than one sent after.',
+          '**Works when:** you have already missed it. It is the fallback, not the plan.',
+        ],
+      },
+      {
+        heading: 'Option 3: send part of it now',
+        blocks: [
+          'Often you have something useful even if the full thing is not ready. September’s numbers, a draft with one section missing, the first half of the customer list.',
+          'Sending part of it now gives the other side something to work on and shows the delay is real, not a cover for a problem. The risk is confusion: a partial document forwarded without context can be mistaken for the final one.',
+          'So label it clearly in the message and, if you can, in the file name. “September P&L attached so you can start. October follows Tuesday.”',
+          '**Works when:** the partial version is useful on its own and clearly marked as partial.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Heads-up', 'Apology after', 'Partial send'],
+            rows: [
+              ['Keeps trust', 'Best', 'Some', 'Good'],
+              ['Gives a new date', 'Yes', 'Yes', 'Yes, if you add one'],
+              ['Gives the other side something to do', 'No', 'No', 'Yes'],
+              ['Risk of confusion', 'Low', 'Low', 'Medium unless labelled'],
+              ['Needs you to notice early', 'Yes', 'No', 'Helps'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The combination that usually works',
+        blocks: [
+          'The strongest version is a heads-up that includes a partial send: new date, short reason, and something useful attached now.',
+          '**Sounds like:** “Quick heads-up: the P&L will be with you Tuesday, not today. The accountant is closing October. Sending the September numbers now so you can start.”',
+          'Then keep the new date. A second slip on the same item does far more damage than the first. If you need to, set the new date a day later than you think, and deliver early.',
+        ],
+      },
+      {
+        heading: 'What to leave out',
+        blocks: [
+          'Three things make a late message worse. A long explanation, which makes a small delay sound like a crisis. Vague dates such as “soon” or “early next week”, which give the other side nothing to plan around. And blaming someone by name, which puts the buyer in the middle of a problem that is not his.',
+          'One more: do not hide the delay inside an unrelated message. A line about the P&L buried under a question about the site visit is easy to miss, and later it looks as if you hoped it would be. Send it on its own.',
+        ],
+      },
+      {
+        heading: 'Notice promises before they are due',
+        blocks: [
+          'The hard part is not writing the message. It is remembering on Thursday what you promised on Monday, in whichever app you promised it. The commitments made in chat rarely make it into a calendar.',
+          'A simple habit helps: every promise gets a dated next step on the deal it belongs to. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the format.',
+          'In Merger, the messaging accounts you connect sit in one inbox, so the message where you promised Friday is in the same place as the buyer’s other messages. With your own Anthropic API key, Claude can flag messages that look like a possible deal; you decide what goes on the Deal Desk, where an approved deal keeps its conversations and next steps together.',
+          'The habit itself needs no software. Late is fine. Silent is the problem.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
