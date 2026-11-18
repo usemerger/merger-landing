@@ -2085,4 +2085,229 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-18 ───────────────────────────────────────────────────────────
+  {
+    slug: 'machine-shop-broker-working-a-counteroffer-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Business brokers',
+    title: 'How a business broker works one counteroffer through a seller, a buyer and a lender in three messaging apps',
+    description:
+      'An illustrative walkthrough: a seller counters on WhatsApp, the buyer is on LinkedIn and the lender is in Slack. How a broker keeps the number, the condition and the dates straight.',
+    dek: 'A counteroffer rarely arrives as a clean number. It arrives as one line in a chat, with a new condition attached, while you are busy. A walkthrough of one week on one sale.',
+    published: '2026-11-18',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The sale',
+        blocks: [
+          'Marcus is a business broker who sells manufacturing and trade businesses. This month his main listing is a machine shop: thirty years old, twenty-two employees, one owner, and a building the owner bought in the nineties and still holds in the same company.',
+          'After six weeks of marketing, one buyer is clearly ahead. Rachel runs a small holding company that buys industrial businesses with a bank loan and her own capital. She has sent a written offer for the business and the building together. The seller, Jim, has had it for two days.',
+          'Everyone in this sale uses a different app. Jim writes on WhatsApp, usually from the shop floor. Rachel prefers LinkedIn messages during the day. Her lender works in a shared Slack channel. Marcus also has a Telegram group with two other brokers he co-lists with, where he posts updates on the listing.',
+        ],
+      },
+      {
+        heading: 'The counter arrives',
+        blocks: [
+          'On Tuesday at 11:40, while Marcus is on a site visit for another listing, Jim writes on WhatsApp:',
+          {
+            type: 'callout',
+            title: 'The message',
+            text: 'Read her offer. I’d do it at her number for the business, but I keep the building and she leases it from me.',
+          },
+          'In one line, Jim has accepted the price for the business, removed the building from the deal and introduced a lease that does not exist yet. That changes Rachel’s financing, her monthly costs and possibly whether she wants the deal at all.',
+          'Two things usually happen next. Either the broker replies from the parking lot with something warm and vague, which Jim reads as agreement. Or the broker forwards a screenshot to the buyer with “thoughts?”, which hands her a negotiation with no context.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The condition gets lost.** Rachel hears “Jim accepted your number” from someone in the co-broker group before she hears “for the business only”.',
+              '**The lease has no terms.** Nobody has said how long, at what rent, or who pays for the roof. Every party fills that gap with their own assumption.',
+              '**The lender hears last.** The bank approved a loan that included real estate. Without it, the structure changes, and the lender learns that from Rachel a week later.',
+              '**The dates drift.** Jim expects an answer “soon”. Rachel expects to talk to her lender first. Nobody wrote down when the next message is due.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every conversation in one list',
+                text: 'Marcus connects the WhatsApp, LinkedIn, Slack and Telegram accounts he already uses. Jim, Rachel, the lender channel and the co-broker group sit in one inbox, and each reply goes out in the app the other person chose.',
+              },
+              {
+                title: 'The counter flagged for review',
+                text: 'With his own Anthropic API key connected, Claude flags Jim’s message as a possible deal. Marcus reads the whole conversation before doing anything with it. Nothing goes on the Deal Desk until he approves it.',
+              },
+              {
+                title: 'A holding reply with a time',
+                text: 'From the parking lot, Marcus sends Jim one line: “Got it, thanks. I’ll call you by 4 today.” Jim knows he has been heard, and Marcus has the afternoon.',
+              },
+              {
+                title: 'The counter written out',
+                text: 'On the Deal Desk, the machine shop now reads: business at Rachel’s number; building retained by seller; lease terms not stated; next step, call Jim by 4 PM. The missing piece is visible: the lease.',
+              },
+              {
+                title: 'One recap for the buyer',
+                text: 'Before Rachel hears it anywhere else, Marcus writes to her on LinkedIn with the counter in full, condition included, and a date for her answer.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What Marcus actually sent',
+        blocks: [
+          'At 3:50 he called Jim and asked one question: what lease would he offer? Jim said ten years, at roughly what the shop would pay a landlord today, with two renewal options. Marcus wrote it back to him on WhatsApp so it existed in writing:',
+          {
+            type: 'callout',
+            title: 'To the seller',
+            text: 'To confirm what we discussed: her number for the business, you keep the building, ten-year lease at market rent with two five-year options. I’ll put this to Rachel today and come back to you by Friday.',
+          },
+          'Then to Rachel, on LinkedIn:',
+          {
+            type: 'callout',
+            title: 'To the buyer',
+            text: 'Jim accepts your number for the business. He wants to keep the building and lease it to you: ten years at market rent, two five-year options. Rent figure to follow from his accountant. Can you check this with your lender and reply by Friday?',
+          },
+          'Rachel forwarded the message to the lender channel herself. The lender asked one question, about the length of the lease, which Marcus had already written down. The co-broker group got a single line: “Counter on the machine shop, details with buyer, answer due Friday.”',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Never answer a counter from the hallway.** Reply with a time, not a position.',
+              '**Write the counter out in full.** Number, what is included, what is excluded, and what is still unstated. The unstated part is usually where the deal turns.',
+              '**Confirm it back to the sender.** One message that starts “To confirm” turns a phone call into a record.',
+              '**Tell the other side before anyone else does.** In a co-listed deal, word travels fast and loses its conditions on the way.',
+              '**Put a date on every reply you owe.** “By Friday” is a promise both sides can hold you to.',
+            ],
+          },
+          'For the habit behind the second point, see [deal numbers in chat](/playbooks/deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary). For the last one, see the guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          'The counter, the confirmation and the reply are still yours to write. Merger keeps them in one place so you can find them on Friday.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'tell-a-buyer-the-seller-chose-someone-else',
+    type: T.guide,
+    audience: 'Business brokers',
+    title: 'How to tell a buyer the seller chose someone else, and keep him for the next listing',
+    description:
+      'The seller picked another buyer. Here is the three-line message to send the ones who lost, the same day, with examples, what to leave out and what to write down afterwards.',
+    dek: 'Every sale has one buyer who wins and several who do not. The ones who do not are your buyer list for the next listing. How you tell them decides whether they open your next message.',
+    published: '2026-11-18',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why this message matters',
+        blocks: [
+          'When a seller accepts an offer, the broker’s attention goes to the winner: the LOI, diligence, the lender. The other serious buyers, the ones who signed the NDA, read the numbers and maybe made an offer, often hear nothing for weeks.',
+          'They find out some other way. A co-broker mentions it, or the closing shows up on LinkedIn. What they remember is not that they lost. It is that nobody told them.',
+          'Those buyers are the most valuable names on your list. They know your process, they have shown they can move, and they have told you what they want. A short, honest message the day the decision is made keeps them reading your next listing.',
+        ],
+      },
+      {
+        heading: 'The three lines',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Thanks, by name, for the work they did',
+                text: 'Be specific. “Thank you for the time on Harbor Signs, and for turning the questions around so fast” reads very differently from “thanks for your interest”.',
+              },
+              {
+                title: 'The reason, in one sentence',
+                text: 'Give the real reason if you can share it: timing, structure, certainty of financing. “The seller went with a buyer who could close in January.” Do not share the winning offer or the other buyer’s name.',
+              },
+              {
+                title: 'What you will send them next, and when',
+                text: '“I have two print shops coming to market in the spring. You’ll see them before the list does.” Only promise what you can do.',
+              },
+            ],
+          },
+          'Send it the same day the seller decides, in the app where you have been talking to that buyer.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example',
+            text: 'Mark, thank you for the work on Harbor Signs. The seller went with a buyer who could close in January. I have two print shops coming in the spring and you’ll see them first.',
+          },
+          'Three sentences. No apology paragraph, no numbers from the other side, no “unfortunately” at the top. A fact and a next step.',
+        ],
+      },
+      {
+        heading: 'Adjust it for how far they got',
+        blocks: [
+          {
+            type: 'table',
+            head: ['How far they got', 'What to add', 'What to leave out'],
+            rows: [
+              ['Asked for the teaser only', 'Nothing. Two lines is enough.', 'The reason, unless they ask'],
+              ['Signed the NDA and read the package', 'What they would need to win next time, if it is clear', 'Details from the package they no longer need'],
+              ['Made an offer', 'A call, if they want one', 'The winning number or terms'],
+              ['Was the backup buyer', 'That you will tell them first if the deal falls through', 'Any hint that it will'],
+            ],
+          },
+          'If a buyer was your backup, say so plainly and agree how long they are willing to wait. A backup who hears nothing for six weeks is not a backup.',
+        ],
+      },
+      {
+        heading: 'Mistakes to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Waiting until closing.** Closing may be months away. The decision is the day to tell them.',
+              '**Sharing the other offer.** It breaks the seller’s confidence and invites a re-bid nobody asked for.',
+              '**Writing a long apology.** It reads as guilt, and it buries the one useful sentence.',
+              '**Promising “first look” at everything.** Send them what fits what they told you, not every listing.',
+              '**Sending one message to the whole group.** If several buyers were in a shared group, still tell each one directly. Nobody wants to learn they lost in front of the others.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Afterwards: write down what they want',
+        blocks: [
+          'The message is half the job. The other half is making “you’ll see them first” true. While the deal is fresh, write down what that buyer told you they want: industry, region, size, whether the owner needs to stay, how they finance. Use their words.',
+          'Put the note where you will find it when the next listing comes in, next to the conversation where they said it. In three months you will not remember which buyer wanted sign shops in the Midwest and which wanted print shops anywhere.',
+          'If a buyer keeps looking at listings and never bids, the same note helps. The guide on [following up on a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) covers when to ask again, and [closing a dead deal without burning the relationship](/playbooks/close-a-dead-deal-without-burning-the-relationship) covers the seller side of the same habit.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so every buyer who looked at the listing is in one list, whichever app they used. You reply in each person’s own app. Contacts live in the Rolodex, linked to the message they came from, so the note about what a buyer wants sits next to the conversation where they said it. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk.',
+          'The message itself is still yours to write. That is the point: the buyer hears it from you, on the day it happened.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
