@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100" fill="none">
+  <defs>
+    <linearGradient id="glass" x1="9" y1="8" x2="71" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e8ede3" stop-opacity=".38"/>
+      <stop offset=".3" stop-color="#929e91" stop-opacity=".13"/>
+      <stop offset=".55" stop-color="#c7b98d" stop-opacity=".06"/>
+      <stop offset="1" stop-color="#a6b7ac" stop-opacity=".24"/>
+    </linearGradient>
+    <linearGradient id="light" x1="25" y1="4" x2="56" y2="77" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f8f5e6" stop-opacity=".52"/>
+      <stop offset=".38" stop-color="#d1dacc" stop-opacity=".16"/>
+      <stop offset=".74" stop-color="#b1c4b4" stop-opacity=".035"/>
+      <stop offset="1" stop-color="#dad0af" stop-opacity=".26"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="15" y1="4" x2="65" y2="96" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fcf9e9" stop-opacity=".85"/>
+      <stop offset=".26" stop-color="#c8d2c4" stop-opacity=".2"/>
+      <stop offset=".58" stop-color="#dae4d8" stop-opacity=".07"/>
+      <stop offset=".83" stop-color="#bcb18b" stop-opacity=".36"/>
+      <stop offset="1" stop-color="#f4eedb" stop-opacity=".64"/>
+    </linearGradient>
+    <path id="mark" d="m40 4-17 48 17 4 17-4L40 4Zm-4 2L4 42l16 10L36 6Zm8 0 32 36-16 10L44 6ZM6 46l14 10 16 36L6 46Zm17 11 15 3v36L23 57Zm19 3 15-3-15 39V60Zm18-4 14-10-30 46 16-36Z"/>
+  </defs>
+  <!-- Original Merger geometry; translucent facets and a fine polished edge. -->
+  <use href="#mark" transform="translate(.45 .65)" fill="#b9c8b9" fill-opacity=".035" stroke="#dae3d5" stroke-opacity=".1" stroke-width=".45" stroke-linejoin="round"/>
+  <use href="#mark" fill="url(#glass)" stroke="url(#edge)" stroke-width=".14" stroke-linejoin="round"/>
+  <path d="M40 4 23 52 40 56V4ZM44 6 76 42 60 52 44 6ZM23 57 38 60V96L23 57Z" fill="url(#light)"/>
+  <path d="M40 4V56M40 4 23 52M44 6 76 42M23 57 38 96M60 56 44 92" stroke="url(#edge)" stroke-width=".22" stroke-linecap="round"/>
+</svg>

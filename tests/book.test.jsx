@@ -31,14 +31,16 @@ describe('/book', () => {
     expect(screen.getByTitle('Pick a time with Owen').getAttribute('src')).toContain('gv=true');
   });
 
-  it('speaks to the vertical from the email and ignores unknown ones', async () => {
+  it('uses one pitch for every business, and the vertical only picks the Playbook', async () => {
     await page('secondaries');
-    expect(screen.getByText(/secondaries brokers personally/)).toBeInTheDocument();
+    expect(screen.getByText(/how Merger fits the way your business runs/)).toBeInTheDocument();
+    expect(screen.queryByText(/secondaries brokers/)).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /secondaries broker keeps 40/ })).toHaveAttribute('href', '/playbooks/secondaries-broker-counterparties-across-messaging-apps');
   });
 
   it('treats an unknown vertical as general', async () => {
     await page('toString');
-    expect(screen.getByText(/dealmakers personally/)).toBeInTheDocument();
+    expect(screen.getByText(/spot the serious inquiries and convert more of them/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /deal flow lives in your DMs/i })).toHaveAttribute('href', '/playbooks/your-deal-flow-lives-in-your-dms');
   });
 });
