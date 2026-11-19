@@ -120,11 +120,11 @@ describe('invitation lifecycle', () => {
   });
   it('does not promise another trial in a returning-member invitation', async () => {
     nav.query = 'token=private-token';
-    api.accountAccess.mockResolvedValue({ ...waiting, rollout: { trialEligible: false } });
+    api.accountAccess.mockResolvedValue({ ...waiting, rollout: { trialEligible: false, offer: 'standard', monthlyPrice: 199, annualPrice: 1908 } });
     api.acceptInvitation.mockRejectedValue(new api.ApiError(410, 'invite_expired'));
     render(<InvitePage />);
     await screen.findByRole('button', { name: 'Accept invitation' });
-    expect(screen.getAllByText(/charged at checkout, with a 30-day money-back guarantee/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Merger is \$199\/month or \$1,908\/year, charged at checkout, with a 30-day money-back guarantee/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/days are free|free trial/i)).not.toBeInTheDocument();
   });
   it('accepts a verified member arriving from their invite link once, then points to the trial', async () => {
