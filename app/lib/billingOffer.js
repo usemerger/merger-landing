@@ -1,17 +1,18 @@
-// The alpha offer, in one place.
+// The membership offer, in one place.
 //
-// THE MODEL, because every string below depends on it:
+// THE MODEL (Nov 2026), because every string below depends on it:
 //
-//   · $50 a month.
-//   · The first two weeks are free. A card is collected at checkout — Stripe
-//     requires one to start the trial — and $0 is charged today.
-//   · Cancel any time before the trial ends and there is no first charge.
-//   · Alpha members keep $50/month FOR LIFE. When Merger leaves alpha and
-//     the price rises, people who joined during the alpha stay at $50 for as
-//     long as their membership is active.
-//   · Reached by invitation now, not from the marketing page. The public
-//     front door is the waitlist (see WAITLIST below) and checkout is behind
-//     /alpha?invite=. The PRICE did not change — only who reaches the button.
+//   · STANDARD is the public offer: $199 a month, or $1,908 a year ($159 a
+//     month, 20% less than monthly), charged at checkout.
+//   · Every new membership has a 30-day money-back guarantee: email support
+//     within 30 days of the first payment for a full refund. It is not a
+//     trial; there is no free period and no $0-today offer.
+//   · THE PILOT ($50 a month or $480 a year) has closed to new people. Members
+//     who joined on it keep their rate while their membership stays active,
+//     and an invitation sent before the pilot closed is honored until it
+//     expires. Only the account pages show it, and only when the backend says
+//     this account still qualifies (rollout.offer === 'pilot').
+//   · No invitation is needed to join.
 //
 // None of the PRICE strings below may say "50% off", "$99.99" or "$79": those
 // described two earlier offers, both retired, and tests/api.test.js fails if
@@ -25,6 +26,7 @@
 // route. Plan copy is hardcoded here; the only live billing read is
 // `GET /api/billing/status`, which an unentitled account can read.
 
+/** THE PILOT (closed to new people; see the model above). */
 export const ALPHA_OFFER = Object.freeze({
   /**
    * The plan the backend bills, and the only value its checkout accepts
@@ -69,8 +71,8 @@ export const ALPHA_OFFER = Object.freeze({
 
   /** The reason to join now rather than later. */
   rateNotice:
-    'Alpha members keep $50/month for life. When Merger leaves alpha and the price '
-    + 'rises, your rate stays at $50 for as long as your membership stays active.',
+    'Your pilot rate stays at $50/month while your membership stays active, '
+    + 'even though the public price is now $199/month.',
 });
 
 /**
@@ -116,20 +118,67 @@ export const ANNUAL_OFFER = Object.freeze({
     + 'of your first payment for a full refund. Applicable tax may be added.',
 
   rateNotice:
-    `Alpha members on annual billing keep ${annualPrice}/year for life. When Merger leaves alpha and the price `
-    + `rises, your rate stays at ${annualPrice}/year for as long as your membership stays active.`,
+    `Your pilot rate stays at ${annualPrice}/year while your membership stays active, `
+    + 'even though the public price is now $1,908/year.',
 });
 
-/** The price terms for a billing interval. Anything but 'year' is monthly. */
-export function offerTerms(interval) {
-  if (interval === 'year') return { ...ANNUAL_OFFER, perLabel: '/year' };
+/**
+ * STANDARD — the public offer from Nov 2026. $199/month, or $1,908/year.
+ *
+ * The annual price is a decision, not arithmetic: 20% off twelve months
+ * ($2,388) is $1,910.40, and NEWO chose $1,908 so the monthly equivalent is a
+ * clean $159. It must match the Stripe prices the backend bills
+ * (STRIPE_PRICE_STANDARD / STRIPE_PRICE_STANDARD_ANNUAL).
+ */
+export const STANDARD_OFFER = Object.freeze({
+  plan: 'operator',
+  name: 'Merger',
+  priceLabel: '$199',
+  intervalLabel: '/ month',
+  todayNote: 'due today',
+  refundDays: 30,
+  guaranteeLabel: '30-day money-back guarantee',
+  checkoutLabel: 'Continue to checkout',
+  summary: '$199/month · 30-day money-back guarantee',
+  billingNotice:
+    '$199 USD/month, charged today when you complete checkout and then each month until you cancel. '
+    + 'Every new membership has a 30-day money-back guarantee: email support@usemerger.com within 30 days '
+    + 'of your first payment for a full refund. Applicable tax may be added.',
+  rateNotice: null,
+});
+
+export const STANDARD_ANNUAL_OFFER = Object.freeze({
+  interval: 'year',
+  priceLabel: '$1,908',
+  intervalLabel: '/ year',
+  monthlyEquivalentLabel: '$159',
+  monthlyTotalLabel: '$2,388',
+  savingsLabel: `Save ${ANNUAL_DISCOUNT_PERCENT}%`,
+  summary: '$1,908/year · 30-day money-back guarantee',
+  billingNotice:
+    '$1,908 USD/year, charged today when you complete checkout and then once a year until you cancel. '
+    + 'Every new membership has a 30-day money-back guarantee: email support@usemerger.com within 30 days '
+    + 'of your first payment for a full refund. Applicable tax may be added.',
+  rateNotice: null,
+});
+
+/**
+ * The price terms for an offer and a billing interval. Anything but 'year' is
+ * monthly; anything but 'pilot' is Standard, so a missing or unknown offer can
+ * only ever show the public price, never a lower one the server will refuse.
+ */
+export function offerTerms(interval, offer = 'standard') {
+  const pilot = offer === 'pilot';
+  const monthly = pilot ? ALPHA_OFFER : STANDARD_OFFER;
+  if (interval === 'year') return { ...(pilot ? ANNUAL_OFFER : STANDARD_ANNUAL_OFFER), offer: pilot ? 'pilot' : 'standard', perLabel: '/year' };
   return {
     interval: 'month',
-    priceLabel: ALPHA_OFFER.priceLabel,
-    intervalLabel: ALPHA_OFFER.intervalLabel,
-    summary: ALPHA_OFFER.summary,
-    billingNotice: ALPHA_OFFER.billingNotice,
-    rateNotice: ALPHA_OFFER.rateNotice,
+    offer: pilot ? 'pilot' : 'standard',
+    priceLabel: monthly.priceLabel,
+    intervalLabel: monthly.intervalLabel,
+    summary: monthly.summary,
+    billingNotice: monthly.billingNotice,
+    rateNotice: monthly.rateNotice,
     perLabel: '/month',
   };
 }
@@ -137,10 +186,8 @@ export function offerTerms(interval) {
 /**
  * The waitlist, in one place, for the same reason the offer is.
  *
- * The price strings here are DERIVED from ALPHA_OFFER rather than retyped.
- * The whole point of the file above is that one number lives in one spot, and
- * a waitlist that promises "$50 for life" while the offer says something else
- * is exactly the failure that rule exists to prevent.
+ * The price strings here are DERIVED from STANDARD_OFFER rather than retyped,
+ * so the public pages can never quote a different number from checkout.
  */
 export const WAITLIST = Object.freeze({
   /** The public CTA, everywhere it appears. */
@@ -149,10 +196,10 @@ export const WAITLIST = Object.freeze({
   /** The anchor the nav and the lower CTAs scroll to. */
   href: '/signup',
 
-  eyebrow: 'Windows and iPhone · 30-day money-back guarantee',
+  eyebrow: 'Windows, Mac and iPhone · 30-day money-back guarantee',
   heading: 'Download Merger.',
   blurb: 'Create your account, choose monthly or annual, and install Merger '
-    + 'on Windows, iPhone or both. Every membership has a 30-day money-back guarantee.',
+    + 'on Windows, Mac, iPhone or all three. Every membership has a 30-day money-back guarantee.',
 
   /**
    * The reason to join now rather than later — the same promise as the offer.
@@ -162,8 +209,8 @@ export const WAITLIST = Object.freeze({
    * sentence ("$50/ month for life"). So these read the PRICE from the offer —
    * the number that must never be retyped — and say the period in words.
    */
-  hook: `Alpha members keep ${ALPHA_OFFER.priceLabel}/month while their membership stays active.`,
-  hookNote: `Seats are ${ALPHA_OFFER.priceLabel} a month, or ${annualPrice} a year. `
+  hook: `${STANDARD_OFFER.priceLabel}/month, or ${STANDARD_ANNUAL_OFFER.priceLabel}/year (save ${ANNUAL_DISCOUNT_PERCENT}%).`,
+  hookNote: `Seats are ${STANDARD_OFFER.priceLabel} a month, or ${STANDARD_ANNUAL_OFFER.priceLabel} a year. `
     + 'Not for you? Get a full refund within 30 days.',
 
   /** What moving up actually takes. */

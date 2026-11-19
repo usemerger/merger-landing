@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, accountAccess, acceptInvitation, accountWaitlist, adminWaitlist, signup, billingStatus, checkout, errorMessage, meOrNull } from '../app/lib/api';
-import { ALPHA_OFFER, ANNUAL_OFFER, offerTerms } from '../app/lib/billingOffer';
+import { ALPHA_OFFER, ANNUAL_OFFER, STANDARD_OFFER, STANDARD_ANNUAL_OFFER, offerTerms } from '../app/lib/billingOffer';
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -52,6 +52,28 @@ describe('the alpha checkout contract', () => {
     await checkout('month');
     await checkout();
     for (const call of fetchMock.mock.calls.slice(1)) expect(JSON.parse(call[1].body)).toEqual({ plan: 'operator', alpha: true });
+    fetchMock.mockClear();
+    await checkout('month', 'standard');
+    await checkout('year', 'standard');
+    expect(fetchMock.mock.calls.map((c) => JSON.parse(c[1].body))).toEqual([
+      { plan: 'operator', alpha: false }, { plan: 'operator', alpha: false, interval: 'year' }]);
+  });
+
+  it('prices Standard at $199 a month or $1,908 a year', () => {
+    expect(STANDARD_OFFER.priceLabel).toBe('$199');
+    expect(STANDARD_ANNUAL_OFFER.priceLabel).toBe('$1,908');
+    expect(STANDARD_ANNUAL_OFFER.monthlyEquivalentLabel).toBe('$159');
+    expect(STANDARD_ANNUAL_OFFER.monthlyTotalLabel).toBe('$2,388');
+    expect(STANDARD_ANNUAL_OFFER.savingsLabel).toBe('Save 20%');
+    for (const notice of [STANDARD_OFFER.billingNotice, STANDARD_ANNUAL_OFFER.billingNotice]) {
+      expect(notice).toContain('charged today');
+      expect(notice).toContain('30-day money-back guarantee');
+      expect(notice).not.toMatch(/\$0|weeks free|free trial|for life|\$50|invite/i);
+    }
+    expect(offerTerms('month').priceLabel).toBe('$199');
+    expect(offerTerms('year').priceLabel).toBe('$1,908');
+    expect(offerTerms('month', 'nonsense').priceLabel).toBe('$199');
+    expect(offerTerms('month', 'pilot').priceLabel).toBe('$50');
   });
 
   it('prices annual at 20% under twelve monthly payments', () => {
@@ -61,9 +83,9 @@ describe('the alpha checkout contract', () => {
     expect(ANNUAL_OFFER.savingsLabel).toBe('Save 20%');
     expect(ANNUAL_OFFER.billingNotice).toContain('charged today');
     expect(ANNUAL_OFFER.billingNotice).toContain('30-day money-back guarantee');
-    expect(ANNUAL_OFFER.rateNotice).toContain('$480/year for life');
-    expect(offerTerms('year').priceLabel).toBe('$480');
-    expect(offerTerms('anything-else').priceLabel).toBe(ALPHA_OFFER.priceLabel);
+    expect(ANNUAL_OFFER.rateNotice).toContain('$480/year while your membership stays active');
+    expect(offerTerms('year', 'pilot').priceLabel).toBe('$480');
+    expect(offerTerms('anything-else', 'pilot').priceLabel).toBe(ALPHA_OFFER.priceLabel);
   });
 
   it('returns the hosted checkout URL and nothing is read but that', async () => {
@@ -90,7 +112,8 @@ describe('the alpha checkout contract', () => {
     expect(copy).toContain('$50');
     expect(copy).not.toMatch(/\$0|weeks free|free trial/i);
     expect(copy).toMatch(/30-day money-back guarantee/);
-    expect(copy).toMatch(/for life/);
+    expect(copy).not.toMatch(/for life/);
+    expect(copy).toMatch(/while your membership stays active/);
     expect(ALPHA_OFFER.plan).toBe('operator');
   });
 });

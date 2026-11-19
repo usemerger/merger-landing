@@ -94,7 +94,7 @@ function SignupForm() {
       <button type="button" className="btn btn-ghost" onClick={checkSession}>Try again</button>
     </> : <>
       <p className="eyebrow">{invited ? 'You’re invited' : 'Download Merger'}</p><h1>Create your Merger account.</h1>
-      <p className="lede">{invited ? 'Use the email your invitation was sent to. Verify it, accept your invitation, then review your plan before activation.' : 'One account for the website and the apps. After you verify your email, choose a plan and download Merger for Windows or iPhone.'}</p>
+      <p className="lede">{invited ? 'Use the email your invitation was sent to. Verify it, accept your invitation, then review your plan before activation.' : 'One account for the website and the apps. After you verify your email, choose a plan and download Merger for Windows, Mac or iPhone.'}</p>
       <GoogleAccountButton mode="signup" next={next} referral={referral.current}/>
       <form className="panel mt-24" onSubmit={onSubmit} noValidate aria-busy={busy}>
         <div className="field"><label htmlFor="name">Name</label><input type="text" id="name" name="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} maxLength={100} required disabled={busy} /></div>
