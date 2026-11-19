@@ -208,6 +208,9 @@ describe('recovery and downloads', () => {
     expect(installer.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
     const ios = screen.getByRole('link', { name: 'Download for iPhone' });
     expect(ios).toHaveAttribute('href', 'https://apps.apple.com/us/app/merger-inbox-for-dealmakers/id6817136478');
-    expect(screen.queryByText(/macOS installer is not currently available/)).toBeNull();
+    const mac = screen.getByRole('link', { name: 'Download for Mac' });
+    expect(mac).toHaveAttribute('href', 'https://apps.apple.com/us/app/merger-inbox-for-dealmakers/id6817136478?platform=mac');
+    expect(screen.getByText(/macOS 13 or later on a Mac with Apple silicon/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Get Merger for Windows, Mac and iPhone.' })).toBeInTheDocument();
   });
 });

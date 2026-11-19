@@ -29,7 +29,7 @@ export default function OpenGraphImage() {
           <div style={{ display: 'flex', gap: 14 }}>
             {NETWORKS.map((name) => <span key={name} style={{ padding: '8px 18px', border: '1px solid #3a3426', borderRadius: 999 }}>{name}</span>)}
           </div>
-          <span style={{ color: '#C9A052' }}>Windows · iPhone</span>
+          <span style={{ color: '#C9A052' }}>Windows · Mac · iPhone</span>
         </div>
       </div>
     ),
