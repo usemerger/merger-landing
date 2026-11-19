@@ -5,7 +5,7 @@ import { faqs } from '../app/landingContent';
 import { llmsFull, llmsIndex } from '../app/lib/llmsText';
 import { homeJsonLd, DEFINITION, SHORT_DESCRIPTION } from '../app/lib/seo';
 import { articles, ILLUSTRATIVE_NOTE } from '../app/playbooks/content';
-import { ALPHA_OFFER, ANNUAL_OFFER } from '../app/lib/billingOffer';
+import { STANDARD_OFFER as ALPHA_OFFER, STANDARD_ANNUAL_OFFER as ANNUAL_OFFER } from '../app/lib/billingOffer';
 
 const BANNED = [/end-to-end/i, /\bencrypt/i, /automatically (files|sends)/i, /free trial/i, /14-day/i];
 
@@ -65,7 +65,7 @@ describe('homepage structured data', () => {
     expect(graph.map((n) => n['@type'])).toEqual(['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
     const app = graph[2];
     expect(app.operatingSystem).toBe('Windows, macOS, iOS');
-    expect(app.offers.map((o) => o.price)).toEqual([ALPHA_OFFER.priceLabel.slice(1), ANNUAL_OFFER.priceLabel.slice(1)]);
+    expect(app.offers.map((o) => o.price)).toEqual([ALPHA_OFFER.priceLabel.slice(1), ANNUAL_OFFER.priceLabel.slice(1)].map((p) => p.replace(/,/g, '')));
     expect(graph[3].mainEntity).toHaveLength(faqs.length);
   });
   it('keeps descriptions inside the claim rules', () => {

@@ -13,7 +13,8 @@ vi.mock('../app/lib/api', () => ({
   errorMessage: (err) => `message:${err?.code || err?.status || 'unknown'}`,
 }));
 
-function TestCheckout({ trialEligible = true }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} />; }
+// The pilot path is what most of these tests were written for; Standard has its own block below.
+function TestCheckout({ trialEligible = true, offer = 'pilot', pilotEndsAt = null }) { const ctl = useStartCheckout(); return <PlanStep ctl={ctl} trialEligible={trialEligible} offer={offer} pilotEndsAt={pilotEndsAt} />; }
 const join = () => screen.getByRole('button', { name: 'Continue to checkout' });
 
 beforeEach(() => { checkout.mockReset(); });
@@ -42,7 +43,7 @@ describe('joining the alpha', () => {
     expect(terms).toHaveTextContent('30-day money-back guarantee');
     expect(terms).toHaveTextContent('full refund');
     expect(screen.queryByText(/weeks free|\$0/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Alpha members keep \$50\/month for life/)).toBeInTheDocument();
+    expect(screen.getByText(/Your pilot rate stays at \$50\/month while your membership stays active/)).toBeInTheDocument();
     expect(checkout).not.toHaveBeenCalled();
   });
 
@@ -50,7 +51,7 @@ describe('joining the alpha', () => {
     render(<TestCheckout trialEligible={false} />);
     expect(document.querySelector('.alpha-amount').textContent).toBe('$50due today');
     expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $50/ month');
-    expect(screen.getByText(/A previous alpha rate guarantee ends/)).toBeInTheDocument();
+    expect(screen.getByText(/A new membership uses the current price of \$50\/month/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Restart membership — $50/month' })).toBeEnabled();
     expect(screen.queryByText(/first 2 weeks are free|trial starts when|\$0/i)).not.toBeInTheDocument();
   });
@@ -63,17 +64,17 @@ describe('joining the alpha', () => {
     expect(document.querySelector('.alpha-amount').textContent).toBe('$480due today');
     expect(document.querySelector('.alpha-then').textContent).toBe('30-day money-back guarantee · $480/ year');
     expect(screen.getByText(/\$480 USD\/year, charged today/)).toHaveTextContent('30-day money-back guarantee');
-    expect(screen.getByText(/keep \$480\/year for life/)).toBeInTheDocument();
+    expect(screen.getByText(/Your pilot rate stays at \$480\/year while your membership stays active/)).toBeInTheDocument();
     expect(screen.queryByText(/\$50 USD\/month/)).not.toBeInTheDocument();
     fireEvent.click(join());
-    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year'));
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year', 'pilot'));
   });
 
   it('sends monthly when the choice is left alone', async () => {
     checkout.mockReturnValue(new Promise(() => {}));
     render(<TestCheckout />);
     fireEvent.click(join());
-    await waitFor(() => expect(checkout).toHaveBeenCalledWith('month'));
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('month', 'pilot'));
   });
 
   it('quotes the full annual price up front for a returning member', () => {
@@ -184,3 +185,39 @@ describe('joining the alpha', () => {
     expect(join()).toBeEnabled();
   });
 });
+
+describe('the Standard offer', () => {
+  it('quotes $199 a month or $1,908 a year and checks out as Standard', async () => {
+    checkout.mockReturnValue(new Promise(() => {}));
+    render(<TestCheckout offer="standard" />);
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$199due today');
+    expect(screen.getByText('$199/month')).toBeInTheDocument();
+    expect(screen.getByText('$1,908/year')).toBeInTheDocument();
+    expect(screen.getByText('$159/month, billed once a year')).toBeInTheDocument();
+    expect(screen.queryByText(/\$50|pilot rate|for life/)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('radio', { name: /Annual/ }));
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$1,908due today');
+    fireEvent.click(join());
+    await waitFor(() => expect(checkout).toHaveBeenCalledWith('year', 'standard'));
+  });
+
+  it('defaults to Standard when no offer is given, so it can never under-quote', () => {
+    const ctl = { busy: false, phase: 'idle', message: '', start: vi.fn() };
+    render(<PlanStep ctl={ctl} trialEligible />);
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$199due today');
+  });
+
+  it('tells a pilot invitee until when the pilot rate is held', () => {
+    render(<TestCheckout offer="pilot" pilotEndsAt="2026-11-20T18:00:00Z" />);
+    expect(document.querySelector('.alpha-amount').textContent).toBe('$50due today');
+    expect(screen.getByText(/keeps this pilot rate available until November 20, 2026/)).toBeInTheDocument();
+  });
+
+  it('treats an ended pilot as a changed offer to refresh, not an error', async () => {
+    checkout.mockRejectedValue({ status: 409, code: 'pilot_offer_ended' });
+    render(<TestCheckout offer="pilot" />);
+    fireEvent.click(join());
+    expect(await screen.findByRole('button', { name: 'Refresh account terms' })).toBeInTheDocument();
+  });
+});
+

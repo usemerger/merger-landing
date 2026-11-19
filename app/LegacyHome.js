@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { faqs } from './landingContent';
-import { ALPHA_OFFER, ANNUAL_OFFER, WAITLIST } from './lib/billingOffer';
+import { STANDARD_OFFER as ALPHA_OFFER, STANDARD_ANNUAL_OFFER as ANNUAL_OFFER, WAITLIST } from './lib/billingOffer';
 import MarketingNav from './components/MarketingNav';
 import MarketingMark from './components/MarketingMark';
 import SocialLinks from './components/SocialLinks';
@@ -22,7 +22,7 @@ export const metadata = {
 
 const invitationTerms = `Creating an account is free. Choose a plan from your account and pay at checkout, then download Merger for Windows, Mac or iPhone. Merger is ${ALPHA_OFFER.priceLabel} USD/month, or ${ANNUAL_OFFER.priceLabel} USD/year with annual billing (${ANNUAL_OFFER.savingsLabel.toLowerCase()}), plus applicable tax, charged at checkout. Not for you? Email support within 30 days of your first payment for a full refund. Cancel any time from your billing page.`;
 
-const offerAnswer = `${invitationTerms} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are separate.`;
+const offerAnswer = `${invitationTerms} Anthropic API usage and DocuSign are separate.`;
 const faqAnswers = faqs.map((faq) => ({ ...faq, answer: faq.offer ? offerAnswer : faq.answer }));
 
 function SectionLabel({ number, children }) {
