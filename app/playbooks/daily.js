@@ -2310,4 +2310,206 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-19 ───────────────────────────────────────────────────────────
+  {
+    slug: 'what-to-send-every-live-deal-before-a-holiday-week',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: 'What to send every live deal before a holiday week',
+    description:
+      'Holiday weeks slow every deal down. Seven things to send, check and write down before the break, so a quiet week does not read as a cooling deal.',
+    dek: 'Nobody minds a slow week at Thanksgiving or the end of the year. What people notice is a deal that goes from daily messages to nothing. Here is what to send before everyone logs off, and what to set up for the day you come back.',
+    published: '2026-11-19',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the week before matters',
+        blocks: [
+          'In a normal week, a live deal produces a steady trickle of messages: a question from the buyer, a document from the seller, a lender asking for one more number. In a holiday week the trickle stops. Sellers travel, counsel is out from Wednesday, and lenders go quiet until the following Monday.',
+          'The pause itself is harmless. The problem is how silence reads from the other side. A seller who heard from you every day and then hears nothing for nine days starts to wonder whether the buyer has cooled. A buyer who is waiting on a document and gets no word starts to look at the next listing.',
+          'A few short messages before the break take that question off the table. Here is what to send, in roughly the order to send it.',
+        ],
+      },
+      {
+        heading: 'Seven things to do before the break',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: '1. Make a list of every live deal',
+                text: 'Not every conversation, only the deals where someone is waiting on someone. Go app by app: the WhatsApp seller, the Telegram buyers, the LinkedIn thread with the lender. If a deal has no next step, it is not live, and it does not need a message this week.',
+              },
+              {
+                title: '2. Send each one a four-line message',
+                text: 'Where it stands, in one sentence. What you are waiting on, and from whom. What happens before the break, if anything. The day you will pick it up. Send it on the Monday or Tuesday of the holiday week, while people are still reading.',
+              },
+              {
+                title: '3. Say what will not happen this week',
+                text: 'If the buyer’s lender will not look at the file until the 30th, say so to the seller now. Bad news before the break is a plan. The same news after the break is a surprise.',
+              },
+              {
+                title: '4. Answer every open question you owe',
+                text: 'Search for messages that end with a question mark and no reply from you. The holiday is the worst time to leave a buyer’s question hanging, because it will hang for nine days instead of two.',
+              },
+              {
+                title: '5. Confirm anything said on a call, in writing',
+                text: 'If a seller agreed to something on a call the week before, write it back to them before the break. “To confirm from Thursday: you’ll send the lease by December 4.” Memories do not improve over a long weekend.',
+              },
+              {
+                title: '6. Tell people who is covering, if anyone',
+                text: 'If you are fully offline, say so and give the day you are back. If a colleague is watching your deals, name them and say what they can decide and what waits for you.',
+              },
+              {
+                title: '7. Put the pick-up date where you will see it',
+                text: 'Each message promised a day. Write it next to the deal, not in a separate list you will forget you made. On the first morning back, that is your to-do list.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What the four-line message looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example, to a seller',
+            text: 'Quick one before the holiday. We’re waiting on your Q3 numbers. No rush this week. I’ll pick it up Monday the 30th. Happy Thanksgiving.',
+          },
+          {
+            type: 'callout',
+            title: 'Example, to a buyer',
+            text: 'Before the break: the seller is reviewing your questions on the lease. His counsel is out until the 30th, so expect answers that week. I’ll send them the day they arrive.',
+          },
+          'Short, specific, and with a date. No pressure to reply, and no “circling back” with nothing new in it. If you want more on that habit, the list of [follow-up messages that restart a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) covers the general case.',
+        ],
+      },
+      {
+        heading: 'What not to send',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**A group blast to every contact.** A holiday card to your whole list is fine. It is not a deal update, and it does not replace the four lines to each live deal.',
+              '**New asks with a holiday deadline.** “Can you get me the tax returns by Wednesday?” to a seller who is packing the car does not get you the tax returns. It gets you a seller who feels pushed.',
+              '**A price change or a new condition.** If something material changed, call first and write it down after. Do not drop it in chat on the way out of the office.',
+              '**Silence because the deal feels fine.** Fine deals are the ones that drift. The message costs a minute.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The first morning back',
+        blocks: [
+          'Start with the dates you promised. Every deal that got a “I’ll pick it up Monday” gets a message that morning, even if all it says is that you are back and the next step is still the same.',
+          'Then read anything that arrived during the break, oldest first. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) is a good way to reset each one, and if a buyer or seller went quiet over the break, [the weekly review from your messages](/playbooks/run-a-weekly-deal-review-from-your-messages) is a quick way to see which.',
+          'If a seller is waiting to hear how buyers are getting on, the [weekly buyer update for your seller](/playbooks/weekly-buyer-update-for-your-seller) is a good format for the first update after the break.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the list of live deals is one list instead of six apps. You reply in each person’s own app. Approved deals sit on the Deal Desk with their conversations attached, so the pick-up date sits next to the message it came from. With your own Anthropic API key, Claude can flag messages that look like a possible deal while you are away, and nothing goes on the Deal Desk until you approve it.',
+          'The four lines are still yours to write. Merger keeps them, and the replies, in one place for the first morning back.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'exclusive-vs-first-look-vs-off-market-what-a-broker-means-by-only-you',
+    type: T.comparison,
+    audience: 'Buyers and investors',
+    title: 'Exclusive, first look or off-market: what a broker means by “only showing this to you”',
+    description:
+      'A broker says a deal is only being shown to you, for now. Comparing what that line can mean, what each version is worth, and the one question to ask before you approve it.',
+    dek: '“Off market. Only showing this to you for now.” It might be a real head start, a short window before a wider release, or a line that goes to several buyers at once. The words are the same. The deal is not. Here is how to tell which one you have.',
+    published: '2026-11-19',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['What it is', 'What you usually get', 'How to recognise it'],
+            rows: [
+              ['A written exclusive', 'A defined period where the seller talks only to you', 'There is a date, and usually a document or a clause in the LOI'],
+              ['A first look', 'A head start of days or weeks before a wider release', 'The broker can tell you when the wider release happens'],
+              ['“Off market” used loosely', 'The deal is not on a listing site, but several buyers may have it', 'Answers about timing and other buyers stay vague'],
+            ],
+          },
+          'None of these is good or bad on its own. A first look with an honest date is worth more than an exclusive that only exists in a chat message. What matters is knowing which one you have before you spend time on the deal.',
+        ],
+      },
+      {
+        heading: 'A written exclusive',
+        blocks: [
+          'A real exclusive has edges: a start date, an end date, and some statement of what the seller will not do in between, usually that they will not negotiate with other buyers. In small business sales it often arrives with or after the LOI, as a no-shop or exclusivity period. Before an LOI, a true exclusive is less common, because the seller has not yet seen a number.',
+          'If a broker offers an exclusive before an LOI, it is reasonable to ask what it covers and to have it written down, even in one line of chat: “Confirming you won’t show this to other buyers until December 15.” A line like that is a record. A feeling that you are the only one is not.',
+        ],
+      },
+      {
+        heading: 'A first look',
+        blocks: [
+          'A first look is the most common honest version of “only you”. The broker is showing the deal to a short list, or to one buyer, before sending it wider. You get time to read the numbers and ask questions without competition, and the broker gets a fast read on the price.',
+          'It is worth a lot if you can move. It is worth very little if the window closes before you have the information to decide. So the useful questions are about time: when does the wider release happen, and what would you need to see from me before then?',
+          {
+            type: 'callout',
+            title: 'One line to send',
+            text: 'Thanks. Until what date, and what happens after it?',
+          },
+          'A broker running a real first look can usually answer that in one message. “Through the 15th, then it goes to our list” is a good answer. It tells you how much work to do this week.',
+        ],
+      },
+      {
+        heading: '“Off market” used loosely',
+        blocks: [
+          'Sometimes “off market” only means the deal is not on a public listing site. The broker may be sending the same message to ten buyers in ten chats, each worded as if it were personal. That is not dishonest in itself; it is how many deals move. But it changes how fast you need to be, and how much the word “only” is worth.',
+          'The signs are in the answers. If you ask about timing and get “soon”, or ask whether others have it and get “a couple of people might take a look”, treat it as an open process. Move at the pace of an open process, and do not let the word “only” push you into skipping steps.',
+        ],
+      },
+      {
+        heading: 'How to read the answer',
+        blocks: [
+          {
+            type: 'table',
+            head: ['If the broker says', 'It probably means', 'What to do next'],
+            rows: [
+              ['A date and what happens after', 'A first look or an exclusive with edges', 'Plan your work back from the date'],
+              ['“The owner wants an answer soon”', 'Urgency without a window', 'Ask what “soon” is, in days'],
+              ['“A few people might look”', 'An open process', 'Move as you would on a listed deal'],
+              ['Silence on the question', 'You do not know yet', 'Ask once more, then decide how much time to spend'],
+            ],
+          },
+          'Whatever the answer, write it down next to the conversation it came from. Two weeks later, “he said through the 15th” is easy to check if it is in front of you, and easy to misremember if it is not.',
+        ],
+      },
+      {
+        heading: 'Mistakes to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Treating “only you” as an exclusive.** Unless there is a date and a commitment, it is a head start at most.',
+              '**Rushing because of the word.** Urgency is a reason to ask about timing, not a reason to skip the NDA or the numbers.',
+              '**Asking about other buyers by name.** The broker should not tell you, and asking puts them in an awkward spot. Ask about timing instead.',
+              '**Forgetting the date you were given.** A first look that ends while you are waiting on a lender is just a missed deal.',
+            ],
+          },
+          'For what usually comes next, see [sending an NDA without retyping names from chat](/playbooks/send-an-nda-without-retyping-names-from-chat), and for the habit of reading a flag before approving it, [AI deal triage without giving up judgment](/playbooks/ai-deal-triage-without-giving-up-judgment).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag a message like “only showing this to you” as a possible deal. It is a suggestion: you ask your question first, and nothing goes on the Deal Desk until you approve it. Approved deals keep the conversation attached, so the date the broker gave you sits next to the deal.',
+          'Whether the window is real is still a question for you to ask. Merger keeps the answer where you will find it.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
