@@ -8,6 +8,7 @@ import {homeJsonLd,jsonLdScript} from '../lib/seo';
 import './funnel.css';
 import './integration.css';
 import './mobile.css';
+import './verticals.css';
 
 function illustration(node){
  if(node.name==='img'&&node.attribs?.fetchpriority){

@@ -4,7 +4,7 @@
 // "deal flow software for family offices") and give AI assistants a clear,
 // quotable answer for each audience. Same claim rules as the Playbooks
 // (playbooks/content.js): no encryption, nothing automatic, no SMS/iMessage,
-// no Mac or Android, no prices (those come from lib/billingOffer.js), and the
+// no Android, no prices (those come from lib/billingOffer.js), and the
 // scenarios are typical workflows, not customer stories.
 //
 // Inline markup inside strings: **bold** and [text](href), same as Playbooks.
@@ -59,7 +59,7 @@ export const verticals = [
     faqs: [
       ['What is the best way for a searcher to track brokers and listings?', 'Keep two records: the broker as a contact, and each listing as a deal linked to the broker who sent it. Merger builds both from the conversations themselves, so the record exists even on the weeks you do not update anything.'],
       ['Do I need a Claude subscription?', 'Claude features use your own Anthropic API key, billed separately by Anthropic. A Claude chat subscription is not an API key. You can file deals by hand without Claude.'],
-      ['Does Merger work on my phone?', 'Merger runs on Windows and iPhone. Mac and Android are not available yet.'],
+      ['Does Merger work on my phone?', 'Merger runs on Windows, Mac and iPhone. Android is not available yet.'],
     ],
   },
   {
@@ -163,7 +163,7 @@ export const verticals = [
     faqs: [
       ['Does Merger replace our firm’s CRM?', 'No. Firms that report from a CRM can keep it. Merger is where the messaging-app conversations happen and become deals, and the Merger API lets an AI assistant read your saved contacts and deals.'],
       ['Which networks can I connect?', 'WhatsApp, Telegram, LinkedIn, Slack, Signal, Instagram, Messenger, Discord, X and LINE. Availability and actions vary by service.'],
-      ['Where does it run?', 'Windows and iPhone.'],
+      ['Where does it run?', 'Windows, Mac and iPhone.'],
     ],
   },
   {
@@ -189,7 +189,7 @@ export const verticals = [
     faqs: [
       ['How do angels and seed investors track deal flow from DMs?', 'Usually with a notes app and memory. Merger keeps the DMs in one inbox and turns the companies you want to meet into deals with the intro attached.'],
       ['Does Merger read all my messages with AI?', 'Only if you turn on Claude features with your own Anthropic API key. You can use the inbox and file deals by hand without them.'],
-      ['Is there an Android app?', 'Not yet. Merger runs on Windows and iPhone.'],
+      ['Is there an Android app?', 'Not yet. Merger runs on Windows, Mac and iPhone.'],
     ],
   },
 ];

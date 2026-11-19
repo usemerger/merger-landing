@@ -3,7 +3,7 @@ import {render,screen,fireEvent,cleanup} from '@testing-library/react';
 import {readFileSync,existsSync} from 'node:fs';
 import {load} from 'cheerio';
 import Purchase from '../app/funnel/Purchase';
-import {ALPHA_OFFER,ANNUAL_OFFER} from '../app/lib/billingOffer';
+import {STANDARD_OFFER as ALPHA_OFFER,STANDARD_ANNUAL_OFFER as ANNUAL_OFFER} from '../app/lib/billingOffer';
 import content from '../app/funnel/content.json';
 vi.mock('../app/lib/waitlist',()=>({captureRef:()=> 'funnel_ref'}));
 afterEach(cleanup);
@@ -39,7 +39,7 @@ describe('homepage migration contracts',()=>{
   expect(screen.getByText(ALPHA_OFFER.billingNotice)).toBeTruthy();
   fireEvent.click(screen.getByRole('radio',{name:/Annual membership/}));
   expect(screen.getByText(ANNUAL_OFFER.billingNotice)).toBeTruthy();
-  expect(screen.getByText(ANNUAL_OFFER.rateNotice,{exact:false})).toBeTruthy();
+  expect(screen.queryByText(/for life|\$50/)).toBeNull();
   expect(screen.getByRole('link',{name:/Make Merger yours/}).getAttribute('href')).toBe('/signup?ref=funnel_ref');
  });
 });
