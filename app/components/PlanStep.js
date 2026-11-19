@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { checkout, errorMessage } from '../lib/api';
-import { ALPHA_OFFER, ANNUAL_OFFER, offerTerms } from '../lib/billingOffer';
+import { ALPHA_OFFER, ANNUAL_OFFER, STANDARD_OFFER, STANDARD_ANNUAL_OFFER, offerTerms } from '../lib/billingOffer';
 import { stripeRedirectURL } from '../lib/authFlow';
 
 // Rendered only after accountAccess grants canCheckout. The checkout endpoint
@@ -32,7 +32,7 @@ const CLOSED_CODES = new Set([
 /** The contract's replies, mapped to how the page should behave. */
 function phaseFor(err) {
   const { status, code } = err || {};
-  if (code === 'trial_offer_changed') return PHASE.OFFER_CHANGED;
+  if (code === 'trial_offer_changed' || code === 'pilot_offer_ended') return PHASE.OFFER_CHANGED;
   if (CLOSED_CODES.has(code)) return PHASE.CLOSED;
   if (status === 401) return PHASE.EXPIRED;
   if (code === 'billing_provider_error' || status === 502
@@ -55,7 +55,7 @@ export function useStartCheckout() {
     return () => window.removeEventListener('pageshow', restore);
   }, []);
 
-  const start = useCallback(async (interval) => {
+  const start = useCallback(async (interval, offer) => {
     if (submitting.current) return;
     submitting.current = true;
     setBusy(true);
@@ -64,7 +64,7 @@ export function useStartCheckout() {
     try {
       // One call. 200 carries a hosted Stripe Checkout URL and nothing else
       // worth reading; stripeRedirectURL refuses anything that is not one.
-      const result = await checkout(interval === 'year' ? 'year' : 'month');
+      const result = await checkout(interval === 'year' ? 'year' : 'month', offer);
       window.location.assign(stripeRedirectURL(result?.url));
     } catch (err) {
       setPhase(phaseFor(err));
@@ -77,7 +77,7 @@ export function useStartCheckout() {
   return { busy, phase, message, start };
 }
 
-export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialEligible }) {
+export default function PlanStep({ ctl, heading = 'Choose your plan', note, trialEligible, offer = 'standard', pilotEndsAt = null }) {
   const pathname = usePathname();
   // Sign in and come back to the page they were on, with the offer in front of
   // them again — not to a dashboard they then have to navigate out of.
@@ -88,9 +88,13 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
   // Monthly is the default: annual is something a member opts into, never
   // something they find they were charged for.
   const [interval, setInterval] = useState('month');
-  const terms = offerTerms(interval);
+  const pilot = offer === 'pilot';
+  const monthlyOffer = pilot ? ALPHA_OFFER : STANDARD_OFFER;
+  const annualOffer = pilot ? ANNUAL_OFFER : STANDARD_ANNUAL_OFFER;
+  const terms = offerTerms(interval, pilot ? 'pilot' : 'standard');
   const annual = terms.interval === 'year';
   const today = terms.priceLabel;
+  const startCheckout = () => ctl.start(interval, pilot ? 'pilot' : 'standard');
 
   if (ctl.phase === PHASE.OFFER_CHANGED) return <section className="plan-step"><h2>Your activation terms changed.</h2><div className="alert alert-warn" role="alert"><p>{ctl.message}</p><button className="btn btn-ghost btn-sm mt-16" type="button" onClick={() => window.location.reload()}>Refresh account terms</button></div></section>;
 
@@ -103,10 +107,10 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
 
       <div className="alpha-summary">
         <div>
-          <span className="eyebrow">Windows and iPhone · one person</span>
-          <h3>{ALPHA_OFFER.name}</h3>
+          <span className="eyebrow">Windows, Mac and iPhone · one person</span>
+          <h3>{pilot ? 'Merger pilot rate' : STANDARD_OFFER.name}</h3>
         </div>
-        <p className="alpha-amount">{today}<span>{ALPHA_OFFER.todayNote}</span></p>
+        <p className="alpha-amount">{today}<span>{monthlyOffer.todayNote}</span></p>
       </div>
 
       {!closed && <fieldset className="billing-interval" disabled={ctl.busy}>
@@ -114,21 +118,22 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
         <label className={annual ? '' : 'is-selected'}>
           <input type="radio" name="billing-interval" value="month" checked={!annual} onChange={() => setInterval('month')} />
           <span className="billing-interval-name">Monthly</span>
-          <span className="billing-interval-price">{ALPHA_OFFER.priceLabel}/month</span>
+          <span className="billing-interval-price">{monthlyOffer.priceLabel}/month</span>
         </label>
         <label className={annual ? 'is-selected' : ''}>
           <input type="radio" name="billing-interval" value="year" checked={annual} onChange={() => setInterval('year')} />
-          <span className="billing-interval-name">Annual <em>{ANNUAL_OFFER.savingsLabel}</em></span>
-          <span className="billing-interval-price">{ANNUAL_OFFER.priceLabel}/year</span>
-          <span className="billing-interval-note">{ANNUAL_OFFER.monthlyEquivalentLabel}/month, billed once a year</span>
+          <span className="billing-interval-name">Annual <em>{annualOffer.savingsLabel}</em></span>
+          <span className="billing-interval-price">{annualOffer.priceLabel}/year</span>
+          <span className="billing-interval-note">{annualOffer.monthlyEquivalentLabel}/month, billed once a year</span>
         </label>
       </fieldset>}
 
       <p className="alpha-then">
-        {ALPHA_OFFER.guaranteeLabel} · <strong>{terms.priceLabel}{terms.intervalLabel}</strong>
+        {monthlyOffer.guaranteeLabel} · <strong>{terms.priceLabel}{terms.intervalLabel}</strong>
       </p>
       <p className="muted">{terms.billingNotice}</p>
-      <p className="muted mt-16">{returning ? `A previous alpha rate guarantee ends when that membership ends. This new membership uses the current alpha offer of ${terms.priceLabel}${terms.perLabel}, which stays in place while this membership remains active.` : terms.rateNotice}</p>
+      {pilot && pilotEndsAt && <p className="field-hint mt-16">Your invitation keeps this pilot rate available until {new Date(pilotEndsAt).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}.</p>}
+      {(returning || terms.rateNotice) && <p className="muted mt-16">{returning ? `A new membership uses the current price of ${terms.priceLabel}${terms.perLabel}.` : terms.rateNotice}</p>}
       <p className="field-hint mt-16">Claude requires your own Anthropic API key, with usage billed separately by Anthropic. DocuSign requires your own account. Alpha features may change.</p>
 
       {/* THE ALPHA IS SHUT, NOT BROKEN. Admission is separate from signup; the window is
@@ -156,16 +161,16 @@ export default function PlanStep({ ctl, heading = 'Join the alpha', note, trialE
 
       {ctl.phase === PHASE.TRANSIENT && <div className="alert alert-warn" role="alert">
         <p>{ctl.message}</p>
-        <button className="linklike mt-16" type="button" onClick={() => ctl.start(interval)} disabled={ctl.busy}>Try again</button>
+        <button className="linklike mt-16" type="button" onClick={startCheckout} disabled={ctl.busy}>Try again</button>
       </div>}
 
       {ctl.phase === PHASE.ERROR && <div className="alert alert-error" role="alert">{ctl.message}</div>}
 
       {!closed && <>
-        <button className="btn btn-primary btn-block" type="button" onClick={() => ctl.start(interval)} disabled={ctl.busy}>
-          {ctl.busy ? 'Opening secure checkout…' : returning ? `Restart membership — ${terms.priceLabel}${terms.perLabel}` : ALPHA_OFFER.checkoutLabel}
+        <button className="btn btn-primary btn-block" type="button" onClick={startCheckout} disabled={ctl.busy}>
+          {ctl.busy ? 'Opening secure checkout…' : returning ? `Restart membership — ${terms.priceLabel}${terms.perLabel}` : monthlyOffer.checkoutLabel}
         </button>
-        <p className="field-hint center mt-16">Stripe collects your card securely. {`${terms.priceLabel} plus applicable tax is charged when you finish checkout, and access begins right away. Not for you? Email support within ${ALPHA_OFFER.refundDays} days for a full refund.`}</p>
+        <p className="field-hint center mt-16">Stripe collects your card securely. {`${terms.priceLabel} plus applicable tax is charged when you finish checkout, and access begins right away. Not for you? Email support within ${monthlyOffer.refundDays} days for a full refund.`}</p>
       </>}
 
       <p className="field-hint center mt-16"><Link href="/terms">Alpha terms</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/support">Help</Link></p>
