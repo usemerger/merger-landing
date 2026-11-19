@@ -8,14 +8,14 @@
 import { faqs } from '../landingContent';
 import { articles } from '../playbooks/content';
 import { verticals } from '../for/verticals';
-import { ALPHA_OFFER, ANNUAL_OFFER } from './billingOffer';
+import { STANDARD_OFFER, STANDARD_ANNUAL_OFFER } from './billingOffer';
 import { APP_STORE_URL, AUDIENCES, DEFINITION, NETWORKS, SITE } from './seo';
 
 const abs = (text) => text.replace(/\]\((\/[^)]*)\)/g, `](${SITE}$1)`);
 
 function faqAnswer(faq) {
   if (!faq.offer) return faq.answer;
-  return `${ALPHA_OFFER.billingNotice} Annual billing: ${ANNUAL_OFFER.billingNotice} ${ALPHA_OFFER.rateNotice} Anthropic API usage and DocuSign are billed separately.`;
+  return `${STANDARD_OFFER.billingNotice} Annual billing: ${STANDARD_ANNUAL_OFFER.billingNotice} Members who joined at the earlier pilot rate keep it while their membership stays active. Anthropic API usage and DocuSign are billed separately.`;
 }
 
 function facts() {
@@ -29,8 +29,8 @@ function facts() {
     '- Deal Desk: each approved deal keeps its source conversation, people, terms and next step.',
     '- Rolodex: contact details from introductions, linked to the message they came from.',
     '- Documents: the member\'s own DocuSign account opens inside Merger with deal contacts beside templates. The member reviews and sends.',
-    `- Platforms: Windows desktop app and iPhone app (${APP_STORE_URL}). Mac and Android are not available yet.`,
-    `- Price: ${ALPHA_OFFER.priceLabel} USD/month or ${ANNUAL_OFFER.priceLabel} USD/year, paid at checkout, with a ${ALPHA_OFFER.refundDays}-day money-back guarantee. Alpha members keep their rate while their membership stays active.`,
+    `- Platforms: Windows desktop app, plus Mac and iPhone apps from the App Store (${APP_STORE_URL}). The Mac app needs macOS 13 or later on Apple silicon. Android is not available yet.`,
+    `- Price: ${STANDARD_OFFER.priceLabel} USD/month or ${STANDARD_ANNUAL_OFFER.priceLabel} USD/year (${STANDARD_ANNUAL_OFFER.monthlyEquivalentLabel}/month, 20% off), paid at checkout, with a ${STANDARD_OFFER.refundDays}-day money-back guarantee. Members who joined at the earlier pilot rate keep it while their membership stays active.`,
     `- Get started: ${SITE}/signup · Book a 15-minute setup call: ${SITE}/book · Support: support@usemerger.com`,
     '- Company: Merger, founded by Owen Van Holtz. Operated by Void Ecom LLC (Florida, USA).',
   ].join('\n');
