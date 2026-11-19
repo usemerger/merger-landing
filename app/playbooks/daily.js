@@ -1211,6 +1211,1105 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-14 ───────────────────────────────────────────────────────────
+  {
+    slug: 'self-storage-investor-buying-facilities-from-owners-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Real estate investors',
+    title: 'How a self-storage investor buys facilities from owners who answer on four different messaging apps',
+    description:
+      'An illustrative walkthrough: a self-storage buyer works owner leads from WhatsApp, LinkedIn, Messenger and a Telegram broker group, and keeps each facility, owner and next step in one place.',
+    dek: 'The owners who sell small storage facilities rarely live on email. One answers on WhatsApp, one on Facebook Messenger, one only through his son on LinkedIn. A walkthrough of keeping four conversations from becoming four lost deals.',
+    published: '2026-11-14',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The buy box',
+        blocks: [
+          'Marcus buys small self-storage facilities with two partners. Their buy box is narrow: 200 to 500 units, older owners, secondary towns within a day’s drive, and room to add climate-controlled units or raise rents that have not moved in years.',
+          'Facilities like that almost never reach a listing site. They come from owners who have run the place for twenty years, from local brokers who know them, and from a Telegram group where a few dozen storage investors swap leads. Marcus’s pipeline is a mix of cold outreach, introductions and group posts.',
+          'At any time he has around fifteen owner conversations going. On a normal week three of them move. The rest are owners who said “not yet”, owners who stopped replying, and owners whose sons or daughters are now the ones answering.',
+        ],
+      },
+      {
+        heading: 'Four owners, four apps',
+        blocks: [
+          'Here is one ordinary week, with invented names.',
+          {
+            type: 'list',
+            items: [
+              '**Glenn, WhatsApp.** Owns a 340-unit facility two hours north. Marcus met him at a regional conference. Glenn sends voice notes and the occasional photo of the office. On Tuesday he writes: “Thinking about it more seriously after the holidays.”',
+              '**Rita, Facebook Messenger.** Found through a local group. Rita answers fast, in short lines. She asks whether Marcus would keep her manager on, which is the real question behind any sale she would consider.',
+              '**Paul, LinkedIn.** Paul’s father owns the facility; Paul handles the business side. He sends a rough rent roll as an attachment and asks for a call “sometime next week”.',
+              '**A Telegram post.** A broker in the investor group posts a 260-unit facility with a gravel lot and expansion land. Two other investors reply in the thread within an hour.',
+            ],
+          },
+          'None of these is an offer yet. Each is a possible deal, and each has a different next step: a date to check back with Glenn, an answer on the manager for Rita, a call with Paul, and a private message to the broker before the Telegram post goes cold.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**“After the holidays” has no date.** Glenn’s message is the warmest of the week and the easiest to lose. By February it is forty voice notes up.',
+              '**The real question goes unanswered.** Rita asked about her manager. Marcus meant to check with his partners and reply. Messenger is the app he opens least.',
+              '**The rent roll lives in a LinkedIn attachment.** When a partner asks what the facility collects, Marcus scrolls LinkedIn to find it.',
+              '**The group lead is first come, first served.** By the time Marcus messages the broker privately, the broker has already sent the package to the two investors who replied in the thread.',
+              '**The partners see none of it.** His partners ask for a status update on Friday. Marcus rebuilds the week from four apps.',
+            ],
+          },
+          'Nothing here is unusual. Small-facility owners pick the app they already use with their family, and the buyer carries the cost of keeping the picture together.',
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every owner chat in one list',
+                text: 'Marcus connects the WhatsApp, Messenger, LinkedIn and Telegram accounts he already uses. Glenn, Rita, Paul and the investor group sit in one inbox. He replies from Merger, and each reply goes out in the app the owner chose.',
+              },
+              {
+                title: 'Possible deals flagged for review',
+                text: 'With his own Anthropic API key connected, Claude flags Glenn’s “more seriously after the holidays”, Paul’s rent roll and the Telegram post as possible deals. Marcus reads each conversation and decides. He approves all three, and passes on a fourth flag from an owner who was only asking about a referral.',
+              },
+              {
+                title: 'One deal per facility, conversations attached',
+                text: 'Each approved facility goes on the Deal Desk with its conversation attached. The rent roll Paul sent sits with Paul’s facility. Glenn’s voice notes sit with Glenn’s.',
+              },
+              {
+                title: 'A next step with a date',
+                text: 'For Glenn: “Check in January 8, ask about timing and whether his daughter is involved.” For Rita: “Answer the manager question by Thursday.” For Paul: “Offer two call times.” For the group lead: “Message the broker directly today.”',
+              },
+              {
+                title: 'Owners saved as contacts',
+                text: 'Paul is saved to the Rolodex with a note that his father is the owner, linked to the message where Paul introduced himself. When a buyer later asks who decides, the answer is one click away.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What changed for Rita',
+        blocks: [
+          'The manager question was the one most likely to slip, because it needed a conversation with the partners first. On the Deal Desk it had a next step with a date, so it came up on Thursday instead of three weeks later.',
+          'Marcus answered on Messenger in two lines: the partners would keep the manager for at least a year, and they would want to meet her before making an offer. Rita replied within the hour and asked when they could visit. A reply like that rarely comes from a question answered late.',
+          'None of this needed new software habits from Rita. She stayed on Messenger the whole time.',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Give every “not yet” a date.** An owner who says “after the holidays” has told you when to ask again. Write the date down the same day.',
+              '**Answer the question behind the question.** Owners of small facilities usually care about their staff, their customers and their name in town as much as the price. Answer that first.',
+              '**Keep documents with the deal, not the app.** A rent roll in a LinkedIn attachment is hard to find when a partner asks for it. Note where each document lives, or keep it with the deal.',
+              '**Move group leads to a private message fast.** A post in a group is seen by everyone in the group. Reply to the broker directly, the same hour if you can.',
+              '**Write the Friday update from one list.** If the update takes more than ten minutes to write, the pipeline is in too many places.',
+            ],
+          },
+          'The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the date habit in more detail, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers the Rolodex side.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each owner’s app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'ask-for-an-introduction-someone-can-forward-in-one-message',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to ask for an introduction that someone can forward in one message',
+    description:
+      'Most intro requests stall because they ask the introducer to write your pitch. Here is the three-line blurb to send instead, with examples, an easy out, and what to do when the intro lands.',
+    dek: '“Could you introduce me to Dan?” asks your contact to explain who you are, why Dan should care and what you want. Most people mean to. Then the week happens. Write the part they forward.',
+    published: '2026-11-14',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why intro requests stall',
+        blocks: [
+          'An introduction is a favor, and the size of the favor decides whether it happens this week. When you ask “Could you introduce me to Dan?”, you are asking your contact to do three things: remember what you do, work out why Dan would care, and write a message Dan will answer.',
+          'That is ten minutes of thought for someone who owes you nothing. They agree, they mean it, and the request sinks under the rest of their messages. Two weeks later you are deciding whether a follow-up would be rude.',
+          'The fix is to do the writing yourself. Send a short blurb your contact can forward as it is, in whatever app they use with Dan. Now the favor is copy, paste and send.',
+        ],
+      },
+      {
+        heading: 'The three-line blurb',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Who you are, in one line',
+                text: 'Write it in the third person so it reads naturally when forwarded. “Maya Ruiz is a search funder buying one services business in the Southeast.” Not your whole background. One line Dan can place.',
+              },
+              {
+                title: 'Why this person',
+                text: 'The specific reason you want Dan and not anyone else. “Dan sold a company like the ones she looks at.” If you cannot write this line, you are not ready to ask for the intro.',
+              },
+              {
+                title: 'What you would ask',
+                text: 'A small, clear ask with a limit. “Twenty minutes on how his handover went.” A small ask is easy to say yes to, and a clear one tells Dan what the call is for.',
+              },
+            ],
+          },
+          'Then add one sentence that makes saying no easy: “No pressure if the timing is wrong.” People forward more readily when they know the other side can decline without awkwardness.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          'Two messages to your contact, in the app you already talk in. First the request, then the blurb on its own so it can be forwarded cleanly:',
+          {
+            type: 'callout',
+            title: 'Message 1',
+            text: 'Could you introduce me to Dan? Here is a short note you can forward as it is. Completely fine if now is not a good time.',
+          },
+          {
+            type: 'callout',
+            title: 'Message 2 (the blurb)',
+            text: 'Maya Ruiz is a search funder buying one services business in the Southeast. Dan sold a company like the ones she looks at, and she would value twenty minutes on how his handover went. No pressure if the timing is wrong.',
+          },
+          'Sending the blurb as its own message matters. A forward of message 2 carries no context Dan does not need, and your contact does not have to edit anything.',
+        ],
+      },
+      {
+        heading: 'Adjust it for the deal',
+        blocks: [
+          {
+            type: 'table',
+            head: ['You are', 'Who you want', 'The “why this person” line'],
+            rows: [
+              ['Business broker', 'A buyer who closed in the sector last year', 'He bought a business like the one you are selling and knows what lenders asked for.'],
+              ['Real estate investor', 'A local owner with older properties', 'She has owned in the submarket for twenty years and knows which owners are thinking about selling.'],
+              ['Secondaries broker', 'An early employee at a named company', 'He has been through a transfer at the company and knows how the approval process works.'],
+              ['Fund manager', 'A family office in a new region', 'They have backed two managers with a similar strategy.'],
+            ],
+          },
+          'The pattern holds across deals: the reason is about them, not about you, and it is specific enough that they would recognize it as true.',
+        ],
+      },
+      {
+        heading: 'Mistakes that make people hesitate',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**A pitch deck as the blurb.** Attachments do not forward well in chat, and nobody reads a deck from someone they have not met. Keep it to three lines.',
+              '**Asking for “a quick call” with no topic.** Dan cannot judge a call he knows nothing about. Name the topic and the time.',
+              '**Asking for five intros at once.** Each one is a favor. Ask for the one that matters, then ask again later.',
+              '**Writing in the first person.** “I am a search funder…” reads strangely when your contact forwards it. Third person forwards cleanly.',
+              '**Following up after two days.** Give it a week. Then one line: “Did you get a chance to send that? Happy to rewrite it if it is not quite right.”',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the intro lands',
+        blocks: [
+          'The intro is the start, not the finish. Three things to do the same day:',
+          {
+            type: 'steps',
+            items: [
+              { title: 'Reply to Dan', text: 'Thank him for being open to it, restate the twenty-minute ask and offer two specific times. Do it in the app the intro arrived in.' },
+              { title: 'Thank the introducer', text: 'One line back to your contact: the intro landed, and you will let them know how it goes. Then actually let them know.' },
+              { title: 'Save the contact with its source', text: 'Record Dan as a contact, with who introduced him and a link to the message. Six months from now, “who connected us?” should take one look, not a scroll.' },
+            ],
+          },
+          'The guide to [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers that last step in detail.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Intros arrive in whatever app the introducer uses: a WhatsApp forward, a LinkedIn group message, a Telegram add. In Merger, the messaging accounts you connect sit in one inbox, so the intro does not depend on which app you check most. You can save the new contact to the Rolodex linked to the message it came from, and if it turns into a deal, it goes on the Deal Desk with the conversation attached once you approve it.',
+          'The blurb itself needs no software. Three lines, written so someone else can send them, is the whole habit.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  // ── 2026-11-15 ───────────────────────────────────────────────────────────
+  {
+    slug: 'chat-replies-that-look-like-agreement-and-are-not',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '7 chat replies that look like agreement and aren’t, and the one line that settles each',
+    description:
+      'A thumbs up, an “ok”, a “sounds good, let me check”. Seven replies in deal chats that feel like a yes, what each one usually means, and the one-line follow-up that gets a real answer.',
+    dek: 'You send terms. The reply comes back in two seconds and it feels like a yes. Often it is not one yet. Here are the seven replies that fool dealmakers most, and the short message that turns each into a clear answer.',
+    published: '2026-11-15',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why chat makes this worse',
+        blocks: [
+          'In a meeting, agreement comes with a face, a pause and usually a handshake. In email, it comes in sentences you can quote. In messaging apps, it often comes as a reaction, a single word or a voice note recorded while walking to the car.',
+          'Fast replies are good for deals. The problem is what we read into them. A tired seller taps a thumbs up to say “seen it, will look later”. A buyer writes “ok” to mean “ok, I understand your position”. The person who sent the terms reads both as acceptance, and the gap only shows up at the letter of intent.',
+          'The fix is not to slow anyone down. It is one short follow-up, sent the same day, that asks for the sentence instead of the signal.',
+        ],
+      },
+      {
+        heading: '1. The reaction',
+        blocks: [
+          'You send the price and a closing date. He reacts with a thumbs up. It is the most common false yes in deal chat, because it is the fastest thing anyone can send.',
+          'A reaction tells you he read the message. It might mean he likes it. It might mean “noted”. It almost never means he has checked it with whoever else signs.',
+          '**Send:** “Good to send the LOI on those terms?” A yes to that is a sentence you can point to later.',
+        ],
+      },
+      {
+        heading: '2. The one-word “ok”',
+        blocks: [
+          'Your message had three things in it: a number, a date and a request for a call. The reply is “ok”. Ok to which one?',
+          'One-word replies usually answer the part of the message the reader cared about. That may not be the part you care about.',
+          '**Send:** pick the one that matters and ask about it alone. “Just to be sure: ok on the March 31 close?”',
+        ],
+      },
+      {
+        heading: '3. “Sounds good, let me run it by my partner”',
+        blocks: [
+          'It reads warm. It is a not-yet. Someone else has a vote, and you do not know when they will use it or what they think.',
+          'Treat it as an open item with a date, not as progress. The deal has not moved until the partner has seen it.',
+          '**Send:** “Makes sense. When do you two usually meet? I’ll check in the day after.” Then put that date on the deal.',
+        ],
+      },
+      {
+        heading: '4. The heart or thumbs up on a meeting time',
+        blocks: [
+          'You propose “Tuesday at 10?” and get a heart. Most of the time it holds. When it does not, you find out at 10:05 on Tuesday.',
+          'Reactions on times are easy to forget because nobody typed anything. There is no calendar invite and nothing to search for.',
+          '**Send:** the day before, one line: “Still on for 10 tomorrow?” If it is a first meeting, send a calendar invite too.',
+        ],
+      },
+      {
+        heading: '5. “Should be fine”',
+        blocks: [
+          'You ask whether the landlord will consent to the lease transfer, or whether the books will be ready by Friday. The answer is “should be fine”.',
+          'That is an opinion about the future, not a commitment. It is often sincere and often wrong, because the person answering does not control the outcome.',
+          '**Send:** “Great. Who confirms it, and by when?” Now you know whose answer you are actually waiting for.',
+        ],
+      },
+      {
+        heading: '6. Silence after “seen”',
+        blocks: [
+          'The message shows as read. No reply. Some people take that as quiet acceptance: he saw the terms and did not object.',
+          'In practice, silence after a read usually means he did not have an answer yet, did not like the answer he had, or read it on his phone between two other things and forgot. None of those is agreement.',
+          '**Send:** after a reasonable gap, one line with a question only he can answer. The list of [follow-up messages that restart a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) has examples that do not sound like chasing.',
+        ],
+      },
+      {
+        heading: '7. The voice note that says yes and something else',
+        blocks: [
+          'A two-minute voice note: “Yeah, yeah, the number works, as long as we sort out the working capital piece, but yeah, let’s do it.” You heard “let’s do it”. The condition was in the middle.',
+          'Voice notes are where conditions go to hide. They are hard to search and hard to quote, and the person who sent one rarely remembers exactly what they said.',
+          '**Send:** reply in text with the number and the condition in the same sentence. “Confirming: the number works, subject to agreeing working capital. Right?” The guide to [places deal terms hide in your chats](/playbooks/places-deal-terms-hide-in-your-chats) covers voice notes and six other hiding places.',
+        ],
+      },
+      {
+        heading: 'The pattern behind all seven',
+        blocks: [
+          'Every false yes above has the same shape. The other side sent a signal, and you filled in the meaning you hoped for. The follow-up in each case does the same thing: it asks for a sentence that contains the term itself.',
+          {
+            type: 'table',
+            head: ['Reply', 'What it usually means', 'Ask for'],
+            rows: [
+              ['Thumbs up', 'Read it', 'A yes to sending the LOI on those terms'],
+              ['“ok”', 'Agreed with one part', 'A yes on the specific term'],
+              ['“Let me run it by my partner”', 'Someone else decides', 'The date they meet'],
+              ['Heart on a time', 'Probably coming', 'A confirm the day before'],
+              ['“Should be fine”', 'Hopes so', 'Who confirms it, and by when'],
+              ['Read, no reply', 'No answer yet', 'One question only he can answer'],
+              ['Voice note yes', 'Yes, with a condition', 'The number and condition in text'],
+            ],
+          },
+          'None of these follow-ups is pushy. They are short, specific and easy to answer, which is why they work. Most people are glad to be asked, because it saves them a harder conversation later.',
+        ],
+      },
+      {
+        heading: 'Keep the answer next to the deal',
+        blocks: [
+          'Once you get the sentence, it is worth keeping where you will find it. The clear “yes, March 31 works” is often in a different app from the terms it answers: terms sent on WhatsApp, confirmation on LinkedIn, the partner’s view in a Signal group.',
+          'In Merger, the messaging accounts you connect sit in one inbox. With your own Anthropic API key, Claude can flag a message that looks like a possible deal, and you decide whether it goes on the Deal Desk. An approved deal keeps its conversations attached, so the sentence that settled a term is one click from the deal it belongs to. Claude reads words; it does not know whether a thumbs up meant yes. That judgment stays with you, as the guide to [AI deal triage without giving up judgment](/playbooks/ai-deal-triage-without-giving-up-judgment) explains.',
+          'The habit itself needs no software. When a reply feels like a yes, ask for the sentence.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Shorthand, written out, or a term summary? Three ways to send deal numbers in chat',
+    description:
+      '“We could do 3.5” can mean millions, a multiple or a percent. Comparing three ways to send deal numbers in messaging apps: shorthand, the full figure in words, and a short term summary.',
+    dek: 'Chat strips the units off numbers. Everyone fills them back in with what they expected to see. Here is how the three common ways of sending a number compare, and when each one is the right call.',
+    published: '2026-11-15',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Approach', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Shorthand (“3.5”, “4x”, “70/30”)', 'Speed, early conversations where both sides share context', 'Units and conditions go missing; forwards lose meaning'],
+              ['Written out in one sentence', 'One number that matters, with its condition attached', 'Gets long if there are several terms'],
+              ['A short term summary', 'Several terms at once, before an LOI', 'Feels formal too early; can stall a casual conversation'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why numbers go wrong in chat',
+        blocks: [
+          'A buyer writes, “We could do 3.5 if the owner stays on.” The broker reads three and a half million. The buyer meant a 3.5 times multiple of earnings, which he assumed was obvious from a call last week. The seller’s accountant, reading a forward, wonders if it is 3.5 percent of something.',
+          'None of them is careless. Messaging apps reward short messages, and short messages drop the parts that seem obvious to the writer. The units, the basis (revenue or earnings, this year or last), and the condition all live in someone’s head.',
+          'This matters more in chat than in email for one reason: chat messages get forwarded alone. The person reading your number may never see the thread above it.',
+        ],
+      },
+      {
+        heading: 'Option 1: shorthand',
+        blocks: [
+          'Shorthand is how most deal numbers start. “3.5”, “4x”, “70/30 on the earn-out”, “mid-sevens”. Between two people who have been talking all week, it is fast and usually understood.',
+          'The risk grows with every person added to the conversation and every day that passes. A week later, even the sender may not remember whether “4x” was on this year’s earnings or a forecast.',
+          '**Works when:** it is early, two people share the context, and nobody is going to act on the number yet.',
+        ],
+      },
+      {
+        heading: 'Option 2: written out in one sentence',
+        blocks: [
+          'The second approach is to write the number in full once, with its unit and its condition, and ask for a confirm. “To confirm: three and a half million, with the owner staying six months?”',
+          'Three rules make this work. Write the unit in words, not just a symbol. Put the condition in the same sentence as the number, so nobody can quote half of it. End with a question, so the other side has to say yes or correct you.',
+          'It costs one message. It saves the conversation at the letter of intent where both sides discover they agreed to different things.',
+          '**Works when:** one number has started to matter, such as a price, a multiple, a split or a deposit, and someone is about to act on it.',
+        ],
+      },
+      {
+        heading: 'Option 3: a short term summary',
+        blocks: [
+          'Once there are several numbers in play, a single sentence stops being enough. A short summary, five to eight lines sent as one message, lists each term with its basis and condition.',
+          {
+            type: 'list',
+            items: [
+              '**Price:** three and a half million, cash at close.',
+              '**Basis:** about 3.5 times last year’s earnings, before owner add-backs are agreed.',
+              '**Owner transition:** six months, paid at the current salary.',
+              '**Condition:** landlord consents to the lease transfer.',
+              '**Next step:** LOI draft by Friday.',
+            ],
+          },
+          'A summary like this is not a term sheet and should say so. Its job is to make sure everyone is looking at the same numbers before lawyers get involved.',
+          'The risk is tone. Sent too early, a structured summary can feel like pressure in a conversation that is still friendly and loose. Wait until the other side is discussing more than one term.',
+          '**Works when:** two or more terms are being discussed, more than two people are involved, or a draft LOI is close.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Shorthand', 'Written out', 'Term summary'],
+            rows: [
+              ['Speed early on', 'Best', 'Fine', 'Slow'],
+              ['Survives being forwarded', 'Rarely', 'Yes', 'Yes'],
+              ['Keeps the condition attached', 'No', 'Yes', 'Yes'],
+              ['Handles several terms', 'No', 'Gets long', 'Yes'],
+              ['Feels casual', 'Yes', 'Yes', 'Can feel formal'],
+              ['Gets an explicit confirm', 'Rarely', 'If you ask', 'If you ask'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'A practical rule',
+        blocks: [
+          'Use shorthand freely while you are exploring. The moment a number moves the deal, write it out once in full and ask for a yes. When a second term joins it, switch to a short summary.',
+          'And whichever you use, keep the confirmed version somewhere other than the bottom of a chat. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) pairs well with this: a confirmed number and a dated next step are most of what a deal record needs.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Numbers rarely arrive in one app. The price comes on WhatsApp, the multiple on a LinkedIn message, the condition in a Telegram group. In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal. You review each flag and decide what goes on the Deal Desk, where an approved deal keeps its conversations attached.',
+          'That means the message where someone confirmed “three and a half million, with six months of transition” stays next to the deal it belongs to. The habit of writing it out in full is still yours.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  // ── 2026-11-16 ───────────────────────────────────────────────────────────
+  {
+    slug: 'insurance-agency-acquirer-owner-conversations-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Independent agency acquirers',
+    title: 'How an insurance agency acquirer keeps retiring owners, producers and a lender in step across messaging apps',
+    description:
+      'An illustrative walkthrough: a buyer of small independent insurance agencies works owners on LinkedIn and WhatsApp, a lender in Slack and a broker group on Telegram, with one next step per agency.',
+    dek: 'Small insurance agencies change hands when an owner is ready to stop, and owners rarely announce it by email. A walkthrough of one buyer, four agencies and the messages that decide which ones close.',
+    published: '2026-11-16',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The buyer',
+        blocks: [
+          'Elena buys small independent insurance agencies with a group of investors behind her. Her targets are agencies with one owner close to retirement, a book of personal and small commercial lines, a few long-serving staff and no plan for who takes over.',
+          'Those agencies are rarely listed. Elena hears about them from carrier contacts, from a Telegram group where a few dozen agency buyers and brokers share leads, from her own LinkedIn outreach, and from owners who already know someone she bought from.',
+          'At any time she has ten or twelve owner conversations going. Most are slow on purpose. An owner who has run an agency for thirty years does not decide in a week, and the buyer who stays patient and organized is usually the one still talking to him when he does.',
+        ],
+      },
+      {
+        heading: 'Four agencies, five apps',
+        blocks: [
+          'Here is one ordinary week, with invented names.',
+          {
+            type: 'list',
+            items: [
+              '**Frank, LinkedIn.** Owns a two-office agency. Elena wrote to him in the spring; he answered “not yet”. On Monday he writes back: “My producer wants to talk about staying on. Can we find a time?”',
+              '**Denise, WhatsApp.** Runs a one-office agency with her husband. They send voice notes from the office and photos of their renewal reports. Denise asks whether Elena would keep their two customer service reps.',
+              '**A Telegram post.** A broker in the buyers’ group posts an agency with a strong commercial book and an owner who wants to close before year end. Three buyers ask for details in the thread within the hour.',
+              '**Gary, WhatsApp, through his daughter.** Gary owns the agency; his daughter Lauren handles the business side and is added to the chat on Wednesday. She has not seen any of the earlier messages.',
+            ],
+          },
+          'Behind all four sits the lender, who works in a shared Slack channel and asks on Thursday which agencies are close enough to need a term sheet this quarter.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The producer question is the real deal.** Frank’s message is about his top producer, not about price. If Elena treats it as small talk, Frank’s agency stalls on the one person who can walk out with the book.',
+              '**The staff question goes unanswered.** Denise asked about her reps. Elena needs to check with her investors first. WhatsApp moves on and the question sinks under the next voice note.',
+              '**The group lead is first come, first served.** By the time Elena messages the broker privately, he has already sent the package to the buyers who replied in the thread.',
+              '**The new person starts from zero.** Lauren joined Gary’s chat late. Whatever she believes the deal is will come from the first summary she gets, from Elena or from someone else.',
+              '**The lender gets a reconstruction.** Answering Thursday’s Slack question means scrolling LinkedIn, two WhatsApp chats and Telegram to rebuild where each agency stands.',
+            ],
+          },
+          'None of this is unusual. Agency owners use the app they already use with their family and staff, and the buyer carries the cost of keeping the picture together.',
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every conversation in one list',
+                text: 'Elena connects the LinkedIn, WhatsApp, Telegram and Slack accounts she already uses. Frank, Denise, Gary and Lauren, the buyers’ group and the lender channel sit in one inbox. Each reply goes out in the app the other person chose.',
+              },
+              {
+                title: 'Possible deals flagged for review',
+                text: 'With her own Anthropic API key connected, Claude flags Frank’s message, Denise’s staff question and the Telegram post as possible deals. Elena reads each conversation before deciding. She approves all three and passes on a fourth flag, a carrier contact asking for a referral.',
+              },
+              {
+                title: 'One deal per agency, conversations attached',
+                text: 'Each approved agency goes on the Deal Desk with its conversation attached. Denise’s renewal photos stay with Denise’s agency. Frank’s spring “not yet” and Monday’s message sit in the same thread.',
+              },
+              {
+                title: 'A next step with a date',
+                text: 'For Frank: “Offer two times for a call with him and his producer by Wednesday.” For Denise: “Answer the reps question by Friday, after the investor call.” For the group lead: “Message the broker directly today.” For Gary: “Send Lauren a three-line recap today.”',
+              },
+              {
+                title: 'Owners and family saved as contacts',
+                text: 'Lauren is saved to the Rolodex with a note that her father owns the agency, linked to the message where she joined. When the lender asks who signs, the answer is one look away.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What changed for Gary’s agency',
+        blocks: [
+          'Lauren was the risk. She arrived three weeks into the conversation and would not scroll up through voice notes. Elena sent her three lines the same afternoon:',
+          {
+            type: 'callout',
+            title: 'The recap',
+            text: 'Welcome, Lauren. Where it stands: your father and I agreed to look at a sale next year, nothing signed. What we discussed: a price range based on last year’s commissions, if the two account managers stay. Next step: I send a one-page summary Friday, and we talk the week after.',
+          },
+          'Lauren replied with two questions about the account managers, which told Elena what the family cared about most. Without the recap, those questions would likely have surfaced much later, as doubts instead of questions.',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Treat staff questions as deal questions.** In a small agency, the producer and the account managers carry the relationships. An owner asking about them is asking whether the sale is safe.',
+              '**Give every “not yet” a date.** An owner who said no in spring may say yes in autumn. Write down when to ask again.',
+              '**Move group leads to a private message fast.** Reply to the broker directly, the same hour if you can.',
+              '**Recap for anyone who joins late.** Three lines: where it stands, the number with its condition, the next step with a date.',
+              '**Answer the lender from one list.** If the update takes more than ten minutes to write, the pipeline is in too many places.',
+            ],
+          },
+          'The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the date habit, and [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers the Rolodex side.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'send-a-recap-when-someone-new-joins-a-deal',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to send a three-line recap when someone new joins a deal',
+    description:
+      'A CFO, a lender or the seller’s daughter joins three weeks in and will not scroll up. Here is the three-line recap to send the day they join, with examples and the mistakes to avoid.',
+    dek: 'Deals pick up people as they go. Each new person forms a view of the deal from the first thing they are told. Make sure that is you, in three lines, the same day.',
+    published: '2026-11-16',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why late joiners matter',
+        blocks: [
+          'Most deals start between two people and end with six or eight. The buyer adds his CFO to the WhatsApp group. The lender loops in someone from credit on Slack. The seller adds his daughter, who will run the handover. A lawyer appears in week five.',
+          'None of them will read three weeks of history. They will ask someone what is going on, or they will skim the last few messages and fill in the rest. Either way, the first account they get becomes their picture of the deal.',
+          'If that account comes from you, it is accurate and it is short. If it comes from someone else, or from a screenshot of the wrong message, you spend the next two weeks correcting it.',
+        ],
+      },
+      {
+        heading: 'The three lines',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Where it stands',
+                text: 'One sentence on the stage, in plain words. “Price agreed in principle. LOI drafting this week.” Not the history of how you got there.',
+              },
+              {
+                title: 'The number and its condition',
+                text: 'The term that matters most, written out in full, with its condition in the same sentence. “Three million, if the lease transfers.” A number without its condition is the most common thing a new person repeats wrongly.',
+              },
+              {
+                title: 'The next step, with a date and an owner',
+                text: '“Landlord call Thursday. I send notes Friday.” The new person now knows what happens next, when, and who is doing it.',
+              },
+            ],
+          },
+          'That is the whole recap. Send it the day they join, in the app where they joined.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example',
+            text: 'Welcome, Priya. Quick recap: price agreed in principle, LOI drafting this week. Three million if the lease transfers. Landlord call Thursday, I’ll send notes Friday. Happy to walk you through any of it.',
+          },
+          'The last line is optional, but it gives the new person an easy way to ask a question instead of guessing.',
+        ],
+      },
+      {
+        heading: 'Adjust it for who joined',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Who joined', 'What they care about', 'Lead with'],
+            rows: [
+              ['Buyer’s CFO', 'Numbers and what they depend on', 'The number and its condition'],
+              ['Lender', 'Timing and what is still open', 'Where it stands and the next date'],
+              ['Seller’s family member', 'What was promised and what was not', 'Where it stands, in plain words'],
+              ['Lawyer', 'What has been agreed in writing', 'What is agreed, and what is still only discussed'],
+              ['Co-broker', 'Who answers what', 'The next step and its owner'],
+            ],
+          },
+          'The three lines stay the same. Only the order and the emphasis change.',
+        ],
+      },
+      {
+        heading: 'Mistakes to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Forwarding screenshots instead.** Screenshots carry old numbers, jokes and half-agreed ideas. A new person cannot tell which parts still stand.',
+              '**Writing the history.** Nobody needs the story of the first call. They need where things are now.',
+              '**Dropping the condition.** “Three million” and “three million if the lease transfers” are different deals. Keep them in one sentence.',
+              '**Waiting a few days.** By then the new person has already formed a view from somewhere else.',
+              '**Sending it only to them.** If the chat is a group, post the recap in the group. Everyone already in the deal reads the same three lines, and any disagreement shows up now rather than at closing.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'When the deal moves again',
+        blocks: [
+          'A recap is a snapshot. When one of the three lines changes, say so in one message rather than letting the change live only in the chat where it happened.',
+          'If the lease call goes well, the second line becomes “Three million, lease transfer confirmed by the landlord on Thursday.” If the date slips, the third line becomes “Landlord call moved to Tuesday. Notes Wednesday.” Short updates like these keep the late joiner, and everyone else, on the same version of the deal.',
+          'A useful rule: whenever a new person joins, or whenever one of the three lines changes, post the three lines again. On a busy deal that may be once a week. On a quiet one it may be once a month. Either way, nobody has to reconstruct the deal from scrollback, and nobody can say later that they were working from a different number.',
+        ],
+      },
+      {
+        heading: 'Why this helps everyone already in the deal',
+        blocks: [
+          'A recap written for one new person works as a check for everyone else. If the seller reads “three million if the lease transfers” and thought the lease was settled, you hear about it today, in one message, instead of in a lawyer’s markup.',
+          'It also gives you a habit worth keeping: if you cannot write the three lines for a deal, you do not know where it stands. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the third line in more detail, and [deal numbers in chat](/playbooks/deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary) covers the second.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'The hard part of a recap is finding the facts, because they are spread across apps: the price on WhatsApp, the condition on LinkedIn, the next step in Slack. In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk. An approved deal keeps its conversations attached, so the facts for the recap are in one place.',
+          'The three lines themselves are still yours to write. That is the point: the new person hears it from you.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  // ── 2026-11-17 ───────────────────────────────────────────────────────────
+  {
+    slug: 'messages-to-send-in-the-first-week-after-an-loi-is-signed',
+    type: T.list,
+    audience: 'All dealmakers',
+    title: '6 messages to send in the first week after an LOI is signed',
+    description:
+      'The LOI is signed and everyone relaxes. Six short messages to send in the first week, in the chats the deal already lives in, so the next sixty days start organised.',
+    dek: 'A signed letter of intent feels like the finish line. It is the start of diligence, lawyers, lenders and a lot more chat. Here are the six messages that set up the next two months, most of them one or two lines long.',
+    published: '2026-11-17',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the first week matters',
+        blocks: [
+          'For weeks the deal has been two people trading messages: you and the seller, or you and the buyer. The day the LOI comes back signed, that changes. Lawyers join. An accountant joins. A lender wants a call. The seller’s spouse or business partner starts to have opinions.',
+          'Everyone is relieved, and relief is when things get skipped. Nobody writes down the timeline because it was in the LOI. Nobody shares who the lawyers are because they will find each other. A week later, three people are asking the same question in three different apps.',
+          'The six messages below take about an hour to send in total. Most are two lines. They do one job: make sure everyone starts the next phase with the same picture.',
+        ],
+      },
+      {
+        heading: '1. Thank the seller, with the timeline',
+        blocks: [
+          'Send it the same day the LOI is signed, in the app you have been using with them. Thank them, then put the dates in writing: when diligence should wrap, when you are aiming to close, and what happens next.',
+          '**Sounds like:** “Thank you, Ray. Signed copy attached. Plan: diligence wraps by January 15, closing target end of February. I’ll send the first request list Monday.”',
+          'A seller who has the dates in front of them worries less and asks less. And when a date slips, you both have the original to talk about.',
+        ],
+      },
+      {
+        heading: '2. Who’s who, in one message',
+        blocks: [
+          'List the people on each side and how to reach them: your lawyer, their lawyer, the accountant, the lender, anyone else who will be asking for things. Name, role and best channel.',
+          'This message saves a surprising amount of time. Without it, the seller’s lawyer emails your accountant to ask who your lawyer is, and the answer comes back two days later.',
+          'If people are being added to a group chat, send this as the first message in the group so everyone sees it at once.',
+        ],
+      },
+      {
+        heading: '3. The first diligence request, not the whole list',
+        blocks: [
+          'The full request list can run to dozens of items. Sending it all on day one tends to produce silence while the seller works out where to start.',
+          'Send the first two or three items instead, with one owner on their side and a date. “Could you send the last three years of tax returns and the current lease by Friday?” Then send the next batch once those arrive.',
+          'Track every request where you will see it, with the exact words, the date asked and who owes the answer. The habit of [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) works just as well for your own requests.',
+        ],
+      },
+      {
+        heading: '4. Which chat is for what',
+        blocks: [
+          'By week one there is usually a group chat, a few direct threads and some email. Say plainly what goes where. A simple rule many dealmakers use: logistics and scheduling in the group, terms and numbers in writing between the two principals, documents through the channel the lawyers prefer.',
+          'It sounds fussy. It prevents the most common week-three problem: a number floated casually in a group, quoted later as if it were agreed.',
+        ],
+      },
+      {
+        heading: '5. A check-in with the person who introduced you',
+        blocks: [
+          'If someone introduced you to this deal, tell them it reached an LOI. One line is enough: “The intro you made in September just signed an LOI. Thank you.”',
+          'Introducers rarely hear how things went. The ones who do tend to introduce you again. The guide to [turning introductions into contact records](/playbooks/turn-introductions-into-contact-records) covers keeping track of who opened which door.',
+        ],
+      },
+      {
+        heading: '6. A date for the first update',
+        blocks: [
+          'Finally, tell the seller when they will next hear from you, even if nothing has happened. “I’ll send a short update every Friday until closing.” Then do it.',
+          'Silence in diligence reads as trouble, even when everything is fine. A regular, short update removes the guesswork. The list of [weekly buyer updates for your seller](/playbooks/weekly-buyer-update-for-your-seller) has formats that take five minutes.',
+        ],
+      },
+      {
+        heading: 'The six at a glance',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Message', 'When', 'Why it matters'],
+            rows: [
+              ['Thanks plus timeline', 'Day of signing', 'Dates both sides can point to'],
+              ['Who’s who', 'Day one or two', 'Nobody hunts for a lawyer’s contact'],
+              ['First diligence request', 'First week', 'Small asks get answered; long lists stall'],
+              ['Which chat is for what', 'First week', 'Terms stay out of casual group threads'],
+              ['Check-in with the introducer', 'First week', 'The person who opened the door hears about it'],
+              ['Date for the first update', 'End of week one', 'Silence stops reading as trouble'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Keep week one findable in week six',
+        blocks: [
+          'Six messages across several apps is exactly the kind of thing that gets lost by closing. The timeline went to the seller on WhatsApp, the lawyer’s contact came in a LinkedIn message, the first request was answered in a Telegram group.',
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply to each person in their own app. New names from those conversations can go into your Rolodex, linked to the message they came from. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk, where an approved deal keeps its conversations attached.',
+          'The habit itself needs no software. Signed is the start: send the six.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'running-late-on-a-deal-deliverable-heads-up-vs-apology-vs-partial-send',
+    type: T.comparison,
+    audience: 'All dealmakers',
+    title: 'Running late on something you promised a buyer: heads-up, apology, or partial send?',
+    description:
+      'You promised the P&L by Friday and it will not be ready. Comparing three ways to handle a missed deal deadline in chat: a heads-up before, an apology after, or sending part of it now.',
+    dek: 'Every deal has a Friday where something you promised is not ready. How you tell the other side matters more than the delay itself. Here is how the three common approaches compare, and the one that usually works best.',
+    published: '2026-11-17',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Approach', 'Good at', 'Where it breaks'],
+            rows: [
+              ['Heads-up before the deadline', 'Keeps trust; the other side can plan', 'Only works if you notice the delay in time'],
+              ['Apology after the deadline', 'Better than nothing', 'Reads as if you hoped nobody would notice'],
+              ['Partial send now, rest later', 'Gives the other side something to work on', 'Can confuse if the partial version is not labelled'],
+            ],
+          },
+          'In practice, the best answer is usually a heads-up that includes a partial send. More on that below.',
+        ],
+      },
+      {
+        heading: 'Why small delays cause big problems',
+        blocks: [
+          'You told a buyer the October P&L would be with him by Friday. On Thursday afternoon the accountant says it needs until Tuesday. It is a four-day delay on one document. It should not matter much.',
+          'It matters because of what the buyer does with silence. If Friday passes with nothing, he does not think “the accountant is closing the month”. He thinks something is wrong with the numbers. He mentions it to his partner. By Monday the deal has a mood problem that has nothing to do with the business.',
+          'Chat makes this sharper. The buyer can see you were online. He can see his last message was read. A missed deadline in a messaging app feels more personal than one in email.',
+        ],
+      },
+      {
+        heading: 'Option 1: a heads-up before the deadline',
+        blocks: [
+          'Send it as soon as you know, and before the deadline, not on it. Three parts: the new date, the reason in one plain sentence, and what happens in the meantime.',
+          '**Sounds like:** “Quick heads-up: the P&L will be with you Tuesday, not today. The accountant is closing October. I’ll send it the moment I have it.”',
+          'The new date should be a day, not “early next week”. The reason should be short. A long apology makes a small delay sound like a big one.',
+          '**Works when:** you notice the delay at least a few hours before the deadline. Which, if you check your promises each morning, is most of the time.',
+        ],
+      },
+      {
+        heading: 'Option 2: an apology after the deadline',
+        blocks: [
+          'Sometimes the deadline passes before you notice. The message then has to do two jobs: own the miss and give a new date.',
+          '**Sounds like:** “I missed Friday on the P&L, sorry. It will be with you Tuesday. The accountant is closing October.”',
+          'Keep it to the facts. Do not explain at length, and do not wait for the buyer to ask first. A late apology sent before he chases is still much better than one sent after.',
+          '**Works when:** you have already missed it. It is the fallback, not the plan.',
+        ],
+      },
+      {
+        heading: 'Option 3: send part of it now',
+        blocks: [
+          'Often you have something useful even if the full thing is not ready. September’s numbers, a draft with one section missing, the first half of the customer list.',
+          'Sending part of it now gives the other side something to work on and shows the delay is real, not a cover for a problem. The risk is confusion: a partial document forwarded without context can be mistaken for the final one.',
+          'So label it clearly in the message and, if you can, in the file name. “September P&L attached so you can start. October follows Tuesday.”',
+          '**Works when:** the partial version is useful on its own and clearly marked as partial.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Need', 'Heads-up', 'Apology after', 'Partial send'],
+            rows: [
+              ['Keeps trust', 'Best', 'Some', 'Good'],
+              ['Gives a new date', 'Yes', 'Yes', 'Yes, if you add one'],
+              ['Gives the other side something to do', 'No', 'No', 'Yes'],
+              ['Risk of confusion', 'Low', 'Low', 'Medium unless labelled'],
+              ['Needs you to notice early', 'Yes', 'No', 'Helps'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The combination that usually works',
+        blocks: [
+          'The strongest version is a heads-up that includes a partial send: new date, short reason, and something useful attached now.',
+          '**Sounds like:** “Quick heads-up: the P&L will be with you Tuesday, not today. The accountant is closing October. Sending the September numbers now so you can start.”',
+          'Then keep the new date. A second slip on the same item does far more damage than the first. If you need to, set the new date a day later than you think, and deliver early.',
+        ],
+      },
+      {
+        heading: 'What to leave out',
+        blocks: [
+          'Three things make a late message worse. A long explanation, which makes a small delay sound like a crisis. Vague dates such as “soon” or “early next week”, which give the other side nothing to plan around. And blaming someone by name, which puts the buyer in the middle of a problem that is not his.',
+          'One more: do not hide the delay inside an unrelated message. A line about the P&L buried under a question about the site visit is easy to miss, and later it looks as if you hoped it would be. Send it on its own.',
+        ],
+      },
+      {
+        heading: 'Notice promises before they are due',
+        blocks: [
+          'The hard part is not writing the message. It is remembering on Thursday what you promised on Monday, in whichever app you promised it. The commitments made in chat rarely make it into a calendar.',
+          'A simple habit helps: every promise gets a dated next step on the deal it belongs to. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the format.',
+          'In Merger, the messaging accounts you connect sit in one inbox, so the message where you promised Friday is in the same place as the buyer’s other messages. With your own Anthropic API key, Claude can flag messages that look like a possible deal; you decide what goes on the Deal Desk, where an approved deal keeps its conversations and next steps together.',
+          'The habit itself needs no software. Late is fine. Silent is the problem.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  // ── 2026-11-18 ───────────────────────────────────────────────────────────
+  {
+    slug: 'machine-shop-broker-working-a-counteroffer-across-messaging-apps',
+    type: T.useCase,
+    audience: 'Business brokers',
+    title: 'How a business broker works one counteroffer through a seller, a buyer and a lender in three messaging apps',
+    description:
+      'An illustrative walkthrough: a seller counters on WhatsApp, the buyer is on LinkedIn and the lender is in Slack. How a broker keeps the number, the condition and the dates straight.',
+    dek: 'A counteroffer rarely arrives as a clean number. It arrives as one line in a chat, with a new condition attached, while you are busy. A walkthrough of one week on one sale.',
+    published: '2026-11-18',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The sale',
+        blocks: [
+          'Marcus is a business broker who sells manufacturing and trade businesses. This month his main listing is a machine shop: thirty years old, twenty-two employees, one owner, and a building the owner bought in the nineties and still holds in the same company.',
+          'After six weeks of marketing, one buyer is clearly ahead. Rachel runs a small holding company that buys industrial businesses with a bank loan and her own capital. She has sent a written offer for the business and the building together. The seller, Jim, has had it for two days.',
+          'Everyone in this sale uses a different app. Jim writes on WhatsApp, usually from the shop floor. Rachel prefers LinkedIn messages during the day. Her lender works in a shared Slack channel. Marcus also has a Telegram group with two other brokers he co-lists with, where he posts updates on the listing.',
+        ],
+      },
+      {
+        heading: 'The counter arrives',
+        blocks: [
+          'On Tuesday at 11:40, while Marcus is on a site visit for another listing, Jim writes on WhatsApp:',
+          {
+            type: 'callout',
+            title: 'The message',
+            text: 'Read her offer. I’d do it at her number for the business, but I keep the building and she leases it from me.',
+          },
+          'In one line, Jim has accepted the price for the business, removed the building from the deal and introduced a lease that does not exist yet. That changes Rachel’s financing, her monthly costs and possibly whether she wants the deal at all.',
+          'Two things usually happen next. Either the broker replies from the parking lot with something warm and vague, which Jim reads as agreement. Or the broker forwards a screenshot to the buyer with “thoughts?”, which hands her a negotiation with no context.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The condition gets lost.** Rachel hears “Jim accepted your number” from someone in the co-broker group before she hears “for the business only”.',
+              '**The lease has no terms.** Nobody has said how long, at what rent, or who pays for the roof. Every party fills that gap with their own assumption.',
+              '**The lender hears last.** The bank approved a loan that included real estate. Without it, the structure changes, and the lender learns that from Rachel a week later.',
+              '**The dates drift.** Jim expects an answer “soon”. Rachel expects to talk to her lender first. Nobody wrote down when the next message is due.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The same week, in one workspace',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Every conversation in one list',
+                text: 'Marcus connects the WhatsApp, LinkedIn, Slack and Telegram accounts he already uses. Jim, Rachel, the lender channel and the co-broker group sit in one inbox, and each reply goes out in the app the other person chose.',
+              },
+              {
+                title: 'The counter flagged for review',
+                text: 'With his own Anthropic API key connected, Claude flags Jim’s message as a possible deal. Marcus reads the whole conversation before doing anything with it. Nothing goes on the Deal Desk until he approves it.',
+              },
+              {
+                title: 'A holding reply with a time',
+                text: 'From the parking lot, Marcus sends Jim one line: “Got it, thanks. I’ll call you by 4 today.” Jim knows he has been heard, and Marcus has the afternoon.',
+              },
+              {
+                title: 'The counter written out',
+                text: 'On the Deal Desk, the machine shop now reads: business at Rachel’s number; building retained by seller; lease terms not stated; next step, call Jim by 4 PM. The missing piece is visible: the lease.',
+              },
+              {
+                title: 'One recap for the buyer',
+                text: 'Before Rachel hears it anywhere else, Marcus writes to her on LinkedIn with the counter in full, condition included, and a date for her answer.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What Marcus actually sent',
+        blocks: [
+          'At 3:50 he called Jim and asked one question: what lease would he offer? Jim said ten years, at roughly what the shop would pay a landlord today, with two renewal options. Marcus wrote it back to him on WhatsApp so it existed in writing:',
+          {
+            type: 'callout',
+            title: 'To the seller',
+            text: 'To confirm what we discussed: her number for the business, you keep the building, ten-year lease at market rent with two five-year options. I’ll put this to Rachel today and come back to you by Friday.',
+          },
+          'Then to Rachel, on LinkedIn:',
+          {
+            type: 'callout',
+            title: 'To the buyer',
+            text: 'Jim accepts your number for the business. He wants to keep the building and lease it to you: ten years at market rent, two five-year options. Rent figure to follow from his accountant. Can you check this with your lender and reply by Friday?',
+          },
+          'Rachel forwarded the message to the lender channel herself. The lender asked one question, about the length of the lease, which Marcus had already written down. The co-broker group got a single line: “Counter on the machine shop, details with buyer, answer due Friday.”',
+        ],
+      },
+      {
+        heading: 'What to copy, with or without software',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Never answer a counter from the hallway.** Reply with a time, not a position.',
+              '**Write the counter out in full.** Number, what is included, what is excluded, and what is still unstated. The unstated part is usually where the deal turns.',
+              '**Confirm it back to the sender.** One message that starts “To confirm” turns a phone call into a record.',
+              '**Tell the other side before anyone else does.** In a co-listed deal, word travels fast and loses its conditions on the way.',
+              '**Put a date on every reply you owe.** “By Friday” is a promise both sides can hold you to.',
+            ],
+          },
+          'For the habit behind the second point, see [deal numbers in chat](/playbooks/deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary). For the last one, see the guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, and you reply in each person’s own app. With your own Anthropic API key, Claude can flag messages that look like a possible deal; nothing goes on the Deal Desk until you approve it. Approved deals keep their conversations attached, contacts live in the Rolodex linked to the message they came from, and confidentiality agreements can go out from your own DocuSign account.',
+          'The counter, the confirmation and the reply are still yours to write. Merger keeps them in one place so you can find them on Friday.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'tell-a-buyer-the-seller-chose-someone-else',
+    type: T.guide,
+    audience: 'Business brokers',
+    title: 'How to tell a buyer the seller chose someone else, and keep him for the next listing',
+    description:
+      'The seller picked another buyer. Here is the three-line message to send the ones who lost, the same day, with examples, what to leave out and what to write down afterwards.',
+    dek: 'Every sale has one buyer who wins and several who do not. The ones who do not are your buyer list for the next listing. How you tell them decides whether they open your next message.',
+    published: '2026-11-18',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why this message matters',
+        blocks: [
+          'When a seller accepts an offer, the broker’s attention goes to the winner: the LOI, diligence, the lender. The other serious buyers, the ones who signed the NDA, read the numbers and maybe made an offer, often hear nothing for weeks.',
+          'They find out some other way. A co-broker mentions it, or the closing shows up on LinkedIn. What they remember is not that they lost. It is that nobody told them.',
+          'Those buyers are the most valuable names on your list. They know your process, they have shown they can move, and they have told you what they want. A short, honest message the day the decision is made keeps them reading your next listing.',
+        ],
+      },
+      {
+        heading: 'The three lines',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Thanks, by name, for the work they did',
+                text: 'Be specific. “Thank you for the time on Harbor Signs, and for turning the questions around so fast” reads very differently from “thanks for your interest”.',
+              },
+              {
+                title: 'The reason, in one sentence',
+                text: 'Give the real reason if you can share it: timing, structure, certainty of financing. “The seller went with a buyer who could close in January.” Do not share the winning offer or the other buyer’s name.',
+              },
+              {
+                title: 'What you will send them next, and when',
+                text: '“I have two print shops coming to market in the spring. You’ll see them before the list does.” Only promise what you can do.',
+              },
+            ],
+          },
+          'Send it the same day the seller decides, in the app where you have been talking to that buyer.',
+        ],
+      },
+      {
+        heading: 'What it looks like',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Example',
+            text: 'Mark, thank you for the work on Harbor Signs. The seller went with a buyer who could close in January. I have two print shops coming in the spring and you’ll see them first.',
+          },
+          'Three sentences. No apology paragraph, no numbers from the other side, no “unfortunately” at the top. A fact and a next step.',
+        ],
+      },
+      {
+        heading: 'Adjust it for how far they got',
+        blocks: [
+          {
+            type: 'table',
+            head: ['How far they got', 'What to add', 'What to leave out'],
+            rows: [
+              ['Asked for the teaser only', 'Nothing. Two lines is enough.', 'The reason, unless they ask'],
+              ['Signed the NDA and read the package', 'What they would need to win next time, if it is clear', 'Details from the package they no longer need'],
+              ['Made an offer', 'A call, if they want one', 'The winning number or terms'],
+              ['Was the backup buyer', 'That you will tell them first if the deal falls through', 'Any hint that it will'],
+            ],
+          },
+          'If a buyer was your backup, say so plainly and agree how long they are willing to wait. A backup who hears nothing for six weeks is not a backup.',
+        ],
+      },
+      {
+        heading: 'Mistakes to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Waiting until closing.** Closing may be months away. The decision is the day to tell them.',
+              '**Sharing the other offer.** It breaks the seller’s confidence and invites a re-bid nobody asked for.',
+              '**Writing a long apology.** It reads as guilt, and it buries the one useful sentence.',
+              '**Promising “first look” at everything.** Send them what fits what they told you, not every listing.',
+              '**Sending one message to the whole group.** If several buyers were in a shared group, still tell each one directly. Nobody wants to learn they lost in front of the others.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Afterwards: write down what they want',
+        blocks: [
+          'The message is half the job. The other half is making “you’ll see them first” true. While the deal is fresh, write down what that buyer told you they want: industry, region, size, whether the owner needs to stay, how they finance. Use their words.',
+          'Put the note where you will find it when the next listing comes in, next to the conversation where they said it. In three months you will not remember which buyer wanted sign shops in the Midwest and which wanted print shops anywhere.',
+          'If a buyer keeps looking at listings and never bids, the same note helps. The guide on [following up on a quiet deal](/playbooks/follow-up-messages-that-restart-a-quiet-deal) covers when to ask again, and [closing a dead deal without burning the relationship](/playbooks/close-a-dead-deal-without-burning-the-relationship) covers the seller side of the same habit.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so every buyer who looked at the listing is in one list, whichever app they used. You reply in each person’s own app. Contacts live in the Rolodex, linked to the message they came from, so the note about what a buyer wants sits next to the conversation where they said it. With your own Anthropic API key, Claude can flag messages that look like a possible deal, and you decide what goes on the Deal Desk.',
+          'The message itself is still yours to write. That is the point: the buyer hears it from you, on the day it happened.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
   // ── 2026-11-05 ───────────────────────────────────────────────────────────
   {
     slug: 'what-to-write-down-after-every-deal-call',
