@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="2400" viewBox="0 0 1200 2400">
+  <defs>
+    <mask id="display" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="2400">
+      <rect width="1200" height="2400" fill="white"/>
+      <!-- Remove the rendered opaque inner lip, preserving the metallic frame. -->
+      <rect x="112" y="158" width="976" height="2084" rx="124" fill="black"/>
+      <!-- Keep the original camera/island hardware above the app screenshot. -->
+      <rect x="430" y="190" width="340" height="115" rx="55" fill="white"/>
+    </mask>
+  </defs>
+  <rect width="1200" height="2400" fill="white" mask="url(#display)"/>
+</svg>
