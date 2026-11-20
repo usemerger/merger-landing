@@ -2512,6 +2512,218 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-20 ───────────────────────────────────────────────────────────
+  {
+    slug: 'cabinet-shop-broker-keeping-a-sale-confidential-through-buyer-site-visits',
+    type: T.useCase,
+    audience: 'Business brokers',
+    title: 'How a business broker keeps a sale confidential through three buyer site visits arranged in three messaging apps',
+    description:
+      'An illustrative walkthrough: three buyers want to see a cabinet shop whose employees do not know it is for sale. How a broker settles who, when and what gets asked, in writing.',
+    dek: 'A site visit is the best sign a buyer is serious. It is also the moment a quiet sale is most likely to stop being quiet. A walkthrough of one listing, three visits and eighteen employees who did not find out.',
+    published: '2026-11-20',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The listing',
+        blocks: [
+          'Elena is a business broker who sells trade and light manufacturing businesses. Her current listing is a custom cabinet shop: twenty-four years old, eighteen employees, one owner. Tom built it from a two-car garage and wants to retire within two years.',
+          'Tom has one firm condition. His team cannot find out the shop is for sale until a buyer is signed and he can tell them himself. Several of his people have been with him for over a decade. He does not want them hearing it from a stranger walking through the spray booth.',
+          'After a month of marketing, three buyers have signed NDAs and want to see the shop. Each one found Elena in a different place. Kevin, who owns a millwork company two towns over, writes on LinkedIn. Priya, a former operations manager buying her first business with an SBA-backed loan, prefers WhatsApp. A small holding company is represented by its deal lead, Sam, who sends everything on Telegram. Tom himself only uses WhatsApp, usually from the shop floor.',
+        ],
+      },
+      {
+        heading: 'How the visit requests arrive',
+        blocks: [
+          'Within the same week, all three buyers ask to come by. None of them asks the same way.',
+          {
+            type: 'list',
+            items: [
+              '**Kevin, on LinkedIn:** “Can I swing by Tuesday and see the shop? Might bring my partner.”',
+              '**Priya, on WhatsApp:** “Would love to walk through the operation. Any day next week works.”',
+              '**Sam, on Telegram:** “Our ops guy wants to see the CNC line and talk to whoever runs it. Thursday?”',
+            ],
+          },
+          'Each message is reasonable on its own. Read together, they contain one buyer bringing an unnamed second person, one buyer with no time attached, and one buyer who wants to interview a key employee who does not know the shop is for sale.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**The extra person.** “Might bring my partner” turns into two people Elena has never met, one of whom has not signed an NDA.',
+              '**The cover story drifts.** Tom tells his foreman one buyer is an insurance inspector and tells the office manager the next one is a supplier. By the third visit, someone notices the stories do not match.',
+              '**Questions go to staff.** A buyer asks a machinist how much overtime he has worked this year. It is a fair question. It is also how rumors start.',
+              '**Follow-up questions scatter.** After each visit, the buyer sends questions in their own app, the seller answers some of them in another, and nobody is sure which answers went to whom.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Four things, settled in writing',
+        blocks: [
+          'Elena does not say yes to any visit until four things are settled, and she settles them in the same chat each buyer used to ask.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Who is coming, by name',
+                text: 'She replies to Kevin: “Happy to set it up. Who will be with you? I’ll need them on the NDA too.” His partner turns out to be his son, who signs the same day.',
+              },
+              {
+                title: 'When, and what Tom tells his team',
+                text: 'Tom and Elena agree one rule for all three visits: after 5 PM, once the crew has left, described to anyone who asks as a meeting with a possible equipment supplier. One story, used every time.',
+              },
+              {
+                title: 'What buyers will not ask staff',
+                text: 'She tells Sam the CNC line can be seen, but the conversation with the lead machinist waits until after an LOI, with Tom’s agreement. Until then, questions about people go to Tom.',
+              },
+              {
+                title: 'Where questions go after',
+                text: 'Every buyer gets the same line: “After the visit, send me your questions here and I’ll get Tom’s answers back to you in this chat.” Tom answers once; Elena relays.',
+              },
+            ],
+          },
+          'Then she sends Tom the details of each visit in his own WhatsApp chat: the day, the time, the names, and anything the buyer said they wanted to see. Tom is never surprised by who walks in.',
+        ],
+      },
+      {
+        heading: 'The visits',
+        blocks: [
+          'Kevin and his son come on Tuesday at 5:30. Priya comes the following Monday at 6. Sam and his operations lead come on Thursday after the line shuts down; they see the CNC machines and the maintenance logs Tom prepared, and the machinist interview goes onto the list for after an LOI.',
+          'After each visit, the questions come back in each buyer’s app, as agreed. Elena collects them, sends them to Tom in one message, and returns his answers in the chat each question came from. When two buyers ask the same thing about the lease, Tom answers once and both get the same answer.',
+          {
+            type: 'callout',
+            title: 'The line Elena sends after each visit',
+            text: 'Thanks for coming by. Send me anything you want to ask Tom here, and I’ll come back with his answers by Friday. Please keep any questions about the team for him, not the staff.',
+          },
+          'Eighteen employees go home on three different evenings without knowing anything has changed. Six weeks later, Kevin signs an LOI, and Tom tells his team himself, on a Monday morning, in the way he planned.',
+        ],
+      },
+      {
+        heading: 'What made the difference',
+        blocks: [
+          'None of this needed a new system. It needed Elena to answer three visit requests with the same four questions, in writing, before agreeing to a time. It needed one cover story instead of three. And it needed every follow-up question to come back through one person.',
+          'The hard part was keeping track. Three buyers in three apps, one seller in a fourth chat, and visit details that had to match exactly. If you broker sales like this, the guide to [sell-side buyer conversations](/playbooks/business-broker-sell-side-buyer-conversations) covers the wider process, and [sending an NDA without retyping names from chat](/playbooks/send-an-nda-without-retyping-names-from-chat) covers the step before any visit.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts Elena connects sit in one inbox, so Kevin’s LinkedIn thread, Priya’s WhatsApp chat, Sam’s Telegram messages and Tom’s WhatsApp all sit in one list, and she replies to each in its own app. With her own Anthropic API key, Claude can flag a visit request as a possible deal; nothing goes on the Deal Desk until she approves it. Each approved deal keeps its conversation attached, so the visit time, the names and the agreed rules sit next to the messages they came from. NDAs go out from her own DocuSign account.',
+          'The four questions are still hers to ask. Merger keeps the answers in one place.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'send-a-seller-an-agenda-before-the-first-call',
+    type: T.guide,
+    audience: 'Brokers, search funders and acquirers',
+    title: 'How to send a seller a three-line agenda before the first call',
+    description:
+      'A first call with an owner goes better when he knows what is coming. What to put in a three-line agenda, where to send it, an example, and what to do the same day after the call.',
+    dek: 'From the owner’s side, a first call is a stranger asking about the thing he spent twenty years building. Without an agenda, it feels like an audit. Three lines, sent the day before in the chat he already uses, change how the call starts.',
+    published: '2026-11-20',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why a first call needs an agenda',
+        blocks: [
+          'Most first calls with business owners are booked in a chat: a LinkedIn reply, a WhatsApp message, a “sure, Thursday works” on Telegram. Then nothing happens until the call. The owner spends the time in between wondering what you will ask, whether you will want his financials, and whether he has already said too much.',
+          'He arrives guarded. The first ten minutes go on establishing that you are not about to ask for his tax returns. An agenda sent the day before spends those ten minutes for you.',
+          'It also tells him something about how you work. A buyer or broker who writes down what they will cover, and then covers it, is easier to trust with the next step.',
+        ],
+      },
+      {
+        heading: 'The three lines',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'What you would like to cover',
+                text: 'In a few words, not a list of twenty questions. “I’d like to hear how the business started and what you want next.” Open topics that let him talk about what he knows best.',
+              },
+              {
+                title: 'What you will tell him',
+                text: 'The call is two-way. “I’ll share how I work and who I work with.” Owners want to know who they are talking to as much as you want to know about the business.',
+              },
+              {
+                title: 'What you might ask for after',
+                text: 'This is the line that matters most. “If it fits, I may ask for last year’s numbers after. Nothing to prepare.” It tells him nothing is being taken from him on the call itself.',
+              },
+            ],
+          },
+          'Three lines is enough. Longer agendas read like a checklist, and a checklist reads like diligence. Save that for later.',
+        ],
+      },
+      {
+        heading: 'An example',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Sent the day before, on WhatsApp',
+            text: 'Looking forward to tomorrow at 10. I’d like to hear how the business started and what you want next. I’ll share how I work and who I work with. If it fits, I may ask for last year’s numbers after. Nothing to prepare.',
+          },
+          'Four sentences, including the time. It confirms the call, sets the tone and removes the biggest worry before it comes up. If he replies with something he wants to cover, even better: now you know what is on his mind.',
+        ],
+      },
+      {
+        heading: 'Where and when to send it',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**In the chat where he agreed to the call.** Not a new email thread. If he said yes on LinkedIn, send it on LinkedIn. He will find it where he expects it.',
+              '**The day before, during working hours.** Early enough that he reads it calmly, late enough that he remembers it.',
+              '**With the time in it.** Restating the time doubles as a confirmation, and catches the call that was about to be missed because of a time zone.',
+              '**Without attachments.** No deck, no questionnaire. Those can come later if the call goes well.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What to avoid',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Asking for documents before the call.** It turns an introduction into a request, and many owners will cancel rather than send anything.',
+              '**Talking about valuation.** If the agenda mentions price or multiples, the call becomes a negotiation before either of you knows if there is a deal.',
+              '**Fund or firm jargon.** “Investment thesis” and “platform acquisition” mean nothing to most owners. Say what you would actually do.',
+              '**Promising things you may not do.** If you are not sure you will ask for numbers, say “might”. Then keep the promise either way.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'After the call, the same day',
+        blocks: [
+          'The agenda is a promise about the call. The follow-up is a promise about what comes next. Before the end of the day, send one short message in the same chat: thank him, name the one thing you will do next, and give it a day.',
+          {
+            type: 'callout',
+            title: 'Example follow-up',
+            text: 'Thanks for the time today. As discussed, could you send last year’s P&L when you have a moment? I’ll come back to you by next Thursday with how I’d think about it.',
+          },
+          'Then write that next step down next to the deal, with a date and an owner. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the habit. If you are running a search, the walkthrough of [search fund outreach without a CRM](/playbooks/search-fund-broker-outreach-without-a-crm) shows how first calls fit into a hundred owner conversations.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the LinkedIn reply where an owner agreed to a call and the WhatsApp chat where you send the agenda are in the same list. You reply in each person’s own app. With your own Anthropic API key, Claude can flag a conversation that looks like a possible deal, and nothing goes on the Deal Desk until you approve it. Approved deals keep the conversation attached, so the agenda, his reply and the next step you promised sit together.',
+          'The three lines are still yours to write. Merger keeps them where you will see them before the next call.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
   // ── 2026-11-05 ───────────────────────────────────────────────────────────
   {
     slug: 'what-to-write-down-after-every-deal-call',
