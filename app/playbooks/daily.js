@@ -2724,6 +2724,231 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-21 ───────────────────────────────────────────────────────────
+  {
+    slug: 'questions-to-ask-when-a-buyer-says-financing-is-lined-up',
+    type: T.list,
+    audience: 'Brokers, sellers’ advisors and acquirers',
+    title: 'Seven questions to ask when a buyer says the financing is lined up',
+    description:
+      '“Financing is lined up” can mean a signed term sheet or a coffee with a banker. Seven short questions to ask in chat before you take the offer to the seller.',
+    dek: 'A buyer sends a number, a closing date and four reassuring words: financing is lined up. Before that offer goes to the seller, seven questions turn the reassurance into something you can check.',
+    published: '2026-11-21',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the phrase needs questions',
+        blocks: [
+          'Offers in chat arrive short. “We’re at 3.1. Financing is lined up, can close in 60 days.” There is a buyer, a number and a date, and it reads like a deal.',
+          'The weak part is the middle sentence. “Lined up” covers everything from a signed commitment to a first meeting with a bank that went well. Both buyers mean it honestly. Only one of them closes in 60 days. The other comes back in week seven with a lender’s conditions and a lower price.',
+          'You do not need to interrogate the buyer. You need a few plain questions, asked early and in writing, so that the offer you take to the seller is the offer that will still be standing at closing. Most buyers with real financing answer them in one message, and are glad someone asked.',
+        ],
+      },
+      {
+        heading: 'The seven questions',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Who is the lender?',
+                text: 'A name, not a category. “A regional bank” and “our SBA lender” are both fine answers to start with, but a lender’s name tells you how far along the conversation is and lets the seller’s side judge how this kind of lender usually behaves.',
+              },
+              {
+                title: 'What do you have in writing from them?',
+                text: 'This is the question that separates the two buyers. A signed term sheet or commitment letter is one thing. An email that says “happy to look at it” is another. Both are worth knowing about. Ask which one it is.',
+              },
+              {
+                title: 'What is the lender still waiting for?',
+                text: 'Almost every commitment has conditions: an appraisal, a quality of earnings review, the seller’s tax returns, a personal guarantee. Knowing the list now tells you what the seller will be asked for, and when.',
+              },
+              {
+                title: 'How much of the price is the loan, and where does the rest come from?',
+                text: 'An offer is usually a mix: a loan, the buyer’s own money, sometimes a seller note or outside investors. Ask for the split in plain words. If part of it depends on the seller carrying a note, the seller needs to hear that before he hears the headline number.',
+              },
+              {
+                title: 'Does the loan depend on anything in the deal itself?',
+                text: 'Lenders often care about a lease being assigned, a key employee staying, or the seller staying on for a transition. If the financing depends on one of those, it is a condition of the offer, even if nobody wrote it that way.',
+              },
+              {
+                title: 'Has this lender closed a deal like this before?',
+                text: 'A lender that has done many acquisitions of this size and type will move through its own process faster than one doing its first. The buyer usually knows. It is a polite question and the answer is often revealing.',
+              },
+              {
+                title: 'What happens to the timeline if the lender is slower than expected?',
+                text: 'Sixty days is a plan, not a promise. Ask what the buyer would do if approval took longer: extend, bring more equity, or step back. Better to know the fallback now than to find out from a missed date.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How to ask without sounding like an audit',
+        blocks: [
+          'Seven questions in one message reads like a form. In practice two or three carry most of the weight, and the rest come up naturally over the following days.',
+          {
+            type: 'callout',
+            title: 'A first reply that covers the important part',
+            text: 'Thanks, that’s a strong start. Is the financing a signed term sheet from a lender, or a conversation with one? And roughly how much of the 3.1 is the loan? I’d like to give the seller the full picture when I share your offer.',
+          },
+          'The last sentence does the work. It tells the buyer why you are asking: not because you doubt him, but because the seller will ask you. Most buyers would rather answer you than have their offer presented with a question mark next to it.',
+          {
+            type: 'list',
+            items: [
+              '**Ask in the chat where the offer arrived.** If the number came on Telegram, ask on Telegram. The answer then sits next to the offer it qualifies.',
+              '**Ask before you forward the offer.** Once the seller has heard “3.1, financing lined up”, he anchors on it. It is easier to share a qualified offer once than to correct an exciting one later.',
+              '**Write down the answer in his words.** “Term sheet from the bank, 70% loan, rest is our money” is a sentence you will want word for word in six weeks.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Signs to slow down',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**No lender name, even after you ask.** It usually means the financing is an idea rather than a process.',
+              '**“We’ll figure out the structure later.”** The structure is the offer. A number without it is a starting point for a conversation, not something to take to the seller as a bid.',
+              '**The split depends on the seller.** If most of the gap is a seller note the seller has not agreed to, the offer is smaller than it looks.',
+              '**The closing date came before the lender.** A date chosen to sound competitive is not the same as a date the lender has agreed to.',
+            ],
+          },
+          'None of these means the buyer is wrong for the deal. Many good buyers start with a conversation and finish with a commitment. They just mean the offer belongs in a different place on your list until the answers come in. The list of [chat replies that look like agreement and are not](/playbooks/chat-replies-that-look-like-agreement-and-are-not) covers the same habit for other phrases.',
+        ],
+      },
+      {
+        heading: 'After the answers come in',
+        blocks: [
+          'Write the offer out once, in full, with the financing in it. “3.1 total. Signed term sheet from the bank for 70%, buyer equity for the rest, conditional on the lease assignment. Target close in 60 days.” That is the sentence the seller should hear. The comparison of [deal numbers in shorthand, written out, or as a term summary](/playbooks/deal-numbers-in-chat-shorthand-vs-written-out-vs-term-summary) shows why writing it out once saves arguments later.',
+          'Then give it a next step with a date: when the lender’s conditions are due, and who is chasing them. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers the habit.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the buyer’s Telegram offer and the seller’s WhatsApp chat are in the same list, and you reply to each in its own app. With your own Anthropic API key, Claude can flag “We’re at 3.1” as a possible deal. Nothing goes on the Deal Desk until you approve it, which is a good moment to ask about the financing first. Approved deals keep the conversation attached, so the buyer’s answers sit next to the offer they qualify.',
+          'The questions are still yours to ask. Merger keeps the answers where you will find them at closing.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'owner-asks-what-its-worth-on-the-first-call-number-vs-range-vs-date',
+    type: T.comparison,
+    audience: 'Brokers, search funders and acquirers',
+    title: 'The owner asks what it’s worth on the first call: a number, a range, or a date',
+    description:
+      'Three ways to answer an owner who asks for a ballpark before you have seen any numbers, what each one costs you later, and the reply that usually works best.',
+    dek: 'Twenty minutes into a first call, or that evening on WhatsApp, the owner asks the question you knew was coming: so what do you think it’s worth? There are three ways to answer. Only one of them leaves you a good second conversation.',
+    published: '2026-11-21',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the question comes so early',
+        blocks: [
+          'For the owner, value is the whole point. He has thought about this number for years, heard what a friend sold for, and read something about multiples. He agreed to the call partly to find out what you think. Asking is reasonable.',
+          'For you, it is the worst moment to answer. You have not seen a single page. You do not know how much of the business runs through him personally, whether the biggest customer is staying, or what last year looked like. Anything you say is a guess, and he will remember it as a promise.',
+          'There are three common answers. Each has a cost.',
+        ],
+      },
+      {
+        heading: 'Option 1: a number on the spot',
+        blocks: [
+          '“From what you’ve told me, probably around two.” It feels helpful, and it keeps the conversation friendly.',
+          {
+            type: 'list',
+            items: [
+              '**What it gets you:** a warm end to the call and an owner who feels heard.',
+              '**What it costs:** the number becomes his number. If the real figure comes in lower, every later offer looks like a retreat from your own word. If it comes in higher, you have told him he was underpricing it, and he will test that with other buyers.',
+              '**When it can work:** almost never on a first call. If you truly know the sector and he has already shared real numbers, a number can be fine. Otherwise it is a guess with your name on it.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Option 2: a wide range on the spot',
+        blocks: [
+          '“Businesses like this usually sell for somewhere between three and five times earnings.” It sounds more careful than a number, and it is often true in general.',
+          {
+            type: 'list',
+            items: [
+              '**What it gets you:** a sense that you know the market, without naming a figure.',
+              '**What it costs:** owners hear the top of a range. “Up to five times” becomes “five times” by the time he tells his spouse. And a range built on a market average says nothing about his business, which is the only one he cares about.',
+              '**When it can work:** when he asks how buyers think about value in general, not what his business is worth. Answer the general question if that is the one he asked.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Option 3: a date, and what you need to get there',
+        blocks: [
+          '“I’d be guessing right now. If you can send the last three years of numbers, I’ll come back within a week of getting them with a range and how I got there.”',
+          {
+            type: 'list',
+            items: [
+              '**What it gets you:** a reason for the next conversation, a request he understands, and a promise you can keep. It also shows him how you will treat his number later: carefully, and with the working shown.',
+              '**What it costs:** a slightly less satisfying end to the call. Some owners push once. Most accept it, especially when you name a date.',
+              '**When it works:** nearly always on a first call, and especially when the owner has not shared any financials yet.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Anchoring risk.** A number: high. A range: medium, because he hears the top. A date: low.',
+              '**What the owner learns about you.** A number: you answer quickly. A range: you know the market. A date: you do what you say, when you say.',
+              '**What happens next.** A number: he holds you to it. A range: he holds you to the top of it. A date: he sends the numbers, and you have a second conversation to prepare for.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How to give the date answer well',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Say you would be guessing',
+                text: 'Plainly, without apology. Owners respect “I don’t know yet” more than a quick figure, because it tells them the eventual figure will mean something.',
+              },
+              {
+                title: 'Name what you need to see',
+                text: 'Be specific and modest. “The last three years of numbers” is clear. A twelve-item diligence list on a first call is not.',
+              },
+              {
+                title: 'Name when you will come back',
+                text: 'A real day or a real interval: “within a week of getting them”. Then keep it. The date is the part he will remember.',
+              },
+            ],
+          },
+          'Then put it in writing the same day, in the chat where you set up the call, so he has your words and you have your promise in one place.',
+          {
+            type: 'callout',
+            title: 'The same answer, sent that evening on WhatsApp',
+            text: 'Thanks for today. On your question about value: I’d be guessing right now. If you can send the last three years of numbers, I’ll come back within a week of getting them with a range and how I got there.',
+          },
+          'If you sent an agenda before the call, this closes the loop it opened. The guide to [sending a seller an agenda before the first call](/playbooks/send-a-seller-an-agenda-before-the-first-call) covers that step, and [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers keeping the date.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the LinkedIn thread where an owner agreed to a call and the WhatsApp chat where he asks for a ballpark are in the same list. You reply in each person’s own app. With your own Anthropic API key, Claude can flag a conversation as a possible deal, and nothing goes on the Deal Desk until you approve it. Approved deals keep the conversation attached, so the date you promised sits next to the message where you promised it.',
+          'Choosing not to guess is still your call. Merger keeps the promise where you will see it.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
   // ── 2026-11-03 ───────────────────────────────────────────────────────────
   {
     slug: 'what-to-check-before-you-forward-a-deal',
