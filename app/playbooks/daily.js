@@ -2949,4 +2949,238 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-22 ───────────────────────────────────────────────────────────
+  {
+    slug: 'marina-broker-answering-the-same-lease-question-from-three-buyers',
+    type: T.useCase,
+    audience: 'Marina and boatyard brokers',
+    title: 'How a marina broker answers the same lease question from three buyers in three messaging apps, once',
+    description:
+      'An illustrative walkthrough: three buyers for a lakeside marina all ask about the lease on the water. How a broker gets one written answer from the seller and sends it to all three.',
+    dek: 'Every buyer for a marina asks the same question sooner or later: what happens to the lease on the water? A walkthrough of one listing where all three asked in the same week, in three different apps.',
+    published: '2026-11-22',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The listing',
+        blocks: [
+          'Marcus is a business broker who sells marinas, boatyards and a few waterfront restaurants. His current listing is a 140-slip marina on a lake two hours from the nearest city: fuel dock, a service shop, dry storage for about sixty boats and a small ship store. The owner, Hal, has run it for thirty-one years and wants to sell before next season.',
+          'Like most marinas, the business sits partly on land Hal owns and partly on water he does not. The docks stand on lake bottom leased from the state, and that lease has its own term, its own renewal process and its own rules about transferring to a new owner. Every serious buyer will ask about it. Most will ask more than once.',
+          'Hal does nearly everything on WhatsApp, usually from the fuel dock. The buyers are spread out. Dana runs a regional group that owns four marinas and writes on LinkedIn. Luis owns a boat dealership on the same lake and messages on Messenger. Ari, who is putting together a small investor group to buy its first marina, prefers Signal.',
+        ],
+      },
+      {
+        heading: 'The same question, three ways',
+        blocks: [
+          'All three buyers have signed NDAs and received the summary. In the same week, all three ask about the lease.',
+          {
+            type: 'list',
+            items: [
+              '**Dana, on LinkedIn:** “How many years are left on the submerged land lease, and has the state ever objected to a transfer?”',
+              '**Luis, on Messenger:** “Is the water part his or rented? My lender will ask.”',
+              '**Ari, on Signal:** “What’s the renewal process for the dock lease and who handles it, us or Hal?”',
+            ],
+          },
+          'It is one topic asked three ways. Dana wants years remaining and transfer history. Luis wants to know what his lender will see. Ari wants to know whose job the renewal is. A good answer covers all of it, and every buyer should get the same facts.',
+        ],
+      },
+      {
+        heading: 'Where it usually breaks',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Three answers instead of one.** The broker answers Dana from memory, forwards Luis’s question to Hal, and tells Ari he will find out. A week later, three buyers hold three slightly different versions of the lease.',
+              '**The seller answers in pieces.** Hal sends a voice note from the dock about the renewal, then a photo of one page of the lease two days later. Neither is something a buyer can rely on.',
+              '**The answer lives in the wrong chat.** The best explanation Hal gives ends up in Marcus’s WhatsApp, where no buyer can see it, and Marcus retypes it differently each time.',
+              '**Nobody can say who was told what.** When Luis’s lender asks a follow-up, Marcus cannot remember whether he told Luis the lease was transferable or only that it had been transferred once before.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'One answer, written once',
+        blocks: [
+          'Marcus decides not to answer any of the three until he has one written answer from Hal that he can send to all of them.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Acknowledge each buyer the same day',
+                text: 'He replies to each in their own app: “Good question. I’m getting Hal’s answer in writing and will send it to you by Thursday.” Nobody waits in silence, and nobody gets a guess.',
+              },
+              {
+                title: 'Ask the seller the combined question',
+                text: 'He sends Hal one WhatsApp message with every part of the question in it: years left on the lease, how renewal works and who files it, whether the state has to approve a transfer, and whether it has ever said no.',
+              },
+              {
+                title: 'Turn the answer into a short written note',
+                text: 'Hal answers with a voice note. Marcus writes it out in five plain lines, sends it back to Hal and asks one thing: “Is this right as written?” Hal replies “Yes, that’s it” and adds the page of the lease that shows the term.',
+              },
+              {
+                title: 'Send the same note to every buyer',
+                text: 'On Thursday morning, Marcus sends the five lines, word for word, to Dana on LinkedIn, Luis on Messenger and Ari on Signal, each with the same page attached.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            title: 'The note Marcus sends all three buyers',
+            text: 'Here is Hal’s answer on the lake bottom lease, confirmed by him in writing. 1. The docks sit on land leased from the state. 2. The current term has eleven years left. 3. Renewal is filed by the owner of the marina at the time. 4. A transfer to a new owner needs the state’s approval. 5. It was transferred once before, when Hal bought the marina, and was approved. The page showing the term is attached. Questions on any of it, send them here.',
+          },
+        ],
+      },
+      {
+        heading: 'The follow-ups',
+        blocks: [
+          'Each buyer comes back with one follow-up, and each follow-up is different. Dana asks how long the last transfer approval took. Luis forwards a question from his lender about whether the lease can be pledged. Ari asks for a copy of the full lease after an LOI.',
+          'Marcus handles them the same way. He acknowledges each one in its own app with a day, collects them into one message to Hal, gets a written answer Hal has confirmed, and sends each buyer the answer to their question. When the lender’s question turns out to matter to Dana too, he sends her the same answer and says why.',
+          'Three weeks in, every buyer has the same facts about the lease, in writing, in the chat they use. When Luis’s lender calls Marcus directly, Marcus reads him the note he sent Luis, not a version from memory.',
+        ],
+      },
+      {
+        heading: 'What made the difference',
+        blocks: [
+          'Nothing about the lease changed. What changed was the order of operations. Marcus acknowledged every question the same day, refused to answer from memory, got the seller to confirm one written version, and sent that exact version to everyone who asked.',
+          'That habit matters most for the questions every buyer asks: leases, permits, key employees, the condition of the docks. The list of [chat replies that look like agreement and are not](/playbooks/chat-replies-that-look-like-agreement-and-are-not) covers a related trap, and [the weekly update for your seller](/playbooks/weekly-buyer-update-for-your-seller) covers keeping Hal informed while the buyers work.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts Marcus connects sit in one inbox, so Dana’s LinkedIn thread, Luis’s Messenger chat, Ari’s Signal messages and Hal’s WhatsApp sit in one list, and he replies to each in its own app. With his own Anthropic API key, Claude can flag a conversation as a possible deal; nothing goes on the Deal Desk until he approves it. Each approved deal keeps its conversations attached, so the note he sent and the replies it got sit next to the deal. NDAs go out from his own DocuSign account.',
+          'Writing one answer and sending it to everyone is still Marcus’s job. Merger keeps every buyer’s copy in view.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'confirm-a-call-time-across-time-zones-in-one-message',
+    type: T.guide,
+    audience: 'All dealmakers',
+    title: 'How to confirm a call time across time zones in one message',
+    description:
+      'Deals cross time zones, and “Tuesday at 10” means two different hours to two people. One message that names the day, the date, both times and the app removes the guesswork.',
+    dek: 'The most common missed call in dealmaking is not a no-show. It is two people waiting an hour apart, each sure they had the time right.',
+    published: '2026-11-22',
+    readMinutes: 6,
+    sections: [
+      {
+        heading: 'Why this goes wrong so often',
+        blocks: [
+          'A seller in Denver, a buyer in London and an advisor in Singapore can all be on the same deal, in the same week, in three different apps. Somebody writes “Tuesday at 10 works”. Somebody else replies with a thumbs up. On Tuesday, one of them is on the call alone.',
+          'Nobody was careless. “Tuesday at 10” just means a different hour, and sometimes a different day, depending on who reads it. The buyer meant his 10. The seller heard hers. The thumbs up confirmed that both had read the message, not that both meant the same time.',
+          'A missed first call costs more than an hour. It costs a little trust, at exactly the point where you have the least of it.',
+        ],
+      },
+      {
+        heading: 'The words that cause it',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**“Tomorrow.”** Written at 9 PM in New York, it is already tomorrow in Tokyo. Whose tomorrow?',
+              '**“Monday.”** This Monday or next Monday? Late in the week, people mean both.',
+              '**“10 AM” with no zone.** The writer’s 10, the reader’s 10, or the 10 of whoever proposed it first?',
+              '**“Same time as last week.”** Unless one of you changed the clocks in between. The US and Europe move their clocks on different weekends in spring and autumn, so for a week or two the usual gap is off by an hour.',
+              '**“Let’s jump on a call.”** On which app? A WhatsApp call, a video link, a phone number? Two people can be on time and still not find each other.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The one-message confirmation',
+        blocks: [
+          'Once a time is agreed in principle, send one message that leaves nothing to interpret. It has five parts.',
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'The day and the date',
+                text: 'Write both: “Tuesday, December 1”. The day catches typos in the date, and the date catches the “which Tuesday” question.',
+              },
+              {
+                title: 'Their time first',
+                text: 'Lead with the time where the other person is. It shows you did the conversion and makes their answer easy: “3 PM London”.',
+              },
+              {
+                title: 'Your time second',
+                text: 'Then yours, in brackets: “(8 AM Denver)”. If either of you gets it wrong, the other one will see it straight away.',
+              },
+              {
+                title: 'How you will meet',
+                text: 'Name the app and who starts it: “I’ll call you on WhatsApp”, or “link below”. If it is a phone call, say which number.',
+              },
+              {
+                title: 'A one-word confirm',
+                text: 'Ask for a reply that means yes: “Can you confirm?” A sentence back, not a reaction. A thumbs up tells you he read it.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            title: 'The message, ready to paste',
+            text: 'To confirm our call: Tuesday, December 1, at 3 PM London (8 AM Denver). I’ll call you on WhatsApp. Can you confirm that works?',
+          },
+          'It reads as polite, not fussy. Most people are relieved when someone else does the conversion.',
+        ],
+      },
+      {
+        heading: 'When there are more than two of you',
+        blocks: [
+          'Group calls multiply the problem. A seller, a buyer, the buyer’s lender and two advisors might sit in four time zones and use three apps between them.',
+          {
+            type: 'list',
+            items: [
+              '**Pick one reference zone and list the others under it.** “Wednesday, December 2, 9 AM New York. That’s 2 PM London, 7 AM Denver and 10 PM Singapore.”',
+              '**Send it in each person’s own chat.** Not everyone reads the group. A short direct message to each person with their own time first is worth the extra minute.',
+              '**Ask each person to confirm.** One person’s “works for me” in the group confirms one person.',
+              '**Say who sends the calendar link.** If two people send one, half the group ends up in the wrong one.',
+            ],
+          },
+          'If someone is going to be on the call at 10 PM, say so and thank them. It is noticed.',
+        ],
+      },
+      {
+        heading: 'The morning of the call',
+        blocks: [
+          'A short reminder a few hours before the call catches most of what is left: a changed plan, a clock change nobody noticed, a link that went to the wrong person.',
+          {
+            type: 'callout',
+            title: 'The reminder',
+            text: 'Looking forward to our call at 3 PM your time today. I’ll call you on WhatsApp.',
+          },
+          'Send it in the same chat as the confirmation, so the agreed time is right above it. If he replies with a different time, you find out at breakfast, not at the start of the call.',
+        ],
+      },
+      {
+        heading: 'If the call gets missed anyway',
+        blocks: [
+          'It still happens. When it does, do not spend the message working out whose fault it was. Write within the hour, take the blame lightly whether or not it was yours, and offer two new times written the same way as before.',
+          {
+            type: 'callout',
+            title: 'The recovery message',
+            text: 'Sorry, looks like we crossed wires on the time. Could you do Wednesday, December 2, at 3 PM London (8 AM Denver), or Thursday at the same time? I’ll call you on WhatsApp.',
+          },
+          'Two options make it easy to say yes, and the format shows the next time will be right.',
+        ],
+      },
+      {
+        heading: 'After the call',
+        blocks: [
+          'The same discipline carries into the next step. When you agree to send something “by Friday”, write the day and date, and whose Friday. The guide to [writing a next step for every deal](/playbooks/write-a-next-step-for-every-deal) covers this, and [sending a seller an agenda before the first call](/playbooks/send-a-seller-an-agenda-before-the-first-call) pairs well with the confirmation above.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'In Merger, the messaging accounts you connect sit in one inbox, so the LinkedIn thread where a buyer agreed to talk and the WhatsApp chat where you confirmed the time are in the same list, and you reply to each in its own app. With your own Anthropic API key, Claude can flag a conversation as a possible deal, and nothing goes on the Deal Desk until you approve it. Approved deals keep the conversation attached, so the confirmed time sits next to the deal it belongs to.',
+          'Doing the conversion is still your job. Merger keeps the confirmation where you will find it.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+  },
 ];
