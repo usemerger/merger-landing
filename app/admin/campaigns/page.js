@@ -28,6 +28,7 @@ const STATUS = {
   no_ramp: ['No ramp configured', 'warn'],
   bounce_rate: ['Paused: bounce rate too high', 'warn'],
   complaint_rate: ['Paused: complaint rate too high', 'warn'],
+  send_failing: ['Stopped: Resend kept refusing sends', 'warn'],
 };
 
 export function totals(days = []) {
@@ -89,6 +90,7 @@ export default function AdminCampaignsPage() {
           {ramp.emailTarget > 0 && <div><dt>Emails today, all flows</dt><dd>{n(ramp.emailsToday)} <span>target {n(ramp.emailTarget)}</span></dd></div>}
           <div><dt>New people invited today</dt><dd>{n(ramp.sentToday)} <span>of {n(ramp.todayQuota)}</span></dd></div>
           <div><dt>Still to invite</dt><dd>{n(data.remaining)}</dd></div>
+          {ramp.sequenceQueued > 0 && <div><dt>Waiting for first email</dt><dd>{n(ramp.sequenceQueued)} <span>re-queued, sent first</span></dd></div>}
           <div><dt>Hard bounce rate, 3 days</dt><dd>{pct(health.bounced, health.sent)} <span>limit 3%{health.soft_bounced ? ` · ${n(health.soft_bounced)} soft, not counted` : ''}</span></dd></div>
           <div><dt>People emailed, 3 days</dt><dd>{n(health.sent)}</dd></div>
           <div><dt>Complaint rate, 3 days</dt><dd>{pct(health.complained, health.sent)} <span>limit 0.1%</span></dd></div>

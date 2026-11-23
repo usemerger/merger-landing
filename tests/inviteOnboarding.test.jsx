@@ -60,10 +60,10 @@ describe('email verification link', () => {
     await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/invite?token=tok'));
   });
 
-  it('goes to the account without one', async () => {
+  it('prompts a verified signup to subscribe without an invitation', async () => {
     nav.query = 'verified=1';
     api.accountAccess.mockResolvedValue({ user: { email: 'p@example.test', emailVerified: true } });
     render(<VerifyEmailPage />);
-    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/dashboard'));
+    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/billing?setup=1'));
   });
 });
