@@ -15,7 +15,8 @@ import { loadPendingInvite } from '../lib/pendingInvite';
 function SignupForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = safeReturnPath(params.get('next'));
+  const returnPath = safeReturnPath(params.get('next'));
+  const next = returnPath === '/dashboard' ? '/billing?setup=1' : returnPath;
   const query = params.toString();
   const [session, setSession] = useState('loading');
   const [email, setEmail] = useState('');
