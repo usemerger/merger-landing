@@ -8,6 +8,14 @@ import PlatformIcon, { IOS_APP_URL, MAC_APP_URL, MAC_REQUIREMENT } from '../comp
 import { download, errorMessage, meOrNull, statusLabel } from '../lib/api';
 import { normalizeInstallers } from '../lib/authFlow';
 
+function currentDevice({ userAgent = '', maxTouchPoints = 0 }) {
+  if (/Android/i.test(userAgent)) return 'android';
+  if (/iPhone|iPad|iPod/i.test(userAgent) || (/Macintosh/i.test(userAgent) && maxTouchPoints > 1)) return 'ios';
+  if (/Windows/i.test(userAgent)) return 'windows';
+  if (/Macintosh|Mac OS X/i.test(userAgent)) return 'mac';
+  return null;
+}
+
 export default function DownloadPage() {
   const router = useRouter();
   const [state, setState] = useState({ phase: 'loading' });
@@ -58,17 +66,13 @@ export default function DownloadPage() {
     return <Shell authed><main className="dash-main">
       <p className="eyebrow">Downloads</p><h1 className="dash-title">Choose a plan to download.</h1>
       <p className="dash-sub">Downloads unlock once your membership starts. Your account shows the next step: verify your email, choose monthly or annual, then come back here. Every membership has a 30-day money-back guarantee.</p>
-      <div className="panel mt-24"><h2>One account, on the web, Windows, Mac and iPhone.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/dashboard">Choose a plan</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
+      <div className="panel mt-24"><h2>One account, on the web, Windows, Mac and iPhone.</h2><p className="muted mt-16">You won’t need another signup. Use your Merger email and password when you’re ready to install.</p><div className="dl-row"><Link className="btn btn-primary" href="/billing?setup=1">Choose a plan</Link><button className="btn btn-ghost" type="button" onClick={load}>Check access again</button></div></div>
     </main></Shell>;
   }
 
   const { windows, macos } = state.installers;
   const anyReady = Boolean(windows);
-  return <Shell authed><main className="dash-main">
-    <p className="eyebrow">Downloads</p>
-    <h1 className="dash-title">Get Merger for Windows, Mac and iPhone.</h1>
-    <p className="dash-sub">Your account has download access. Install Merger on your computer, your phone or both, sign in and connect your messaging accounts.</p>
-    <div className="panel mt-24">
+  const windowsCard = (<div className="panel mt-24">
       <div className="panel-head"><h2>Windows</h2>{anyReady && state.version && <span className="pill neutral">Version {state.version}</span>}</div>
       {anyReady ? <>
         <div className="dl-row">
@@ -77,22 +81,33 @@ export default function DownloadPage() {
         <p className="field-hint mt-16">If your download does not start, try the link again or refresh the installer list below.</p>
       </> : <p className="muted mt-16">The Windows installer isn’t available right now. Please check again shortly.</p>}
       <div className="dl-row"><button className="btn btn-ghost btn-sm" type="button" onClick={load}>{anyReady ? 'Refresh installers' : 'Check again'}</button></div>
-    </div>
-    <div className="panel mt-16">
-      <div className="panel-head"><h2>Mac</h2></div>
+    </div>);
+  const macCard = (<div className="panel mt-16"><div className="panel-head"><h2>Mac</h2></div>
       <p className="muted mt-16">Get Merger for Mac from the App Store and sign in with the same account.</p>
       <div className="dl-row">
         <a className="btn btn-primary btn-sm btn-platform" href={MAC_APP_URL} target="_blank" rel="noopener noreferrer"><PlatformIcon platform="apple" />Download for Mac</a>
         {macos && <a className="btn btn-ghost btn-sm btn-platform" href={macos} download>Direct download{state.version ? ` (v${state.version})` : ''}</a>}
       </div>
       <p className="field-hint mt-16">{MAC_REQUIREMENT}</p>
-    </div>
-    <div className="panel mt-16">
-      <div className="panel-head"><h2>iPhone</h2></div>
+    </div>);
+  const iosCard = (<div className="panel mt-16"><div className="panel-head"><h2>iPhone</h2></div>
       <p className="muted mt-16">Get Merger on your iPhone from the App Store and sign in with the same account.</p>
       <div className="dl-row"><a className="btn btn-primary btn-sm btn-platform" href={IOS_APP_URL} target="_blank" rel="noopener noreferrer"><PlatformIcon platform="apple" />Download for iPhone</a></div>
-    </div>
-    <p className="field-hint mt-16">Use the same email and password in the app as on this site.</p>
+    </div>);
+
+  const device = currentDevice(navigator);
+  const openApp = <a className="btn btn-primary mt-16" href="merger:///">Open Merger</a>;
+  return <Shell authed><main className="dash-main">
+    <p className="eyebrow">App access confirmed</p>
+    <h1 className="dash-title">{device ? 'You’re ready to use Merger.' : 'Get Merger for Windows, Mac and iPhone.'}</h1>
+    <p className="dash-sub">Sign in to the app with your Merger account.</p>
+    {device === 'android' && <section className="panel"><h2>Return to Merger on Android</h2>{openApp}<p className="field-hint mt-16">If Merger is already installed, you can also open it from your home screen. The public Android download is coming soon.</p></section>}
+    {device === 'ios' && <section className="panel"><h2>Continue on your iPhone or iPad</h2>{openApp}<div className="dl-row"><a className="btn btn-ghost" href={IOS_APP_URL}>Download on the App Store</a></div></section>}
+    {device === 'windows' && windowsCard}
+    {device === 'mac' && macCard}
+    {device ? <details className="mt-24"><summary>Downloads for other devices</summary>
+      {device !== 'windows' && windowsCard}{device !== 'mac' && macCard}{device !== 'ios' && iosCard}
+    </details> : <>{windowsCard}{macCard}{iosCard}</>}
     <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/dashboard">Your account</Link></div>
   </main></Shell>;
 }
