@@ -48,7 +48,7 @@ describe('signup and sign-in recovery', () => {
     expect(screen.getByLabelText('Name')).toHaveAttribute('type', 'text');
     fill('Name', 'Morgan Ellis'); fill('Email', 'person@example.com'); fill('Password', 'fixture-password');
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fdashboard'));
+    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fbilling%3Fsetup%3D1'));
     expect(api.signup).toHaveBeenCalledWith('person@example.com', 'fixture-password', 'Morgan Ellis', {});
     expect(api.claimHandle).not.toHaveBeenCalled();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('signup and sign-in recovery', () => {
     api.meOrNull.mockResolvedValue(account);
     fill('Name', 'Morgan'); fill('Email', 'person@example.com'); fill('Password', 'fixture-password');
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fdashboard'));
+    await waitFor(() => expect(nav.router.replace).toHaveBeenCalledWith('/verify-email?next=%2Fbilling%3Fsetup%3D1'));
     expect(api.signup).toHaveBeenCalledTimes(1);
   });
   it('blocks malformed email and replaces an unsafe return URL on login', async () => {
@@ -133,6 +133,14 @@ describe('account and checkout', () => {
     await screen.findByText('$159.00 / month total');
     expect(screen.queryByText(/per seat/)).not.toBeInTheDocument();
   });
+  it('offers checkout immediately after verification even without a handle', async () => {
+    nav.pathname = '/billing'; nav.query = 'setup=1';
+    api.meOrNull.mockResolvedValue({ ...account, handle: null });
+    render(<AccountDashboard />);
+    expect(await screen.findByRole('heading', { name: 'Choose your subscription.' })).toBeInTheDocument();
+    expect(screen.getByTestId('checkout')).toBeInTheDocument();
+    expect(screen.queryByText('Reserve your handle')).not.toBeInTheDocument();
+  });
   it('lets an existing account reserve its missing handle before checkout', async () => {
     api.meOrNull.mockResolvedValue({ ...account, handle: undefined });
     render(<AccountDashboard />);
@@ -150,6 +158,20 @@ describe('account and checkout', () => {
     await screen.findByRole('heading', { name: 'Your Merger account.' });
     expect(screen.queryByRole('link', { name: 'Go to downloads' })).not.toBeInTheDocument();
     expect(screen.queryByTestId('checkout')).not.toBeInTheDocument();
+  });
+  it('waits for confirmed access before handing a Stripe return to the app', async () => {
+    vi.useFakeTimers();
+    nav.pathname = '/billing'; nav.query = 'checkout=success';
+    api.meOrNull.mockResolvedValue(account);
+    api.billingStatus.mockResolvedValueOnce(noSubscription).mockResolvedValueOnce({ entitled: true });
+    render(<AccountDashboard />);
+    await act(async () => {});
+    expect(screen.getByText('Confirming your subscription…')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Continue to Merger' })).not.toBeInTheDocument();
+    await act(async () => { await vi.advanceTimersByTimeAsync(1500); });
+    expect(screen.getByRole('link', { name: 'Continue to Merger' })).toHaveAttribute('href', '/download');
+    await act(async () => { await vi.advanceTimersByTimeAsync(1400); });
+    expect(nav.router.replace).toHaveBeenCalledWith('/download');
   });
   it('preserves checkout success when a session expires', async () => {
     nav.pathname = '/billing'; nav.query = 'checkout=success';
@@ -195,6 +217,22 @@ describe('recovery and downloads', () => {
     expect(api.forgotPassword).not.toHaveBeenCalled();
     fill('Email', 'person@example.com'); fireEvent.click(screen.getByRole('button', { name: 'Send reset link' }));
     await screen.findByText(/If an account exists for/);
+  });
+  it.each([
+    ['Android', 0, 'Open Merger', 'merger:///'],
+    ['iPhone', 1, 'Open Merger', 'merger:///'],
+    ['Macintosh', 5, 'Open Merger', 'merger:///'],
+    ['Macintosh', 0, 'Download for Mac', 'https://apps.apple.com/us/app/merger-inbox-for-dealmakers/id6817136478?platform=mac'],
+    ['Windows NT', 0, 'Download for Windows', 'https://releases.buildmerger.com/example.exe'],
+  ])('provides the handoff for %s with %i touch points', async (ua, touch, label, href) => {
+    const uaSpy = vi.spyOn(navigator, 'userAgent', 'get').mockReturnValue(ua);
+    vi.stubGlobal('navigator', Object.assign(Object.create(navigator), { maxTouchPoints: touch }));
+    try {
+      api.meOrNull.mockResolvedValue(account);
+      api.download.mockResolvedValue({ builds: { windows: 'https://releases.buildmerger.com/example.exe' } });
+      render(<DownloadPage />);
+      expect(await screen.findByRole('link', { name: label, exact: true })).toHaveAttribute('href', href);
+    } finally { vi.unstubAllGlobals(); uaSpy.mockRestore(); }
   });
   it('keeps a non-subscription 403 as an error, and retries into the current installer list', async () => {
     api.meOrNull.mockResolvedValue(account);
