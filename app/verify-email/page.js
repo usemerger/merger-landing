@@ -24,7 +24,13 @@ function Verification() {
     try {
       const result = await accountAccess();
       if (id !== current.current) return;
-      if (result.user.emailVerified) { router.replace(next); return; }
+      if (result.user.emailVerified) {
+        const ordinarySignup = ['/dashboard', '/billing?setup=1', '/download'].includes(next);
+        router.replace(ordinarySignup
+          ? (result.capabilities?.canUseApp ? '/download' : '/billing?setup=1')
+          : next);
+        return;
+      }
       setAccess(result);
     } catch (err) {
       if (id !== current.current) return;
