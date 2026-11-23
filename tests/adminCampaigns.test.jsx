@@ -73,6 +73,14 @@ describe('campaigns dashboard', () => {
     expect(schedule).not.toHaveTextContent('Emails today, all flows');
   });
 
+  it('shows contacts waiting for their first email and a stopped run', async () => {
+    api.adminCampaigns.mockResolvedValue({ ...report, runs: [{ ...report.runs[0], paused_reason: 'send_failing' }], ramp: { ...report.ramp, sequenceQueued: 19144 } });
+    render(<AdminCampaignsPage />);
+    const schedule = await screen.findByRole('region', { name: 'Sending schedule' });
+    expect(schedule).toHaveTextContent('Waiting for first email19,144');
+    expect(screen.getByText('Stopped: Resend kept refusing sends')).toBeInTheDocument();
+  });
+
   it('refuses non-staff', async () => {
     api.adminCampaigns.mockRejectedValue(new api.ApiError(403));
     render(<AdminCampaignsPage />);
