@@ -3183,6 +3183,208 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-23 ───────────────────────────────────────────────────────────
+  {
+    slug: 'business-purchase-agreement-terms-explained',
+    type: T.list,
+    audience: 'Buyers, sellers and brokers',
+    title: 'Eight terms in a business purchase agreement, explained in plain language',
+    description:
+      'Reps and warranties, disclosure schedules, indemnification, baskets, caps, escrow, survival and the non-compete: what each term in a business purchase agreement does.',
+    dek: 'The letter of intent fits on two pages. The purchase agreement that follows can run to sixty. Most of the extra length is eight ideas, repeated in careful legal language. Here they are in plain English.',
+    published: '2026-11-23',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the agreement gets so long',
+        blocks: [
+          'A letter of intent says the price, the structure and roughly how the deal will close. The purchase agreement has a harder job. It has to say what happens if something the buyer was told turns out to be wrong after the money has changed hands.',
+          'Almost every long section in a small or mid-sized business purchase agreement is an answer to that one question. Once you know the eight terms below, the document reads much faster, and you know which pages deserve your attention.',
+          'This is a plain-language overview of how these terms commonly work in private company sales in the United States. Terms vary deal by deal and by state, and none of this is legal advice. Your attorney reads the real document.',
+        ],
+      },
+      {
+        heading: 'The eight terms',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**1. Purchase price and how it is paid.** The headline number is only the start. The agreement says how much arrives at closing in cash, how much is held back, whether part is a seller note or an earnout, and how the price adjusts for working capital, cash and debt on the closing date.',
+              '**2. Representations and warranties.** Statements of fact the seller makes about the business: the financial statements are accurate, the business owns its equipment, there are no lawsuits beyond the ones listed, taxes are paid. The buyer makes a shorter set, mostly that it can legally sign and pay.',
+              '**3. Disclosure schedules.** The lists attached to the agreement where the seller writes down the exceptions. “There are no lawsuits, except those on Schedule 3.8.” A known problem that is disclosed is usually not a breach. This is why sellers are told to put everything on the schedules.',
+              '**4. Indemnification.** The promise to pay if a representation turns out to be false, or if a listed risk comes due. It is the part of the agreement that turns a broken promise into money.',
+              '**5. Basket.** A threshold the buyer’s claims must pass before the seller pays anything, so small disputes do not turn into a running argument. Some baskets work like a deductible (the seller pays only above it); others work like a tipping point (once crossed, the seller pays from the first dollar).',
+              '**6. Cap.** The most the seller can owe for ordinary breaches. In middle-market deals that do not use insurance, caps are often reported at a fraction of the price, commonly around 10% or less. Fraud and certain core promises, such as owning the shares being sold, usually sit outside the cap.',
+              '**7. Escrow or holdback.** Part of the price set aside at closing, held by a third party or by the buyer, so there is money to pay claims if they come. It is released to the seller on a set schedule if nothing goes wrong.',
+              '**8. Survival period.** How long after closing the buyer can bring a claim on the general representations. Many deals use somewhere around 12 to 24 months, with longer periods for taxes and ownership. After it ends, most claims are closed.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How the pieces fit together',
+        blocks: [
+          'The terms are designed to work as a set. An illustrative example, with invented figures, makes it easier to see.',
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'A business sells for 4 million dollars. The agreement sets a basket of 1% (40,000 dollars), a cap of 10% (400,000 dollars), an escrow of 10% held for 18 months, and an 18-month survival period. Nine months after closing, the buyer finds an unpaid tax bill of 90,000 dollars that was not on the schedules. With a deductible-style basket, the seller owes 50,000 dollars, paid out of the escrow. If no other claims arrive, the rest of the escrow goes to the seller at month 18.',
+          },
+          'Change one term and the others move. A seller who accepts a larger escrow can sometimes negotiate a lower cap. A buyer who accepts a short survival period may ask for a smaller basket in return. That is why brokers and attorneys talk about the package, not each clause on its own.',
+        ],
+      },
+      {
+        heading: 'Two more that come up often',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Non-compete and non-solicit.** The seller agrees not to start or join a competing business, or to recruit away employees and customers, for a set time and area. How far these can reach depends on the state, so this is one to check locally.',
+              '**Conditions to closing.** The things that must be true before anyone is obliged to close: landlord consent to the lease, key customer contracts transferred, financing in place, no major change in the business. These are where a deal that looks finished can still stall.',
+            ],
+          },
+          'Some buyers also use representations and warranties insurance, where an insurer pays covered claims instead of the seller. It is more common in larger deals. When it is used, the escrow and cap are often much smaller.',
+        ],
+      },
+      {
+        heading: 'What to read first',
+        blocks: [
+          'If you are a seller, start with the disclosure schedules. They are the cheapest protection you have, and they are written from your own knowledge of the business. Anything you know and leave off is the most likely source of a claim later.',
+          'If you are a buyer, start with indemnification and the cap. They tell you how much protection the rest of the document actually buys.',
+          'If you are the broker, start with the conditions to closing. They tell you what has to happen between now and the closing date, and who has to do it. The [first week after an LOI is signed](/playbooks/messages-to-send-in-the-first-week-after-an-loi-is-signed) is usually when those items get assigned.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Merger does not draft or review agreements. It keeps the conversations around a deal in one place: the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached. When a question about the schedules comes in on WhatsApp and the answer goes out on LinkedIn, both stay next to the deal they belong to.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'Seyfarth Shaw, Middle Market M&A SurveyBook (caps, baskets, escrow and survival in middle-market deals)',
+        href: 'https://www.seyfarth.com/M-and-A-SurveyBook.html',
+        accessed: '2026-11-23',
+      },
+      {
+        label: 'LexisNexis Practical Guidance, Market trends: indemnification provisions in asset purchase transactions',
+        href: 'https://www.lexisnexis.com/community/insights/legal/practical-guidance-journal/b/pa/posts/market-trends-indemnification-provisions-in-asset-purchase-transactions',
+        accessed: '2026-11-23',
+      },
+    ],
+  },
+  {
+    slug: 'asset-sale-vs-stock-sale-what-the-buyer-actually-buys',
+    type: T.comparison,
+    audience: 'Buyers, sellers and brokers',
+    title: 'Asset sale vs stock sale: what the buyer actually buys, and why it changes the deal',
+    description:
+      'The two ways to buy a private business side by side: what transfers, who keeps the old liabilities, which contracts need consent, and why buyers and sellers often want different ones.',
+    dek: 'Two buyers can offer the same price for the same business and still be making very different offers. One wants to buy the assets. The other wants to buy the company. Here is what that difference means.',
+    published: '2026-11-23',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          'In an **asset sale**, the buyer buys the things the business uses: equipment, inventory, customer lists, the name, the phone number, sometimes the lease. The seller’s company stays behind, now holding cash instead of a business, and usually keeps whatever liabilities the buyer did not agree to take.',
+          'In a **stock sale** (or a sale of membership interests, for an LLC), the buyer buys the company itself. Everything inside it comes along: the assets, the contracts, the employees, the bank account, and the history, including liabilities nobody has discovered yet.',
+          'Many small business sales in the United States are structured as asset sales. Larger deals, and businesses with contracts or licenses that are hard to move, more often use stock sales. This is a plain-language comparison, not tax or legal advice. The right structure depends on the entity type, the state and the numbers, and that is a conversation for the CPA and the attorney.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Question', 'Asset sale', 'Stock sale'],
+            rows: [
+              ['What the buyer gets', 'The listed assets and any liabilities it agrees to take', 'The whole company, with everything in it'],
+              ['Old, unknown liabilities', 'Usually stay with the seller’s company', 'Stay inside the company the buyer now owns'],
+              ['Contracts and leases', 'Each one is assigned; many need the other side’s consent', 'Usually stay in place, unless they have a change-of-control clause'],
+              ['Licenses and permits', 'Often have to be reissued in the buyer’s name', 'Often carry over with the company'],
+              ['Employees', 'Typically hired fresh by the buyer', 'Stay employed by the same company'],
+              ['Buyer’s tax position', 'Can often depreciate assets from the new, higher price', 'Inherits the company’s existing tax basis'],
+              ['Seller’s tax position', 'Can mean more ordinary income, and a second layer of tax for a C corporation', 'Often taxed as a capital gain on the shares'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Why buyers often prefer an asset sale',
+        blocks: [
+          'The first reason is risk. When a buyer picks the assets, it can leave behind the lawsuit from three years ago, the unpaid sales tax, or the warranty claims on work done before closing. Those stay with the seller’s old company.',
+          'The second reason is tax. When a buyer purchases assets, the price is allocated across them, and the buyer can often depreciate or amortize them from that new value. That lowers the buyer’s taxable income in the years after closing. In the United States both sides report how the price was split across asset classes, on IRS Form 8594, so the allocation is usually negotiated in the agreement.',
+        ],
+      },
+      {
+        heading: 'Why sellers often prefer a stock sale',
+        blocks: [
+          'For the seller, a stock sale is cleaner. The company leaves with its history, and the seller is not left holding an empty entity to wind down.',
+          'Tax can also point the other way. Gain on shares held for more than a year is often taxed as a long-term capital gain. In an asset sale, part of the price can be taxed as ordinary income (for example, gain on equipment that has already been depreciated). For a C corporation the difference can be larger, because the company pays tax on the asset sale and the owner pays again when the money comes out. S corporations and LLCs work differently, which is one more reason the entity type matters before anyone picks a structure.',
+        ],
+      },
+      {
+        heading: 'How the gap usually gets closed',
+        blocks: [
+          'Because buyer and seller often start on opposite sides, the structure turns into part of the price negotiation.',
+          {
+            type: 'list',
+            items: [
+              '**Price.** A seller who accepts an asset sale may ask for a higher price to cover the extra tax. A buyer who accepts a stock sale may offer less to cover the extra risk.',
+              '**Protection in the agreement.** In a stock sale, buyers lean harder on representations, indemnification and escrow, because the old liabilities come with the company. The terms are explained in [eight terms in a business purchase agreement](/playbooks/business-purchase-agreement-terms-explained).',
+              '**Hybrid elections.** In some cases a stock purchase can be treated as an asset purchase for tax purposes through specific elections. These have strict conditions and are squarely a question for the CPA.',
+              '**Practical constraints.** If the business depends on a government contract, a hard-to-reissue license or a lease the landlord will not assign, a stock sale may be the only practical route, whatever the tax picture.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Questions to settle before the LOI',
+        blocks: [
+          'Structure is much easier to agree before a price is on paper than after. A broker or buyer who asks these early saves weeks later:',
+          {
+            type: 'list',
+            items: [
+              'What kind of entity is the business: C corporation, S corporation or LLC?',
+              'Which contracts, leases and licenses would need consent in an asset sale, and how likely is each one?',
+              'Are there known liabilities either side would want to leave behind?',
+              'Have the seller’s CPA and the buyer’s CPA each run the numbers on both structures?',
+            ],
+          },
+          'Then write the structure into the letter of intent, so the price and the structure are agreed together.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Questions like these tend to arrive in pieces: the entity type in a WhatsApp reply, the landlord’s view on LinkedIn, the CPA’s note in Slack. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached. The answers stay with the deal they belong to.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'IRS, About Form 8594, Asset Acquisition Statement under Section 1060',
+        href: 'https://www.irs.gov/forms-pubs/about-form-8594',
+        accessed: '2026-11-23',
+      },
+      {
+        label: 'The Hartford, What are you selling? Assets or stocks?',
+        href: 'https://www.thehartford.com/business-insurance/strategy/sell-a-business/asset-sale-vs-stock-sale',
+        accessed: '2026-11-23',
+      },
+      {
+        label: 'Carta, Asset sale vs. stock sale',
+        href: 'https://carta.com/learn/startups/exit-strategies/mergers-acquisitions/asset-sale-vs-stock-sale/',
+        accessed: '2026-11-23',
+      },
+    ],
+  },
   // ── 2026-11-02 ───────────────────────────────────────────────────────────
   {
     slug: 'angel-syndicate-lead-filling-an-allocation-across-messaging-apps',
