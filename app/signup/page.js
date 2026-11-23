@@ -10,7 +10,6 @@ import PasswordField from '../components/PasswordField';
 import { errorMessage, meOrNull, signup } from '../lib/api';
 import { MIN_PASSWORD_LENGTH, normalizeEmail, safeReturnPath, validEmail } from '../lib/authFlow';
 import { captureRef } from '../lib/waitlist';
-import { WAITLIST } from '../lib/billingOffer';
 import { loadPendingInvite } from '../lib/pendingInvite';
 
 function SignupForm() {
@@ -21,8 +20,6 @@ function SignupForm() {
   const [session, setSession] = useState('loading');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState('');
-  const [firm, setFirm] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -49,8 +46,6 @@ function SignupForm() {
       const draft = JSON.parse(sessionStorage.getItem('merger_waitlist_draft') || 'null');
       if (draft && Date.now() - draft.at < 3600000) {
         setEmail(typeof draft.email === 'string' ? draft.email : '');
-        setRole(WAITLIST.roles.includes(draft.role) ? draft.role : '');
-        setFirm(typeof draft.firm === 'string' ? draft.firm : '');
       }
     } catch { /* Draft data is optional; the form remains usable. */ }
     // Arriving from an invitation: use the address it was sent to, since the
@@ -72,7 +67,7 @@ function SignupForm() {
     pending.current = true; setBusy(true); setError('');
     try {
       const address = normalizeEmail(email);
-      const waitlist = { ...(role ? { role } : {}), ...(firm.trim() ? { firm: firm.trim() } : {}), ...(referral.current ? { ref: referral.current } : {}) };
+      const waitlist = referral.current ? { ref: referral.current } : {};
       try { await signup(address, password, name.trim(), waitlist); }
       catch (err) {
         // A lost response must not cause a second signup. Resume only this identity.
@@ -100,7 +95,6 @@ function SignupForm() {
         <div className="field"><label htmlFor="name">Name</label><input type="text" id="name" name="name" autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} maxLength={100} required disabled={busy} /></div>
         <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="you@firm.com" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} /></div>
         <PasswordField id="password" label="Password" autoComplete="new-password" placeholder="At least 8 characters" value={password} onChange={(event) => setPassword(event.target.value)} minLength={MIN_PASSWORD_LENGTH} disabled={busy} />
-        <details className="mt-16"><summary>Tell us about your work <span className="muted">(optional)</span></summary><div className="field mt-16"><label htmlFor="role">What you do</label><select id="role" value={role} onChange={(event) => setRole(event.target.value)} disabled={busy}><option value="">Select…</option>{WAITLIST.roles.map((value) => <option key={value}>{value}</option>)}</select></div><div className="field"><label htmlFor="firm">Firm</label><input type="text" id="firm" value={firm} autoComplete="organization" maxLength={200} onChange={(event) => setFirm(event.target.value)} disabled={busy} /></div></details>
         {error && <div className="alert alert-error" role="alert">{error}</div>}
         <button className="btn btn-primary btn-block mt-24" type="submit" disabled={busy}>{busy ? 'Creating your account…' : 'Create account'}</button>
         <p className="field-hint center mt-16">{invited ? 'Creating an account is free. Nothing is charged until you choose a plan.' : 'Creating an account is free. Nothing is charged until you choose a plan.'}</p>
