@@ -38,6 +38,7 @@ export default function AccountDashboard() {
   const pathname = usePathname();
   const returnPath = safeReturnPath(`${pathname}${params.toString() ? `?${params}` : ''}`);
   const loginPath = `/login?next=${encodeURIComponent(returnPath)}`;
+  const setup = pathname === '/billing' && params.get('setup') === '1';
   const justCheckedOut = params.get('checkout') === 'success';
   const canceledCheckout = ['cancelled', 'canceled'].includes(params.get('checkout'));
   const [user, setUser] = useState(null);
@@ -139,10 +140,10 @@ export default function AccountDashboard() {
    */
   const entitledNow = status?.entitled === true;
   useEffect(() => {
-    if (!justCheckedOut || !entitledNow) return undefined;
+    if (!(justCheckedOut || setup) || !entitledNow) return undefined;
     const timer = setTimeout(() => router.replace('/download'), 1400);
     return () => clearTimeout(timer);
-  }, [justCheckedOut, entitledNow, router]);
+  }, [justCheckedOut, setup, entitledNow, router]);
 
   async function openPortal() {
     if (portalPending.current) return;
@@ -190,7 +191,7 @@ export default function AccountDashboard() {
   const pendingPayment = justCheckedOut && !entitled;
   const subscriptionStatus = s.subscriptionStatus || (complimentary ? 'none' : s.entitlementStatus);
   const hasSubscription = hasPaidSubscription(subscriptionStatus);
-  const canSubscribe = access.capabilities?.canCheckout === true && !complimentary && !grandfathered && !entitled && !pendingPayment && !hasSubscription && Boolean(user.handle);
+  const canSubscribe = access.capabilities?.canCheckout === true && !complimentary && !grandfathered && !entitled && !pendingPayment && !hasSubscription;
   const renewalDate = formatDate(s.currentPeriodEnd);
   const trialDate = formatDate(s.trialEndsAt);
   const cancellationAt = s.cancelAt || (s.cancelAtPeriodEnd === true ? s.currentPeriodEnd || s.trialEndsAt : null);
@@ -207,10 +208,30 @@ export default function AccountDashboard() {
   const price = priceLabel(s.pricing);
   const trialing = subscriptionStatus === 'trialing' && entitled;
 
+  if (billingPage && justCheckedOut) {
+    return <Shell authed><main className="auth-main"><div className="auth-card" aria-live="polite">
+      <h1>{entitled ? 'Your membership is active.' : 'Confirming your subscription…'}</h1>
+      {entitled ? <Link className="btn btn-primary mt-24" href="/download">Continue to Merger</Link>
+        : <><p className="lede">We’re checking your payment with Stripe. This can take a moment.</p>
+          {(pollState === 'waiting' || pollState === 'error') && <button className="btn btn-ghost" onClick={() => setPollCycle(value => value + 1)}>Check subscription again</button>}</>}
+    </div></main></Shell>;
+  }
+  if (setup && entitled) return <Shell authed><main className="auth-main"><Link className="btn btn-primary" href="/download">Continue to Merger</Link></main></Shell>;
+  if (billingPage && verified && canSubscribe) {
+    return <Shell authed><main className="auth-main"><div className="auth-card">
+      <h1>Choose your subscription.</h1>
+      <p className="lede">Your email is verified. You need an active subscription to use Merger. Choose a plan below, then sign in to the app with this account.</p>
+      {canceledCheckout && <p className="alert alert-info" role="status">Checkout was not completed. Choose a plan to try again.</p>}
+      {s.configured === false ? <p className="alert alert-warn">Checkout is temporarily unavailable. <button type="button" className="linklike" onClick={load}>Check again</button></p>
+        : <div className="panel mt-24"><PlanStep ctl={checkoutCtl} heading="Membership options" trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'standard'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} /></div>}
+    </div></main></Shell>;
+  }
+
   return <Shell authed capabilities={access.capabilities}><main className="dash-main">
     <p className="eyebrow">{billingPage ? 'Subscription & billing' : 'Your workspace'}</p>
     <h1 className="dash-title">{billingPage ? 'Your membership.' : user.displayName ? `Welcome, ${user.displayName.split(' ')[0]}.` : 'Your Merger account.'}</h1>
     <p className="dash-handle">{user.email}</p>
+    {verified && canSubscribe && !user.handle && <Link className="btn btn-primary mt-16" href="/billing?setup=1">Choose your subscription</Link>}
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
     <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to choose a plan.' : admitted ? (access.rollout?.inviteRequired === false ? 'Choose monthly or annual below, then download Merger for Windows, Mac or iPhone. 30-day money-back guarantee.' : 'Your invitation is accepted. Finish activation when you’re ready.') : 'Your account is ready. We’ll keep your access progress here.'}</p>
     {waitlistPermissions(access.capabilities).canViewWaitlist && <div className="dl-row"><Link className="btn btn-ghost btn-sm" href="/admin/waitlist">{waitlistPermissions(access.capabilities).canManageWaitlistInvitations ? 'Manage waitlist' : 'View waitlist'}</Link></div>}
@@ -278,7 +299,7 @@ export default function AccountDashboard() {
         </>}
       </>}
     </div>}
-    {canSubscribe && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'pilot'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
+    {canSubscribe && user.handle && <div className="panel"><PlanStep ctl={checkoutCtl} trialEligible={access.rollout?.trialEligible} offer={access.rollout?.offer ?? 'pilot'} pilotEndsAt={access.rollout?.pilotEndsAt ?? null} heading={subscriptionStatus === 'canceled' ? 'Join again' : 'Choose your plan'} note={subscriptionStatus === 'canceled' ? 'A new membership uses the terms shown below.' : 'Your account and handle are ready. Review the terms before continuing to checkout.'} /></div>}
     <div className="panel">
       <div className="panel-head"><h2>Download Merger</h2></div>
       <p className="muted mt-16">{entitled ? 'Get Merger for Windows, Mac and iPhone.' : access.rollout?.inviteRequired === false ? 'Downloads unlock once your membership starts.' : 'Downloads unlock after you’re invited and your activation is confirmed.'}</p>
