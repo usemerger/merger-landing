@@ -3385,6 +3385,239 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-24 ───────────────────────────────────────────────────────────
+  {
+    slug: 'quality-of-earnings-review-walkthrough-for-a-small-business-sale',
+    type: T.useCase,
+    audience: 'Business buyers, sellers and brokers',
+    title: 'How a quality of earnings review changes a small business sale: an illustrative walkthrough',
+    description:
+      'An illustrative walkthrough of a quality of earnings review on a commercial cleaning company: what the accountants test, which add-backs hold up, and how the price moves.',
+    dek: 'The listing said adjusted EBITDA of 850,000 dollars. The buyer’s accountants spent five weeks finding out how much of that was real. A walkthrough of what they checked and what happened to the deal.',
+    published: '2026-11-24',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The deal',
+        blocks: [
+          'Nadia spent twelve years running operations for a facilities company before deciding to buy a business of her own. After eight months of looking she signed a letter of intent for a commercial cleaning company: about 120 employees, offices and clinics as customers, and a founder, Glen, who wanted to retire.',
+          'The broker’s memo showed adjusted EBITDA of 850,000 dollars and an asking price of 3.4 million dollars, or four times that figure. Nadia’s offer matched the price, subject to diligence and financing. She planned to borrow most of it through an SBA-backed loan.',
+          'That loan made one step non-negotiable. Under the SBA rules for loans approved from October 1, 2026, a business acquisition with a purchase price of 3 million dollars or more (not counting owner-occupied real estate) needs a quality of earnings report. Her lender asked for it in the first week.',
+        ],
+      },
+      {
+        heading: 'What a quality of earnings review is',
+        blocks: [
+          'A quality of earnings review, usually called a QoE, is an accounting review commissioned by the buyer (sometimes by the seller, before going to market). It is not an audit. The accountants do not sign off on every number. They test one question: are the earnings the price is based on real, and will they repeat under a new owner?',
+          'In practice that means four kinds of work: tying the profit and loss statement to bank deposits and tax returns, testing each add-back the seller claims, looking at revenue by customer and by month, and working out a normal level of working capital for the business.',
+        ],
+      },
+      {
+        heading: 'The add-backs',
+        blocks: [
+          'Most of the gap between a small company’s reported profit and its “adjusted EBITDA” is add-backs: costs the seller says a new owner will not have. The broker’s memo listed five. The accountants tested each one.',
+          {
+            type: 'list',
+            items: [
+              '**Glen’s salary above a market wage (accepted).** Glen paid himself well above what a general manager would cost. The accountants added back the difference, not the whole salary, because someone still has to run the company.',
+              '**A one-time legal settlement (accepted).** A 40,000-dollar payment to settle a contract dispute. Documented, not repeated in prior years, so it stayed.',
+              '**Glen’s daughter on payroll (partly rejected).** The memo added back her full salary. She worked about twenty hours a week on scheduling, and that work would need to be done after the sale. Only the part above a market wage for that role survived.',
+              '**Personal vehicle and phone (accepted).** Small, documented, and clearly personal.',
+              '**“Non-recurring” equipment repairs (rejected).** Floor machines break every year. Three years of repair bills showed a similar amount each year, so the accountants treated it as a normal cost of running the business.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What else turned up',
+        blocks: [
+          'Two findings had nothing to do with add-backs, and both mattered more than any single one of them.',
+          'First, customer concentration. The largest customer, a medical group, was about 22% of revenue, and its contract came up for renewal four months after the planned closing date. Nothing was wrong with the relationship, but a buyer paying four times earnings wanted to know those earnings would still be there in month five.',
+          'Second, a contract that had already ended. A school district customer had not renewed in June. Its revenue was still in the trailing twelve months the memo used, but it would not be in the next twelve. The accountants showed the earnings both with and without it.',
+        ],
+      },
+      {
+        heading: 'How the number moved',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'Adjusted EBITDA in the memo: 850,000 dollars. After the QoE: the daughter’s salary add-back cut by 35,000, the repairs add-back removed (30,000), and the lost school contract taken out (25,000). Adjusted EBITDA: 760,000 dollars. At the same four times multiple, that supports about 3.04 million dollars, not 3.4 million.',
+          },
+          'The lender sized the loan on the lower figure too, because SBA lenders now have to measure cash flow on historical earnings rather than projections.',
+        ],
+      },
+      {
+        heading: 'The renegotiation',
+        blocks: [
+          'Nadia did not walk away, and she did not simply cut her offer to the new number. Her broker and Glen’s broker went through the report line by line. Glen accepted the repairs and the school contract. He pushed back on the daughter’s role, and the two sides split the difference.',
+          'The concentration risk was handled with structure rather than price. The agreed deal was 3.1 million dollars: 2.9 million at closing and up to 200,000 dollars as an earnout, paid if the medical group renewed on similar terms within six months. Glen also agreed to stay on as a consultant for a year, mostly to help with that renewal.',
+          'Findings like these are why many experienced sellers commission their own QoE before going to market, so they find the weak add-backs first. If you are new to the terms that come next, the [eight terms in a business purchase agreement](/playbooks/business-purchase-agreement-terms-explained) explain where findings like these end up in the final document.',
+        ],
+      },
+      {
+        heading: 'What to take from it',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'An add-back has to survive one question: will a new owner really not have this cost? Salary above market usually survives. Recurring costs called one-time usually do not.',
+              'Trailing twelve months can include revenue that is already gone. Ask what changed since the period ended.',
+              'Customer concentration is often handled with an earnout or a seller consulting period rather than a lower price.',
+              'Sellers who run their own QoE before listing have fewer surprises in diligence.',
+            ],
+          },
+          'This is an illustrative composite, not advice for a specific deal. The accountants, the lender and the attorneys on a real deal decide what applies.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'A QoE produces dozens of questions, and they rarely arrive in one place: the accountants on Slack, the seller on WhatsApp, the broker on LinkedIn. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached, so the answers stay next to the deal they belong to.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'Starfield & Smith, Change of ownership transactions under SOP 50 10 8.1 (QoE threshold, historical cash flow, effective October 1, 2026)',
+        href: 'https://starfieldsmith.com/2026/09/best-practices-change-of-ownership-transactions-under-sop-50-10-8-1-what-sba-lenders-need-to-know/',
+        accessed: '2026-11-24',
+      },
+      {
+        label: 'Investopedia, Quality of earnings',
+        href: 'https://www.investopedia.com/terms/q/qualityofearnings.asp',
+        accessed: '2026-11-24',
+      },
+    ],
+  },
+  {
+    slug: 'how-an-sba-7a-loan-business-acquisition-works',
+    type: T.guide,
+    audience: 'Business buyers, sellers and brokers',
+    title: 'How an SBA 7(a) loan business acquisition works, step by step',
+    description:
+      'How buying a small business with an SBA 7(a) loan works: the equity injection, seller notes, debt service coverage, the documents a lender asks for, and the rules from October 2026.',
+    dek: 'Many small business purchases in the United States are financed with a loan partly guaranteed by the Small Business Administration. Here is how one moves from a signed LOI to closing, and what changed in the rules this fall.',
+    published: '2026-11-24',
+    readMinutes: 8,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'What the SBA actually does',
+        blocks: [
+          'The SBA does not usually lend the money. A bank or other approved lender makes the loan, and the SBA guarantees a large part of it. If the borrower defaults, the guarantee covers much of the lender’s loss. That guarantee is why banks will lend against a small company’s cash flow, with less collateral than a conventional loan would need.',
+          'The program used most often for buying a business is 7(a). Loans can go up to 5 million dollars. In exchange for the guarantee, the lender has to follow the SBA’s rulebook, the Standard Operating Procedure, which sets how much the buyer must put in, how cash flow is measured and which documents are needed.',
+          'The rules below follow SOP 50 10 8.1, which applies to SBA loans approved on or after October 1, 2026. Lenders can add their own requirements on top, and the rules do change, so treat this as an overview and check the details with the lender. None of it is financial or legal advice.',
+        ],
+      },
+      {
+        heading: 'The steps',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: '1. Sign the LOI with financing as a condition',
+                text: 'The letter of intent sets the price and structure and usually says the deal depends on the buyer getting financing. Many buyers talk to an SBA lender before signing, so the structure in the LOI is one the lender can work with.',
+              },
+              {
+                title: '2. Send the lender the package',
+                text: 'Typically three years of business tax returns and financial statements, a recent interim profit and loss and balance sheet, the buyer’s personal financial statement and tax returns, a résumé showing relevant management experience, and the LOI.',
+              },
+              {
+                title: '3. The lender tests the cash flow',
+                text: 'The question is whether the business’s past earnings cover the new loan payments with room to spare. Under the current rules the lender has to use historical earnings, from the last fiscal year or a two-year average, not projections.',
+              },
+              {
+                title: '4. Valuation and, for larger deals, a QoE',
+                text: 'A business valuation is now required on every change of ownership. If the price, not counting owner-occupied real estate, is 3 million dollars or more, a quality of earnings report is required too.',
+              },
+              {
+                title: '5. Approval, then closing documents',
+                text: 'Once the lender approves the loan, the attorneys finish the purchase agreement, the lender prepares its own closing documents, and the parties line up the lease assignment, licenses and any landlord consents.',
+              },
+              {
+                title: '6. Close and fund',
+                text: 'The buyer’s equity and the loan proceeds pay the seller, the lender takes its security, and any seller note is signed with its standby terms. Diligence findings may have changed the price along the way.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'The equity injection',
+        blocks: [
+          'The buyer has to put real money into the deal. For a first acquisition, the minimum equity injection is 10% of the total project cost, and under the current rules it cannot be reduced. Lenders can ask for more.',
+          'Part of that 10% can come from a seller note, but only if the note is on full standby (the seller receives no payments on it for the time the standby terms require) and only up to half of the required injection. Other limited sources, such as minority investors, fall under the same cap.',
+          'Buyers who already own a business in the same industry, and partial buyouts where an existing owner stays, have their own categories with more flexibility. They are worth asking a lender about directly.',
+        ],
+      },
+      {
+        heading: 'Illustrative math',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'A business sells for 2 million dollars, and closing costs and working capital bring the total project to 2.1 million. The minimum equity injection is 10%, or 210,000 dollars. Up to half of it, 105,000 dollars, could come from a seller note on full standby, so the buyer brings at least 105,000 dollars in cash. The SBA loan covers the remaining 1.89 million. At an illustrative 10% rate over ten years, payments come to roughly 300,000 dollars a year.',
+          },
+          'Now the cash flow test. Lenders commonly look for a debt service coverage ratio of at least 1.25, which means the business’s historical cash flow, after paying the new owner a reasonable salary, should be at least 1.25 times the yearly debt payments. In this example that is roughly 375,000 dollars a year. If the business earned less than that last year, the loan is smaller, the price comes down, or the buyer brings more equity.',
+        ],
+      },
+      {
+        heading: 'What changed on October 1, 2026',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Historical earnings only.** Cash flow coverage uses past results, not the buyer’s forecast.',
+              '**Valuations on every deal,** and a quality of earnings report from 3 million dollars.',
+              '**Four categories of change of ownership,** each with its own equity and coverage rules: first acquisitions, expansions by existing owners in the same industry, owner buyouts and employee ownership.',
+              '**Seller consulting up to 24 months,** up from 12, so a seller can stay on to help with the transition for longer.',
+              '**No 7(a) Small loans for acquisitions,** whatever the size of the deal.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What it means for sellers and brokers',
+        blocks: [
+          'For a seller, an SBA buyer is often the most likely buyer for a business in the low millions. That buyer’s lender will test the same numbers the broker put in the memo, using last year’s results. Clean books and documented add-backs make the loan, and so the sale, easier.',
+          'For a broker, it helps to ask early whether the buyer is financing through the SBA, whether they have the cash for the equity injection, and whether the seller would accept a standby note. Those three answers shape the deal more than the headline price. The choice between buying assets or shares matters here too; see [asset sale vs stock sale](/playbooks/asset-sale-vs-stock-sale-what-the-buyer-actually-buys).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'An SBA deal adds a lender, an appraiser and often a QoE firm to the conversation, each asking for documents in a different place. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached. The lender’s list and the seller’s answers stay with the deal.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'U.S. Small Business Administration, 7(a) loans',
+        href: 'https://www.sba.gov/funding-programs/loans/7a-loans',
+        accessed: '2026-11-24',
+      },
+      {
+        label: 'Starfield & Smith, Best practices: change of ownership transactions under SOP 50 10 8.1',
+        href: 'https://starfieldsmith.com/2026/09/best-practices-change-of-ownership-transactions-under-sop-50-10-8-1-what-sba-lenders-need-to-know/',
+        accessed: '2026-11-24',
+      },
+      {
+        label: 'Live Oak Bank, Navigating the SBA’s SOP 50 10 8',
+        href: 'https://www.liveoak.bank/blog/navigating-the-sbas-new-sop-50-10-8',
+        accessed: '2026-11-24',
+      },
+      {
+        label: 'BizBuySell, Eligibility requirements for an SBA business acquisition loan',
+        href: 'https://www.bizbuysell.com/finance-center/yoursba/top-5-requirements/',
+        accessed: '2026-11-24',
+      },
+    ],
+  },
   // ── 2026-11-04 ───────────────────────────────────────────────────────────
   {
     slug: 'multifamily-investor-off-market-deals-from-wholesalers-and-owners',
