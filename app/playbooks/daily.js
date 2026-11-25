@@ -3618,4 +3618,211 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-25 ───────────────────────────────────────────────────────────
+  {
+    slug: 'business-broker-engagement-agreement-terms-explained',
+    type: T.list,
+    audience: 'Business owners, brokers and M&A advisors',
+    title: 'Nine terms in a business broker engagement agreement, explained in plain language',
+    description:
+      'Exclusivity, term length, the success fee, minimum fees, retainers, the tail, buyer exclusions, expenses and termination: what each term in a broker agreement does.',
+    dek: 'Before a business is listed, the owner signs an agreement with the broker. It is usually a few pages long, and it decides who gets paid, how much, and for how long after the agreement ends. Here are the nine terms that matter.',
+    published: '2026-11-25',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why this document matters more than it looks',
+        blocks: [
+          'Owners tend to read a broker agreement for one number, the fee. The other clauses get a skim. But most disputes between owners and brokers are not about the percentage. They are about timing: whether a buyer counts as the broker’s buyer, whether the agreement had ended, and what happens if the owner sells to someone after letting the broker go.',
+          'Business brokers usually work on smaller companies, and M&A advisors or investment bankers on larger ones. Their engagement letters look different, but they are built from the same parts. The terms below are a plain-language overview of how these agreements commonly work in the United States. Wording, practice and licensing rules vary by state and by firm, and none of this is legal advice. Read the actual agreement with your attorney before you sign it.',
+        ],
+      },
+      {
+        heading: 'The nine terms',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**1. Exclusivity.** Most brokers ask for the exclusive right to sell the business for the length of the agreement. That usually means the broker is paid if the business sells during the term, even if the owner finds the buyer. Some agreements carve out buyers the owner already knew (see term 7).',
+              '**2. Term length.** How long the engagement runs. Six to twelve months is a common range for small business listings, and a twelve-month term is common because a typical sale takes most of a year. Look for whether it renews on its own or simply ends.',
+              '**3. Success fee.** The fee paid when the deal closes, usually a percentage of the price. For small business sales, fees commonly run around 10% to 15% on smaller deals and tend to fall as a percentage as deals get larger. Advisors on larger deals often use a sliding scale, with a lower percentage on each additional slice of the price.',
+              '**4. Minimum fee.** A floor under the success fee, so a low sale price still pays the broker something worth the work. On smaller deals the minimum can be the number that actually applies, so it is worth reading next to the percentage.',
+              '**5. Retainer or upfront fee.** Some brokers and most M&A advisors charge a fee at signing or a monthly fee while the business is marketed. Others work only on success. When there is a retainer, ask whether it is credited against the success fee at closing.',
+              '**6. The tail.** A period after the agreement ends during which the broker is still owed a fee if the business sells to a buyer the broker introduced or worked with. In advisor engagements a tail of 12 to 24 months is common. The definition of which buyers count is the part to read slowly.',
+              '**7. Buyer exclusions.** A list of people the owner already knew before the engagement (a competitor who asked last year, a key employee) who are excluded from the fee or carry a lower one. If you have names in mind, put them in the agreement before you sign, not after.',
+              '**8. Expenses.** Who pays for valuation work, marketing, listing sites and data rooms. Many business brokers absorb these costs; advisors on larger deals more often pass some through. Agreements usually say whether expenses need the owner’s approval first.',
+              '**9. Termination.** How either side can end the agreement early, how much notice is needed, and what survives: typically the tail and any fees already earned. An owner who ends the agreement in month four may still owe a fee on a buyer from month three.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How the fee, the minimum and the tail fit together',
+        blocks: [
+          'These three terms only make sense as a set. An illustrative example, with invented figures, shows why.',
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'An owner signs a twelve-month exclusive agreement with a 10% success fee, a minimum fee of 60,000 dollars and a twelve-month tail. In month nine a buyer the broker introduced makes an offer that the owner turns down. The agreement ends in month twelve and the owner does not renew. In month sixteen the same buyer comes back and the business sells for 500,000 dollars. Because the buyer was introduced during the term and the sale closed inside the tail, the broker is owed a fee. At 10% that would be 50,000 dollars, so the 60,000 dollar minimum applies.',
+          },
+          'Change one term and the outcome moves. With a six-month tail, nothing would be owed. With an exclusion for that buyer, nothing would be owed either. With no minimum, the fee would be 50,000 dollars. That is why brokers and owners negotiate these clauses together rather than one at a time.',
+        ],
+      },
+      {
+        heading: 'Questions worth asking before you sign',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Which buyers trigger the tail?** Anyone the broker spoke to, anyone who signed an NDA, or only buyers who received the full memo or made an offer? Narrower is better for the owner, and the broker should be willing to send a list at the end of the term.',
+              '**What counts as the price?** Is the fee calculated on cash at closing only, or also on a seller note, an earnout, real estate sold alongside the business, or consulting fees paid to the owner?',
+              '**When is the fee paid?** Usually at closing, out of the proceeds. If part of the price arrives later, does the fee on that part also wait?',
+              '**What happens if the owner pulls the business off the market?** Some agreements charge a fee or reimburse expenses if the owner withdraws.',
+              '**Who is the broker’s client?** The owner should be. If the broker also takes fees from buyers, the agreement should say so.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'What brokers usually want, and why',
+        blocks: [
+          'Seen from the broker’s side, most of these terms answer one risk: doing months of work and then being cut out of the deal. Exclusivity protects against the owner shopping the business through three brokers at once. The tail protects against an owner ending the agreement and closing with the broker’s buyer a week later. The minimum fee protects against a deal that closes far below the asking price after the same amount of work.',
+          'None of that makes the terms unfair. It makes them negotiable. A broker confident in the process will often agree to a shorter tail tied to a written buyer list, a clear exclusions schedule and a retainer that is credited at closing. Those changes cost the broker little and protect the owner a lot.',
+          'Once the agreement is signed, the rest of the sale has its own paperwork. For the documents that come later, see [the eight terms in a business purchase agreement](/playbooks/business-purchase-agreement-terms-explained).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'A tail clause depends on a record of which buyers the broker introduced and when. That record usually lives in chats: an intro on LinkedIn, follow-ups on WhatsApp, a site visit arranged on Telegram. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached, and introductions are saved to the Rolodex linked to the message they came from.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'BizBuySell, Business broker contract terms (engagement period, exclusivity, minimum fee, tail period)',
+        href: 'https://www.bizbuysell.com/learning-center/article/business-broker-contract-terms/',
+        accessed: '2026-11-25',
+      },
+      {
+        label: 'Corporate Finance Institute, Fee tail (success fees, retainers, tail periods of 12 to 24 months)',
+        href: 'https://corporatefinanceinstitute.com/resources/wealth-management/fee-tail/',
+        accessed: '2026-11-25',
+      },
+      {
+        label: 'investors.club, Business broker fees in 2026 (typical rates and minimums)',
+        href: 'https://investors.club/how-much-do-business-brokers-charge/',
+        accessed: '2026-11-25',
+      },
+    ],
+  },
+  {
+    slug: 'seller-note-vs-earnout-how-each-pays-the-seller',
+    type: T.comparison,
+    audience: 'Buyers, sellers and brokers',
+    title: 'Seller note vs earnout: two ways to pay part of the price later, side by side',
+    description:
+      'A seller note is a loan with a schedule. An earnout is a payment that depends on results. How each works, who carries the risk, and why a deal might use one, the other or both.',
+    dek: 'When a buyer cannot or will not pay the full price at closing, the gap usually gets filled one of two ways. Both mean the seller waits for money. Only one of them is guaranteed to arrive.',
+    published: '2026-11-25',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The short version',
+        blocks: [
+          'A **seller note** is a loan from the seller to the buyer. The seller accepts part of the price as a promissory note and the buyer pays it back over time, with interest, on a fixed schedule. The amount owed is set on the day of closing.',
+          'An **earnout** is a contingent payment. The buyer agrees to pay more later only if the business hits agreed targets after closing, such as revenue, gross profit or EBITDA over a set period. If the targets are missed, that part of the price is never paid.',
+          'Both defer part of the price. The difference is who carries the risk of how the business performs. With a seller note, the buyer owes the money either way. With an earnout, the seller only gets paid if the business delivers.',
+          'This is a plain-language comparison of how these tools commonly work in private company sales in the United States. Terms vary deal by deal, tax treatment depends on the details, and none of this is legal, tax or investment advice.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['', 'Seller note', 'Earnout'],
+            rows: [
+              ['What it is', 'A loan from the seller, repaid on a schedule', 'Extra price paid only if targets are met'],
+              ['Amount', 'Fixed at closing', 'Depends on results, up to an agreed maximum'],
+              ['Typical terms', 'Interest commonly around 6% to 10%, repaid over roughly three to seven years', 'Measured over a set period, most often one to two years in larger private deals'],
+              ['Main risk for the seller', 'The buyer cannot pay', 'The targets are missed, or measured differently than expected'],
+              ['Main risk for the buyer', 'A fixed debt even if the business struggles', 'Disputes over how results were measured'],
+              ['Why it gets used', 'Fills a financing gap; shows the seller believes in the business', 'Bridges a disagreement about what the business is worth'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How a seller note works',
+        blocks: [
+          'Seller notes are especially common in small business sales, where bank financing and the buyer’s cash do not quite reach the agreed price. Most carry interest, often tied to the prime rate plus a few points, and most run three to seven years, though shorter and longer notes exist.',
+          'The note is usually subordinated to the bank loan, which means the bank gets paid first if things go wrong. When the purchase is financed with an SBA loan, the lender may require part or all of the note to be on standby, with no payments to the seller for a set period. The seller is, in effect, the last lender in line.',
+          'For a buyer, a seller note is cheaper and more flexible than most other money, and it keeps the seller interested in a smooth handover. For a seller, it can mean a higher headline price, but it is credit risk. The note is only as good as the business’s ability to pay it.',
+        ],
+      },
+      {
+        heading: 'How an earnout works',
+        blocks: [
+          'Earnouts usually show up when buyer and seller disagree about the future. The seller says next year will be the best yet. The buyer is willing to pay for that year, but only after it happens. The earnout is the compromise.',
+          'In the larger private deals tracked in SRS Acquiom’s 2026 deal terms study, earnouts appeared in about a quarter of deals, and the median earnout was worth about a third of the closing payment if fully earned. The most common measurement period was one to two years.',
+          'The hard part is the definition. Revenue is easier to measure than profit, because profit depends on costs the buyer now controls. Agreements spell out the accounting rules, what happens if the buyer changes the business, and how disputes get settled. Sellers who stay on to run the business often care most about how much control they keep during the earnout period.',
+        ],
+      },
+      {
+        heading: 'One deal, both tools',
+        blocks: [
+          'Many deals use both. An illustrative example, with invented figures:',
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'A business sells for 3 million dollars. The buyer pays 2.4 million at closing from a bank loan and their own cash. The seller takes a 300,000 dollar note at an illustrative 8% over five years, so the buyer owes roughly 6,000 dollars a month regardless of results. The last 300,000 dollars is an earnout, paid in full if revenue grows 10% in the first two years and in part if it grows less. If the business has a hard year, the seller still collects on the note, but may receive little or nothing of the earnout.',
+          },
+          'Read that way, the offer is really three numbers: 2.4 million dollars that is close to certain, 300,000 dollars that depends on the buyer staying solvent, and 300,000 dollars that depends on the business growing. The same 3 million dollar headline can hide very different amounts of risk.',
+        ],
+      },
+      {
+        heading: 'Which one fits',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**A financing gap, with agreement on value.** A seller note is the usual answer. Both sides agree what the business is worth; the buyer just cannot fund all of it at closing.',
+              '**A disagreement about value.** An earnout lets each side keep its view and let the results decide.',
+              '**A seller who wants certainty.** A note, ideally with a personal guarantee or security, and a shorter term. Earnouts suit sellers who are confident and will stay involved.',
+              '**A buyer worried about the first year.** An earnout shifts some of that risk back to the seller. A note does not.',
+            ],
+          },
+          'For more on each term on its own, see [the eight terms in a business purchase agreement](/playbooks/business-purchase-agreement-terms-explained) and [how an SBA 7(a) acquisition works](/playbooks/how-an-sba-7a-loan-business-acquisition-works), which covers standby seller notes.',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Notes and earnouts tend to get negotiated in pieces, a rate on WhatsApp, a target on a call, a revised split on LinkedIn. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached, so the terms you discussed stay next to the deal.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'Website Closers, Seller notes and earn-outs (seller note rates and terms, how earnouts pay)',
+        href: 'https://www.websiteclosers.com/seller-notes-and-earn-outs/',
+        accessed: '2026-11-25',
+      },
+      {
+        label: 'Fasken, Private M&A deal trends to watch: key takeaways from SRS Acquiom’s 2026 study (earnout frequency, size and length)',
+        href: 'https://www.fasken.com/en/knowledge/2026/05/private-ma-deal-trends-to-watch-key-takeaways-from-srs-acquioms-2026-study',
+        accessed: '2026-11-25',
+      },
+      {
+        label: 'Investopedia, Earnout: definition and how it works',
+        href: 'https://www.investopedia.com/terms/e/earnout.asp',
+        accessed: '2026-11-25',
+      },
+    ],
+  },
 ];
