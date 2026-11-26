@@ -3825,6 +3825,266 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-26 ───────────────────────────────────────────────────────────
+  {
+    slug: 'pre-ipo-secondary-trade-walkthrough-rofr-transfer-approval-and-settlement',
+    type: T.useCase,
+    audience: 'Pre-IPO secondaries',
+    title: 'How a pre-IPO secondary trade settles: an illustrative walkthrough of ROFR, transfer approval and closing',
+    description:
+      'An illustrative walkthrough of a private company share sale after the price is agreed: the transfer notice, the right of first refusal, company approval, escrow and the cap table update.',
+    dek: 'The buyer and seller agreed a price on a Tuesday. The shares moved seven weeks later. A walkthrough of everything that happens in between, and why the company gets a say.',
+    published: '2026-11-26',
+    readMinutes: 7,
+    illustrative: true,
+    sections: [
+      {
+        heading: 'The trade',
+        blocks: [
+          'Rafael was an early engineer at a late-stage logistics software company, here called Company K. He left two years ago with vested common stock and now wants to sell part of it. Mei runs a two-person secondaries desk. She found him a buyer, a family office that wants exposure to Company K before any IPO.',
+          'After a week of back and forth, the two sides agree on a price per share and a number of shares. Rafael thinks the hard part is over. Mei knows it has barely started. In a public company, a trade settles in a day. In a private company, the shares belong to a company that usually has the right to block, delay or take over the sale.',
+          'What follows is a common sequence for a sale of common stock in a venture-backed company. Every company’s documents are different, so the order and timing below are typical, not universal. None of it is legal or tax advice.',
+        ],
+      },
+      {
+        heading: 'Step 1: read the stock documents before anything is signed',
+        blocks: [
+          'Mei’s first request is for Rafael’s paperwork: the stock option or purchase agreements, any stockholder agreements he signed, and the company’s bylaws if he has them. These documents decide whether the trade can happen at all.',
+          {
+            type: 'list',
+            items: [
+              '**Transfer restrictions.** Many private companies require board approval for any transfer, and some prohibit sales outside company-run programs.',
+              '**Right of first refusal (ROFR).** The company, and sometimes its major investors, can buy the shares at the same price and terms the outside buyer agreed to.',
+              '**Co-sale rights.** Some investors can join a sale and sell part of their own shares to the same buyer.',
+              '**Vesting and share class.** Only vested shares can be sold, and the buyer needs to know whether they are common or preferred.',
+            ],
+          },
+          'Company K’s documents allow transfers with board approval and give the company a 30-day ROFR once it receives a complete transfer notice. That 30 days is a common window, though some companies set longer ones.',
+        ],
+      },
+      {
+        heading: 'Step 2: sign a purchase agreement that depends on the company',
+        blocks: [
+          'Rafael and the buyer sign a share purchase agreement with the agreed price, number of shares and a closing that is conditional on the company waiving its ROFR and approving the transfer. If the company exercises its right, the agreement usually falls away and the company buys instead.',
+          'The buyer also confirms it can meet the company’s conditions. Some companies only approve buyers who are accredited investors, refuse competitors, or limit how many new holders they add to the cap table.',
+        ],
+      },
+      {
+        heading: 'Step 3: the transfer notice starts the clock',
+        blocks: [
+          'Rafael, with Mei’s help, sends Company K a transfer notice: who the buyer is, how many shares, the price and the other terms. The ROFR period usually starts only when the company considers the notice complete, so a missing signature or an unclear term can quietly reset the clock.',
+          'Mei asks the company’s stock administrator to confirm in writing the date the notice was received as complete. That date drives everything after it.',
+        ],
+      },
+      {
+        heading: 'Step 4: the company decides',
+        blocks: [
+          'During the ROFR window, Company K has three common choices: waive the right and let the trade go ahead, exercise it and buy the shares itself at the same price, or assign the right to an existing investor who buys instead.',
+          'A company may exercise because it wants to control who holds its stock, or because it thinks the price is low. The seller usually still gets the agreed price. The outside buyer is the one who loses the trade, which is why buyers and brokers watch ROFR exercise closely.',
+          'Company K waives. Its board also approves the transfer, subject to the buyer signing joinders to the existing stockholder agreements, so the new holder is bound by the same restrictions Rafael was.',
+        ],
+      },
+      {
+        heading: 'Step 5: escrow, documents and the cap table',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Funds into escrow',
+                text: 'The buyer wires the purchase price to an escrow agent rather than straight to Rafael, so neither side has to trust the other with cash or shares first.',
+              },
+              {
+                title: 'Transfer documents',
+                text: 'Rafael signs a stock power or the company’s transfer form, the buyer signs the joinders, and both sides deliver whatever else the company asks for.',
+              },
+              {
+                title: 'The company records the transfer',
+                text: 'Company K updates its stock ledger, often on its cap table platform, and issues the shares to the buyer. Until this happens, the buyer does not legally hold the shares.',
+              },
+              {
+                title: 'Release',
+                text: 'Once the transfer is recorded, the escrow agent releases the money to Rafael, less any fees the agreement says are paid out of the proceeds.',
+              },
+            ],
+          },
+          'From agreed price to release, Rafael’s trade took about seven weeks. Thirty to ninety days is a common range for private company transfers, depending on how fast the company responds and how complete the paperwork is.',
+        ],
+      },
+      {
+        heading: 'Where these trades usually slow down',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**An incomplete notice.** The ROFR window does not start, and nobody notices for two weeks.',
+              '**A company that is slow to answer.** Stock administration is rarely anyone’s main job at a growing startup.',
+              '**A buyer who cannot be approved.** A competitor, or a buyer who would push the holder count past a limit the company cares about.',
+              '**Changed terms.** If the price or share count changes after the notice, the company may treat it as a new notice and restart the window.',
+            ],
+          },
+          'For a broker, the lesson from Rafael’s trade is that the price is the first agreement, not the last. The company is a third party to every private secondary, and its documents set the timeline. For the conversations that come before this stage, see [how a secondaries broker keeps 40 counterparties straight](/playbooks/secondaries-broker-counterparties-across-messaging-apps).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'A single trade like this runs through a seller, a buyer, a stock administrator, an escrow agent and often two sets of lawyers, each in a different app. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached. The notice date and the company’s answer stay with the trade.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'Forge Global, What happens when a company exercises its ROFR',
+        href: 'https://forgeglobal.com/insights/private-market-education/what-happens-when-company-exercises-rofr/',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'MicroVentures, Right of first refusal is a common obstacle in secondary transactions',
+        href: 'https://microventures.com/right-of-first-refusal',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'Morrison & Foerster via CLS Blue Sky Blog, Buying shares of private companies from existing shareholders',
+        href: 'https://clsbluesky.law.columbia.edu/2020/08/06/morrison-foerster-discusses-buying-shares-of-private-companies-from-existing-shareholders',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'Nasdaq Private Market, How to sell private company stock',
+        href: 'https://www.nasdaqprivatemarket.com/shareholders/',
+        accessed: '2026-11-26',
+      },
+    ],
+  },
+  {
+    slug: 'real-estate-syndication-distribution-waterfall-explained',
+    type: T.guide,
+    audience: 'Real estate syndicators and investors',
+    title: 'How a real estate syndication waterfall works: preferred return, return of capital and the split',
+    description:
+      'How a real estate syndication distribution waterfall works, tier by tier: the preferred return, return of capital, catch-up and the sponsor’s promote, with illustrative math.',
+    dek: 'Every syndication decides, in advance, who gets paid first when the money comes in. That order is the waterfall. Here is how the common version works and what to read for in an operating agreement.',
+    published: '2026-11-26',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'What a waterfall is',
+        blocks: [
+          'In a real estate syndication, a sponsor (the general partner) finds a property, raises equity from investors (the limited partners), and runs the asset. The money that comes back, from rent during the hold and from the sale at the end, is split between the two groups according to a schedule written into the operating agreement. Because the money fills one tier before it spills into the next, the schedule is called a waterfall.',
+          'Waterfalls vary a lot from deal to deal. The structure below is a common one, not a standard. Read the actual agreement, and treat the figures as typical ranges and illustrative math, not investment, legal or tax advice.',
+        ],
+      },
+      {
+        heading: 'The tiers, in order',
+        blocks: [
+          {
+            type: 'steps',
+            items: [
+              {
+                title: 'Tier 1: the preferred return',
+                text: 'Investors receive a target annual return on their capital before the sponsor shares in profits. It is often 6% to 8% a year. It is a priority, not a guarantee: if the property does not produce the cash, the pref is not paid, though in many deals the shortfall accrues and is owed later.',
+              },
+              {
+                title: 'Tier 2: return of capital',
+                text: 'Investors get their original money back. During the hold this rarely happens; it usually comes from a refinance or the sale.',
+              },
+              {
+                title: 'Tier 3: the catch-up (in some deals)',
+                text: 'The sponsor receives most or all of the next dollars until it has its agreed share of the profit paid so far. Catch-ups are common in private equity funds and less common in smaller syndications.',
+              },
+              {
+                title: 'Tier 4: the split',
+                text: 'What is left is shared. 70/30 or 80/20, investors to sponsor, are common. The sponsor’s share is the promote, sometimes called carried interest.',
+              },
+            ],
+          },
+          'Some deals add more tiers: the split moves in the sponsor’s favor, say from 70/30 to 60/40, once investors pass a higher return hurdle, often measured as an internal rate of return. Each extra tier rewards the sponsor for results above the plan.',
+        ],
+      },
+      {
+        heading: 'Illustrative math',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'Investors put in 5 million dollars. The deal has an 8% simple, cumulative preferred return and a 70/30 split, with no catch-up. The pref is 400,000 dollars a year, but the property pays out 250,000 a year for five years, so 750,000 of unpaid pref builds up. At the sale, 8 million dollars is left for the equity. First, 750,000 pays the unpaid pref. Next, 5 million returns the investors’ capital. The remaining 2.25 million is split 70/30: 1.575 million to investors and 675,000 to the sponsor.',
+          },
+          'Add it up. Investors received 1.25 million during the hold, then 750,000, then 5 million, then 1.575 million: 8.575 million on 5 million invested. The sponsor’s promote is 675,000, paid only because the investors got their pref and their money back first. If the sale had brought in 5.75 million or less, there would have been nothing left to split, and no promote.',
+        ],
+      },
+      {
+        heading: 'Why each side reads the waterfall differently',
+        blocks: [
+          'For investors, the early tiers are the protection. A cumulative pref and a full return of capital before any split mean the sponsor is only paid a share of profits when there are profits to share. Investors tend to focus on how high the pref is and whether it accrues.',
+          'For the sponsor, the later tiers are the business model. Acquisition and asset management fees are mainly meant to cover the cost of finding and running the deal. The promote is where a sponsor makes most of its money, and only if the deal beats the plan. That is why sponsors negotiate hardest over the split and the hurdles above the pref.',
+          'In private equity funds, the same idea comes in two versions. A whole-fund waterfall, often called European, returns capital and the pref across every deal in the fund before carry is paid. A deal-by-deal waterfall, often called American, can pay carry on each winning deal sooner. Most single-property syndications are one deal, so the question rarely comes up, but it matters for sponsors who raise a fund across several properties.',
+        ],
+      },
+      {
+        heading: 'The details that change the numbers',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Cumulative or not.** With a cumulative pref, unpaid amounts carry forward, as in the example. Without it, a missed year is gone.',
+              '**Simple or compounding.** A compounding pref grows on the unpaid balance, which favors investors when payouts fall short.',
+              '**What the pref applies to.** Usually unreturned capital. After a refinance returns part of the capital, the pref often shrinks with it.',
+              '**Operating cash vs sale proceeds.** Many agreements run cash flow during the hold and money from a sale or refinance through different waterfalls.',
+              '**Sponsor fees.** Acquisition, asset management and disposition fees are usually paid outside the waterfall, so they reduce what reaches it.',
+              '**Sponsor co-investment.** When the sponsor also invests its own money, that portion is usually treated like any other investor’s capital.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Questions investors commonly ask a sponsor',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'Is the preferred return cumulative, and is it simple or compounding?',
+              'Is there a catch-up, and how much of each dollar goes to the sponsor during it?',
+              'At what return does the split change, and how is that return measured?',
+              'Which fees come out before the waterfall?',
+              'What happens to the pref after a refinance returns part of the capital?',
+            ],
+          },
+          'The same five questions are worth answering on the sponsor side before the raise starts, because the answers end up in the offering documents and in every investor call. For how the raise itself runs, see [a syndicator’s raise from a WhatsApp intro to signed documents](/playbooks/real-estate-syndicator-capital-raise-from-intro-to-signature).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Investor questions about the waterfall arrive in WhatsApp, LinkedIn and Telegram long before anyone opens the operating agreement. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached, so the answers you gave each investor stay with the raise.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'Wall Street Prep, Real estate waterfall',
+        href: 'https://www.wallstreetprep.com/knowledge/real-estate-waterfall/',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'BiggerPockets, A real estate investor’s guide to the equity waterfall',
+        href: 'https://www.biggerpockets.com/blog/real-estate-waterfall-investors-guide',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'InvestNext, Common real estate waterfall structures',
+        href: 'https://www.investnext.com/blog/common-real-estate-waterfall-structures/',
+        accessed: '2026-11-26',
+      },
+      {
+        label: 'Wikipedia, Distribution waterfall',
+        href: 'https://en.wikipedia.org/wiki/Distribution_waterfall',
+        accessed: '2026-11-26',
+      },
+    ],
+  },
   // ── 2026-11-02 ───────────────────────────────────────────────────────────
   {
     slug: 'angel-syndicate-lead-filling-an-allocation-across-messaging-apps',
