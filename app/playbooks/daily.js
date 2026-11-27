@@ -4085,6 +4085,220 @@ export const daily = [
       },
     ],
   },
+  // ── 2026-11-27 ───────────────────────────────────────────────────────────
+  {
+    slug: 'commercial-real-estate-purchase-agreement-terms-explained',
+    type: T.list,
+    audience: 'Commercial real estate investors and brokers',
+    title: 'Commercial real estate purchase agreement terms, explained in plain language',
+    description:
+      'Earnest money, the due diligence period, going hard, estoppels, financing contingencies and prorations: the commercial property contract terms that decide who can walk away and when.',
+    dek: 'A commercial property deal is mostly a schedule of dates. Each one decides who can still walk away, and what it costs them. Here are the terms that set those dates, one at a time.',
+    published: '2026-11-27',
+    readMinutes: 7,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'Why the contract matters more than the price',
+        blocks: [
+          'The price on a commercial property usually gets agreed in a letter of intent, often in a few messages. The purchase and sale agreement that follows is where the real negotiation happens: how much the buyer puts at risk, for how long they can investigate, and what the seller promises about the building.',
+          'The terms below are common in US commercial deals, but contracts, customs and state law vary. This is a plain-language overview, not legal advice. A real estate attorney should read the actual agreement.',
+        ],
+      },
+      {
+        heading: 'The terms, in the order they usually come up',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Letter of intent (LOI).** A short, usually non-binding summary of price, deposit, timing and key conditions. It sets the frame for the contract, and parts of it, such as confidentiality or exclusivity, can be binding even when the rest is not.',
+              '**Earnest money deposit.** Money the buyer puts up to show the offer is serious. In commercial deals it is commonly about 1% to 3% of the price, and some contracts add a second deposit later. On a 4 million dollar building, 2% is 80,000 dollars.',
+              '**Escrow agent.** The deposit does not go to the seller. A neutral third party holds it, very often the title company working on the deal, and releases it according to the contract.',
+              '**Due diligence period.** A window, set in the contract, during which the buyer inspects the property, reviews leases and financials, orders reports and lines up financing. During this window the buyer can usually terminate and get the deposit back.',
+              '**Going hard.** When the due diligence period ends without the buyer terminating, the deposit typically becomes non-refundable. From that point, a buyer who walks away for a reason the contract does not allow usually loses it.',
+              '**Title commitment and survey.** The title company reports what is recorded against the property: liens, easements, restrictions. The survey shows boundaries and encroachments. The contract sets a deadline for the buyer to object and for the seller to cure or decline.',
+              '**Estoppel certificates.** Statements signed by tenants confirming their rent, lease dates, deposits and whether either side is in default. They let the buyer check that the rent roll matches what tenants say.',
+              '**Financing contingency.** A right to terminate if the buyer cannot get the loan described in the contract. Sellers often push to shorten it or remove it, because it keeps the deposit at risk of coming back.',
+              '**Seller representations.** Statements about the property, such as no known environmental problems, no pending lawsuits, leases as disclosed. Many commercial sales are largely "as is", with a short list of representations that survive closing for a limited time.',
+              '**Closing date and extensions.** The day ownership and money change hands. Contracts often let the buyer extend once or twice, sometimes for an added deposit.',
+              '**Prorations.** Rent, property taxes and operating costs for the month of closing are split between buyer and seller by date, and tenant security deposits are usually credited to the buyer.',
+              '**Assignment.** Whether the buyer can transfer the contract to another entity, which matters when an investor group forms a new company to own the property.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How the deposit and the dates fit together',
+        blocks: [
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'A buyer agrees to pay 4 million dollars for a small retail center and puts down a 2% earnest money deposit, 80,000 dollars, held by the title company. The contract gives the buyer a due diligence period to review leases, estoppels and inspections. If the buyer terminates inside that window, the 80,000 dollars usually comes back. If the window ends and the buyer later walks away without a contractual reason, the seller usually keeps it.',
+          },
+          'That is why experienced buyers line up their inspections, lender and lease review in the first days of the period, not the last. And it is why sellers watch the date the deposit goes hard more closely than almost anything else in the contract: before it, the buyer has an option; after it, the buyer has a commitment with money behind it.',
+        ],
+      },
+      {
+        heading: 'What each side usually negotiates',
+        blocks: [
+          {
+            type: 'table',
+            head: ['Term', 'Buyer usually wants', 'Seller usually wants'],
+            rows: [
+              ['Deposit', 'Smaller, fully refundable for longer', 'Larger, going hard sooner'],
+              ['Due diligence period', 'Longer, with an option to extend', 'Shorter, with no extensions'],
+              ['Financing contingency', 'Included, with a realistic loan description', 'Removed or very short'],
+              ['Representations', 'More of them, surviving longer after closing', 'Fewer, "as is" where possible'],
+              ['Closing extensions', 'Available without extra cost', 'Available only for an added deposit'],
+            ],
+          },
+          'None of these is right or wrong on its own. A buyer with cash and a short checklist can offer a hard deposit early and win a competitive deal. A buyer who needs a loan and has many tenants to check may need more time, and should ask for it in the LOI rather than in the contract.',
+        ],
+      },
+      {
+        heading: 'Questions worth answering before the LOI goes out',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              'How big is the deposit, and is there a second one?',
+              'Exactly when does it go hard, counted from what day?',
+              'What does the buyer need to see in due diligence, and can it be done in the time asked for?',
+              'Is there a financing contingency, and what loan does it describe?',
+              'Which tenants must deliver estoppels before closing?',
+              'Can the buyer assign the contract to a new entity?',
+            ],
+          },
+          'For how the same steps look when the asset is a business rather than a building, see [business purchase agreement terms, explained](/playbooks/business-purchase-agreement-terms-explained).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Most of these terms are first floated in a message: a deposit in a WhatsApp thread, a closing date in LinkedIn, a tenant question in a Telegram group. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached, so what each side said before the contract is easy to find.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'A.CRE (Adventures in CRE), The earnest money deposit',
+        href: 'https://www.adventuresincre.com/the-earnest-money-deposit/',
+        accessed: '2026-11-27',
+      },
+      {
+        label: 'Acquisition Stars, LOI earnest money deposit guide',
+        href: 'https://acquisitionstars.com/loi-guides/loi-earnest-money-deposit',
+        accessed: '2026-11-27',
+      },
+    ],
+  },
+  {
+    slug: 'recourse-vs-non-recourse-commercial-real-estate-loans',
+    type: T.comparison,
+    audience: 'Commercial real estate investors and syndicators',
+    title: 'Recourse vs non-recourse loans in commercial real estate: who pays if the deal goes wrong',
+    description:
+      'Recourse vs non-recourse commercial real estate loans: what each means for the borrower, where each is common, and how bad boy carve-outs can turn a non-recourse loan into a personal one.',
+    dek: 'Two loans can carry the same rate and the same amount and still put very different things at risk. The difference is what the lender can take if the loan is not repaid.',
+    published: '2026-11-27',
+    readMinutes: 6,
+    illustrative: false,
+    sections: [
+      {
+        heading: 'The one question behind both terms',
+        blocks: [
+          'Every commercial real estate loan is secured by the property. The question recourse answers is what happens if the property is not enough. Can the lender only take the building, or can it also come after the borrower, and the people who signed a guarantee, for the rest?',
+          'This is a plain-language overview. Loan documents, guarantees and state law vary, and the exact wording decides who owes what. It is not legal or investment advice.',
+        ],
+      },
+      {
+        heading: 'Side by side',
+        blocks: [
+          {
+            type: 'table',
+            head: ['', 'Recourse loan', 'Non-recourse loan'],
+            rows: [
+              ['If the loan defaults', 'The lender can take the property and pursue the borrower or guarantor for any shortfall', 'The lender generally looks only to the property'],
+              ['Who is personally exposed', 'The borrower, and usually the sponsor through a personal guarantee', 'Generally no one, unless a carve-out is triggered'],
+              ['Where it is common', 'Construction, bridge and other shorter-term loans', 'Longer-term permanent loans on stabilized, performing properties, including CMBS'],
+              ['What the lender relies on', 'The property and the guarantor’s balance sheet', 'The property’s income and value'],
+              ['The catch', 'A bad outcome can reach personal assets', 'Carve-outs can make the loan partly or fully recourse'],
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'How a recourse loan works',
+        blocks: [
+          'With a recourse loan, the borrower is personally liable for the outstanding balance in addition to the property itself. In practice the borrower is often a single-purpose company, so the lender asks the sponsor to sign a personal guarantee. If the property is foreclosed on and sold for less than the debt, the lender can pursue the guarantor for the difference.',
+          'Recourse is common on loans where the property is not yet producing stable income: ground-up construction, heavy renovation, or a short bridge loan while a building is leased up. The lender is taking a bet on a business plan, so it wants a person standing behind it.',
+          {
+            type: 'callout',
+            title: 'Illustrative math',
+            text: 'A sponsor borrows 6 million dollars on a recourse bridge loan to reposition an office building. The plan stalls, the loan defaults, and the building sells at foreclosure for 4.5 million. With full recourse, the lender can pursue the guarantor for the 1.5 million shortfall, plus costs the loan documents allow. With a non-recourse loan and no carve-out triggered, the lender would generally absorb that loss.',
+          },
+          'Recourse is not always all or nothing. Some loans are recourse for a set percentage of the balance, or only until the property hits an income target, after which the guarantee burns off.',
+        ],
+      },
+      {
+        heading: 'How a non-recourse loan works',
+        blocks: [
+          'With a non-recourse loan, the lender agrees in advance that if the loan is not repaid, it will look to the property and its income, not to the borrower’s other assets. These loans are usually reserved for stabilized, performing properties, where the rent roll alone can support the debt. Non-recourse has long been a staple of commercial mortgage-backed securities (CMBS) loans.',
+          'Because the lender cannot fall back on a guarantor, it leans harder on the property: debt service coverage, occupancy, lease terms, reserves. A non-recourse loan is often harder to qualify for and may come with less flexibility, such as prepayment limits, in exchange for keeping the sponsor’s personal assets out of it.',
+        ],
+      },
+      {
+        heading: 'Bad boy carve-outs: when non-recourse stops being non-recourse',
+        blocks: [
+          'Almost every non-recourse loan comes with exceptions, commonly called bad boy carve-outs, backed by a guarantee from the sponsor. They cover acts the borrower controls and the lender cannot price.',
+          {
+            type: 'list',
+            items: [
+              '**Losses only.** Lesser breaches, such as misapplying rents, failing to pay property taxes or insurance, or environmental problems, typically make the guarantor liable for the lender’s actual losses from that act.',
+              '**Full recourse.** Serious acts, such as a voluntary bankruptcy filing, fraud or misrepresentation, or an unapproved transfer, typically make the whole loan recourse to the guarantor.',
+              '**Quiet triggers.** Some documents also tie full liability to a change in control of the borrower, taking on additional debt, or breaching separateness covenants. Court cases have shown that a loosely drafted covenant can make a non-recourse loan fully recourse in a downturn.',
+            ],
+          },
+          'The practical point: the carve-out list is where a non-recourse loan’s real risk sits. It is worth reading line by line with counsel before the term sheet is signed, not at closing.',
+        ],
+      },
+      {
+        heading: 'How sponsors and investors think about the choice',
+        blocks: [
+          {
+            type: 'list',
+            items: [
+              '**Business plan.** A value-add or construction plan usually means recourse, or a recourse bridge loan followed by a non-recourse refinance once the property is stabilized.',
+              '**Personal balance sheet.** Lenders size a guarantee against the guarantor’s net worth and liquidity, so a recourse loan can limit how many deals a sponsor can take on at once.',
+              '**Investors in a syndication.** Limited partners are usually not guarantors either way. The guarantee sits with the sponsor, and investors commonly ask who signed it and on what terms, because a sponsor under personal pressure may make different decisions.',
+              '**Questions to ask a lender.** Is the loan full, partial or non-recourse? Does any guarantee burn off, and when? Which carve-outs are losses only and which are full recourse?',
+            ],
+          },
+          'For how investors and the sponsor share the money once the loan is paid, see [how a real estate syndication waterfall works](/playbooks/real-estate-syndication-distribution-waterfall-explained).',
+        ],
+      },
+      {
+        heading: 'Where Merger fits',
+        blocks: [
+          'Loan terms rarely arrive in one place. A lender quotes a rate on LinkedIn, a guarantee question comes up in a WhatsApp group with your partners, a term sheet lands in Slack. In Merger, the messaging accounts you connect sit in one inbox, and with your own Anthropic API key Claude can flag a conversation as a possible deal for you to approve onto the Deal Desk, with the conversation attached.',
+          WORTH_KNOWING,
+        ],
+      },
+    ],
+    sources: [
+      {
+        label: 'PropertyMetrics, Recourse vs non-recourse loans',
+        href: 'https://propertymetrics.com/blog/recourse-vs-non-recourse-loans',
+        accessed: '2026-11-27',
+      },
+      {
+        label: 'ArentFox Schiff, Non-recourse carve-outs: borrower and guarantor considerations',
+        href: 'https://www.afslaw.com/perspectives/alerts/non-recourse-carve-outs-borrower-and-guarantor-considerations',
+        accessed: '2026-11-27',
+      },
+    ],
+  },
   // ── 2026-11-02 ───────────────────────────────────────────────────────────
   {
     slug: 'angel-syndicate-lead-filling-an-allocation-across-messaging-apps',
