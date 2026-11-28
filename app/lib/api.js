@@ -68,6 +68,10 @@ export const signup = (email, password, displayName, waitlist) =>
 
 export const login = (email, password) =>
   request('/api/auth/login', { method: 'POST', body: { email, password } });
+export const startInviteEmail = email => request('/api/onboarding/signup/start', { method:'POST', body:{email} });
+export const checkInviteEmail = (challengeId, code) => request('/api/onboarding/signup/verify', { method:'POST', body:{challengeId, code, intent:'check_account'} });
+export const signInInviteEmail = (challengeId, code) => request('/api/onboarding/signup/verify', { method:'POST', body:{challengeId, code, intent:'sign_in_existing'} });
+export const finishInviteSignup = (challengeId, proof, password, accepted) => request('/api/onboarding/signup/complete', { method:'POST', body:{challengeId, proof, password, termsAccepted:accepted, privacyAccepted:accepted} });
 export const googleSigninStatus = () => request('/api/auth/google/status');
 export const googleSigninStart = (body) => request('/api/auth/google/start',{method:'POST',body});
 export const googleSigninComplete = (ticket) => request('/api/auth/google/complete',{method:'POST',body:{ticket}});
