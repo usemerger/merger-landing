@@ -27,7 +27,7 @@ describe('in-deal authentication',()=>{
     fireEvent.change(email,{target:{value:'returning@example.com'}});
     api.startInviteEmail.mockResolvedValue({challengeId:'fixture'});
     fireEvent.click(screen.getByRole('button',{name:'Send verification code'}));
-    const code=await screen.findByLabelText('Verification code');
+    const code=await screen.findByRole('textbox',{name:'Digit 1 of 6'});
     fireEvent.change(code,{target:{value:'123456'}});
     api.checkInviteEmail.mockResolvedValue({ok:true,status:'existing_account',signInWithCode:true});
     fireEvent.click(screen.getByRole('button',{name:'Verify email'}));

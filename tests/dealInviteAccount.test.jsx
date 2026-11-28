@@ -18,9 +18,9 @@ async function verify() {
   await screen.findByLabelText('Email address');
   fill('Email address', email.toUpperCase());
   click('Send verification code');
-  await screen.findByLabelText('Verification code');
+  await screen.findByRole('textbox',{name:'Digit 1 of 6'});
   expect(screen.queryByLabelText('New password')).toBeNull();
-  fill('Verification code','123456');
+  fill('Digit 1 of 6','123456');
   click('Verify email');
 }
 beforeEach(() => {
@@ -29,6 +29,29 @@ beforeEach(() => {
   api.startInviteEmail.mockResolvedValue({challengeId:'challenge'});
 });
 describe('invitation account routing', () => {
+  it('advances through six boxes, identifies missing digits and accepts a complete paste from any box',async()=>{
+    render(<Page/>);
+    await screen.findByLabelText('Email address');
+    fill('Email address', email);
+    click('Send verification code');
+    const first = await screen.findByRole('textbox',{name:'Digit 1 of 6'});
+    const box = n => screen.getByRole('textbox',{name:`Digit ${n} of 6`});
+    fireEvent.keyDown(first,{key:'0'});
+    expect(box(2)).toHaveFocus();
+    fireEvent.keyDown(box(2),{key:'Backspace'});
+    expect(first).toHaveFocus();
+    expect(first).toHaveValue('');
+    fireEvent.paste(first,{clipboardData:{getData:()=>'01234'}});
+    click('Verify email');
+    expect(await screen.findByRole('alert')).toHaveTextContent('Enter the remaining digit');
+    expect(box(6)).toHaveFocus();
+    expect(api.checkInviteEmail).not.toHaveBeenCalled();
+    fireEvent.paste(box(6),{clipboardData:{getData:()=>'012 345'}});
+    api.checkInviteEmail.mockResolvedValue({ok:true,status:'existing_account',signInWithCode:true});
+    click('Verify email');
+    await screen.findByText('Welcome back');
+    expect(api.checkInviteEmail).toHaveBeenCalledWith('challenge','012345');
+  });
   it('signs the existing account in and returns to the shared document in the same tab', async () => {
     api.checkInviteEmail.mockResolvedValue({ok:true,status:'existing_account',signInWithCode:true});
     api.signInInviteEmail.mockResolvedValue({ok:true});

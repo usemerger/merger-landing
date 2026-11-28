@@ -1,0 +1,30 @@
+.invite-code {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(4px, 1vw, 8px);
+}
+
+.auth-card .field .invite-code input[type=text] {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #57565b;
+  border-radius: 9px;
+  background: #141518;
+  color: #f5f4f2;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.auth-card .field .invite-code input[type=text]:focus {
+  background: #27231d;
+  border-color: #e6c78f;
+  outline: 2px solid #e6c78f;
+  outline-offset: 1px;
+}

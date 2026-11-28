@@ -3,13 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import GoogleAccountButton from './GoogleAccountButton';
+import InviteCodeInput, { emptyCode } from './InviteCodeInput';
 import { meOrNull, startInviteEmail, checkInviteEmail, signInInviteEmail, finishInviteSignup } from '../lib/api';
 
 export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
   const [step, setStep] = useState('email');
   const [email,setEmail] = useState('');
   const [challenge,setChallenge] = useState('');
-  const [code,setCode] = useState('');
+  const [digits,setDigits] = useState(emptyCode);
+  const code = digits.join('');
   const [proof,setProof] = useState('');
   const [password,setPassword] = useState('');
   const [accepted,setAccepted] = useState(false);
@@ -39,11 +41,17 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
     return () => { current = false; };
   }, [retry]);
   function restart() {
-    expectedEmail.current = null; setReady(true); setStep('email'); setProof(''); setPassword(''); setCode(''); setAccepted(false); setChallenge(''); setError('');
+    expectedEmail.current = null; setReady(true); setStep('email'); setProof(''); setPassword(''); setDigits(emptyCode()); setAccepted(false); setChallenge(''); setError('');
   }
   async function submit(event) {
     event.preventDefault();
     if (pending.current) return;
+    if (step === 'code' && code.length !== 6) {
+      const missing = 6 - code.length;
+      setError(`Enter ${missing === 1 ? 'the remaining digit' : `the remaining ${missing} digits`} of your code.`);
+      card.current?.querySelector(`#deal-code-${digits.indexOf('')}`)?.focus();
+      return;
+    }
     pending.current = true; setBusy(true); setError('');
     try {
       if (step === 'email') {
@@ -58,12 +66,12 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
           if (result.signInWithCode !== true) { setStep('unavailable'); return; }
           setStep('existing');
         } else if (result.status === undefined && typeof result.proof === 'string' && /^[\w-]{43}$/.test(result.proof)) {
-          setProof(result.proof); setCode(''); setStep('new');
+          setProof(result.proof); setDigits(emptyCode()); setStep('new');
         } else throw Error();
       } else if (step === 'existing' || step === 'new') {
         const result = step === 'existing' ? await signInInviteEmail(challenge, code) : await finishInviteSignup(challenge, proof, password, accepted);
         if (result.ok !== true) throw Error();
-        expectedEmail.current = email; setCode(''); setPassword(''); setProof(''); setStep('session');
+        expectedEmail.current = email; setDigits(emptyCode()); setPassword(''); setProof(''); setStep('session');
         const account = await meOrNull();
         if (!account?.userId || account.emailVerified !== true || account.email?.toLowerCase() !== email) throw Error();
         if (onJoin) onJoin(account);
@@ -85,7 +93,7 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
       {!onJoin && step==='email' && <GoogleAccountButton mode="login" next={next}/>}
       <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy} style={{border:0,margin:0,padding:0,minWidth:0}}>
         {step==='email'&&<><p className="lede">Enter your email. We’ll send a code to check your account.</p><div className="field"><label htmlFor="deal-email">Email address</label><input id="deal-email" type="email" autoComplete="email" required maxLength={254} value={email} onChange={e=>setEmail(e.target.value)} /></div></>}
-        {step==='code'&&<><p className="lede">Enter the six-digit code sent to {email}.</p><div className="field"><label htmlFor="deal-code">Verification code</label><input id="deal-code" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} required value={code} onChange={e=>setCode(e.target.value)} /></div></>}
+        {step==='code'&&<><p className="lede">Enter the six-digit code sent to {email}.</p><InviteCodeInput digits={digits} error={Boolean(error)} onChange={next=>{setDigits(next);setError('');}}/></>}
         {step==='existing'&&<p className="lede">{email} already has a Merger account. Continue with the email you just verified.</p>}
         {step==='unavailable'&&<p className="lede">This email is already registered. {onJoin ? 'Contact Merger support for help signing in.' : <Link href={'/login?next='+encodeURIComponent(next)}>Use account sign-in</Link>}</p>}
         {step==='new'&&<><p className="lede">Your email is verified. Choose a password for {email}.</p><div className="field"><label htmlFor="deal-password">New password</label><input id="deal-password" type="password" autoComplete="new-password" minLength={8} maxLength={256} required value={password} onChange={e=>setPassword(e.target.value)} /></div>
@@ -93,6 +101,6 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
         {step!=='unavailable'&&<button className="btn btn-primary btn-block" disabled={busy}>{busy?'Please wait…':step==='new'?'Create account':step==='existing'?'Sign in':step==='code'?'Verify email':'Send verification code'}</button>}
         {step!=='email'&&<button type="button" className="btn btn-ghost" disabled={busy} onClick={restart}>Start again</button>}
       </fieldset></form></>}
-    {error&&<p className="alert alert-error" role="alert">{error}</p>}
+    {error&&<p id={step==='code'?'invite-code-error':undefined} className="alert alert-error" role="alert">{error}</p>}
   </div>;
 }
