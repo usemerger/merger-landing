@@ -3,7 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import InviteAccountForm from '../../components/InviteAccountForm';
 import GoogleAccountButton from '../../components/GoogleAccountButton';
 import MarketingMark from '../../components/MarketingMark';
-import { meOrNull } from '../../lib/api';
+import ProfileControls from './ProfileControls';
+import { readRecent, rememberDeal } from '../previewLinks';
+import { clearSessionHint } from '../../lib/useSession';
+import { logout, meOrNull } from '../../lib/api';
 
 const path = '/deal-preview/riverfront';
 const title = 'Riverfront acquisition';
@@ -26,9 +29,9 @@ function ShareDialog({ screen, setScreen, join, account, pending, onClose }) {
   }, [screen]);
   return <dialog ref={dialog} className="rv-modal" aria-label="Deal invitation" onCancel={event => { event.preventDefault(); onClose(); }}>
     <button type="button" className="rv-dismiss" onClick={onClose} aria-label="Close sign-in">×</button>
-    <section className="rv-form">
+    <section key={screen} className="rv-form rv-step">
       {screen !== 'welcome' && <button className="rv-back" type="button" onClick={() => setScreen('welcome')}>‹ Back</button>}
-      {screen === 'email' ? <InviteAccountForm next={path} onJoin={user => join(user.displayName || user.handle || 'Merger member', user.userId)}/>
+      {screen === 'email' ? <InviteAccountForm next={path} onJoin={user => join(user.displayName || user.handle || 'Merger member', user)}/>
         : screen === 'guest' ? <form onSubmit={event => { event.preventDefault(); if(name.trim()) join(name.trim()); }}>
           <h1>What should we call you?</h1><p>This name appears beside your messages.</p>
           <label htmlFor="rv-guest">Your name</label><input id="rv-guest" autoComplete="name" maxLength={60} required value={name} onChange={e=>setName(e.target.value)}/>
@@ -36,8 +39,8 @@ function ShareDialog({ screen, setScreen, join, account, pending, onClose }) {
         </form> : <>
           <h1 tabIndex={-1} ref={heading}>You’re invited to a deal.</h1>
           <p>Kai invited you to collaborate on Riverfront acquisition.</p>
-          {account ? <button className="rv-primary" onClick={()=>join(account.displayName || account.handle || 'Merger member', account.userId)}>Continue as {account.displayName || account.handle || account.email}</button> : <>
-            <GoogleAccountButton mode="login" next={path}/>
+          {account ? <button className="rv-primary" onClick={()=>join(account.displayName || account.handle || 'Merger member', account)}>Continue as {account.displayName || account.handle || account.email}</button> : <>
+            <GoogleAccountButton mode="login" next="/dashboard?resumeInvite=public"/>
             <button className="rv-primary" onClick={()=>setScreen('email')}>Continue with email</button>
           </>}
           <button className="rv-secondary" onClick={()=>setScreen('guest')}>Continue as a guest</button>
@@ -48,46 +51,67 @@ function ShareDialog({ screen, setScreen, join, account, pending, onClose }) {
   </dialog>;
 }
 
-export default function Receiver() {
-  const [screen,setScreen] = useState('welcome');
-  const [account,setAccount] = useState(null);
+export default function Receiver({initialAccount=null, token=null, checkAccess}) {
+  const [screen,setScreen] = useState(initialAccount ? null : 'welcome');
+  const [account,setAccount] = useState(initialAccount);
   const [pending,setPending] = useState(true);
-  const [participant,setParticipant] = useState(null);
+  const [participant,setParticipant] = useState(initialAccount ? {name:initialAccount.displayName || initialAccount.handle || 'Merger member',member:true} : null);
   const [section,setSection] = useState('Documents');
   const [documentOpen,setDocumentOpen] = useState(false);
   const [draft,setDraft] = useState('');
   const [messages,setMessages] = useState([]);
   const composer = useRef(null);
+  const [sending,setSending] = useState(false);
+  const log = useRef(null);
+  useEffect(()=>{ if(messages.length) log.current?.lastElementChild?.scrollIntoView?.({block:'nearest'}); },[messages]);
+  function restore(user) {
+    const recent=readRecent(user?.userId);
+    if (!user || recent?.token!==token) return;
+    setParticipant({name:user.displayName || user.handle || 'Merger member',member:true});
+    setScreen(null);
+    if ([null,'Documents','Deal info','People','Timeline'].includes(recent.section)) setSection(recent.section);
+    setDocumentOpen(recent.documentOpen===true);
+  }
   useEffect(()=>{
+    if (initialAccount) {restore(initialAccount);setPending(false);return;}
     let current = true;
-    meOrNull().then(user => { if(current)setAccount(user); }).catch(()=>{}).finally(()=>{ if(current)setPending(false); });
+    meOrNull().then(user => { if(current){setAccount(user);restore(user);} }).catch(()=>{}).finally(()=>{ if(current)setPending(false); });
     return ()=>{ current=false; };
   },[]);
-  function join(name,id) {
-    if(id)setAccount({displayName:name,userId:id});
-    setParticipant({name,member:!!id}); setScreen(null);
+  useEffect(()=>{
+    if(!pending && participant?.member) rememberDeal(account?.userId,token,section,documentOpen);
+  },[pending,participant,account,token,section,documentOpen]);
+  async function signOut() {
+    await logout(); clearSessionHint();
+    setParticipant(null);setAccount(null);setDraft('');setMessages([]);setDocumentOpen(false);setSection('Documents');setScreen('welcome');
+    if(checkAccess) await checkAccess();
+  }
+  function join(name,user) {
+    if(user)setAccount(user);
+    setParticipant({name,member:!!user}); setScreen(null);
     requestAnimationFrame(()=>composer.current?.focus());
   }
   function close() {
     if(participant) setScreen(null);
     else setScreen(screen==='guest'?'welcome':'guest');
   }
-  function send(event) {
+  async function send(event) {
     event.preventDefault();
-    if(!participant || !draft.trim())return;
+    if(!participant || !draft.trim() || sending)return;
+    if(checkAccess){setSending(true);const allowed=await checkAccess();setSending(false);if(!allowed)return;}
     setMessages(items=>[...items,{id:crypto.randomUUID(),text:draft.trim()}]);setDraft('');
   }
   return <main className="rv">
     <header className="rv-header"><div className="rv-brand"><MarketingMark size={25}/> MERGER</div><div><h2>{title}</h2><small>Real estate</small></div>
       <nav aria-label="Deal tools">{['Deal info','Timeline','People','Documents'].map(item=><button key={item} aria-pressed={section===item} onClick={()=>setSection(s=>s===item?null:item)}>{item}</button>)}</nav>
-      {participant && <button className="rv-account" onClick={()=>setScreen('welcome')}>{participant.member?participant.name:'Sign in'}</button>}
+      {participant && <ProfileControls participant={participant} account={account} privateLink={!!token} onSignOut={signOut} onSignIn={()=>setScreen('welcome')}/>}
     </header>
     <div className="rv-strip"><span className="rv-avatar">K</span><div><strong>Kai</strong><small>Merger DMs · Preview conversation</small></div></div>
     <div className="rv-workspace">
       {documentOpen && <article className="rv-paper"><button onClick={()=>setDocumentOpen(false)} aria-label="Close document">×</button><small>RIVERFRONT ACQUISITION</small><h2>{documentName}</h2><h3>Purchase price</h3><p>$12,000,000 for 48 residential units.</p><h3>Diligence</h3><p>Ten business days from delivery of the diligence package.</p></article>}
-      <section className="rv-thread" aria-label="Buyer party chat"><div className="rv-log" role="log"><span className="rv-incoming">{openingMessage}</span>{messages.map(m=><span className="rv-outgoing" key={m.id}>{m.text}</span>)}</div>
-      <form className="rv-compose" onSubmit={send}><input ref={composer} aria-label="Message Kai" placeholder="Write a preview message…" maxLength={2000} value={draft} onChange={e=>setDraft(e.target.value)}/><button disabled={!draft.trim()||!participant}>Send</button></form></section>
-      {section && <aside className="rv-inspector"><header><strong>{section}</strong><button onClick={()=>setSection(null)} aria-label="Close details">×</button></header>
+      <section className="rv-thread" aria-label="Buyer party chat"><div ref={log} className="rv-log" role="log"><span className="rv-incoming">{openingMessage}</span>{messages.map(m=><span className="rv-outgoing" key={m.id}>{m.text}</span>)}</div>
+      <form className="rv-compose" onSubmit={send}><input ref={composer} aria-label="Message Kai" placeholder="Write a preview message…" maxLength={2000} value={draft} onChange={e=>setDraft(e.target.value)}/><button disabled={!draft.trim()||!participant||sending}>{sending?'Sending…':'Send'}</button></form></section>
+      {section && <aside key={section} className="rv-inspector"><header><strong>{section}</strong><button onClick={()=>setSection(null)} aria-label="Close details">×</button></header>
       {section==='Documents'?<><small>Shared with you</small><p>{documentName}</p><button onClick={()=>setDocumentOpen(true)}>Open document</button></>:
       section==='Deal info'?<><small>Terms</small><p>$12M asking · 48 residential units</p><small>Next step</small><p>Confirm the diligence window with the seller.</p></>:
       section==='Timeline'?<ol>{stages.map(s=><li key={s}>{s}{s==='Diligence'?' · Current':''}</li>)}</ol>:<><p>Kai · Deal owner</p>{participant&&<p>{participant.name} · {participant.member?'Merger member':'Guest'}</p>}</>}

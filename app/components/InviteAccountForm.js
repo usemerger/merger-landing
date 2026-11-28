@@ -20,6 +20,11 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
   const [ready,setReady] = useState(false);
   const [retry,setRetry] = useState(0);
   const expectedEmail = useRef(null);
+  const card = useRef(null);
+  useEffect(()=>{
+    if (onJoin && ready) card.current?.querySelector('input:not([type="checkbox"])')?.focus();
+    if (onJoin && ready && !card.current?.querySelector('input:not([type="checkbox"])')) card.current?.querySelector('h1')?.focus();
+  },[step,ready,member]);
   useEffect(() => {
     let current = true;
     meOrNull().then(account => {
@@ -72,11 +77,11 @@ export default function InviteAccountForm({next, returnURL, preview, onJoin}) {
     } finally { pending.current = false; setBusy(false); }
   }
   const title = { email:onJoin?'Continue with email':'Continue to your deal', code:'Check your email', existing:'Welcome back', new:'Create your Merger account', unavailable:'Sign-in help', session:'Check your session' };
-  return <div className="auth-card">
-    {member ? <><h1>You’re signed in</h1><p className="lede">{member.displayName || member.email}</p>
+  return <div ref={card} key={member ? 'member' : ready ? step : 'checking'} className="auth-card rv-account-step">
+    {member ? <><h1 tabIndex={-1}>You’re signed in</h1><p className="lede">{member.displayName || member.email}</p>
       {onJoin ? <button type="button" className="btn btn-primary btn-block" onClick={()=>onJoin(member)}>Join deal</button> : preview ? <a className="btn btn-primary btn-block" href={returnURL} rel="noreferrer">Return to the deal</a> : <Link className="btn btn-primary btn-block" href="/dashboard">Open Merger</Link>}</>
     : !ready || step==='session' ? <><p role="status">Checking your Merger session…</p>{error&&<button type="button" onClick={()=>{setError('');setReady(false);setRetry(v=>v+1);}}>Check again</button>}{step==='session' && error && <button type="button" onClick={restart}>Verify again</button>}</>
-    : <><h1>{title[step]}</h1>
+    : <><h1 tabIndex={-1}>{title[step]}</h1>
       {!onJoin && step==='email' && <GoogleAccountButton mode="login" next={next}/>}
       <form onSubmit={submit} aria-busy={busy}><fieldset disabled={busy} style={{border:0,margin:0,padding:0,minWidth:0}}>
         {step==='email'&&<><p className="lede">Enter your email. We’ll send a code to check your account.</p><div className="field"><label htmlFor="deal-email">Email address</label><input id="deal-email" type="email" autoComplete="email" required maxLength={254} value={email} onChange={e=>setEmail(e.target.value)} /></div></>}

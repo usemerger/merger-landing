@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import RecentDealLink from './RecentDealLink';
+import { dealURL, validToken } from '../deal-preview/previewLinks';
 import Shell from './Shell';
 import PlanStep, { useStartCheckout } from './PlanStep';
 import HandleField from './HandleField';
@@ -69,6 +71,8 @@ export default function AccountDashboard() {
       const account = await meOrNull();
       if (current !== request.current) return;
       if (!account) { router.replace(loginPath); return; }
+      const resume = new URLSearchParams(window.location.search).get('resumeInvite');
+      if (resume === 'public' || validToken(resume)) { router.replace(dealURL(resume)); return; }
       const permissions = await accountAccess();
       if (current !== request.current) return;
       setUser({ ...account, ...permissions.user, userId: account.userId || permissions.user.id });
@@ -231,6 +235,7 @@ export default function AccountDashboard() {
     <p className="eyebrow">{billingPage ? 'Subscription & billing' : 'Your workspace'}</p>
     <h1 className="dash-title">{billingPage ? 'Your membership.' : user.displayName ? `Welcome, ${user.displayName.split(' ')[0]}.` : 'Your Merger account.'}</h1>
     <p className="dash-handle">{user.email}</p>
+    <RecentDealLink userId={user.userId}/>
     {verified && canSubscribe && !user.handle && <Link className="btn btn-primary mt-16" href="/billing?setup=1">Choose your subscription</Link>}
     {user.handle && <p className="dash-handle">@{user.handle}</p>}
     <p className="dash-sub">{grandfathered ? 'Founding account' : entitled ? 'Your account has access to Merger.' : !verified ? 'Verify your email to choose a plan.' : admitted ? (access.rollout?.inviteRequired === false ? 'Choose monthly or annual below, then download Merger for Windows, Mac or iPhone. 30-day money-back guarantee.' : 'Your invitation is accepted. Finish activation when you’re ready.') : 'Your account is ready. We’ll keep your access progress here.'}</p>
